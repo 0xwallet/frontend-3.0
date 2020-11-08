@@ -1,0 +1,34 @@
+@import './color/index.less';
+@import './background/index.less';
+@import './cursor/index.less';
+
+* {
+  padding: 0;
+  margin: 0;
+}
+
+.overflow-text {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.layout-radius {
+  border-radius: 0.5rem;
+}
+
+.left {
+  float: left;
+}
+
+.right {
+  float: right;
+}
+
+.clear-float {
+  &::after {
+    content: '';
+    clear: both;
+    display: block;
+  }
+}
