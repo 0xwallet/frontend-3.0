@@ -3,6 +3,7 @@ import { ActionContext } from 'vuex';
 import { UserStore, RootStore } from '@/types/store';
 import { createWallet } from '@/hooks/nkn/useWallet';
 import { useMessage } from '@/hooks/web/useMessage';
+import { useRouter } from 'vue-router';
 
 type UserContext = ActionContext<UserStore, RootStore>;
 
@@ -21,6 +22,7 @@ export default {
         async login ({ commit }: UserContext, params: { password: string; email: string }) {
           createWallet(params);
           const userInfo = await useApollo().user.signin(params);
+          useRouter().push({ name: 'root' });
           notification.success({
             message: '注册成功',
             description: `欢迎回来: ${userInfo.realName}`,
@@ -31,6 +33,7 @@ export default {
         async register ({ commit }: UserContext, params: { password: string; email: string; code: string; username: string }) {
           const { nknEncryptedWallet, nknPublicKey } = createWallet(params);
           const userInfo = await useApollo().user.signup({...params, nknEncryptedWallet, nknPublicKey});
+          useRouter().push({ name: 'root' });
           notification.success({
             message: '注册成功',
             description: `欢迎回来: ${userInfo.realName}`,
