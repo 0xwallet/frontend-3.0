@@ -1,7 +1,7 @@
 const name = 'vue-frontend';
 module.exports = {
   publicPath: "./",
-  outputDir: "docs",
+  outputDir: "dist",
   productionSourceMap: false,
   chainWebpack: config => {
     // config.plugins.delete('preload')
