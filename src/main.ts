@@ -1,20 +1,52 @@
-import type { App } from 'vue';
 import { createApp } from 'vue';
-import Root from './App.vue';
-import graphql from './plugins/graphql';
-import antd from './plugins/antd';
-import global from './plugins/global';
-import store from './store';
-import router from './router';
-import wallet from './plugins/wallet';
-import i18n from './plugins/i18n';
-import 'ant-design-vue/dist/antd.css';
-import './styles/global.less';
 
-const app: App = createApp(Root);
+import router, { setupRouter } from '/@/router';
+import { setupStore } from '/@/store';
+import { setupAntd } from '/@/setup/ant-design-vue';
+import { setupErrorHandle } from '/@/setup/error-handle';
+import { setupGlobDirectives } from '/@/setup/directives';
 
-app.use(global).use(i18n).use(router).use(store).use(antd).use(graphql).use(wallet);
+import { setupProdMockServer } from '../mock/_createProductionServer';
+import { setApp } from '/@/setup/App';
 
+import App from './App.vue';
+
+import { isDevMode, isProdMode, isUseMock } from '/@/utils/env';
+
+import '/@/design/index.less';
+
+const app = createApp(App);
+
+// ui
+setupAntd(app);
+
+// Configure routing
+setupRouter(app);
+
+// Configure vuex store
+setupStore(app);
+
+// Register global directive
+setupGlobDirectives(app);
+
+// Configure global error handling
+setupErrorHandle(app);
+
+// Mount when the route is ready
 router.isReady().then(() => {
   app.mount('#app');
 });
+
+// The development environment takes effect
+if (isDevMode()) {
+  app.config.performance = true;
+  window.__APP__ = app;
+}
+
+// If you do not need to use the mock service in the production environment, you can comment the code
+if (isProdMode() && isUseMock()) {
+  setupProdMockServer();
+}
+
+// Used to share app instances in other modules
+setApp(app);

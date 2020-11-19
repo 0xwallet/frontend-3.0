@@ -1,0 +1,82 @@
+@import (reference) '../../design/index.less';
+
+.default-layout {
+  &__content {
+    position: relative;
+
+    &.fixed {
+      overflow: hidden;
+    }
+  }
+
+  &__loading {
+    position: absolute;
+    z-index: @page-loading-z-index;
+  }
+
+  &__main {
+    position: relative;
+    height: 100%;
+
+    &.fixed {
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+
+    &.fixed.lock {
+      overflow: hidden;
+    }
+  }
+
+  .layout-content {
+    position: relative;
+
+    &.fixed {
+      width: 1200px;
+      margin: 0 auto;
+    }
+  }
+
+  .layout-sidebar {
+    background-size: 100% 100%;
+
+    &.ant-layout-sider-dark {
+      background: @sider-dark-bg-color;
+    }
+
+    &:not(.ant-layout-sider-dark) {
+      border-right: 1px solid @border-color-light;
+    }
+
+    .ant-layout-sider-zero-width-trigger {
+      top: 40%;
+      z-index: 10;
+    }
+
+    &__dargbar {
+      position: absolute;
+      top: 0;
+      right: -2px;
+      z-index: @side-drag-z-index;
+      width: 2px;
+      height: 100%;
+      cursor: col-resize;
+      border-top: none;
+      border-bottom: none;
+
+      &.hide {
+        display: none;
+      }
+
+      &:hover {
+        background: @primary-color;
+        box-shadow: 0 0 4px 0 rgba(28, 36, 56, 0.15);
+      }
+    }
+  }
+}
+
+.ant-layout-sider-trigger {
+  height: 36px;
+  line-height: 36px;
+}
