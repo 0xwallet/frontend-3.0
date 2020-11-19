@@ -63,15 +63,22 @@
   export default defineComponent({
     components: { BasicTable, BreadCrumb, GIcon, UploadFile, CreateFolderModal, MoveModal },
     setup() {
+      // 信息框
       const { createMessage, createErrorModal } = useMessage();
+      // 文件路径面包屑
       const path = ref([]);
       let dirId = '';
+      // 表格数据
+      // 文件夹数据+文件数据
       const tableData = computed(() => {
         return folder.value.concat(files.value);
       });
+      // 储存本级目录所有文件夹名
       const folder = ref([]);
+      // 储存本级目录路所有文件
       const files = ref([]);
-      function fetchData(params = { dirId: '' }) {
+      // 根据ID获取数据 默认root目录
+      function fetchData(params = { dirId: 'root' }) {
         useApollo()
           .query({
             query: driveListFiles,
@@ -79,51 +86,55 @@
             fetchPolicy: 'no-cache',
           })
           .then((res) => {
+            // 取得返回值
             const list = res.data?.driveListFiles;
+            // 重置文件夹列表，文件列表
             folder.value = [];
             files.value = [];
-            if (list) {
-              if (list[1]) {
-                console.log(list);
-                folder.value.push({
-                  id: list[1].id,
-                  type: 'folder',
-                  fullName: '...',
-                  size: 0,
-                  createAt: '',
-                  hash: '',
-                  space: list[1].space,
-                  desc: '',
-                });
-              }
-              list.forEach((v) => {
-                if (v && v.isDir) {
-                  if (v.fullName.length > 0) {
-                    if (params) {
-                      if (v.id === params.dirId) {
-                        return;
-                      }
-                    }
-                    if (list[0].fullName.length > v.fullName.length) {
+            if (!list) {
+              return;
+            }
+            // 列表[1]存在为存在上级目录，存入dirId，fullName设置为...
+            if (list[1]) {
+              folder.value.push({
+                id: list[1].id,
+                type: 'folder',
+                fullName: '...',
+                size: 0,
+                createAt: '',
+                hash: '',
+                space: list[1].space,
+                desc: '',
+              });
+            }
+            // 遍历返回信息，组成表格信息
+            list.forEach((v) => {
+              // 是目录
+              if (v && v.isDir) {
+                if (v.fullName.length > 0) {
+                  if (params) {
+                    if (v.id === params.dirId) {
                       return;
                     }
-                    // console.log(v);
-                    folder.value.push({
-                      id: v.id,
-                      type: 'folder',
-                      fullName: v.fullName[v.fullName.length - 1],
-                      size: 0,
-                      createAt: moment(v.updatedAt).format('Y-M-D H:m:s'),
-                      hash: v.hash,
-                      space: v.space,
-                      desc: v.info?.description,
-                    });
                   }
+                  if (list[0].fullName.length > v.fullName.length) {
+                    return;
+                  }
+                  folder.value.push({
+                    id: v.id,
+                    type: 'folder',
+                    fullName: v.fullName[v.fullName.length - 1],
+                    size: 0,
+                    createAt: moment(v.updatedAt).format('Y-M-D H:m:s'),
+                    hash: v.hash,
+                    space: v.space,
+                    desc: v.info?.description,
+                  });
                 }
-              });
+              }
+            });
 
-              // console.log(data.driveListFiles);
-            }
+            // console.log(data.driveListFiles);
           })
           .catch((err) => {
             console.log(err);
@@ -133,9 +144,9 @@
             });
           });
       }
-
+      // 获取数据
       fetchData();
-
+      // 文件列表表格
       const [
         registerTable,
         { getSelectRowKeys, setSelectedRowKeys, clearSelectedRowKeys, getDataSource, reload },
@@ -156,8 +167,12 @@
         registerCreateFolder,
         { openModal: openModal1, setModalProps: setModal1 },
       ] = useModal();
+      // 移动文件Modal
       const [registerMoveModal, { openModal: openModal2, setModalProps: setModal2 }] = useModal();
 
+      // 打开新建文件夹modal
+      // 传入上级文件夹ID dirId
+      // 传入本级文件夹名，防止重名 folder
       function openCreateFolderModal() {
         openModal1(true, { folder, dirId });
         nextTick(() => {
@@ -170,7 +185,7 @@
           });
         });
       }
-
+      // 打开移动窗口
       function openMoveModal() {
         openModal2(true, getSelectRowKeys());
         nextTick(() => {
@@ -184,7 +199,7 @@
           });
         });
       }
-
+      // 删除文件或文件夹
       function del(file) {
         useApollo()
           .mutate({ mutation: driveDeleteFile, variables: file })
@@ -211,15 +226,19 @@
       function clearSelect() {
         clearSelectedRowKeys();
       }
-
+      // 打开文件或者进入目录
       function openFile(file) {
+        // 进入目录
         if (file.type === 'folder') {
+          // ...为上级目录
           if (file.fullName === '...') {
             path.value.pop();
           } else {
             path.value.push(file.fullName);
           }
-          dirId = file.id || '';
+          // 保存最新进入的目录ID
+          dirId = file.id || 'root';
+          // 根据ID获取最新进入目录文件
           fetchData({ dirId: file.id });
         }
       }
