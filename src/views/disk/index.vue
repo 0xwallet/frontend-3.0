@@ -84,7 +84,7 @@
             files.value = [];
             if (list) {
               if (list[1]) {
-                console.log(list[1]);
+                console.log(list);
                 folder.value.push({
                   id: list[1].id,
                   type: 'folder',
@@ -103,6 +103,9 @@
                       if (v.id === params.dirId) {
                         return;
                       }
+                    }
+                    if (list[0].fullName.length > v.fullName.length) {
+                      return;
                     }
                     // console.log(v);
                     folder.value.push({
