@@ -1,6 +1,6 @@
 import { appStore } from './app';
 import type {
-  LoginParams,
+  // LoginParams,
   GetUserInfoByUserIdModel,
   GetUserInfoByUserIdParams,
 } from '/@/api/sys/model/userModel';
@@ -85,7 +85,7 @@ class User extends VuexModule {
    * @description: login
    */
   @Action
-  async login(params?: LoginParams, goHome = true): Promise<GetUserInfoByUserIdModel | null> {
+  async login(goHome = true): Promise<GetUserInfoByUserIdModel | null> {
     try {
       // get user info
       // const userInfo = await this.getUserInfoAction({ userId });

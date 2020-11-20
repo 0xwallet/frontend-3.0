@@ -74,6 +74,15 @@ export const driveDeleteFile = gql`
     driveDeleteFile(id: $id, space: $space)
   }
 `;
+// 根据hash查询
+export const driveUploadByHash = gql`
+  mutation($fullName: [String]!, $hash: Sting!) {
+    driveUploadByHash(fullName: $fullName, hash: $hash) {
+      id
+    }
+  }
+`;
+
 // subscriptions
 export const driveFileUploaded = gql`
   subscription($userId: ID!) {
