@@ -36,14 +36,15 @@
         <a-button type="primary" v-show="choose"> 下载 </a-button>
         <a-button type="primary" v-show="!choose" @click="openMoveModal"> 移动 </a-button>
         <a-button type="primary" v-show="choose"> 分享 </a-button>
-        <UploadFile />
-        <a-button type="primary"> 上传文件夹 </a-button>
+        <a-button type="primary" @click="openUploadModal"> 上传 </a-button>
+
         <a-button type="primary" @click="openCreateFolderModal"> 新建文件夹 </a-button>
         <a-button type="primary" @click="reload"> 刷新 </a-button>
       </template></BasicTable
     >
     <CreateFolderModal @register="registerCreateFolder" />
     <MoveModal @register="registerMoveModal" />
+    <UploadModal @register="registerUploadModal" />
   </div>
 </template>
 <script lang="ts">
@@ -52,7 +53,7 @@
   import { getBasicColumns } from './tableData';
   import { useMessage } from '/@/hooks/web/useMessage';
   import BreadCrumb from './component/BreadCrumb.vue';
-  import UploadFile from './component/Upload.vue';
+  import UploadModal from './component/upload/UploadModal.vue';
   import CreateFolderModal from './component/CreateFolderModal.vue';
   import MoveModal from './component/MoveModal.vue';
   import GIcon from '/@/components/Icon/index';
@@ -61,7 +62,7 @@
   import { useModal } from '/@/components/Modal';
   import moment from 'moment';
   export default defineComponent({
-    components: { BasicTable, BreadCrumb, GIcon, UploadFile, CreateFolderModal, MoveModal },
+    components: { BasicTable, BreadCrumb, GIcon, UploadModal, CreateFolderModal, MoveModal },
     setup() {
       // 信息框
       const { createMessage, createErrorModal } = useMessage();
@@ -169,6 +170,8 @@
       ] = useModal();
       // 移动文件Modal
       const [registerMoveModal, { openModal: openModal2, setModalProps: setModal2 }] = useModal();
+      //上传Modal
+      const [registerUploadModal, { openModal: openModal3, setModalProps: setModal3 }] = useModal();
 
       // 打开新建文件夹modal
       // 传入上级文件夹ID dirId
@@ -190,6 +193,20 @@
         openModal2(true, getSelectRowKeys());
         nextTick(() => {
           setModal2({
+            canFullscreen: false,
+            width: '70%',
+            destroyOnClose: true,
+            afterClose: () => {
+              fetchData({ dirId });
+            },
+          });
+        });
+      }
+      // 打开上传窗口
+      function openUploadModal() {
+        openModal3(true);
+        nextTick(() => {
+          setModal3({
             canFullscreen: false,
             width: '70%',
             destroyOnClose: true,
@@ -255,6 +272,8 @@
         openCreateFolderModal,
         registerMoveModal,
         openMoveModal,
+        registerUploadModal,
+        openUploadModal,
         del,
       };
     },
