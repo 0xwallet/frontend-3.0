@@ -1,5 +1,5 @@
 <template>
-  <ConfigProvider :locale="zhCN" :transform-cell-text="transformCellText" v-bind="lockEvent">
+  <ConfigProvider v-bind="lockEvent" :locale="zhCN" :transform-cell-text="transformCellText">
     <router-view />
   </ConfigProvider>
 </template>

@@ -39,10 +39,6 @@ export const basicProps = {
   rightMenuList: {
     type: Array as PropType<ContextMenuItem[]>,
   },
-  loadData: {
-    type: Function as PropType<(...args: any[]) => any>,
-    default: null,
-  },
 };
 
 export const treeNodeProps = {

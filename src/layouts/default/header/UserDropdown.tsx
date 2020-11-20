@@ -41,7 +41,6 @@ export default defineComponent({
         handleLoginOut();
       } else if (e.key === 'doc') {
         openDoc();
-      } else if (e.key === 'uc') {
       }
     }
 
@@ -80,8 +79,6 @@ export default defineComponent({
                   <>
                     {showDoc && renderItem({ key: 'doc', text: '文档', icon: 'gg:loadbar-doc' })}
                     {showDoc && <Divider />}
-                    {renderItem({ key: 'uc', text: '个人中心', icon: 'ant-design:user-outlined' })}
-                    <Divider />
                     {renderItem({
                       key: 'loginOut',
                       text: '退出系统',

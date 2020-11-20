@@ -260,7 +260,6 @@ export default defineComponent({
         onRightClick: handleRightClick,
       };
       propsData = omit(propsData, 'treeData');
-      console.log(propsData);
       return (
         <Tree {...propsData} class={prefixCls}>
           {{

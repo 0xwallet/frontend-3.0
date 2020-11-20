@@ -108,7 +108,6 @@ export function useTabs() {
         query,
         params,
       };
-
       goTo && replace ? router.replace(data) : router.push(data);
     },
     activeKeyRef,

@@ -4,6 +4,7 @@
 // TODO Currently, it is not possible to monitor file addition and deletion. The content has been changed, the cache problem?
 import { join } from 'path';
 import { lstatSync } from 'fs';
+// @ts-ignore
 import glob from 'glob';
 import { createResolver, Resolver } from 'vite/dist/node/resolver.js';
 import { Transform } from 'vite/dist/node/transform.js';
@@ -75,7 +76,7 @@ const globbyTransform = function (config: SharedConfig): Transform {
           const temRender = template(templateStr);
 
           const groups: Array<string>[] = [];
-          const replaceFiles = files.map((f, i) => {
+          const replaceFiles = files.map((f: string, i: any) => {
             const file = g2 + resolver.fileToRequest(f) + g2;
             groups.push([name + i, file]);
             return temRender({ name: name + i, file });

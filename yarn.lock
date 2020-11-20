@@ -1408,6 +1408,11 @@
   dependencies:
     "@types/node" "*"
 
+"@types/globrex@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.npm.taobao.org/@types/globrex/download/@types/globrex-0.1.0.tgz#baf4ac8e36947017612c01fde7c7b641dc0b6c89"
+  integrity sha1-uvSsjjaUcBdhLAH958e2QdwLbIk=
+
 "@types/http-assert@*":
   version "1.5.1"
   resolved "https://registry.npm.taobao.org/@types/http-assert/download/@types/http-assert-1.5.1.tgz#d775e93630c2469c2f980fc27e3143240335db3b"
@@ -1822,18 +1827,18 @@
     vscode-languageserver-textdocument "^1.0.1"
     vscode-uri "^2.1.2"
 
-"@vueuse/core@4.0.0-beta.41":
-  version "4.0.0-beta.41"
-  resolved "https://registry.npm.taobao.org/@vueuse/core/download/@vueuse/core-4.0.0-beta.41.tgz#0058aed5ade75ae2866283498009ad5172cbae84"
-  integrity sha1-AFiu1a3nWuKGYoNJgAmtUXLLroQ=
+"@vueuse/core@4.0.0-rc.3":
+  version "4.0.0-rc.3"
+  resolved "https://registry.npm.taobao.org/@vueuse/core/download/@vueuse/core-4.0.0-rc.3.tgz#5381ca657e10df596cd7027fc5c96b2d4b3a090c"
+  integrity sha1-U4HKZX4Q31ls1wJ/xclrLUs6CQw=
   dependencies:
-    "@vueuse/shared" "4.0.0-beta.41"
+    "@vueuse/shared" "4.0.0-rc.3"
     vue-demi latest
 
-"@vueuse/shared@4.0.0-beta.41":
-  version "4.0.0-beta.41"
-  resolved "https://registry.npm.taobao.org/@vueuse/shared/download/@vueuse/shared-4.0.0-beta.41.tgz#395782ea2e580f1fc9488d25c89bd09f70170b25"
-  integrity sha1-OVeC6i5YDx/JSI0lyJvQn3AXCyU=
+"@vueuse/shared@4.0.0-rc.3":
+  version "4.0.0-rc.3"
+  resolved "https://registry.npm.taobao.org/@vueuse/shared/download/@vueuse/shared-4.0.0-rc.3.tgz#42fb56fed3779f3b8a17a82c16a364bad20d01b7"
+  integrity sha1-QvtW/tN3nzuKF6gsFqNkutINAbc=
   dependencies:
     vue-demi latest
 
@@ -3375,6 +3380,13 @@ dot-prop@^5.1.0:
   dependencies:
     is-obj "^2.0.0"
 
+dot-prop@^6.0.0:
+  version "6.0.1"
+  resolved "https://registry.npm.taobao.org/dot-prop/download/dot-prop-6.0.1.tgz?cache=0&sync_timestamp=1605778245141&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fdot-prop%2Fdownload%2Fdot-prop-6.0.1.tgz#fc26b3cf142b9e59b74dbd39ed66ce620c681083"
+  integrity sha1-/CazzxQrnlm3Tb057WbOYgxoEIM=
+  dependencies:
+    is-obj "^2.0.0"
+
 dotenv-expand@^5.1.0:
   version "5.1.0"
   resolved "https://registry.npm.taobao.org/dotenv-expand/download/dotenv-expand-5.1.0.tgz#3fbaf020bfd794884072ea26b1e9791d45a629f0"
@@ -4264,6 +4276,11 @@ globjoin@^0.1.4:
   version "0.1.4"
   resolved "https://registry.npm.taobao.org/globjoin/download/globjoin-0.1.4.tgz#2f4494ac8919e3767c5cbb691e9f463324285d43"
   integrity sha1-L0SUrIkZ43Z8XLtpHp9GMyQoXUM=
+
+globrex@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.npm.taobao.org/globrex/download/globrex-0.1.2.tgz#dd5d9ec826232730cd6793a5e33a9302985e6098"
+  integrity sha1-3V2eyCYjJzDNZ5Ol4zqTApheYJg=
 
 gonzales-pe@^4.3.0:
   version "4.3.0"
@@ -8441,7 +8458,7 @@ vue-eslint-parser@^7.1.1:
     esquery "^1.0.1"
     lodash "^4.17.15"
 
-vue-i18n@^9.0.0-beta.7:
+vue-i18n@^9.0.0-beta.8:
   version "9.0.0-beta.8"
   resolved "https://registry.npm.taobao.org/vue-i18n/download/vue-i18n-9.0.0-beta.8.tgz?cache=0&sync_timestamp=1605720580684&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fvue-i18n%2Fdownload%2Fvue-i18n-9.0.0-beta.8.tgz#92282d5b5e0e6f15cc04943ce11bf49db610468f"
   integrity sha1-kigtW14ObxXMBJQ84Rv0nbYQRo8=
