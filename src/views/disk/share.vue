@@ -8,81 +8,100 @@
         >
         </GIcon>
         <a-button type="link" @click="openFile(record)"
-          >{{ record.name }}{{ record.type === 'folder' ? '' : '.' + record.type }}</a-button
+          >{{ record.fullName }}{{ record.type === 'folder' ? '' : '.' + record.type }}</a-button
         >
-      </template></BasicTable
-    >
+      </template>
+      <template #action="{ record }">
+        <div>
+          <a-button
+            type="link"
+            color="error"
+            :pop="{ title: '删除' + record.fullName + '.' + record.type + '?' }"
+            @click="del(record)"
+            >删除</a-button
+          ></div
+        >
+      </template>
+    </BasicTable>
   </div>
 </template>
 <script lang="ts">
   import { defineComponent, computed, ref } from 'vue';
-  import { BasicColumn, BasicTable, useTable } from '/@/components/Table';
+  import { BasicTable, useTable } from '/@/components/Table';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { demoShareList } from '/@/api/demo/table';
   import GIcon from '/@/components/Icon/index';
-  import { byteTransfer } from '/@/utils/disk/file';
+  import { useApollo } from '/@/hooks/apollo/apollo';
+  import { driveListShares, driveDeleteShare } from '/@/hooks/apollo/gqlFile';
+  import moment from 'moment';
+  import { getBasicColumns } from '/@/views/disk/component/shareData';
 
-  function getBasicColumns(): BasicColumn[] {
-    return [
-      {
-        title: '文件名',
-        dataIndex: 'name',
-        width: 400,
-        align: 'left',
-        slots: { customRender: 'name' },
-      },
-      {
-        title: '状态',
-        fixed: 'right',
-        dataIndex: 'status',
-        customRender: ({ text }) => {
-          if (Number(text) === 0) {
-            return '已过期';
-          }
-
-          return '';
-        },
-      },
-
-      {
-        title: '大小',
-        dataIndex: 'size',
-        width: 80,
-        fixed: 'right',
-        customRender: ({ text }) => {
-          return byteTransfer(text);
-        },
-      },
-
-      {
-        title: '时间',
-        dataIndex: 'createAt',
-        fixed: 'right',
-      },
-      {
-        title: '到期',
-        dataIndex: 'time',
-        fixed: 'right',
-      },
-    ];
-  }
   export default defineComponent({
     components: { BasicTable, GIcon },
     setup() {
       const { createMessage } = useMessage();
       const path = ref([]);
-
+      const tableData = ref([]);
       const [
         registerTable,
         { getSelectRowKeys, setSelectedRowKeys, clearSelectedRowKeys, getDataSource, reload },
       ] = useTable({
         canResize: false,
         title: '分享列表',
-        api: demoShareList,
+        dataSource: tableData,
         columns: getBasicColumns(),
         rowKey: 'id',
         showIndexColumn: false,
       });
+
+      function fetchData() {
+        tableData.value = [];
+        useApollo()
+          .query({
+            query: driveListShares,
+            fetchPolicy: 'no-cache',
+          })
+          .then((res) => {
+            const list = res?.data?.driveListShares;
+            list.forEach((v) => {
+              tableData.value.push({
+                shareId: v.id,
+                id: v.userFile.id,
+                fullName: v.userFile.fullName[v.userFile.fullName.length - 1].split('.')[0],
+                type: v.userFile.fullName[v.userFile.fullName.length - 1].split('.')[1],
+                hash: v.userFile.hash,
+                size: v.userFile.info.size,
+                uri: v.uri,
+                token: v.token,
+                code: v.code,
+              });
+            });
+            console.log(tableData.value);
+            // console.log(data.driveListFiles);
+          })
+          .catch((err) => {
+            console.log(err);
+            createErrorModal({
+              title: '错误',
+              content: err.message,
+            });
+          });
+      }
+
+      fetchData();
+
+      function del(record) {
+        useApollo()
+          .mutate({
+            mutation: driveDeleteShare,
+            variables: {
+              id: record.shareId,
+            },
+          })
+          .finally(() => {
+            fetchData();
+          });
+      }
+
       const choose = computed(() => {
         return getSelectRowKeys().length !== 0;
       });
@@ -102,21 +121,14 @@
         clearSelectedRowKeys();
       }
 
-      function openFile(file) {
-        console.log(file);
-        if (file.type === 'folder') {
-          path.value.push(file.name);
-        }
-      }
-
       return {
         registerTable,
         setSelectedRowKeyList,
         clearSelect,
         choose,
         path,
-        openFile,
         reload,
+        del,
       };
     },
   });

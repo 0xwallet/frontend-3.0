@@ -42,6 +42,26 @@ export const driveListFiles = gql`
     }
   }
 `;
+//分享文件列表
+export const driveListShares = gql`
+  query {
+    driveListShares {
+      code
+      id
+      token
+      uri
+      expiredAt
+      userFile {
+        fullName
+        hash
+        id
+        info {
+          size
+        }
+      }
+    }
+  }
+`;
 
 // mutations
 // 新建目录
@@ -95,6 +115,14 @@ export const driveCreateShare = gql`
       uri
       token
       code
+    }
+  }
+`;
+// 删除分享文件
+export const driveDeleteShare = gql`
+  mutation($id: ID!) {
+    driveDeleteShare(id: $id) {
+      id
     }
   }
 `;
