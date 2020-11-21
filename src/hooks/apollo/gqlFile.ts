@@ -82,6 +82,22 @@ export const driveUploadByHash = gql`
     }
   }
 `;
+// 获取预览token
+export const drivePreviewToken = gql`
+  mutation {
+    drivePreviewToken
+  }
+`;
+// 分享文件
+export const driveCreateShare = gql`
+  mutation($code: String, $userFileId: String!) {
+    driveCreateShare(userFileId: $userFileId, code: $code) {
+      uri
+      token
+      code
+    }
+  }
+`;
 
 // subscriptions
 export const driveFileUploaded = gql`

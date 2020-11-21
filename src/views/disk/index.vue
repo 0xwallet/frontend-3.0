@@ -15,8 +15,11 @@
       </template>
       <template #action="{ record }">
         <div>
-          <a-button type="link">详情</a-button>
-          <a-button type="link">重命名</a-button>
+          <a-button type="link" v-if="record.type !== 'folder'">详情</a-button>
+          <a-button type="link" v-if="record.type !== 'folder'" @click="preview(record)"
+            >预览</a-button
+          >
+          <a-button type="link" @click="openShareModal(record)">分享</a-button>
           <a-button type="link">复制路径</a-button>
           <a-button type="link">下载</a-button>
           <a-button
@@ -45,6 +48,7 @@
     <CreateFolderModal @register="registerCreateFolder" />
     <MoveModal @register="registerMoveModal" />
     <UploadModal @register="registerUploadModal" />
+    <ShareModal @register="registerShareModal" />
   </div>
 </template>
 <script lang="ts">
@@ -55,14 +59,30 @@
   import BreadCrumb from './component/BreadCrumb.vue';
   import UploadModal from './component/upload/UploadModal.vue';
   import CreateFolderModal from './component/CreateFolderModal.vue';
+  import ShareModal from './component/ShareModal.vue';
   import MoveModal from './component/MoveModal.vue';
   import GIcon from '/@/components/Icon/index';
   import { useApollo } from '/@/hooks/apollo/apollo';
-  import { driveListFiles, driveDeleteFile } from '/@/hooks/apollo/gqlFile';
+  import {
+    driveListFiles,
+    driveDeleteFile,
+    drivePreviewToken,
+    driveCreateShare,
+  } from '/@/hooks/apollo/gqlFile';
   import { useModal } from '/@/components/Modal';
+  import { createImgPreview } from '/@/components/Preview/index';
   import moment from 'moment';
+  import { toLower } from 'lodash-es';
   export default defineComponent({
-    components: { BasicTable, BreadCrumb, GIcon, UploadModal, CreateFolderModal, MoveModal },
+    components: {
+      BasicTable,
+      BreadCrumb,
+      GIcon,
+      UploadModal,
+      CreateFolderModal,
+      MoveModal,
+      ShareModal,
+    },
     setup() {
       // 信息框
       const { createMessage, createErrorModal } = useMessage();
@@ -174,7 +194,7 @@
         rowSelection: {
           type: 'checkbox',
         },
-        scroll: { x: 1800, y: 800 },
+        scroll: { x: 1000, y: 800 },
       });
       // 新建文件夹Modal
       const [
@@ -185,6 +205,8 @@
       const [registerMoveModal, { openModal: openModal2, setModalProps: setModal2 }] = useModal();
       //上传Modal
       const [registerUploadModal, { openModal: openModal3, setModalProps: setModal3 }] = useModal();
+      //分享Modal
+      const [registerShareModal, { openModal: openModal4, setModalProps: setModal4 }] = useModal();
 
       // 打开新建文件夹modal
       // 传入上级文件夹ID dirId
@@ -223,6 +245,21 @@
           setModal3({
             canFullscreen: false,
             width: '70%',
+            destroyOnClose: true,
+            afterClose: () => {
+              fetchData({ dirId });
+            },
+          });
+        });
+      }
+      // 打开分享窗口
+      function openShareModal(record) {
+        openModal4(true, { record }, true);
+
+        nextTick(() => {
+          setModal4({
+            canFullscreen: false,
+            width: '30%',
             destroyOnClose: true,
             afterClose: () => {
               fetchData({ dirId });
@@ -273,6 +310,50 @@
           fetchData({ dirId: file.id });
         }
       }
+      function preview(file) {
+        switch (file.type) {
+          case 'folder':
+            break;
+          default:
+            console.log(file);
+            const id = localStorage.getItem('uid');
+            let token = '';
+            useApollo()
+              .mutate({ mutation: drivePreviewToken })
+              .then((res) => {
+                token = res?.data?.drivePreviewToken;
+                let url = `https://drive-s.owaf.io/preview/${id}/${toLower(file.space)}/${
+                  file.id
+                }/${file.fullName}.${file.type}?token=${token}`;
+                console.log(url);
+
+                console.log(token);
+                // /preview/:user_id/:space/:user_file_id/:filename?token=:token
+                createImgPreview({
+                  imageList: [url],
+                });
+              });
+        }
+      }
+
+      function share(file) {
+        switch (file.type) {
+          case 'folder':
+            break;
+          default:
+            console.log(file);
+            useApollo()
+              .mutate({
+                mutation: driveCreateShare,
+                variables: {
+                  userFileId: file.id,
+                },
+              })
+              .then((res) => {
+                console.log(res);
+              });
+        }
+      }
 
       return {
         registerTable,
@@ -288,7 +369,11 @@
         openMoveModal,
         registerUploadModal,
         openUploadModal,
+        registerShareModal,
+        openShareModal,
         del,
+        preview,
+        share,
       };
     },
   });

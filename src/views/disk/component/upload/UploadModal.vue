@@ -189,6 +189,7 @@
       // 预览
       function handlePreview(record: FileItem) {
         const { thumbUrl = '' } = record;
+        console.log(thumbUrl);
         createImgPreview({
           imageList: [thumbUrl],
         });

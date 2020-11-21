@@ -41,13 +41,11 @@ export function getBasicColumns(): BasicColumn[] {
     {
       title: '操作',
       fixed: 'right',
-      width: 50,
       slots: { customRender: 'action' },
     },
     {
       title: '大小',
       dataIndex: 'size',
-      width: 80,
       fixed: 'right',
       customRender: ({ text }) => {
         return byteTransfer(text);
