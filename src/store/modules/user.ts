@@ -150,5 +150,4 @@ class User extends VuexModule {
     });
   }
 }
-export { User };
 export const userStore = getModule<User>(User);
