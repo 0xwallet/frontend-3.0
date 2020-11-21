@@ -139,7 +139,7 @@
               .mutate({
                 mutation: driveUploadByHash,
                 variables: {
-                  fullName: [name],
+                  fullName: [...path, name],
                   hash: hash,
                 },
               })

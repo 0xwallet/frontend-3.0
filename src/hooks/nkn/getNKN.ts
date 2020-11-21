@@ -9,7 +9,6 @@ export async function useMClient(): Promise<any> {
   try {
     if (!wallet) return;
     const seed = wallet.getSeed();
-    console.log(seed);
     const NKN: any = await useNKN();
     let disk = new NKN.MultiClient({
       seed,
@@ -38,7 +37,6 @@ export function useWallet(): Promise<any> {
     if (!password) {
       reject('no walletPassword');
     }
-
     if (!wallet) {
       console.log('恢复wallet');
       useNKN().then((nkn: any) => {
