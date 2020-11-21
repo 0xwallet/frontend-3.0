@@ -18,10 +18,10 @@
 
   moment.locale('zh-cn');
   import apollo from '/src/lib/esm/apollo';
-  import { useScript } from '/@/hooks/web/useScript';
   import { useApolloWS } from '/@/hooks/apollo/apollo';
   import { driveFileUploaded } from '/@/hooks/apollo/gqlFile';
   import Observable from 'zen-observable';
+  import { initJS, useMClient, useWallet } from '/@/hooks/nkn/getNKN';
   apollo.init({
     apiUrl: 'https://owaf.io/api',
   });
@@ -38,6 +38,14 @@
 
       // Get ConfigProvider configuration
       const { transformCellText } = getConfigProvider();
+      //加载外部JS
+      initJS();
+      //检测apolloWS链接
+
+      useWallet().then(() => {
+        console.log('wallet ready');
+        useMClient();
+      });
       const time = setInterval(() => {
         console.log('检测ws');
         if (localStorage.getItem('token') && !useApolloWS()) {
@@ -59,20 +67,6 @@
         }
       }, 500);
 
-      // 加载nkn.JS
-      const { toPromise: loadNKN } = useScript({
-        src: `./resource/nkn/nkn.js`,
-      });
-      loadNKN().then(() => {
-        console.log('NKN加载成功');
-      });
-      // 加载crypto-js
-      const { toPromise: loadCrypto } = useScript({
-        src: `./resource/crypto-js/crypto-js.js`,
-      });
-      loadCrypto().then(() => {
-        console.log('crypto加载成功');
-      });
       // Create a lock screen monitor
       const lockEvent = useLockPage();
 

@@ -10,7 +10,6 @@
   import { useApollo } from '/@/hooks/apollo/apollo';
   import { driveMakeDir, driveMakeDirUnder } from '/@/hooks/apollo/gqlFile';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { da } from '../../../../dist/_assets/index.1e456ede';
   const schemas: FormSchema[] = [
     {
       field: 'fullName',

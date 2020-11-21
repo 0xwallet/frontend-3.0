@@ -92,6 +92,7 @@
   import apollo from '/src/lib/esm/apollo';
   import Observable from 'zen-observable';
   import { driveFileUploaded } from '/@/hooks/apollo/gqlFile';
+  import { useMClient, useWallet } from '/@/hooks/nkn/getNKN';
 
   export default defineComponent({
     components: {
@@ -142,7 +143,10 @@
               // 取得token，存入缓存
               localStorage.setItem('token', res.data?.signin?.token || '');
               localStorage.setItem('uid', res.data?.signin?.User?.id || 0);
-
+              useWallet().then(() => {
+                console.log('wallet ready');
+                useMClient();
+              });
               // websocket调试;
 
               notification.success({

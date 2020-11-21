@@ -126,12 +126,25 @@
                     type: 'folder',
                     fullName: v.fullName[v.fullName.length - 1],
                     size: 0,
-                    createAt: moment(v.updatedAt).format('Y-M-D H:m:s'),
+                    createAt: moment(v.updatedAt).format('Y-M-D h:m:s'),
                     hash: v.hash,
                     space: v.space,
                     desc: v.info?.description,
                   });
                 }
+                return;
+              }
+              if (v && !v.isDir) {
+                files.value.push({
+                  id: v.id,
+                  type: v.fullName[v.fullName.length - 1].split('.')[1],
+                  fullName: v.fullName[v.fullName.length - 1].split('.')[0],
+                  size: v.info.size,
+                  createAt: moment(v.updatedAt).format('Y-M-D h:m:s'),
+                  hash: v.hash,
+                  space: v.space,
+                  desc: v.info?.description,
+                });
               }
             });
 
@@ -190,7 +203,7 @@
       }
       // 打开移动窗口
       function openMoveModal() {
-        openModal2(true, getSelectRowKeys());
+        openModal2(true, getSelectRowKeys(), true);
         nextTick(() => {
           setModal2({
             canFullscreen: false,
@@ -204,7 +217,8 @@
       }
       // 打开上传窗口
       function openUploadModal() {
-        openModal3(true);
+        openModal3(true, { path });
+
         nextTick(() => {
           setModal3({
             canFullscreen: false,

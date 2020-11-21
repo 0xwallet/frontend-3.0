@@ -98,7 +98,6 @@ export function createTableColumns(): (
       title: '文件HASH',
       width: 100,
       customRender: ({ text }) => {
-        console.log(text);
         let list = [];
         for (let i = 1; i < 11; i++) {
           list.push(text.slice(2 + 6 * (i - 1), 2 + 6 * i));

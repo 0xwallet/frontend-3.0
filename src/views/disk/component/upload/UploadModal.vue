@@ -53,14 +53,15 @@
   import { checkFileType, checkImgType, getBase64WithFile } from './utils';
   import { buildUUID } from '/@/utils/uuid';
   import { createImgPreview } from '/@/components/Preview/index';
-  import { uploadApi } from '/@/api/sys/upload';
-  import { isFunction } from '/@/utils/is';
-  import { warn } from '/@/utils/log';
+
   import FileList from './FileList';
-  import { getCrypto } from '/@/hooks/nkn/getNKN';
-  import { useApollo } from '/@/hooks/apollo/apollo';
   //Apollo
+
+  import { useApollo } from '/@/hooks/apollo/apollo';
+
   import { driveUploadByHash } from '/@/hooks/apollo/gqlFile';
+  import { encode } from '@msgpack/msgpack';
+  import { useCrypto, useMClient } from '/@/hooks/nkn/getNKN';
   export default defineComponent({
     components: { BasicModal, Upload, Alert, FileList },
     props: basicProps,
@@ -71,8 +72,13 @@
       const state = reactive<{ fileList: FileItem[] }>({
         fileList: [],
       });
+      let path = [];
 
-      const [register, { closeModal }] = useModalInner();
+      const [register, { closeModal }] = useModalInner((data) => {
+        // path.value = data.path;
+
+        path = [...unref(data.path)];
+      });
 
       const { accept, helpText, maxNumber, maxSize } = toRefs(props);
       const { getAccept, getStringAccept, getHelpText } = useUploadType({
@@ -125,7 +131,7 @@
 
         let hash = '';
         file.arrayBuffer().then((res) => {
-          getCrypto().then((CryptoJS) => {
+          useCrypto().then((CryptoJS) => {
             let wordArray = CryptoJS.lib.WordArray.create(res);
             hash = CryptoJS.SHA256(wordArray).toString();
             let status = '';
@@ -137,7 +143,7 @@
                   hash: hash,
                 },
               })
-              .then((res) => {
+              .then(() => {
                 status = 'success';
               })
               .catch((err) => {})
@@ -152,7 +158,6 @@
                   type: name.split('.').pop(),
                   status,
                 };
-                console.log(commonItem);
                 // 生成图片缩略图
                 if (checkImgType(file)) {
                   // beforeUpload，如果异步会调用自带上传方法
@@ -189,26 +194,72 @@
         });
       }
 
+      const numBytes = 16 << 20;
+      const writeChunkSize = 1024;
       async function uploadApiByItem(item: FileItem) {
-        const { api } = props;
-        if (!api || !isFunction(api)) {
-          return warn('upload api must exist and be a function');
-        }
+        console.log(item);
         try {
-          item.status = UploadResultStatus.UPLOADING;
+          // 获取client session
+          const session = await useMClient();
 
-          const { data } = await uploadApi(
-            {
-              ...(props.uploadParams || {}),
-              file: item.file,
-            },
-            function onUploadProgress(progressEvent: ProgressEvent) {
-              const complete = ((progressEvent.loaded / progressEvent.total) * 100) | 0;
-              item.percent = complete;
+          const object = {
+            File: new Uint8Array(await item.file.arrayBuffer()),
+            FullName: [...path, item.name],
+            FileSize: item.size,
+            UserId: localStorage.getItem('uid'),
+            Space: 'PRIVATE',
+            Description: '',
+          };
+          item.status = UploadResultStatus.UPLOADING;
+          let timeStart = Date.now();
+          console.log(object);
+
+          const encoded: Uint8Array = encode(object);
+          console.log(encoded);
+
+          let buffer = new ArrayBuffer(4);
+          let dv = new DataView(buffer);
+          dv.setUint32(0, encoded.length, true);
+
+          await session.write(new Uint8Array(buffer));
+          let buf!: Uint8Array;
+          for (let n = 0; n < encoded.length; n += buf.length) {
+            buf = new Uint8Array(Math.min(encoded.length - n, writeChunkSize));
+            for (let i = 0; i < buf.length; i++) {
+              buf[i] = encoded[i + n];
             }
-          );
+            await session.write(buf);
+
+            if (
+              Math.floor(((n + buf.length) * 10) / encoded.length) !==
+              Math.floor((n * 10) / encoded.length)
+            ) {
+              item.percent = (((n + buf.length) / item.size) * 100) | 0;
+              let speed: number | string =
+                ((n + buf.length) / (1 << 20) / (Date.now() - timeStart)) * 1000;
+
+              if (speed > 0.9) {
+                speed = speed.toFixed(2) + ' MB/s';
+              } else if (speed * 1000 > 0.9) {
+                speed = (speed * 1000).toFixed(2) + 'KB/s';
+              } else {
+                speed = (speed * 1000 * 1000).toFixed(2) + 'B/s';
+              }
+              item.status = speed;
+
+              console.log(
+                session.localAddr,
+                'sent',
+                n + buf.length,
+                'bytes',
+                ((n + buf.length) / (1 << 20) / (Date.now() - timeStart)) * 1000000000,
+                'B/s'
+              );
+            }
+
+            // c
+          }
           item.status = UploadResultStatus.SUCCESS;
-          item.responseData = data;
           return {
             success: true,
             error: null,
@@ -221,6 +272,44 @@
             error: e,
           };
         }
+      }
+
+      async function write(session, numBytes) {
+        let timeStart = Date.now();
+        let buffer = new ArrayBuffer(4);
+        let dv = new DataView(buffer);
+        dv.setUint32(0, numBytes, true);
+        await session.write(new Uint8Array(buffer));
+        let buf;
+        for (let n = 0; n < numBytes; n += buf.length) {
+          buf = new Uint8Array(Math.min(numBytes - n, writeChunkSize));
+          for (let i = 0; i < buf.length; i++) {
+            buf[i] = byteAt(n + i);
+          }
+          await session.write(buf);
+          if (Math.floor(((n + buf.length) * 10) / numBytes) !== Math.floor((n * 10) / numBytes)) {
+            console.log(
+              session.localAddr,
+              'sent',
+              n + buf.length,
+              'bytes',
+              ((n + buf.length) / (1 << 20) / (Date.now() - timeStart)) * 1000,
+              'MB/s'
+            );
+          }
+        }
+        console.log(
+          session.localAddr,
+          'finished sending',
+          numBytes,
+          'bytes',
+          (numBytes / (1 << 20) / (Date.now() - timeStart)) * 1000,
+          'MB/s'
+        );
+      }
+
+      function byteAt(n) {
+        return n % 256;
       }
 
       // 点击开始上传

@@ -82,7 +82,7 @@
   import { useGo } from '/@/hooks/web/usePage';
   import { sendVerifyCode, signUp } from '/@/hooks/apollo/gqlUser';
   import { useApollo } from '/@/hooks/apollo/apollo';
-  import { getCrypto, getNKN } from '/@/hooks/nkn/getNKN';
+  import { useNKN, useCrypto } from '/@/hooks/nkn/getNKN';
 
   export default defineComponent({
     components: {
@@ -152,42 +152,37 @@
 
         try {
           const data = await form.validate();
-          getCrypto().then((crypto) => {
-            const secret = crypto.enc.Base64.stringify(
-              crypto.HmacSHA512(data.email, data.password)
-            );
-            getNKN().then((nkn) => {
-              // console.log(nkn);
-              let w = new nkn.Wallet({ password: secret });
-              const walletJson = JSON.stringify(w);
-              useApollo()
-                .mutate({
-                  mutation: signUp,
-                  variables: {
-                    email: data.email,
-                    password: data.password,
-                    code: data.code,
-                    username: data.email.split('@')[0],
-                    nknEncryptedWallet: walletJson,
-                    nknPublicKey: w.getPublicKey(),
-                  },
-                })
-                .then(() => {
-                  notification.success({
-                    message: '注册成功',
-                    duration: 3,
-                  });
-                  go('/login');
-                });
+
+          const CryptoJS = await useCrypto();
+          const secret = CryptoJS.enc.Base64.stringify(
+            CryptoJS.HmacSHA512(data.email, data.password)
+          );
+          const NKN = await useNKN();
+          let w = new NKN.Wallet({ password: secret });
+          const walletJson = JSON.stringify(w.toJSON());
+
+          console.log(walletJson);
+          useApollo()
+            .mutate({
+              mutation: signUp,
+              variables: {
+                email: data.email,
+                password: data.password,
+                code: data.code,
+                username: data.email.split('@')[0],
+                nknEncryptedWallet: walletJson,
+                nknPublicKey: w.getPublicKey(),
+              },
+            })
+            .then(() => {
+              localStorage.setItem('walletPassword', secret);
+              localStorage.setItem('walletJson', walletJson);
+              notification.success({
+                message: '注册成功',
+                duration: 3,
+              });
+              go('/login');
             });
-          });
-          // if (userInfo) {
-          //   notification.success({
-          //     message: '登录成功',
-          //     description: `欢迎回来: ${userInfo.realName}`,
-          //     duration: 3,
-          //   });
-          // }
         } catch (error) {
         } finally {
           // resetVerify();
