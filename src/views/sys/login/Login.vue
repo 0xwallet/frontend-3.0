@@ -92,7 +92,7 @@
   import apollo from '/src/lib/esm/apollo';
   import Observable from 'zen-observable';
   import { driveFileUploaded } from '/@/hooks/apollo/gqlFile';
-  import { useMClient, useWallet } from '/@/hooks/nkn/getNKN';
+  import { useCrypto, useMClient, useWallet } from '/@/hooks/nkn/getNKN';
 
   export default defineComponent({
     components: {
@@ -101,6 +101,10 @@
       ACheckbox: Checkbox,
     },
     setup() {
+      localStorage.setItem('walletJson', undefined);
+      localStorage.setItem('walletPassword', undefined);
+      localStorage.setItem('token', undefined);
+      localStorage.setItem('uid', undefined);
       const formRef = ref<any>(null);
       const autoLoginRef = ref(false);
       // const verifyRef = ref<RefInstanceType<DragVerifyActionType>>(null);
@@ -130,6 +134,7 @@
         try {
           const data = await form.validate();
           // 登录
+
           useApollo()
             .mutate({
               mutation: signIn,
@@ -141,12 +146,30 @@
             })
             .then((res) => {
               // 取得token，存入缓存
+              console.log(res);
+              useCrypto().then((CryptoJS) => {
+                const secret = CryptoJS.enc.Base64.stringify(
+                  CryptoJS.HmacSHA512(data.email, data.password)
+                );
+                localStorage.setItem('walletPassword', secret);
+                localStorage.setItem(
+                  'walletJson',
+                  res?.data?.signin?.User?.wallets.filter((v) => v.tags[0] == 'MESSAGE')[0]?.info
+                    ?.encryptedWallet
+                );
+                useWallet().then(() => {
+                  console.log('wallet ready');
+                  useMClient();
+                });
+              });
+
+              // const wallet = res?.data?.signin?.User?.wallets.filter(
+              //   (v) => v.tags[0] == 'MESSAGE'
+              // )[0]?.info?.encryptedWallet;
+
               localStorage.setItem('token', res.data?.signin?.token || '');
               localStorage.setItem('uid', res.data?.signin?.User?.id || 0);
-              useWallet().then(() => {
-                console.log('wallet ready');
-                useMClient();
-              });
+
               // websocket调试;
 
               notification.success({

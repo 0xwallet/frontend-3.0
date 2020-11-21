@@ -1,28 +1,28 @@
 import gql from 'graphql-tag';
-import { User } from './gqlUser';
+// import { User } from './gqlUser';
 // type
-const DriveUserFileInfo = `DriveUserFileInfo {
-  description: String
-  size: String
-  }
-`;
-const DriveSpace = `
-  enum DriveSpace {
-    PRIVATE
-    PUBLIC
-  }
-`;
-const DriveUserFile = `DriveUserFile {
-  fullName: String
-  hash: String
-  id: ID
-  info: ${DriveUserFileInfo}
-  insertedAt: NaiveDateTime
-  isDir: Boolean
-  space: ${DriveSpace}
-  updatedAt: NaiveDateTime
-  user: ${User}
-}`;
+// const DriveUserFileInfo = `DriveUserFileInfo {
+//   description: String
+//   size: String
+//   }
+// `;
+// const DriveSpace = `
+//   enum DriveSpace {
+//     PRIVATE
+//     PUBLIC
+//   }
+// `;
+// const DriveUserFile = `DriveUserFile {
+//   fullName: String
+//   hash: String
+//   id: ID
+//   info: ${DriveUserFileInfo}
+//   insertedAt: NaiveDateTime
+//   isDir: Boolean
+//   space: ${DriveSpace}
+//   updatedAt: NaiveDateTime
+//   user: ${User}
+// }`;
 // query
 // 文件查询
 export const driveListFiles = gql`

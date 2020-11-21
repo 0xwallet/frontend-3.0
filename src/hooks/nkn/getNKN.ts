@@ -31,19 +31,19 @@ export function useWallet(): Promise<any> {
   return new Promise((resolve, reject) => {
     const password = localStorage.getItem('walletPassword');
     const json = localStorage.getItem('walletJson');
-    if (!json) {
-      reject('no walletJson');
+    if (json === 'undefined' || json === 'null' || json === '') {
+      reject('no wallJson');
+      return;
     }
-    if (!password) {
+    if (password === 'undefined' || password === 'null' || password === '') {
       reject('no walletPassword');
+      return;
     }
-    if (!wallet) {
-      console.log('恢复wallet');
-      useNKN().then((nkn: any) => {
-        wallet = nkn.Wallet.fromJSON(json, { password });
-        resolve(wallet);
-      });
-    }
+
+    useNKN().then((nkn: any) => {
+      wallet = nkn.Wallet.fromJSON(json, { password });
+      resolve(wallet);
+    });
   });
 }
 

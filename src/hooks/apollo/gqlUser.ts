@@ -54,6 +54,12 @@ export const signIn = gql`
       token
       User {
         id
+        wallets {
+          tags
+          info {
+            encryptedWallet
+          }
+        }
       }
     }
   }
