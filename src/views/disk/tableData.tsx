@@ -41,18 +41,21 @@ export function getBasicColumns(): BasicColumn[] {
     {
       title: '操作',
       fixed: 'right',
+      width: 300,
       slots: { customRender: 'action' },
     },
     {
       title: '大小',
       dataIndex: 'size',
       fixed: 'right',
+      width: 100,
       customRender: ({ text }) => {
         return byteTransfer(text);
       },
     },
     {
       title: '时间',
+      width: 150,
       dataIndex: 'createAt',
       fixed: 'right',
     },
