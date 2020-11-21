@@ -1106,10 +1106,10 @@
   resolved "https://registry.npm.taobao.org/@iconify/iconify/download/@iconify/iconify-2.0.0-rc.2.tgz#c4a95ddc06ca9b9496df03604e66fdefb39f4c4b"
   integrity sha1-xKld3AbKm5SW3wNgTmb977OfTEs=
 
-"@iconify/json@^1.1.260":
-  version "1.1.260"
-  resolved "https://registry.npm.taobao.org/@iconify/json/download/@iconify/json-1.1.260.tgz#75bfcdcaf01f1a0092bb26f4ce7aebf357da431a"
-  integrity sha1-db/NyvAfGgCSuyb0znrr81faQxo=
+"@iconify/json@^1.1.261":
+  version "1.1.262"
+  resolved "https://registry.npm.taobao.org/@iconify/json/download/@iconify/json-1.1.262.tgz#a67067bad418d59c729ec514e3aa629d0ab3710b"
+  integrity sha1-pnBnutQY1ZxynsUU46pinQqzcQs=
 
 "@jumpn/utils-array@0.3.4":
   version "0.3.4"
@@ -1832,7 +1832,7 @@
     vscode-languageserver-textdocument "^1.0.1"
     vscode-uri "^2.1.2"
 
-"@vueuse/core@4.0.0-rc.3":
+"@vueuse/core@^4.0.0-rc.3":
   version "4.0.0-rc.3"
   resolved "https://registry.npm.taobao.org/@vueuse/core/download/@vueuse/core-4.0.0-rc.3.tgz#5381ca657e10df596cd7027fc5c96b2d4b3a090c"
   integrity sha1-U4HKZX4Q31ls1wJ/xclrLUs6CQw=
@@ -3385,7 +3385,7 @@ dot-prop@^5.1.0:
   dependencies:
     is-obj "^2.0.0"
 
-dot-prop@^6.0.0:
+dot-prop@^6.0.1:
   version "6.0.1"
   resolved "https://registry.npm.taobao.org/dot-prop/download/dot-prop-6.0.1.tgz?cache=0&sync_timestamp=1605778245141&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fdot-prop%2Fdownload%2Fdot-prop-6.0.1.tgz#fc26b3cf142b9e59b74dbd39ed66ce620c681083"
   integrity sha1-/CazzxQrnlm3Tb057WbOYgxoEIM=
@@ -6562,10 +6562,10 @@ prettier-linter-helpers@^1.0.0:
   dependencies:
     fast-diff "^1.1.2"
 
-prettier@^2.1.2:
-  version "2.1.2"
-  resolved "https://registry.npm.taobao.org/prettier/download/prettier-2.1.2.tgz?cache=0&sync_timestamp=1600215482255&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fprettier%2Fdownload%2Fprettier-2.1.2.tgz#3050700dae2e4c8b67c4c3f666cdb8af405e1ce5"
-  integrity sha1-MFBwDa4uTItnxMP2Zs24r0BeHOU=
+prettier@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.npm.taobao.org/prettier/download/prettier-2.2.0.tgz?cache=0&sync_timestamp=1605845802749&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fprettier%2Fdownload%2Fprettier-2.2.0.tgz#8a03c7777883b29b37fb2c4348c66a78e980418b"
+  integrity sha1-igPHd3iDsps3+yxDSMZqeOmAQYs=
 
 pretty-bytes@^5.3.0:
   version "5.4.1"
@@ -8148,10 +8148,10 @@ typescript@^3.9.7:
   resolved "https://registry.npm.taobao.org/typescript/download/typescript-3.9.7.tgz?cache=0&sync_timestamp=1605424591887&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Ftypescript%2Fdownload%2Ftypescript-3.9.7.tgz#98d600a5ebdc38f40cb277522f12dc800e9e25fa"
   integrity sha1-mNYApevcOPQMsndSLxLcgA6eJfo=
 
-typescript@^4.0.5:
-  version "4.0.5"
-  resolved "https://registry.npm.taobao.org/typescript/download/typescript-4.0.5.tgz?cache=0&sync_timestamp=1605424591887&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Ftypescript%2Fdownload%2Ftypescript-4.0.5.tgz#ae9dddfd1069f1cb5beb3ef3b2170dd7c1332389"
-  integrity sha1-rp3d/RBp8ctb6z7zshcN18EzI4k=
+typescript@^4.1.2:
+  version "4.1.2"
+  resolved "https://registry.npm.taobao.org/typescript/download/typescript-4.1.2.tgz#6369ef22516fe5e10304aae5a5c4862db55380e9"
+  integrity sha1-Y2nvIlFv5eEDBKrlpcSGLbVTgOk=
 
 uglify-js@^3.1.4:
   version "3.11.6"
@@ -8312,10 +8312,10 @@ vary@^1.1.2:
   resolved "https://registry.npm.taobao.org/vary/download/vary-1.1.2.tgz#2299f02c6ded30d4a5961b0b9f74524a18f634fc"
   integrity sha1-IpnwLG3tMNSllhsLn3RSShj2NPw=
 
-vditor@^3.6.2:
-  version "3.6.2"
-  resolved "https://registry.npm.taobao.org/vditor/download/vditor-3.6.2.tgz#ee6011efa3ec563c6356ed82efbf2e00ba2e35c6"
-  integrity sha1-7mAR76PsVjxjVu2C778uALouNcY=
+vditor@^3.6.3:
+  version "3.6.3"
+  resolved "https://registry.npm.taobao.org/vditor/download/vditor-3.6.3.tgz#7d006f273208869b268268453b688ad4a0de8995"
+  integrity sha1-fQBvJzIIhpsmgmhFO2iK1KDeiZU=
   dependencies:
     diff-match-patch "^1.0.5"
 

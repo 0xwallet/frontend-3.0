@@ -99,7 +99,9 @@ export default defineComponent({
             : unref(data) && unref(data)[field];
 
         const width = contentMinWidth;
+
         return (
+          // @ts-ignore
           <Descriptions.Item label={renderLabel(item)} key={field} span={span}>
             {() =>
               contentMinWidth ? (

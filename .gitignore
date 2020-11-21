@@ -3,7 +3,7 @@ node_modules
 dist
 .npmrc
 .cache
-
+.lock
 .local
 # local env files
 .env.local

@@ -10,7 +10,7 @@
         >
         </GIcon>
         <a-button type="link" @click="openFile(record)"
-          >{{ record.fullName }}{{ record.type === 'folder' ? '' : '.' + record.type }}</a-button
+          >{{ record.name }}{{ record.type === 'folder' ? '' : '.' + record.type }}</a-button
         >
       </template>
       <template #action="{ record }">
@@ -74,6 +74,7 @@
   import moment from 'moment';
   import { toLower } from 'lodash-es';
   import { downloadByUrl } from '/@/utils/file/download';
+  import { file } from '/@/views/disk/type/file';
   export default defineComponent({
     components: {
       BasicTable,
@@ -111,17 +112,17 @@
             // 取得返回值
             const list = res.data?.driveListFiles;
             // 重置文件夹列表，文件列表
-            folder.value = [];
-            files.value = [];
+
+            let temp = [];
             if (!list) {
               return;
             }
             // 列表[1]存在为存在上级目录，存入dirId，fullName设置为...
             if (list[1]) {
-              folder.value.push({
+              temp.push({
                 id: list[1].id,
                 type: 'folder',
-                fullName: '...',
+                name: '...',
                 size: 0,
                 createAt: '',
                 hash: '',
@@ -130,46 +131,30 @@
               });
             }
             // 遍历返回信息，组成表格信息
+            let p = [];
+            let f = [];
             list.forEach((v) => {
-              // 是目录
-              if (v && v.isDir) {
-                if (v.fullName.length > 0) {
-                  if (params) {
-                    if (v.id === params.dirId) {
-                      return;
-                    }
-                  }
-                  if (list[0].fullName.length > v.fullName.length) {
-                    return;
-                  }
-                  folder.value.push({
-                    id: v.id,
-                    type: 'folder',
-                    fullName: v.fullName[v.fullName.length - 1],
-                    size: 0,
-                    createAt: moment(v.updatedAt).format('Y-M-D h:m:s'),
-                    hash: v.hash,
-                    space: v.space,
-                    desc: v.info?.description,
-                  });
-                }
+              if (!v) {
                 return;
               }
-              if (v && !v.isDir) {
-                files.value.push({
-                  id: v.id,
-                  type: v.fullName[v.fullName.length - 1].split('.')[1],
-                  fullName: v.fullName[v.fullName.length - 1].split('.')[0],
-                  size: v.info.size,
-                  createAt: moment(v.updatedAt).format('Y-M-D h:m:s'),
-                  hash: v.hash,
-                  space: v.space,
-                  desc: v.info?.description,
-                });
+              // 是目录
+              if (v.isDir) {
+                if (dirId === v.id) {
+                  return;
+                }
+                if (dirId === '' && v.id === 'root') {
+                  return;
+                }
+                if (temp.length > 0 && temp[0].id == v.id) {
+                  return;
+                }
+                p.push(new file({ userFile: v }));
+              } else {
+                f.push(new file({ userFile: v }));
               }
             });
-
-            // console.log(data.driveListFiles);
+            folder.value = temp.concat(p);
+            files.value = f;
           })
           .catch((err) => {
             console.log(err);

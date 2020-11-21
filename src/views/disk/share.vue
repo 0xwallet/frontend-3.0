@@ -8,7 +8,7 @@
         >
         </GIcon>
         <a-button type="link" @click="openFile(record)"
-          >{{ record.fullName }}{{ record.type === 'folder' ? '' : '.' + record.type }}</a-button
+          >{{ record.name }}{{ record.type === 'folder' ? '' : '.' + record.type }}</a-button
         >
       </template>
       <template #action="{ record }">
@@ -34,11 +34,12 @@
   import { driveListShares, driveDeleteShare } from '/@/hooks/apollo/gqlFile';
   import moment from 'moment';
   import { getBasicColumns } from '/@/views/disk/component/shareData';
+  import { file } from '/@/views/disk/type/file';
 
   export default defineComponent({
     components: { BasicTable, GIcon },
     setup() {
-      const { createMessage } = useMessage();
+      const { createMessage, createErrorModal } = useMessage();
       const path = ref([]);
       const tableData = ref([]);
       const [
@@ -54,7 +55,6 @@
       });
 
       function fetchData() {
-        tableData.value = [];
         useApollo()
           .query({
             query: driveListShares,
@@ -62,20 +62,14 @@
           })
           .then((res) => {
             const list = res?.data?.driveListShares;
+            let temp = [];
             list.forEach((v) => {
-              tableData.value.push({
-                shareId: v.id,
-                id: v.userFile.id,
-                fullName: v.userFile.fullName[v.userFile.fullName.length - 1].split('.')[0],
-                type: v.userFile.fullName[v.userFile.fullName.length - 1].split('.')[1],
-                hash: v.userFile.hash,
-                size: v.userFile.info.size,
-                uri: v.uri,
-                token: v.token,
-                code: v.code,
-              });
+              let f = new file(v);
+              temp.push(f);
             });
-            console.log(tableData.value);
+            tableData.value = temp;
+            console.log(temp);
+
             // console.log(data.driveListFiles);
           })
           .catch((err) => {

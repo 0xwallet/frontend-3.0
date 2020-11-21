@@ -55,8 +55,11 @@ export const driveListShares = gql`
         fullName
         hash
         id
+        isDir
+        space
         info {
           size
+          description
         }
       }
     }
