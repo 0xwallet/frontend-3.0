@@ -15,13 +15,13 @@
       </template>
       <template #action="{ record }">
         <div>
-          <a-button type="link" v-if="record.type !== 'folder'">详情</a-button>
+          <!--          <a-button type="link" v-if="record.type !== 'folder'">详情</a-button>-->
           <a-button type="link" v-if="record.type !== 'folder'" @click="preview(record)"
             >预览</a-button
           >
           <a-button type="link" @click="openShareModal(record)">分享</a-button>
-          <a-button type="link">复制路径</a-button>
-          <a-button type="link">下载</a-button>
+          <!--          <a-button type="link">复制路径</a-button>-->
+          <a-button type="link" @click="download(record)">下载</a-button>
           <a-button
             type="link"
             color="error"
@@ -73,6 +73,7 @@
   import { createImgPreview } from '/@/components/Preview/index';
   import moment from 'moment';
   import { toLower } from 'lodash-es';
+  import { downloadByUrl } from '/@/utils/file/download';
   export default defineComponent({
     components: {
       BasicTable,
@@ -335,6 +336,29 @@
               });
         }
       }
+      function download(file) {
+        switch (file.type) {
+          case 'folder':
+            break;
+          default:
+            const id = localStorage.getItem('uid');
+            let token = '';
+            useApollo()
+              .mutate({ mutation: drivePreviewToken })
+              .then((res) => {
+                token = res?.data?.drivePreviewToken;
+                let url = `https://drive-s.owaf.io/download/${id}/${toLower(file.space)}/${
+                  file.id
+                }/${file.fullName}.${file.type}?token=${token}`;
+
+                // /preview/:user_id/:space/:user_file_id/:filename?token=:token
+                downloadByUrl({
+                  url: url,
+                  target: '_self',
+                });
+              });
+        }
+      }
 
       function share(file) {
         switch (file.type) {
@@ -374,6 +398,7 @@
         del,
         preview,
         share,
+        download,
       };
     },
   });
