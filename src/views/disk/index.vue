@@ -60,7 +60,7 @@
   import BreadCrumb from './component/BreadCrumb.vue';
   import UploadModal from './component/upload/UploadModal.vue';
   import CreateFolderModal from './component/CreateFolderModal.vue';
-  import ShareModal from './component/ShareModal.vue';
+  import ShareModal from './share/ShareModal.vue';
   import MoveModal from './component/MoveModal.vue';
   import GIcon from '/@/components/Icon/index';
   import { useApollo } from '/@/hooks/apollo/apollo';
@@ -288,7 +288,6 @@
           case 'folder':
             break;
           default:
-            console.log(file);
             const id = localStorage.getItem('uid');
             let token = '';
             useApollo()

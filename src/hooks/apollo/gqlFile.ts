@@ -66,6 +66,30 @@ export const driveListShares = gql`
   }
 `;
 
+//分享文件
+export const driveFindShare = gql`
+  query($uri: String!, $code: String) {
+    driveFindShare(uri: $uri, code: $code) {
+      code
+      id
+      token
+      uri
+      expiredAt
+      userFile {
+        fullName
+        hash
+        id
+        isDir
+        space
+        info {
+          size
+          description
+        }
+      }
+    }
+  }
+`;
+
 // mutations
 // 新建目录
 export const driveMakeDir = gql`

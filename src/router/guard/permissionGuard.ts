@@ -11,8 +11,9 @@ import { RootRoute } from '../routes/index';
 
 const LOGIN_PATH = PageEnum.BASE_LOGIN;
 const REG_PATH = PageEnum.BASE_REG;
+const SHARE_PAGE = PageEnum.SHARE_PAGE;
 
-const whitePathList: PageEnum[] = [LOGIN_PATH, REG_PATH];
+const whitePathList: PageEnum[] = [LOGIN_PATH, REG_PATH, SHARE_PAGE];
 
 export function createPermissionGuard(router: Router) {
   router.beforeEach(async (to, from, next) => {

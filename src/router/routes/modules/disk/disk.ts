@@ -26,7 +26,7 @@ export default {
     {
       path: '/share',
       name: 'Share',
-      component: () => import('/@/views/disk/share.vue'),
+      component: () => import('/@/views/disk/share/share.vue'),
       meta: {
         title: '我的分享',
       },
@@ -37,6 +37,14 @@ export default {
       component: () => import('/@/views/disk/recycle.vue'),
       meta: {
         title: '回收站',
+      },
+    },
+    {
+      path: '/shareFile/:uri',
+      name: 'ShareFile',
+      component: () => import('/@/views/disk/share/shareFile.vue'),
+      meta: {
+        title: '文件分享',
       },
     },
   ],

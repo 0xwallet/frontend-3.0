@@ -11,6 +11,10 @@
           >{{ record.name }}{{ record.type === 'folder' ? '' : '.' + record.type }}</a-button
         >
       </template>
+
+      <template #uri="{ text }">
+        <a-button type="link" @click="copyUrl(text)"> {{ text }}</a-button>
+      </template>
       <template #action="{ record }">
         <div>
           <a-button
@@ -26,15 +30,15 @@
   </div>
 </template>
 <script lang="ts">
-  import { defineComponent, computed, ref } from 'vue';
+  import { defineComponent, computed, ref, unref } from 'vue';
   import { BasicTable, useTable } from '/@/components/Table';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import GIcon from '/@/components/Icon/index';
+  import GIcon from '/@/components/Icon';
   import { useApollo } from '/@/hooks/apollo/apollo';
   import { driveListShares, driveDeleteShare } from '/@/hooks/apollo/gqlFile';
-  import moment from 'moment';
-  import { getBasicColumns } from '/@/views/disk/component/shareData';
+  import { getBasicColumns } from '/@/views/disk/share/shareData';
   import { file } from '/@/views/disk/type/file';
+  import { useCopyToClipboard } from '/@/hooks/web/useCopyToClipboard';
 
   export default defineComponent({
     components: { BasicTable, GIcon },
@@ -42,6 +46,7 @@
       const { createMessage, createErrorModal } = useMessage();
       const path = ref([]);
       const tableData = ref([]);
+      const origin = window.location.origin;
       const [
         registerTable,
         { getSelectRowKeys, setSelectedRowKeys, clearSelectedRowKeys, getDataSource, reload },
@@ -53,7 +58,6 @@
         rowKey: 'id',
         showIndexColumn: false,
       });
-
       function fetchData() {
         useApollo()
           .query({
@@ -68,7 +72,6 @@
               temp.push(f);
             });
             tableData.value = temp;
-            console.log(temp);
 
             // console.log(data.driveListFiles);
           })
@@ -114,6 +117,16 @@
       function clearSelect() {
         clearSelectedRowKeys();
       }
+      const { clipboardRef, copiedRef } = useCopyToClipboard();
+      function copyUrl(uri) {
+        if (uri === '') {
+          return;
+        }
+        clipboardRef.value = `${window.location.origin}/#/disk/shareFile/${uri}`;
+        if (unref(copiedRef)) {
+          createMessage.warning('copy success！');
+        }
+      }
 
       return {
         registerTable,
@@ -123,6 +136,8 @@
         path,
         reload,
         del,
+        origin,
+        copyUrl,
       };
     },
   });

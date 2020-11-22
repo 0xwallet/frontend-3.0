@@ -35,6 +35,8 @@ export function getBasicColumns(): BasicColumn[] {
     {
       title: '网址',
       dataIndex: 'uri',
+      width: 300,
+      slots: { customRender: 'uri' },
     },
     {
       title: 'code',
