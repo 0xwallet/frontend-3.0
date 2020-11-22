@@ -1,11 +1,13 @@
 <template>
   <Breadcrumb>
-    <BreadcrumbItem v-for="(path, index) in paths" :key="index">{{ path }}</BreadcrumbItem>
+    <BreadcrumbItem v-for="(path, index) in paths" :key="index">
+      <a-button @click="go(path)" type="link">{{ path.name }}</a-button>
+    </BreadcrumbItem>
   </Breadcrumb>
 </template>
 
 <script>
-  import { defineComponent, computed } from 'vue';
+  import { defineComponent, computed, ref, watch } from 'vue';
   import { Breadcrumb } from 'ant-design-vue';
 
   export default defineComponent({
@@ -14,12 +16,16 @@
       path: Array,
     },
     components: { Breadcrumb, BreadcrumbItem: Breadcrumb.Item },
-    setup(props) {
+    setup(props, { emit }) {
       const paths = computed(() => {
-        return ['全部'].concat(props.path);
+        return [{ name: '全部', dirId: 'root' }].concat(props.path);
       });
+      function go(path) {
+        emit('jump', path);
+      }
       return {
         paths,
+        go,
       };
     },
   });

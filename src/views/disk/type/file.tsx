@@ -1,5 +1,3 @@
-import { number } from 'vue-i18n';
-
 interface fileParams {
   userFile: userFile;
   shareId?: string;

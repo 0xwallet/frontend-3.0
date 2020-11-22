@@ -1,6 +1,6 @@
 <template>
   <div class="p-4">
-    <BreadCrumb :path="path" />
+    <BreadCrumb :path="path" @jump="goPath" />
     <!--    <UploadFile />-->
     <BasicTable @register="registerTable">
       <template #name="{ record }">
@@ -9,6 +9,7 @@
           size="30"
         >
         </GIcon>
+
         <a-button type="link" @click="openFile(record)"
           >{{ record.name }}{{ record.type === 'folder' ? '' : '.' + record.type }}</a-button
         >
@@ -52,7 +53,7 @@
   </div>
 </template>
 <script lang="ts">
-  import { defineComponent, computed, ref, nextTick } from 'vue';
+  import { defineComponent, computed, ref, nextTick, unref } from 'vue';
   import { BasicTable, useTable } from '/@/components/Table';
   import { getBasicColumns } from './tableData';
   import { useMessage } from '/@/hooks/web/useMessage';
@@ -71,7 +72,6 @@
   } from '/@/hooks/apollo/gqlFile';
   import { useModal } from '/@/components/Modal';
   import { createImgPreview } from '/@/components/Preview/index';
-  import moment from 'moment';
   import { toLower } from 'lodash-es';
   import { downloadByUrl } from '/@/utils/file/download';
   import { file } from '/@/views/disk/type/file';
@@ -105,7 +105,7 @@
         useApollo()
           .query({
             query: driveListFiles,
-            variables: params.dirId == '' ? {} : params,
+            variables: params,
             fetchPolicy: 'no-cache',
           })
           .then((res) => {
@@ -121,6 +121,7 @@
             if (list[1]) {
               temp.push({
                 id: list[1].id,
+                fullName: list[1].fullName,
                 type: 'folder',
                 name: '...',
                 size: 0,
@@ -128,6 +129,7 @@
                 hash: '',
                 space: list[1].space,
                 desc: '',
+                isDir: true,
               });
             }
             // 遍历返回信息，组成表格信息
@@ -139,7 +141,7 @@
               }
               // 是目录
               if (v.isDir) {
-                if (dirId === v.id) {
+                if (params.dirId === v.id) {
                   return;
                 }
                 if (dirId === '' && v.id === 'root') {
@@ -280,22 +282,7 @@
       function clearSelect() {
         clearSelectedRowKeys();
       }
-      // 打开文件或者进入目录
-      function openFile(file) {
-        // 进入目录
-        if (file.type === 'folder') {
-          // ...为上级目录
-          if (file.fullName === '...') {
-            path.value.pop();
-          } else {
-            path.value.push(file.fullName);
-          }
-          // 保存最新进入的目录ID
-          dirId = file.id || 'root';
-          // 根据ID获取最新进入目录文件
-          fetchData({ dirId: file.id });
-        }
-      }
+
       function preview(file) {
         switch (file.type) {
           case 'folder':
@@ -364,6 +351,39 @@
         }
       }
 
+      function goPath(p) {
+        fetchData({ dirId: p.dirId });
+        if (p.dirId === 'root') {
+          path.value = [];
+          return;
+        }
+        let l = [];
+        path.value.forEach((v) => {
+          l.push(v);
+          if (v.dirId == p.dirId) {
+            path.value = [...l];
+          }
+        });
+      }
+      // 打开文件或者进入目录
+      function openFile(f: file) {
+        if (!f.isDir) {
+          return;
+        }
+        fetchData({ dirId: f.id });
+        // TODO 这里有个迷之BUG，name自己变成...
+        if (f.name === '...') {
+          if (f.fullName.length > 0) {
+            path.value.push({ name: f.fullName[f.fullName.length - 1], dirId: f.id });
+            return;
+          }
+          path.value.pop();
+          return;
+        }
+        path.value.push({ name: f.name, dirId: f.id });
+        // 根据ID获取最新进入目录文件
+      }
+
       return {
         registerTable,
         setSelectedRowKeyList,
@@ -384,6 +404,7 @@
         preview,
         share,
         download,
+        goPath,
       };
     },
   });
