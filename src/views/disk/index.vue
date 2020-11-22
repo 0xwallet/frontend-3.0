@@ -1,7 +1,6 @@
 <template>
   <div class="p-4">
     <BreadCrumb :path="path" @jump="goPath" />
-    <!--    <UploadFile />-->
     <BasicTable @register="registerTable">
       <template #name="{ record }">
         <GIcon
@@ -27,7 +26,7 @@
             type="link"
             color="error"
             :pop="{ title: '删除' + record.fullName + '?' }"
-            @click="del(record)"
+            @click="delFile(record)"
             >删除</a-button
           ></div
         >
@@ -36,7 +35,14 @@
         <a-button type="primary" @click="setSelectedRowKeyList">
           {{ !choose ? '全选' : '取消' }}
         </a-button>
-        <a-button type="primary" v-show="choose"> 删除 </a-button>
+        <a-button
+          v-show="choose"
+          type="primary"
+          color="success"
+          :pop="{ title: `删除选中的${getSelectRowKeys().length}个文件?` }"
+          @click="delFiles"
+          >删除</a-button
+        >
         <a-button type="primary" v-show="choose"> 下载 </a-button>
         <a-button type="primary" v-show="!choose" @click="openMoveModal"> 移动 </a-button>
         <a-button type="primary" v-show="choose"> 分享 </a-button>
@@ -69,6 +75,7 @@
     driveDeleteFile,
     drivePreviewToken,
     driveCreateShare,
+    driveDeleteFiles,
   } from '/@/hooks/apollo/gqlFile';
   import { useModal } from '/@/components/Modal';
   import { createImgPreview } from '/@/components/Preview/index';
@@ -90,7 +97,7 @@
       const { createMessage, createErrorModal } = useMessage();
       // 文件路径面包屑
       const path = ref([]);
-      let dirId = '';
+      let dirId = 'root';
       // 表格数据
       // 文件夹数据+文件数据
       const tableData = computed(() => {
@@ -102,6 +109,7 @@
       const files = ref([]);
       // 根据ID获取数据 默认root目录
       function fetchData(params = { dirId: 'root' }) {
+        console.log(params);
         useApollo()
           .query({
             query: driveListFiles,
@@ -200,6 +208,7 @@
       // 传入上级文件夹ID dirId
       // 传入本级文件夹名，防止重名 folder
       function openCreateFolderModal() {
+        console.log(dirId);
         openModal1(true, { folder, dirId });
         nextTick(() => {
           setModal1({
@@ -256,9 +265,28 @@
         });
       }
       // 删除文件或文件夹
-      function del(file) {
+      function delFile(file) {
         useApollo()
           .mutate({ mutation: driveDeleteFile, variables: file })
+          .finally(() => {
+            fetchData({ dirId });
+          });
+      }
+      //批量删除文件
+      function delFiles() {
+        if (getSelectRowKeys().length === 0) {
+          createErrorModal({ title: '错误', content: '未选择文件' });
+          return;
+        }
+        useApollo()
+          .mutate({
+            mutation: driveDeleteFiles,
+            variables: { ids: getSelectRowKeys(), space: 'PRIVATE' },
+          })
+          .then((res) => {
+            const count = res.data?.driveDeleteFiles;
+            createMessage.success(`成功删除${count}个文件`);
+          })
           .finally(() => {
             fetchData({ dirId });
           });
@@ -369,6 +397,7 @@
         if (!f.isDir) {
           return;
         }
+        dirId = f.id;
         fetchData({ dirId: f.id });
         // TODO 这里有个迷之BUG，name自己变成...
         if (f.name === '...') {
@@ -399,11 +428,13 @@
         openUploadModal,
         registerShareModal,
         openShareModal,
-        del,
+        delFile,
         preview,
         share,
         download,
         goPath,
+        delFiles,
+        getSelectRowKeys,
       };
     },
   });

@@ -121,6 +121,12 @@ export const driveDeleteFile = gql`
     driveDeleteFile(id: $id, space: $space)
   }
 `;
+// 批量删除文件
+export const driveDeleteFiles = gql`
+  mutation($ids: [String]!, $space: Sting!) {
+    driveDeleteFiles(ids: $ids, space: $space)
+  }
+`;
 // 根据hash查询
 export const driveUploadByHash = gql`
   mutation($fullName: [String]!, $hash: Sting!) {
