@@ -1,16 +1,6 @@
 import gql from 'graphql-tag';
-
-// mutations
-
-// 邮件验证码
-export const sendVerifyCode = gql`
-  mutation($email: String, $type: VerifyCodeType) {
-    sendVerifyCode(email: $email, type: $type)
-  }
-`;
 // 用户结构体
 export const User = `
-  User {
   id
   avatar
   email
@@ -22,7 +12,36 @@ export const User = `
   }
   role
   type
-}`;
+`;
+//query
+export const me = gql`
+  query {
+    me{
+    ${User}
+    }
+  }
+`;
+
+// mutations
+// 修改密码
+export const resetPassword = gql`
+  mutation($email: String!, $newPassword: String!, $oldPassword: String = "") {
+    resetPassword(email: $email, newPassword: $newPassword, oldPassword: $oldPassword) {
+      token
+      User {
+        id
+      }
+    }
+  }
+`;
+
+// 邮件验证码
+export const sendVerifyCode = gql`
+  mutation($email: String, $type: VerifyCodeType) {
+    sendVerifyCode(email: $email, type: $type)
+  }
+`;
+
 // 用户注册
 export const signUp = gql`
   mutation(

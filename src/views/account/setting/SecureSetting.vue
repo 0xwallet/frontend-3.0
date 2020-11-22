@@ -1,34 +1,45 @@
 <template>
   <CollapseContainer title="安全设置" :canExpan="false">
     <List>
-      <template v-for="item in list" :key="item.key">
-        <ListItem>
-          <ListItemMeta>
-            <template #title>
-              {{ item.title }}
-              <div class="extra" v-if="item.extra"> {{ item.extra }} </div>
-            </template>
-            <template #description>
-              <div>{{ item.description }} </div>
-            </template>
-          </ListItemMeta>
-        </ListItem>
-      </template>
+      <ListItem>
+        <ListItemMeta>
+          <template #title>
+            账户密码
+            <div class="extra"> <a-button type="link" @click="openPWModal">修改</a-button> </div>
+          </template>
+          <template #description>
+            <div>当前密码强度：强 </div>
+          </template>
+        </ListItemMeta>
+      </ListItem>
     </List>
+    <changePWModal @register="registerModal" />
   </CollapseContainer>
 </template>
 <script lang="ts">
   import { List } from 'ant-design-vue';
-  import { defineComponent, onMounted } from 'vue';
+  import { defineComponent } from 'vue';
   import { CollapseContainer } from '/@/components/Container/index';
 
-  import { secureSettingList } from './data';
+  import changePWModal from './changePWModal.vue';
+  import { useModal } from '/@/components/Modal';
 
   export default defineComponent({
-    components: { CollapseContainer, List, ListItem: List.Item, ListItemMeta: List.Item.Meta },
+    components: {
+      CollapseContainer,
+      List,
+      ListItem: List.Item,
+      ListItemMeta: List.Item.Meta,
+      changePWModal,
+    },
     setup() {
+      const [registerModal, { openModal }] = useModal();
+      function openPWModal() {
+        openModal(true);
+      }
       return {
-        list: secureSettingList,
+        registerModal,
+        openPWModal,
       };
     },
   });
