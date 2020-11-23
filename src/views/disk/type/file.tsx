@@ -64,6 +64,7 @@ export class File {
     this.path = params.userFile.fullName.slice(0, params.userFile.fullName.length - 1);
     this.size = Number(params.userFile.info.size);
     this.desc = params.userFile.info.description;
+
     this.code = params.code;
     this.token = params.token;
     this.uri = params.uri;

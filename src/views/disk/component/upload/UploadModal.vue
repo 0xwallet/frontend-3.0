@@ -135,6 +135,7 @@
             let wordArray = CryptoJS.lib.WordArray.create(res);
             hash = CryptoJS.SHA256(wordArray).toString();
             let status = '';
+
             useApollo()
               .mutate({
                 mutation: driveUploadByHash,
@@ -198,7 +199,6 @@
       const numBytes = 16 << 20;
       const writeChunkSize = 1024;
       async function uploadApiByItem(item: FileItem) {
-        console.log(item);
         try {
           // 获取client session
           const session = await useMClient();
@@ -213,15 +213,10 @@
           };
           item.status = UploadResultStatus.UPLOADING;
           let timeStart = Date.now();
-          console.log(object);
-
           const encoded: Uint8Array = encode(object);
-          console.log(encoded);
-
           let buffer = new ArrayBuffer(4);
           let dv = new DataView(buffer);
           dv.setUint32(0, encoded.length, true);
-
           await session.write(new Uint8Array(buffer));
           let buf!: Uint8Array;
           for (let n = 0; n < encoded.length; n += buf.length) {

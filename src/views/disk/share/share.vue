@@ -1,22 +1,11 @@
 <template>
   <div class="p-4">
     <BasicTable @register="registerTable">
-      <template #name="{ record }">
-        <GIcon
-          :icon="record.type === 'folder' ? 'bx-bx-folder' : 'bx-bxs-file-' + record.type"
-          size="30"
-        >
-        </GIcon>
-        <a-button type="link" @click="openFile(record)"
-          >{{ record.name }}{{ record.type === 'folder' ? '' : '.' + record.type }}</a-button
-        >
-      </template>
-
       <template #uri="{ record, text }">
         <a-button type="link" @click="copyUrl(record)"> {{ text }}</a-button>
       </template>
       <template #action="{ record }">
-        <div>
+        <div v-if="record.name !== 'deleted'">
           <a-button
             type="link"
             color="error"
@@ -70,6 +59,12 @@
             const list = res?.data?.driveListShares;
             let temp = [];
             list.forEach((v) => {
+              if (v.userFile === null) {
+                temp.push({
+                  name: 'deleted',
+                });
+                return;
+              }
               let f = new File(v);
               temp.push(f);
             });
