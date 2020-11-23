@@ -129,6 +129,7 @@ const viteConfig: UserConfig = {
     include: [
       'echarts/map/js/china',
       'ant-design-vue/es/locale/zh_CN',
+      'ant-design-vue/es/locale/en_US',
       '@ant-design/icons-vue',
       // 'zen-observable',
       // 'fast-json-stable-stringify',
@@ -140,6 +141,7 @@ const viteConfig: UserConfig = {
       'phoenix/assets/js/phoenix',
     ],
     // allowNodeBuiltins: ['crypto-js', 'vben-admin-2.0'],
+
   },
 
   // Local cross-domain proxy

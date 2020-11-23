@@ -4,6 +4,7 @@
     <div class="login-form-wrap">
       <div class="login-form mx-6">
         <div class="login-form__content px-2 py-10">
+          <AppLocalPicker class="login-form__locale" />
           <header>
             <img :src="logo" class="mr-4" />
             <h1>{{ title }}</h1>
@@ -34,14 +35,17 @@
             <a-row>
               <a-col :span="12">
                 <a-form-item>
-                  <!-- 未做逻辑，需要自行处理 -->
-                  <a-checkbox v-model:checked="autoLogin" size="small">自动登录</a-checkbox>
+
+                  <!-- No logic, you need to deal with it yourself -->
+                  <a-checkbox v-model:checked="autoLogin" size="small">{{
+                    t('sys.login.autoLogin')
+                  }}</a-checkbox>
                 </a-form-item>
               </a-col>
               <a-col :span="12">
                 <a-form-item :style="{ 'text-align': 'right' }">
-                  <!-- 未做逻辑，需要自行处理 -->
-                  <a-button type="link" size="small">忘记密码</a-button>
+                  <!-- No logic, you need to deal with it yourself -->
+                  <a-button type="link" size="small">{{ t('sys.login.forgetPassword') }}</a-button>
                 </a-form-item>
               </a-col>
             </a-row>
@@ -53,7 +57,7 @@
                 :block="true"
                 @click="login"
                 :loading="formState.loading"
-                >登录</a-button
+                >{{ t('sys.login.loginButton') }}</a-button
               >
             </a-form-item>
             <a-form-item>
@@ -81,10 +85,12 @@
   import { Checkbox } from 'ant-design-vue';
 
   import Button from '/@/components/Button/index.vue';
+  import { AppLocalPicker } from '/@/components/Application';
+  // import { BasicDragVerify, DragVerifyActionType } from '/@/components/Verify/index';
 
   import { userStore } from '/@/store/modules/user';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { useSetting } from '/@/hooks/core/useSetting';
+  import { useGlobSetting } from '/@/settings/use';
   import logo from '/@/assets/images/logo.png';
   import { useGo } from '/@/hooks/web/usePage';
   import { signIn } from '/@/hooks/apollo/gqlUser';
@@ -99,6 +105,7 @@
       //  BasicDragVerify,
       AButton: Button,
       ACheckbox: Checkbox,
+      AppLocalPicker,
     },
     setup() {
       localStorage.setItem('walletJson', undefined);
@@ -109,8 +116,10 @@
       const autoLoginRef = ref(false);
       // const verifyRef = ref<RefInstanceType<DragVerifyActionType>>(null);
       const go = useGo();
-      const { globSetting } = useSetting();
       const { notification, createErrorModal } = useMessage();
+
+      const globSetting = useGlobSetting();
+      const { t } = useI18n();
 
       // const openLoginVerifyRef = computed(() => appStore.getProjectConfig.openLoginVerify);
 
@@ -123,8 +132,8 @@
       });
 
       const formRules = reactive({
-        email: [{ required: true, message: '请输入邮箱', trigger: 'blur' }],
-        password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
+        email: [{ required: true, message: t('sys.login.accountPlaceholder'), trigger: 'blur' }],
+        password: [{ required: true, message: t('sys.login.passwordPlaceholder'), trigger: 'blur' }],
       });
 
       async function handleLogin() {
@@ -173,8 +182,8 @@
               // websocket调试;
 
               notification.success({
-                message: '登录成功',
-                description: `欢迎回来: ${res.data?.signin?.User?.email}`,
+                message: t('sys.login.loginSuccessTitle'),
+                description: `${t('sys.login.loginSuccessDesc')}: ${res.data?.signin?.User?.email}`,
                 duration: 3,
               });
               userStore.login();
@@ -251,7 +260,14 @@
         .respond-to(xlarge, { width: 100vw; right:0});
       }
 
+      &__locale {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+      }
+
       &__content {
+        position: relative;
         width: 100%;
         height: 100%;
         border: 1px solid #999;
