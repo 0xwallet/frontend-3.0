@@ -1,70 +1,86 @@
 <template>
-  <BasicModal v-bind="$attrs" @register="register" title="新建文件夹">
-    <BasicTree :treeData="treeData" :loadData="onLoadData" />
+  <BasicModal v-bind="$attrs" @register="register" title="移动文件" @ok="moveFile">
+    <Row
+      ><Col>选择了{{ total }}个文件,已处理{{ now }}个</Col
+      ><Col><Progress :percent="total === 0 ? 0 : (now / total) * 100" /></Col
+    ></Row>
+    <Tree :treeData="treeData" :loadData="onLoadData" v-model:selectedKeys="path" />
   </BasicModal>
 </template>
 <script lang="ts">
-  import { defineComponent, ref, nextTick } from 'vue';
+  import { defineComponent, ref } from 'vue';
   import { BasicModal, useModalInner } from '/@/components/Modal';
-  import { BasicTree, TreeItem } from '/@/components/Tree/index';
+  import { Tree, Progress, Row, Col } from 'ant-design-vue';
   import { useApollo } from '/@/hooks/apollo/apollo';
-  import { driveListFiles, driveMakeDir, driveMakeDirUnder } from '/@/hooks/apollo/gqlFile';
+  import { driveListFiles, driveMoveFile } from '/@/hooks/apollo/gqlFile';
   import { useMessage } from '/@/hooks/web/useMessage';
-  export const treeData: TreeItem[] = [
-    {
-      title: 'parent 1',
-      key: '0-0',
-      icon: 'home|svg',
-    },
-    {
-      title: 'parent 2',
-      key: '1-1',
-      icon: 'home|svg',
-    },
-    {
-      title: 'parent 3',
-      key: '2-2',
-      icon: 'home|svg',
-    },
-  ];
+  import { TreeItem } from '/@/components/Tree/index';
   export default defineComponent({
-    components: { BasicModal, BasicTree },
+    components: { BasicModal, Tree, Progress, Row, Col },
     setup() {
-      const { createErrorModal } = useMessage();
-
-      const [register, { closeModal }] = useModalInner((data) => {
-        console.log(data);
+      const { createMessage, createErrorModal } = useMessage();
+      let folder: string[] = [];
+      const total = ref(0);
+      const now = ref(0);
+      const path = ref([]);
+      const treeData = ref([{ title: '根目录', key: 'root', value: 'root' }] as TreeItem[]);
+      const [register] = useModalInner((data) => {
+        folder = data.folder;
+        total.value = data.folder.length;
+        path.value = [data.path[data.path.length - 1]];
       });
-      function fetchData(params) {
-        useApollo()
+
+      function onLoadData(treeNode) {
+        if (treeNode.dataRef.children) {
+          return;
+        }
+        return useApollo()
           .query({
             query: driveListFiles,
-            variables: params,
+            variables: { dirId: treeNode.value },
             fetchPolicy: 'no-cache',
           })
           .then((res) => {
-            console.log(res);
+            let temp: TreeItem[] = [];
+            if (!res.data.driveListFiles) {
+              return;
+            }
+            res.data.driveListFiles.forEach((v, index) => {
+              if (index < 2) {
+                return;
+              }
+              if (v && v.isDir && v.id !== 'root' && v.id != treeNode.value) {
+                temp.push({ title: v.fullName[v.fullName.length - 1], key: v.id, value: v.id });
+              }
+            });
+            treeNode.dataRef.children = temp;
           });
       }
-      function onLoadData(treeNode) {
-        console.log(treeNode);
-        return new Promise((resolve) => {
-          console.log(treeNode);
-          if (treeNode.dataRef.children) {
-            resolve();
-            return;
+      async function moveFile() {
+        try {
+          now.value = 0;
+          for (let i = 0; i < folder.length; i++) {
+            if (folder[i] != path.value[0]) {
+              await useApollo().mutate({
+                mutation: driveMoveFile,
+                variables: {
+                  fromId: folder[i],
+                  toId: path.value[0],
+                },
+              });
+              now.value += 1;
+            }
           }
-          setTimeout(() => {
-            treeNode.dataRef.children = [
-              { title: 'Child Node', key: `${treeNode.eventKey}-0` },
-              { title: 'Child Node', key: `${treeNode.eventKey}-1` },
-            ];
-            resolve();
-          }, 1000);
-        });
-      }
 
-      return { register, treeData, onLoadData };
+          //
+        } catch (err) {
+          console.log(err);
+          createErrorModal({ title: '错误', content: err.message });
+        } finally {
+          createMessage.success('成功移动' + now.value + '个文件');
+        }
+      }
+      return { register, treeData, onLoadData, moveFile, path, total, now };
     },
   });
 </script>

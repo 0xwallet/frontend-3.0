@@ -44,7 +44,7 @@
           >删除</a-button
         >
         <a-button type="primary" v-show="choose"> 下载 </a-button>
-        <a-button type="primary" v-show="!choose" @click="openMoveModal"> 移动 </a-button>
+        <a-button type="primary" v-show="choose" @click="openMoveModal"> 移动 </a-button>
         <a-button type="primary" v-show="choose"> 分享 </a-button>
         <a-button type="primary" @click="openUploadModal"> 上传 </a-button>
 
@@ -184,6 +184,10 @@
         showIndexColumn: false,
         rowSelection: {
           type: 'checkbox',
+          getCheckboxProps: (record) => ({
+            disabled: record.name === '...', // Column configuration not to be checked
+            name: record.name,
+          }),
         },
         scroll: { x: 1000, y: 800 },
       });
@@ -216,13 +220,14 @@
       }
       // 打开移动窗口
       function openMoveModal() {
-        openModal2(true, getSelectRowKeys(), true);
+        openModal2(true, { folder: getSelectRowKeys(), path });
         nextTick(() => {
           setModal2({
             canFullscreen: false,
             width: '70%',
             destroyOnClose: true,
             afterClose: () => {
+              clearSelectedRowKeys();
               fetchData({ dirId });
             },
           });

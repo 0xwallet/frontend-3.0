@@ -109,12 +109,13 @@ export const driveMakeDirUnder = gql`
     }
   }
 `;
-// 指定目录下新建目录
+// 移动文件到指定ID
 export const driveMoveFile = gql`
   mutation($fromId: String!, $toId: String!) {
     driveMoveFile(fromId: $fromId, toId: $toId)
   }
 `;
+
 // 删除文件
 export const driveDeleteFile = gql`
   mutation($id: String!, $space: Sting!) {
