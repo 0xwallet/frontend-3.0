@@ -1,6 +1,6 @@
 <template>
   <div class="px-10 py-4">
-    <a-button type="primary" class="my-4" @click="openDrawer">打开Drawer</a-button>
+    <a-button type="primary" class="my-4" @click="openDrawer">右侧Drawer</a-button>
     <DashboardDrawer @register="registerDrawer" />
   </div>
 </template>
