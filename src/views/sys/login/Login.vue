@@ -213,6 +213,7 @@
         title: globSetting && globSetting.title,
         logo,
         go,
+        t,
       };
     },
   });
