@@ -48,7 +48,7 @@
   import { useMessage } from '/@/hooks/web/useMessage';
   import ShareFileModal from './ShareFileModal.vue';
   import { useModal } from '/@/components/Modal';
-  import { file } from '/@/views/disk/type/file';
+  import { File } from '/@/views/disk/type/file';
   import { useTable, BasicTable } from '/@/components/Table';
   import { getBasicColumns } from '/@/views/disk/share/tableData';
   import { toLower } from 'lodash-es';
@@ -128,7 +128,7 @@
               return;
             }
             openModal(false);
-            const f = new file(data);
+            const f = new File(data);
             tableData.value = [f];
           });
       }
@@ -181,7 +181,7 @@
         }
       }
       // 打开文件或者进入目录
-      function openFile(f: file) {
+      function openFile(f: File) {
         if (!f.isDir) {
           return;
         }

@@ -1,6 +1,7 @@
 <template>
   <ScrollContainer>
     <div ref="wrapperRef" class="m-4 account">
+      <Dashboard />
       <Tabs tab-position="left">
         <template v-for="item in settingList" :key="item.key">
           <TabPane :tab="item.name">
@@ -15,7 +16,7 @@
 <script lang="ts">
   import { defineComponent } from 'vue';
   import { Tabs } from 'ant-design-vue';
-
+  import Dashboard from '../dashboard/index.vue';
   import { ScrollContainer } from '/@/components/Container/index';
   import { settingList } from './data';
 
@@ -33,6 +34,7 @@
       SecureSetting,
       AccountBind,
       MsgNotify,
+      Dashboard,
     },
     setup() {
       return { settingList };

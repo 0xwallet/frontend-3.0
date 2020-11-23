@@ -15,13 +15,13 @@
       </template>
       <template #action="{ record }">
         <div>
-          <!--          <a-button type="link" v-if="record.type !== 'folder'">详情</a-button>-->
           <a-button type="link" v-if="record.type !== 'folder'" @click="preview(record)"
             >预览</a-button
           >
           <a-button type="link" @click="openShareModal(record)">分享</a-button>
-          <!--          <a-button type="link">复制路径</a-button>-->
-          <a-button type="link" @click="download(record)">下载</a-button>
+          <a-button type="link" @click="download(record)" v-if="record.type !== 'folder'"
+            >下载</a-button
+          >
           <a-button
             type="link"
             color="error"
@@ -49,7 +49,7 @@
         <a-button type="primary" @click="openUploadModal"> 上传 </a-button>
 
         <a-button type="primary" @click="openCreateFolderModal"> 新建文件夹 </a-button>
-        <a-button type="primary" @click="reload"> 刷新 </a-button>
+        <a-button type="primary" @click="fetchData()"> 刷新 </a-button>
       </template></BasicTable
     >
     <CreateFolderModal @register="registerCreateFolder" />
@@ -70,18 +70,9 @@
   import MoveModal from './component/MoveModal.vue';
   import GIcon from '/@/components/Icon/index';
   import { useApollo } from '/@/hooks/apollo/apollo';
-  import {
-    driveListFiles,
-    driveDeleteFile,
-    drivePreviewToken,
-    driveCreateShare,
-    driveDeleteFiles,
-  } from '/@/hooks/apollo/gqlFile';
+  import { driveListFiles, driveDeleteFiles } from '/@/hooks/apollo/gqlFile';
   import { useModal } from '/@/components/Modal';
-  import { createImgPreview } from '/@/components/Preview/index';
-  import { toLower } from 'lodash-es';
-  import { downloadByUrl } from '/@/utils/file/download';
-  import { file } from '/@/views/disk/type/file';
+  import { File } from '/@/views/disk/type/file';
   export default defineComponent({
     components: {
       BasicTable,
@@ -107,6 +98,10 @@
       const folder = ref([]);
       // 储存本级目录路所有文件
       const files = ref([]);
+      //当前是否有选择文件
+      const choose = computed(() => {
+        return getSelectRowKeys().length !== 0;
+      });
       // 根据ID获取数据 默认root目录
       function fetchData(params = { dirId: 'root' }) {
         console.log(params);
@@ -158,9 +153,9 @@
                 if (temp.length > 0 && temp[0].id == v.id) {
                   return;
                 }
-                p.push(new file({ userFile: v }));
+                p.push(new File({ userFile: v }));
               } else {
-                f.push(new file({ userFile: v }));
+                f.push(new File({ userFile: v }));
               }
             });
             folder.value = temp.concat(p);
@@ -208,7 +203,6 @@
       // 传入上级文件夹ID dirId
       // 传入本级文件夹名，防止重名 folder
       function openCreateFolderModal() {
-        console.log(dirId);
         openModal1(true, { folder, dirId });
         nextTick(() => {
           setModal1({
@@ -264,10 +258,21 @@
           });
         });
       }
+      // 文件预览
+      function preview(f: File) {
+        f.preview();
+      }
+      // 文件下载
+      function download(f: File) {
+        f.download();
+      }
       // 删除文件或文件夹
       function delFile(file) {
-        useApollo()
-          .mutate({ mutation: driveDeleteFile, variables: file })
+        const f: File = file;
+        f.delFile()
+          .then(() => {
+            createMessage.success('删除成功');
+          })
           .finally(() => {
             fetchData({ dirId });
           });
@@ -292,10 +297,7 @@
           });
       }
 
-      const choose = computed(() => {
-        return getSelectRowKeys().length !== 0;
-      });
-
+      // 全选，反选
       function setSelectedRowKeyList() {
         if (getSelectRowKeys().length !== 0) {
           clearSelectedRowKeys();
@@ -307,77 +309,8 @@
         }
         setSelectedRowKeys(arr);
       }
-      function clearSelect() {
-        clearSelectedRowKeys();
-      }
 
-      function preview(file) {
-        switch (file.type) {
-          case 'folder':
-            break;
-          default:
-            const id = localStorage.getItem('uid');
-            let token = '';
-            useApollo()
-              .mutate({ mutation: drivePreviewToken })
-              .then((res) => {
-                token = res?.data?.drivePreviewToken;
-                let url = `https://drive-s.owaf.io/preview/${id}/${toLower(file.space)}/${
-                  file.id
-                }/${file.fullName}.${file.type}?token=${token}`;
-                console.log(url);
-
-                console.log(token);
-                // /preview/:user_id/:space/:user_file_id/:filename?token=:token
-                createImgPreview({
-                  imageList: [url],
-                });
-              });
-        }
-      }
-      function download(file) {
-        switch (file.type) {
-          case 'folder':
-            break;
-          default:
-            const id = localStorage.getItem('uid');
-            let token = '';
-            useApollo()
-              .mutate({ mutation: drivePreviewToken })
-              .then((res) => {
-                token = res?.data?.drivePreviewToken;
-                let url = `https://drive-s.owaf.io/download/${id}/${toLower(file.space)}/${
-                  file.id
-                }/${file.fullName}.${file.type}?token=${token}`;
-
-                // /preview/:user_id/:space/:user_file_id/:filename?token=:token
-                downloadByUrl({
-                  url: url,
-                  target: '_self',
-                });
-              });
-        }
-      }
-
-      function share(file) {
-        switch (file.type) {
-          case 'folder':
-            break;
-          default:
-            console.log(file);
-            useApollo()
-              .mutate({
-                mutation: driveCreateShare,
-                variables: {
-                  userFileId: file.id,
-                },
-              })
-              .then((res) => {
-                console.log(res);
-              });
-        }
-      }
-
+      // 路径面包屑跳转
       function goPath(p) {
         fetchData({ dirId: p.dirId });
         if (p.dirId === 'root') {
@@ -393,20 +326,32 @@
         });
       }
       // 打开文件或者进入目录
-      function openFile(f: file) {
+      function openFile(f: File) {
         if (!f.isDir) {
           return;
         }
+
         dirId = f.id;
         fetchData({ dirId: f.id });
-        // TODO 这里有个迷之BUG，name自己变成...
+        if (f.id === 'root') {
+          path.value = [];
+          return;
+        }
+
         if (f.name === '...') {
+          let p = unref(path);
+          p.forEach((v) => {
+            if (v.dirId == f.id) {
+              path.value.pop();
+              return;
+            }
+          });
+          // TODO 这里有个迷之BUG，name自己变成...
           if (f.fullName.length > 0) {
             path.value.push({ name: f.fullName[f.fullName.length - 1], dirId: f.id });
+            console.log(22, path.value);
             return;
           }
-          path.value.pop();
-          return;
         }
         path.value.push({ name: f.name, dirId: f.id });
         // 根据ID获取最新进入目录文件
@@ -415,11 +360,9 @@
       return {
         registerTable,
         setSelectedRowKeyList,
-        clearSelect,
         choose,
         path,
         openFile,
-        reload,
         registerCreateFolder,
         openCreateFolderModal,
         registerMoveModal,
@@ -430,11 +373,11 @@
         openShareModal,
         delFile,
         preview,
-        share,
         download,
         goPath,
         delFiles,
         getSelectRowKeys,
+        fetchData,
       };
     },
   });

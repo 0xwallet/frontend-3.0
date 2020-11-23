@@ -1,21 +1,22 @@
 <template>
   <BasicModal v-bind="$attrs" @register="register" title="分享文件" @ok="shareFile">
-    文件名：{{ file.fullName + '.' + file.type }}
-    <BasicForm @register="registerForm" :model="model" v-if="shareUrl.uri === undefined" />
-    <div v-if="shareUrl.uri !== undefined">
-      <p> 分享url：{{ shareUrl.uri }}</p>
-      <p> 分享token：{{ shareUrl.token }}</p>
-      <p> 分享code：{{ shareUrl.code }}</p>
+    <p> 文件名：{{ file.fullName + '.' + file.type }}</p>
+    <BasicForm @register="registerForm" :model="model" v-if="!shareUrl" />
+    <div v-if="shareUrl">
+      <p>
+        分享url：<a-button type="link" @click="copyUrl">{{ file.shareUrl() }}</a-button>
+      </p>
+      <p> 分享token：{{ file.token }}</p>
+      <p> 分享code：{{ file.code }}</p>
     </div>
   </BasicModal>
 </template>
 <script lang="ts">
-  import { defineComponent, ref, nextTick } from 'vue';
+  import { defineComponent, ref } from 'vue';
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { BasicForm, FormSchema, useForm } from '/@/components/Form';
-  import { useApollo } from '/@/hooks/apollo/apollo';
-  import { driveCreateShare } from '/@/hooks/apollo/gqlFile';
   import { useMessage } from '/@/hooks/web/useMessage';
+  import { File } from '/@/views/disk/type/file';
 
   function randomString(len) {
     len = len || 32;
@@ -45,7 +46,7 @@
     setup() {
       const modelRef = ref({});
       const file = ref({});
-      const shareUrl = ref({});
+      const shareUrl = ref(false);
       const [registerForm, { validateFields }] = useForm({
         labelWidth: 120,
         schemas,
@@ -56,28 +57,33 @@
       });
 
       const { createErrorModal } = useMessage();
-
       const [register, { closeModal }] = useModalInner((data) => {
         file.value = data.record;
-        shareUrl.value = {};
-        console.log(shareUrl.value);
-        console.log(file.value);
       });
 
-      function shareFile() {
-        validateFields().then((params) => {
-          useApollo()
-            .mutate({
-              mutation: driveCreateShare,
-              variables: { ...params, userFileId: file.value.id },
-            })
-            .then((res) => {
-              console.log(res);
-              shareUrl.value = res.data?.driveCreateShare;
-            });
-        });
+      async function shareFile() {
+        const paramas = await validateFields();
+
+        const f: File = file.value;
+        if (!(await f.share(paramas.code))) {
+          createErrorModal({ title: '失败', content: '分享失败' });
+        }
+        shareUrl.value = true;
       }
-      return { register, schemas, registerForm, model: modelRef, shareFile, file, shareUrl };
+      function copyUrl() {
+        const f: File = file.value;
+        f.copyShareUrl();
+      }
+      return {
+        register,
+        schemas,
+        registerForm,
+        model: modelRef,
+        shareFile,
+        file,
+        shareUrl,
+        copyUrl,
+      };
     },
   });
 </script>

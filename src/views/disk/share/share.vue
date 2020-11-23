@@ -12,8 +12,8 @@
         >
       </template>
 
-      <template #uri="{ text }">
-        <a-button type="link" @click="copyUrl(text)"> {{ text }}</a-button>
+      <template #uri="{ record, text }">
+        <a-button type="link" @click="copyUrl(record)"> {{ text }}</a-button>
       </template>
       <template #action="{ record }">
         <div>
@@ -26,6 +26,9 @@
           ></div
         >
       </template>
+      <template #toolbar>
+        <a-button type="primary" @click="fetchData()"> 刷新</a-button>
+      </template>
     </BasicTable>
   </div>
 </template>
@@ -37,8 +40,7 @@
   import { useApollo } from '/@/hooks/apollo/apollo';
   import { driveListShares, driveDeleteShare } from '/@/hooks/apollo/gqlFile';
   import { getBasicColumns } from '/@/views/disk/share/shareData';
-  import { file } from '/@/views/disk/type/file';
-  import { useCopyToClipboard } from '/@/hooks/web/useCopyToClipboard';
+  import { File } from '/@/views/disk/type/file';
 
   export default defineComponent({
     components: { BasicTable, GIcon },
@@ -46,16 +48,16 @@
       const { createMessage, createErrorModal } = useMessage();
       const path = ref([]);
       const tableData = ref([]);
-      const origin = window.location.origin;
       const [
         registerTable,
-        { getSelectRowKeys, setSelectedRowKeys, clearSelectedRowKeys, getDataSource, reload },
+        { getSelectRowKeys, setSelectedRowKeys, clearSelectedRowKeys, getDataSource },
       ] = useTable({
         canResize: false,
+
         title: '分享列表',
         dataSource: tableData,
         columns: getBasicColumns(),
-        rowKey: 'id',
+        rowKey: 'shareId',
         showIndexColumn: false,
       });
       function fetchData() {
@@ -68,11 +70,10 @@
             const list = res?.data?.driveListShares;
             let temp = [];
             list.forEach((v) => {
-              let f = new file(v);
+              let f = new File(v);
               temp.push(f);
             });
             tableData.value = temp;
-
             // console.log(data.driveListFiles);
           })
           .catch((err) => {
@@ -85,18 +86,11 @@
       }
 
       fetchData();
-
-      function del(record) {
-        useApollo()
-          .mutate({
-            mutation: driveDeleteShare,
-            variables: {
-              id: record.shareId,
-            },
-          })
-          .finally(() => {
-            fetchData();
-          });
+      // 删除分享
+      async function del(record) {
+        const f: File = record;
+        await f.delShare();
+        fetchData();
       }
 
       const choose = computed(() => {
@@ -117,15 +111,9 @@
       function clearSelect() {
         clearSelectedRowKeys();
       }
-      const { clipboardRef, copiedRef } = useCopyToClipboard();
-      function copyUrl(uri) {
-        if (uri === '') {
-          return;
-        }
-        clipboardRef.value = `${window.location.origin}/#/disk/shareFile/${uri}`;
-        if (unref(copiedRef)) {
-          createMessage.warning('copy success！');
-        }
+      function copyUrl(record) {
+        const f: File = record;
+        f.copyShareUrl();
       }
 
       return {
@@ -134,10 +122,9 @@
         clearSelect,
         choose,
         path,
-        reload,
         del,
-        origin,
         copyUrl,
+        fetchData,
       };
     },
   });
