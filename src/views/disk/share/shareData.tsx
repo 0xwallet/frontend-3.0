@@ -4,7 +4,7 @@ import GIcon from '/@/components/Icon';
 export function getBasicColumns(): BasicColumn[] {
   return [
     {
-      title: '文件名',
+      title: '文件',
       dataIndex: 'name',
       width: 400,
       align: 'left',
@@ -55,10 +55,10 @@ export function getBasicColumns(): BasicColumn[] {
       },
     },
     {
-      title: '网址',
+      // title: '网址',
       dataIndex: 'uri',
       width: 300,
-      slots: { customRender: 'uri' },
+      slots: { customRender: 'uri', title: 'urltitle' },
     },
     {
       title: 'code',

@@ -1,6 +1,12 @@
 <template>
   <div class="p-4">
     <BasicTable @register="registerTable">
+      <template #urltitle>
+        <span>
+          网址
+          <BasicHelp class="ml-2" text="点击复制分享链接" />
+        </span>
+      </template>
       <template #uri="{ record, text }">
         <a-button type="link" @click="copyUrl(record)"> {{ text }}</a-button>
       </template>
@@ -27,12 +33,12 @@
   import { useMessage } from '/@/hooks/web/useMessage';
   import GIcon from '/@/components/Icon';
   import { useApollo } from '/@/hooks/apollo/apollo';
-  import { driveListShares, driveDeleteShare } from '/@/hooks/apollo/gqlFile';
+  import { driveListShares } from '/@/hooks/apollo/gqlFile';
   import { getBasicColumns } from '/@/views/disk/share/shareData';
   import { File } from '/@/views/disk/type/file';
-
+  import { BasicHelp } from '/@/components/Basic';
   export default defineComponent({
-    components: { BasicTable, GIcon },
+    components: { BasicTable, GIcon, BasicHelp },
     setup() {
       const { createMessage, createErrorModal } = useMessage();
       const path = ref([]);
