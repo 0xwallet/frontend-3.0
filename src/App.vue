@@ -15,8 +15,6 @@
   import { getConfigProvider, initAppConfigStore } from '/@/setup/App';
 
   import { useLockPage } from '/@/hooks/web/useLockPage';
-
-  moment.locale('zh-cn');
   import apollo from '/src/lib/esm/apollo';
   import { useApolloWS } from '/@/hooks/apollo/apollo';
   import { driveFileUploaded } from '/@/hooks/apollo/gqlFile';

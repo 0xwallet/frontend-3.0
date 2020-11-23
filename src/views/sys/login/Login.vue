@@ -35,7 +35,6 @@
             <a-row>
               <a-col :span="12">
                 <a-form-item>
-
                   <!-- No logic, you need to deal with it yourself -->
                   <a-checkbox v-model:checked="autoLogin" size="small">{{
                     t('sys.login.autoLogin')
@@ -89,15 +88,15 @@
   // import { BasicDragVerify, DragVerifyActionType } from '/@/components/Verify/index';
 
   import { userStore } from '/@/store/modules/user';
+  import { useI18n } from 'vue-i18n';
+
   import { useMessage } from '/@/hooks/web/useMessage';
   import { useGlobSetting } from '/@/settings/use';
   import logo from '/@/assets/images/logo.png';
   import { useGo } from '/@/hooks/web/usePage';
   import { signIn } from '/@/hooks/apollo/gqlUser';
-  import { useApollo, useApolloWS } from '/@/hooks/apollo/apollo';
-  import apollo from '/src/lib/esm/apollo';
-  import Observable from 'zen-observable';
-  import { driveFileUploaded } from '/@/hooks/apollo/gqlFile';
+  import { useApollo } from '/@/hooks/apollo/apollo';
+
   import { useCrypto, useMClient, useWallet } from '/@/hooks/nkn/getNKN';
 
   export default defineComponent({
@@ -133,7 +132,9 @@
 
       const formRules = reactive({
         email: [{ required: true, message: t('sys.login.accountPlaceholder'), trigger: 'blur' }],
-        password: [{ required: true, message: t('sys.login.passwordPlaceholder'), trigger: 'blur' }],
+        password: [
+          { required: true, message: t('sys.login.passwordPlaceholder'), trigger: 'blur' },
+        ],
       });
 
       async function handleLogin() {
