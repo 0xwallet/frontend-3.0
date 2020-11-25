@@ -4,7 +4,7 @@
     <div class="login-form-wrap">
       <div class="login-form mx-6">
         <div class="login-form__content px-2 py-10">
-          <AppLocalPicker class="login-form__locale" />
+          <AppLocalePicker v-if="showLocale" class="login-form__locale" />
           <header>
             <img :src="logo" class="mr-4" />
             <h1>{{ title }}</h1>
@@ -25,7 +25,7 @@
                 size="large"
                 visibilityToggle
                 v-model:value="formData.password"
-                placeholder="Password: 123456"
+                placeholder="password: 123456"
               />
             </a-form-item>
 
@@ -88,23 +88,24 @@
   // import { BasicDragVerify, DragVerifyActionType } from '/@/components/Verify/index';
 
   import { userStore } from '/@/store/modules/user';
-  import { useI18n } from 'vue-i18n';
 
+  // import { appStore } from '/@/store/modules/app';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { useGlobSetting } from '/@/settings/use';
+  import { useGlobSetting, useProjectSetting } from '/@/hooks/setting';
   import logo from '/@/assets/images/logo.png';
   import { useGo } from '/@/hooks/web/usePage';
   import { signIn } from '/@/hooks/apollo/gqlUser';
   import { useApollo } from '/@/hooks/apollo/apollo';
 
   import { useCrypto, useMClient, useWallet } from '/@/hooks/nkn/getNKN';
+  import { useI18n } from '/@/hooks/web/useI18n';
 
   export default defineComponent({
     components: {
       //  BasicDragVerify,
       AButton: Button,
       ACheckbox: Checkbox,
-      AppLocalPicker,
+      AppLocalePicker,
     },
     setup() {
       localStorage.setItem('walletJson', undefined);
@@ -118,7 +119,8 @@
       const { notification, createErrorModal } = useMessage();
 
       const globSetting = useGlobSetting();
-      const { t } = useI18n();
+      const { locale } = useProjectSetting();
+      const { t } = useI18n('sys.login');
 
       // const openLoginVerifyRef = computed(() => appStore.getProjectConfig.openLoginVerify);
 
@@ -131,10 +133,9 @@
       });
 
       const formRules = reactive({
-        email: [{ required: true, message: t('sys.login.accountPlaceholder'), trigger: 'blur' }],
-        password: [
-          { required: true, message: t('sys.login.passwordPlaceholder'), trigger: 'blur' },
-        ],
+        email: [{ required: true, message: t('accountPlaceholder'), trigger: 'blur' }],
+        password: [{ required: true, message: t('passwordPlaceholder'), trigger: 'blur' }],
+        // verify: unref(openLoginVerifyRef) ? [{ required: true, message: '请通过验证码校验' }] : [],
       });
 
       async function handleLogin() {
@@ -183,8 +184,8 @@
               // websocket调试;
 
               notification.success({
-                message: t('sys.login.loginSuccessTitle'),
-                description: `${t('sys.login.loginSuccessDesc')}: ${res.data?.signin?.User?.email}`,
+                message: t('loginSuccessTitle'),
+                description: `${t('loginSuccessDesc')}: ${res.data?.signin?.User?.email}`,
                 duration: 3,
               });
               userStore.login();
@@ -200,7 +201,6 @@
           formState.loading = false;
         }
       }
-
       return {
         formRef,
         // verifyRef,
@@ -214,6 +214,7 @@
         logo,
         go,
         t,
+        showLocale: locale.show,
       };
     },
   });

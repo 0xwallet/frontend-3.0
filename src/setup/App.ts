@@ -20,6 +20,7 @@ import {
 } from '/@/setup/theme';
 
 import { appStore } from '/@/store/modules/app';
+import { deepMerge } from '../utils/index';
 
 // Used to share global app instances
 let app: App;
@@ -50,11 +51,15 @@ export function useThemeMode(mode: ThemeModeEnum) {
 // Initial project configuration
 export function initAppConfigStore() {
   let projCfg: ProjectConfig = getLocal(PROJ_CFG_KEY) as ProjectConfig;
-  if (!projCfg) {
-    projCfg = projectSetting;
-  }
-  const { colorWeak, grayMode, headerBgColor, menuBgColor } = projCfg;
+  projCfg = deepMerge(projectSetting, projCfg || {});
+
   try {
+    const {
+      colorWeak,
+      grayMode,
+      headerSetting: { bgColor: headerBgColor } = {},
+      menuSetting: { bgColor } = {},
+    } = projCfg;
     // if (
     //   themeColor !== primaryColor &&
     //   themeColor &&
@@ -63,7 +68,7 @@ export function initAppConfigStore() {
     //   updateTheme(themeColor);
     // }
     headerBgColor && updateHeaderBgColor(headerBgColor);
-    menuBgColor && updateSidebarBgColor(menuBgColor);
+    bgColor && updateSidebarBgColor(bgColor);
     grayMode && updateGrayMode(grayMode);
     colorWeak && updateColorWeak(colorWeak);
   } catch (error) {

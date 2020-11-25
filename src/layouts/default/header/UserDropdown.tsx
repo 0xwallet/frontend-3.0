@@ -1,5 +1,5 @@
 // components
-import { Dropdown, Menu, Divider } from 'ant-design-vue';
+import { Dropdown, Menu } from 'ant-design-vue';
 
 import { defineComponent, computed, unref } from 'vue';
 
@@ -11,15 +11,41 @@ import Icon from '/@/components/Icon/index';
 import { userStore } from '/@/store/modules/user';
 
 import { DOC_URL } from '/@/settings/siteSetting';
-import { appStore } from '/@/store/modules/app';
+
+import { openWindow } from '/@/utils';
+
+import { useHeaderSetting } from '/@/hooks/setting/useHeaderSetting';
+import { FunctionalComponent } from 'vue';
+import { useI18n } from '/@/hooks/web/useI18n';
+
+type MenuEvent = 'loginOut' | 'doc';
+interface MenuItemProps {
+  icon: string;
+  text: string;
+  key: MenuEvent;
+}
 
 const prefixCls = 'user-dropdown';
+
+const MenuItem: FunctionalComponent<MenuItemProps> = (props) => {
+  const { key, icon, text } = props;
+  return (
+    <Menu.Item key={key}>
+      {() => (
+        <span class="flex items-center">
+          <Icon icon={icon} class="mr-1" />
+          <span>{text}</span>
+        </span>
+      )}
+    </Menu.Item>
+  );
+};
+
 export default defineComponent({
   name: 'UserDropdown',
   setup() {
-    const getProjectConfigRef = computed(() => {
-      return appStore.getProjectConfig;
-    });
+    const { t } = useI18n('layout.header');
+    const { getShowDoc } = useHeaderSetting();
 
     const getUserInfo = computed(() => {
       const { realName = '', desc } = userStore.getUserInfoState || {};
@@ -33,61 +59,58 @@ export default defineComponent({
 
     // open doc
     function openDoc() {
-      window.open(DOC_URL, '__blank');
+      openWindow(DOC_URL);
     }
 
-    function handleMenuClick(e: any) {
-      if (e.key === 'loginOut') {
-        handleLoginOut();
-      } else if (e.key === 'doc') {
-        openDoc();
+    function handleMenuClick(e: { key: MenuEvent }) {
+      switch (e.key) {
+        case 'loginOut':
+          handleLoginOut();
+          break;
+        case 'doc':
+          openDoc();
+          break;
       }
     }
 
-    function renderItem({ icon, text, key }: { icon: string; text: string; key: string }) {
+    function renderSlotsDefault() {
+      const { realName } = unref(getUserInfo);
       return (
-        <Menu.Item key={key}>
+        <section class={prefixCls}>
+          <img class={`${prefixCls}__header`} src={headerImg} />
+          <section class={`${prefixCls}__info`}>
+            <section class={`${prefixCls}__name`}>{realName}</section>
+          </section>
+        </section>
+      );
+    }
+
+    function renderSlotOverlay() {
+      const showDoc = unref(getShowDoc);
+      return (
+        <Menu onClick={handleMenuClick}>
           {() => (
-            <span class="flex items-center">
-              <Icon icon={icon} class="mr-1" />
-              <span>{text}</span>
-            </span>
+            <>
+              {showDoc && <MenuItem key="doc" text={t('dropdownItemDoc')} icon="gg:loadbar-doc" />}
+              {/* @ts-ignore */}
+              {showDoc && <Menu.Divider />}
+              <MenuItem
+                key="loginOut"
+                text={t('dropdownItemLoginOut')}
+                icon="ant-design:poweroff-outlined"
+              />
+            </>
           )}
-        </Menu.Item>
+        </Menu>
       );
     }
 
     return () => {
-      const { realName } = unref(getUserInfo);
-      const {
-        headerSetting: { showDoc },
-      } = unref(getProjectConfigRef);
       return (
-        <Dropdown placement="bottomLeft">
+        <Dropdown placement="bottomLeft" overlayClassName="app-layout-header-user-dropdown-overlay">
           {{
-            default: () => (
-              <section class={prefixCls}>
-                <img class={`${prefixCls}__header`} src={headerImg} />
-                <section class={`${prefixCls}__info`}>
-                  <section class={`${prefixCls}__name`}>{realName}</section>
-                </section>
-              </section>
-            ),
-            overlay: () => (
-              <Menu slot="overlay" onClick={handleMenuClick}>
-                {() => (
-                  <>
-                    {showDoc && renderItem({ key: 'doc', text: '文档', icon: 'gg:loadbar-doc' })}
-                    {showDoc && <Divider />}
-                    {renderItem({
-                      key: 'loginOut',
-                      text: '退出系统',
-                      icon: 'ant-design:poweroff-outlined',
-                    })}
-                  </>
-                )}
-              </Menu>
-            ),
+            default: () => renderSlotsDefault(),
+            overlay: () => renderSlotOverlay(),
           }}
         </Dropdown>
       );

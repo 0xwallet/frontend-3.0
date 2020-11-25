@@ -22,7 +22,7 @@ export default defineComponent({
   setup(props, { slots, emit, attrs }) {
     const visibleRef = ref(false);
     const propsRef = ref<Partial<ModalProps> | null>(null);
-    const modalWrapperRef = ref<any>(null);
+    const modalWrapperRef = ref<ComponentRef>(null);
     // modal   Bottom and top height
     const extHeightRef = ref(0);
     // Unexpanded height of the popup
@@ -219,11 +219,7 @@ export default defineComponent({
     emit('register', modalMethods, uuid);
 
     return () => (
-      <Modal
-        onCancel={handleCancel}
-        getContainer={() => document.querySelector('.default-layout__main')}
-        {...{ ...attrs, ...props, ...unref(getProps) }}
-      >
+      <Modal onCancel={handleCancel} {...{ ...attrs, ...props, ...unref(getProps) }}>
         {{
           footer: () => renderFooter(),
           closeIcon: () => renderClose(),

@@ -1,3 +1,5 @@
+import './index.less';
+
 import type { DrawerInstance, DrawerProps } from './types';
 
 import { defineComponent, ref, computed, watchEffect, watch, unref, nextTick, toRaw } from 'vue';
@@ -13,8 +15,7 @@ import { getSlot } from '/@/utils/helper/tsxHelper';
 import { isFunction, isNumber } from '/@/utils/is';
 import { buildUUID } from '/@/utils/uuid';
 import { deepMerge } from '/@/utils';
-
-import './index.less';
+import { useI18n } from '/@/hooks/web/useI18n';
 
 const prefixCls = 'basic-drawer';
 export default defineComponent({
@@ -22,10 +23,12 @@ export default defineComponent({
   props: basicProps,
   emits: ['visible-change', 'ok', 'close', 'register'],
   setup(props, { slots, emit, attrs }) {
-    const scrollRef = ref<any>(null);
+    const scrollRef = ref<ElRef>(null);
 
     const visibleRef = ref(false);
     const propsRef = ref<Partial<DrawerProps> | null>(null);
+
+    const { t } = useI18n('component.drawer');
 
     const getMergeProps = computed((): any => {
       return deepMerge(toRaw(props), unref(propsRef));
@@ -49,7 +52,7 @@ export default defineComponent({
           ? `${opt.wrapClassName} ${prefixCls}__detail`
           : `${prefixCls}__detail`;
         if (!opt.getContainer) {
-          opt.getContainer = `.default-layout__main`;
+          opt.getContainer = '.layout-content';
         }
       }
       return opt;
@@ -208,7 +211,7 @@ export default defineComponent({
                 >
                   <FullLoading
                     absolute
-                    tip="加载中..."
+                    tip={t('loadingText')}
                     class={[!unref(getProps).loading ? 'hidden' : '']}
                   />
                   {getSlot(slots, 'default')}

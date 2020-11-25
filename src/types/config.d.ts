@@ -1,12 +1,14 @@
-// 左侧菜单, 顶部菜单
 import { MenuTypeEnum, MenuModeEnum, TriggerEnum } from '/@/enums/menuEnum';
 import { ContentEnum, PermissionModeEnum, ThemeEnum, RouterTransitionEnum } from '/@/enums/appEnum';
+import { CacheTypeEnum } from '/@/enums/cacheEnum';
 import type { LocaleType } from '/@/locales/types';
 
 export interface MenuSetting {
+  bgColor: string;
+  fixed: boolean;
   collapsed: boolean;
   collapsedShowTitle: boolean;
-  hasDrag: boolean;
+  canDrag: boolean;
   showSearch: boolean;
   show: boolean;
   hidden: boolean;
@@ -26,13 +28,13 @@ export interface MultiTabsSetting {
   show: boolean;
   // 开启快速操作
   showQuick: boolean;
-  // 显示icon
-  showIcon: boolean;
+  canDrag: boolean;
   // 缓存最大数量
   max: number;
 }
 
 export interface HeaderSetting {
+  bgColor: string;
   fixed: boolean;
   show: boolean;
   theme: ThemeEnum;
@@ -44,12 +46,12 @@ export interface HeaderSetting {
   useLockPage: boolean;
   // 显示文档按钮
   showDoc: boolean;
-  showGithub: boolean;
   // 显示消息中心按钮
   showNotice: boolean;
 }
 
 export interface LocaleSetting {
+  show: boolean;
   // Current language
   lang: LocaleType;
   // default language
@@ -58,12 +60,25 @@ export interface LocaleSetting {
   availableLocales: LocaleType[];
 }
 
+export interface TransitionSetting {
+  //  Whether to open the page switching animation
+  enable: boolean;
+
+  // Route basic switching animation
+  basicTransition: RouterTransitionEnum;
+
+  // Whether to open page switching loading
+  openPageLoading: boolean;
+
+  // Whether to open the top progress bar
+  openNProgress: boolean;
+}
+
 export interface ProjectConfig {
   locale: LocaleSetting;
-  // header背景色
-  headerBgColor: string;
-  // 左侧菜单背景色
-  menuBgColor: string;
+
+  permissionCacheType: CacheTypeEnum;
+
   // 是否显示配置按钮
   showSettingButton: boolean;
   // 权限模式
@@ -80,6 +95,7 @@ export interface ProjectConfig {
   contentMode: ContentEnum;
   // 是否显示logo
   showLogo: boolean;
+  showFooter: boolean;
   headerSetting: HeaderSetting;
   // 菜单类型
   // menuType: MenuTypeEnum;
@@ -87,6 +103,9 @@ export interface ProjectConfig {
 
   // 多标签页设置
   multiTabsSetting: MultiTabsSetting;
+
+  transitionSetting: TransitionSetting;
+
   // pageLayout是否开启keep-alive
   openKeepAlive: boolean;
 
@@ -98,18 +117,8 @@ export interface ProjectConfig {
   showBreadCrumbIcon: boolean;
   // 使用error-handler-plugin
   useErrorHandle: boolean;
-  // 开启页面切换动画
-  openRouterTransition: boolean;
-  // 路由切换动画
-  routerTransition: RouterTransitionEnum;
-  // 是否开启登录安全校验
-  openLoginVerify: boolean;
-  // 是否开启页面切换loading
-  openPageLoading: boolean;
   // 是否开启回到顶部
   useOpenBackTop: boolean;
-  // 开启顶部进度条
-  openNProgress: boolean;
   // 是否可以嵌入iframe页面
   canEmbedIFramePage: boolean;
   // 切换界面的时候是否删除未关闭的message及notify
