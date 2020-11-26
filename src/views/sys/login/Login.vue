@@ -80,11 +80,11 @@
   </div>
 </template>
 <script lang="ts">
-  import { defineComponent, reactive, ref, unref } from 'vue';
+  import { defineComponent, reactive, ref, unref, toRaw } from 'vue';
   import { Checkbox } from 'ant-design-vue';
 
   import Button from '/@/components/Button/index.vue';
-  import { AppLocalPicker } from '/@/components/Application';
+  import { AppLocalePicker } from '/@/components/Application';
   // import { BasicDragVerify, DragVerifyActionType } from '/@/components/Verify/index';
 
   import { userStore } from '/@/store/modules/user';

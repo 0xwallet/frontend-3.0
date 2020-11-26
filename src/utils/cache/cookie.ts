@@ -22,7 +22,7 @@ export default class WebCookie {
    * @param name cookie key
    * @param value cookie value
    * @param expire
-   * If the expiration time is not set, the default management browser will automatically delete
+   * If the expiration time is not set, the default client browser will automatically delete
    * e.g:
    *  cookieData.set('name','value',)
    */

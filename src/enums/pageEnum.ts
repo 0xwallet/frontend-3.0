@@ -6,7 +6,7 @@ export enum PageEnum {
   // basic home path
   BASE_HOME = '/disk',
   // error page path
-  ERROR_PAGE = '/exception'
+  ERROR_PAGE = '/exception',
 
   SHARE_PAGE = '/disk/shareFile',
   // error log page path

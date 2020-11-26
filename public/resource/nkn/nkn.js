@@ -11339,7 +11339,7 @@ class Wallet {
     let iv = options.iv || common.util.randomBytesHex(16);
     let masterKey = options.masterKey || common.util.randomBytesHex(32);
     this.options = options;
-    this.account = new _account.default(options.seed, {
+    this.general = new _account.default(options.seed, {
       worker: options.worker
     });
     this.iv = iv;
@@ -47725,9 +47725,9 @@ module.exports = require('./lib/heap');
 
   /*
   Insert item x in list a, and keep it sorted assuming a is sorted.
-  
+
   If x is already in a, insert it to the right of the rightmost x.
-  
+
   Optional args lo (default 0) and hi (default a.length) bound the slice
   of a to be searched.
    */
@@ -47794,7 +47794,7 @@ module.exports = require('./lib/heap');
 
   /*
   Pop and return the current smallest value, and add the new item.
-  
+
   This is more efficient than heappop() followed by heappush(), and can be
   more appropriate when using a fixed size heap. Note that the value
   returned may be larger than item! That constrains reasonable use of
@@ -55921,7 +55921,7 @@ var TBSCertificate = asn.define('TBSCertificate', function () {
     this.key('version').explicit(0).int().optional(),
     this.key('serialNumber').int(),
     this.key('signature').use(AlgorithmIdentifier),
-    this.key('issuer').use(Name),
+    this.key('organization').use(Name),
     this.key('validity').use(Validity),
     this.key('subject').use(Name),
     this.key('subjectPublicKeyInfo').use(SubjectPublicKeyInfo),
@@ -64111,13 +64111,13 @@ Script.prototype.runInContext = function (context) {
     if (!(context instanceof Context)) {
         throw new TypeError("needs a 'context' argument.");
     }
-    
+
     var iframe = document.createElement('iframe');
     if (!iframe.style) iframe.style = {};
     iframe.style.display = 'none';
-    
+
     document.body.appendChild(iframe);
-    
+
     var win = iframe.contentWindow;
     var wEval = win.eval, wExecScript = win.execScript;
 
@@ -64126,7 +64126,7 @@ Script.prototype.runInContext = function (context) {
         wExecScript.call(win, 'null');
         wEval = win.eval;
     }
-    
+
     forEach(Object_keys(context), function (key) {
         win[key] = context[key];
     });
@@ -64135,11 +64135,11 @@ Script.prototype.runInContext = function (context) {
             win[key] = context[key];
         }
     });
-    
+
     var winKeys = Object_keys(win);
 
     var res = wEval.call(win, this.code);
-    
+
     forEach(Object_keys(win), function (key) {
         // Avoid copying circular objects like `top` and `window` by only
         // updating existing context properties or new properties in the `win`
@@ -64154,9 +64154,9 @@ Script.prototype.runInContext = function (context) {
             defineProp(context, key, win[key]);
         }
     });
-    
+
     document.body.removeChild(iframe);
-    
+
     return res;
 };
 

@@ -1,27 +1,27 @@
 import type { MenuModule } from '/@/router/types.d';
 const menu: MenuModule = {
-  orderNo: 10,
+  orderNo: 3,
   menu: {
-    name: 'Dashboard',
-    path: '/dashboard',
+    name: '历史',
+    path: '/history',
     // tag: {
     //   dot: true,
     // },
     children: [
       {
-        path: '/workbench',
-        name: '工作台',
+        path: '/payment',
+        name: '支付',
         // tag: {
         //   content: 'new',
         // },
       },
       {
-        path: '/analysis',
-        name: '分析页',
+        path: '/settlement',
+        name: '结算',
       },
       {
-        path: '/welcome',
-        name: '首页',
+        path: '/activity',
+        name: '审计',
       },
     ],
   },
