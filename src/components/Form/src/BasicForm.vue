@@ -1,6 +1,6 @@
 <template>
   <Form v-bind="{ ...$attrs, ...$props }" ref="formElRef" :model="formModel">
-    <Row :class="getProps.compact ? 'compact-form-row' : ''">
+    <Row :class="getProps.compact ? 'compact-form-row' : ''" :style="getRowWrapStyleRef">
       <slot name="formHeader" />
       <template v-for="schema in getSchema" :key="schema.field">
         <FormItem
@@ -77,6 +77,11 @@
         }
       );
 
+      const getRowWrapStyleRef = computed((): any => {
+        const { baseRowStyle } = unref(getMergePropsRef);
+        return baseRowStyle || {};
+      });
+
       // 获取表单基本配置
       const getProps = computed(
         (): FormProps => {
@@ -98,7 +103,7 @@
         const schemas: FormSchema[] = unref(schemaRef) || (unref(getProps).schemas as any);
         for (const schema of schemas) {
           const { defaultValue, component } = schema;
-          if (defaultValue && dateItemType.includes(component!)) {
+          if (defaultValue && dateItemType.includes(component)) {
             if (!Array.isArray(defaultValue)) {
               schema.defaultValue = moment(defaultValue);
             } else {
@@ -207,6 +212,7 @@
         getActionPropsRef,
         defaultValueRef,
         advanceState,
+        getRowWrapStyleRef,
         getProps,
         formElRef,
         getSchema,

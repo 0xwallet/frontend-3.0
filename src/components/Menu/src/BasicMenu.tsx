@@ -3,10 +3,21 @@ import './index.less';
 import type { MenuState } from './types';
 import type { Menu as MenuType } from '/@/router/types';
 
-import { computed, defineComponent, unref, reactive, watch, onMounted, ref, toRefs } from 'vue';
+import {
+  computed,
+  defineComponent,
+  unref,
+  reactive,
+  watch,
+  onMounted,
+  ref,
+  toRefs,
+  ComputedRef,
+} from 'vue';
 import { Menu } from 'ant-design-vue';
 import SearchInput from './SearchInput.vue';
 import MenuContent from './MenuContent';
+// import { ScrollContainer } from '/@/components/Container';
 
 import { MenuModeEnum, MenuTypeEnum } from '/@/enums/menuEnum';
 import { ThemeEnum } from '/@/enums/appEnum';
@@ -34,7 +45,7 @@ export default defineComponent({
     const menuState = reactive<MenuState>({
       defaultSelectedKeys: [],
       mode: props.mode,
-      theme: computed(() => props.theme),
+      theme: computed(() => props.theme) as ComputedRef<ThemeEnum>,
       openKeys: [],
       searchValue: '',
       selectedKeys: [],
@@ -262,7 +273,10 @@ export default defineComponent({
             onClick={handleInputClick}
             collapsed={unref(getCollapsed)}
           />
+
+          {/* <section style={unref(getMenuWrapStyle)}> */}
           <section style={unref(getMenuWrapStyle)} class="basic-menu__content">
+            {/* <ScrollContainer>{() => renderMenu()}</ScrollContainer> */}
             {renderMenu()}
           </section>
         </section>

@@ -22,6 +22,7 @@ import { getUserInfoById } from '/@/api/sys/user';
 // import { FULL_PAGE_NOT_FOUND_ROUTE } from '/@/router/constant';
 import { setLocal, getLocal, getSession, setSession } from '/@/utils/helper/persistent';
 import { useProjectSetting } from '/@/hooks/setting';
+import { useI18n } from '/@/hooks/web/useI18n';
 
 export type UserInfo = Omit<GetUserInfoByUserIdModel, 'roles'>;
 
@@ -140,10 +141,11 @@ class User extends VuexModule {
   @Action
   async confirmLoginOut() {
     const { createConfirm } = useMessage();
+    const { t } = useI18n('sys.app');
     createConfirm({
       iconType: 'warning',
-      title: '温馨提醒',
-      content: '是否确认退出系统?',
+      title: t('loginOutTip'),
+      content: t('loginOutMessage'),
       onOk: async () => {
         await this.loginOut(true);
       },
