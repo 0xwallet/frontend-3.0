@@ -12,17 +12,11 @@
   </span>
 </template>
 <script lang="ts">
-  import { PropType } from 'vue';
-
   import { defineComponent, computed, ref } from 'vue';
   import { Button, Popconfirm } from 'ant-design-vue';
   // import { extendSlots } from '/@/utils/helper/tsxHelper';
   // import { useThrottle } from '/@/hooks/core/useThrottle';
   // import { isFunction } from '/@/utils/is';
-
-  import { defineComponent, computed } from 'vue';
-
-  import { Button } from 'ant-design-vue';
   import Icon from '/@/components/Icon';
   import { propTypes } from '/@/utils/propTypes';
 
@@ -37,9 +31,7 @@
       disabled: propTypes.bool,
       preIcon: propTypes.string,
       postIcon: propTypes.string,
-      pop: {
-        type: Object as PropType<object>,
-      },
+      pop: propTypes.object,
     },
     setup(props, { attrs }) {
       const getIsCircleBtn = computed(() => attrs.shape === 'circle');

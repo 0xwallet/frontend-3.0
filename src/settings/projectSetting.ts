@@ -90,7 +90,7 @@ const setting: ProjectConfig = {
     // Whether to show dom
     hidden: true,
     // Whether to show search box
-    showSearch: true,
+    showSearch: false,
     // Menu width
     menuWidth: 210,
     // Menu mode
@@ -108,7 +108,7 @@ const setting: ProjectConfig = {
     // Fold trigger position
     trigger: TriggerEnum.HEADER,
     // Turn on accordion mode, only show a menu
-    accordion: true,
+    accordion: false,
   },
 
   // Multi-label

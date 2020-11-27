@@ -17,10 +17,10 @@
             ref="formRef"
             layout="vertical"
           >
-            <a-form-item name="email" label="EMAIL">
+            <a-form-item name="email" :label="t('emailLabel')">
               <a-input size="large" v-model:value="formData.email" placeholder="email" />
             </a-form-item>
-            <a-form-item name="password" label="密码">
+            <a-form-item name="password" :label="t('passwordLabel')">
               <a-input-password
                 size="large"
                 visibilityToggle
@@ -34,17 +34,16 @@
             </a-form-item> -->
             <a-row>
               <a-col :span="12">
-                <a-form-item>
-                  <!-- No logic, you need to deal with it yourself -->
-                  <a-checkbox v-model:checked="autoLogin" size="small">{{
-                    t('sys.login.autoLogin')
-                  }}</a-checkbox>
-                </a-form-item>
+                <!--                <a-form-item>-->
+                <!--                  <a-checkbox v-model:checked="autoLogin" size="small">{{-->
+                <!--                    t('sys.login.autoLogin')-->
+                <!--                  }}</a-checkbox>-->
+                <!--                </a-form-item>-->
               </a-col>
               <a-col :span="12">
                 <a-form-item :style="{ 'text-align': 'right' }">
                   <!-- No logic, you need to deal with it yourself -->
-                  <a-button type="link" size="small">{{ t('sys.login.forgetPassword') }}</a-button>
+                  <a-button type="link" size="small">{{ t('forgetPassword') }}</a-button>
                 </a-form-item>
               </a-col>
             </a-row>
@@ -56,7 +55,7 @@
                 :block="true"
                 @click="login"
                 :loading="formState.loading"
-                >{{ t('sys.login.loginButton') }}</a-button
+                >{{ t('loginButton') }}</a-button
               >
             </a-form-item>
             <a-form-item>
@@ -70,7 +69,7 @@
                     go('/register');
                   }
                 "
-                >注册</a-button
+                >{{ t('registerButton') }}</a-button
               >
             </a-form-item>
           </a-form>
@@ -83,13 +82,12 @@
   import { defineComponent, reactive, ref, unref, toRaw } from 'vue';
   import { Checkbox } from 'ant-design-vue';
 
-  import Button from '/@/components/Button/index.vue';
+  import { Button } from '/@/components/Button';
   import { AppLocalePicker } from '/@/components/Application';
   // import { BasicDragVerify, DragVerifyActionType } from '/@/components/Verify/index';
 
   import { userStore } from '/@/store/modules/user';
 
-  // import { appStore } from '/@/store/modules/app';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { useGlobSetting, useProjectSetting } from '/@/hooks/setting';
   import logo from '/@/assets/images/logo.png';
@@ -133,7 +131,7 @@
       });
 
       const formRules = reactive({
-        email: [{ required: true, message: t('accountPlaceholder'), trigger: 'blur' }],
+        email: [{ required: true, message: t('emailPlaceholder'), trigger: 'blur' }],
         password: [{ required: true, message: t('passwordPlaceholder'), trigger: 'blur' }],
         // verify: unref(openLoginVerifyRef) ? [{ required: true, message: '请通过验证码校验' }] : [],
       });
@@ -222,6 +220,13 @@
 <style lang="less" scoped>
   @import (reference) '../../../design/index.less';
 
+  .login-form__locale {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    z-index: 1;
+  }
+
   .login {
     position: relative;
     height: 100vh;
@@ -239,7 +244,9 @@
     }
 
     &-form {
-      width: 520px;
+      position: relative;
+      bottom: 60px;
+      width: 400px;
       background: @white;
       border: 10px solid rgba(255, 255, 255, 0.5);
       border-width: 8px;
@@ -253,7 +260,8 @@
         right: 0;
         display: flex;
         width: 100%;
-        height: 90%;
+        height: 100%;
+        // height: 90%;
         justify-content: center;
         align-items: center;
         .respond-to(large, {

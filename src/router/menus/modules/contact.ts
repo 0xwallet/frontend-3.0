@@ -2,7 +2,7 @@ import type { MenuModule } from '/@/router/types.d';
 const menu: MenuModule = {
   orderNo: 2,
   menu: {
-    name: '私域',
+    name: 'routes.menu.contact',
     path: '/contact',
     // tag: {
     //   dot: true,
@@ -10,18 +10,18 @@ const menu: MenuModule = {
     children: [
       {
         path: '/organization',
-        name: '组织',
+        name: 'routes.menu.organization',
         // tag: {
         //   content: 'new',
         // },
       },
       {
         path: '/client',
-        name: '客户',
+        name: 'routes.menu.client',
       },
       {
         path: '/general',
-        name: '全部',
+        name: 'routes.menu.general',
       },
     ],
   },

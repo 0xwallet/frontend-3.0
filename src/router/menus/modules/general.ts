@@ -3,20 +3,20 @@ const menu: MenuModule = {
   orderNo: 4,
   menu: {
     path: '/general',
-    name: '通用',
+    name: 'routes.menu.GENERAL',
 
     children: [
       {
         path: '/account',
-        name: '账户',
+        name: 'routes.menu.account',
       },
       {
         path: '/security',
-        name: '安全',
+        name: 'routes.menu.security',
       },
       {
         path: '/metanet',
-        name: '元网',
+        name: 'routes.menu.metanet',
       },
     ],
   },

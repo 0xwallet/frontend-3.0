@@ -16,26 +16,27 @@
             :rules="formRules"
             ref="formRef"
           >
-            <a-form-item name="email" label="邮箱">
+            <a-form-item name="email" label="email">
               <a-input v-model:value="formData.email" placeholder="email" />
               <div class="email-button"
                 ><a-button @click="getVerifyCode" :disabled="emailButton !== 0"
-                  >发送验证码{{ emailButton === 0 ? '' : '(' + emailButton + '秒)' }}</a-button
+                  >{{ t('verificationButton')
+                  }}{{ emailButton === 0 ? '' : '(' + emailButton + t('sec') + ')' }}</a-button
                 >
                 {{ info }}
               </div>
             </a-form-item>
-            <a-form-item name="code" label="验证码">
+            <a-form-item name="code" :label="t('verification')">
               <a-input v-model:value="formData.code" placeholder="verifyCode" />
             </a-form-item>
-            <a-form-item name="password" label="密码">
+            <a-form-item name="password" :label="t('passwordLabel')">
               <a-input-password
                 visibilityToggle
                 v-model:value="formData.password"
                 placeholder="Password"
               />
             </a-form-item>
-            <a-form-item name="password2" label="确认密码">
+            <a-form-item name="password2" :label="t('passwordLabel2')">
               <a-input-password
                 visibilityToggle
                 v-model:value="formData.password2"
@@ -50,7 +51,7 @@
                 :block="true"
                 :loading="formState.loading"
                 @click="register"
-                >注册</a-button
+                >{{ t('registerButton') }}</a-button
               >
             </a-form-item>
             <a-form-item>
@@ -63,7 +64,7 @@
                     go('/login');
                   }
                 "
-                >返回登录</a-button
+                >{{ t('backLoginButton') }}</a-button
               >
             </a-form-item>
           </a-form>
@@ -75,14 +76,15 @@
 <script lang="ts">
   import { defineComponent, reactive, ref, unref } from 'vue';
   import { Checkbox } from 'ant-design-vue';
-  import Button from '/@/components/Button/index.vue';
+  import { Button } from '/@/components/Button';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { useSetting } from '/@/hooks/core/useSetting';
   import logo from '/@/assets/images/logo.png';
   import { useGo } from '/@/hooks/web/usePage';
   import { sendVerifyCode, signUp } from '/@/hooks/apollo/gqlUser';
   import { useApollo } from '/@/hooks/apollo/apollo';
   import { useNKN, useCrypto } from '/@/hooks/nkn/getNKN';
+  import { useGlobSetting } from '/@/hooks/setting';
+  import { useI18n } from '/@/hooks/web/useI18n';
 
   export default defineComponent({
     components: {
@@ -92,10 +94,11 @@
     setup() {
       const formRef = ref<any>(null);
       const go = useGo();
-      const { globSetting } = useSetting();
+      const globSetting = useGlobSetting();
       const { notification } = useMessage();
       const info = ref('');
       const emailButton = ref(0);
+      const { t } = useI18n('sys.login');
       const formData = reactive({
         email: '',
         password: '',
@@ -108,10 +111,10 @@
       });
 
       const formRules = reactive({
-        email: [{ required: true, message: '请输入邮箱', trigger: 'blur' }],
-        password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
-        password2: [{ required: true, message: '请输入密码', trigger: 'blur' }],
-        code: [{ required: true, message: '请输入验证码', trigger: 'blur' }],
+        email: [{ required: true, message: t('emailPlaceholder'), trigger: 'blur' }],
+        password: [{ required: true, message: t('passwordPlaceholder'), trigger: 'blur' }],
+        password2: [{ required: true, message: t('passwordPlaceholder'), trigger: 'blur' }],
+        code: [{ required: true, message: t('verificationPlaceholder'), trigger: 'blur' }],
       });
 
       function getVerifyCode() {
@@ -142,7 +145,7 @@
             },
           })
           .finally(() => {
-            info.value = '已发送，请查收';
+            info.value = t('verificationSend');
           });
       }
       async function register() {
@@ -178,7 +181,7 @@
               localStorage.setItem('walletPassword', secret);
               localStorage.setItem('walletJson', walletJson);
               notification.success({
-                message: '注册成功',
+                message: t('registerSuccess'),
                 duration: 3,
               });
               go('/login');
@@ -198,6 +201,7 @@
         title: globSetting && globSetting.title,
         logo,
         go,
+        t,
         getVerifyCode,
         info,
         emailButton,

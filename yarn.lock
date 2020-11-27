@@ -8502,7 +8502,7 @@ vite-plugin-pwa@^0.1.5:
     fast-glob "^3.2.4"
     rollup-plugin-workbox "^5.2.1"
 
-vite@^1.0.0-rc.10:
+vite@^1.0.0-rc.13:
   version "1.0.0-rc.13"
   resolved "https://registry.npm.taobao.org/vite/download/vite-1.0.0-rc.13.tgz?cache=0&sync_timestamp=1606326433570&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fvite%2Fdownload%2Fvite-1.0.0-rc.13.tgz#0e0b3b6138998a1d0c02459908a6c4fb2f294727"
   integrity sha1-Dgs7YTiZih0MAkWZCKbE+y8pRyc=
@@ -8597,7 +8597,7 @@ vue-router@^4.0.0-rc.5:
   resolved "https://registry.npm.taobao.org/vue-router/download/vue-router-4.0.0-rc.5.tgz?cache=0&sync_timestamp=1605950373328&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fvue-router%2Fdownload%2Fvue-router-4.0.0-rc.5.tgz#191d32e3d5276641ff21e881d34e33a71dc6e8f0"
   integrity sha1-GR0y49UnZkH/IeiB004zpx3G6PA=
 
-vue-types@^3.0.0:
+vue-types@^3.0.0, vue-types@^3.0.1:
   version "3.0.1"
   resolved "https://registry.npm.taobao.org/vue-types/download/vue-types-3.0.1.tgz#20e9baae8673de8093d0a989234695d08d544be0"
   integrity sha1-IOm6roZz3oCT0KmJI0aV0I1US+A=
@@ -8618,10 +8618,10 @@ vuex-module-decorators@^1.0.1:
   resolved "https://registry.npm.taobao.org/vuex-module-decorators/download/vuex-module-decorators-1.0.1.tgz#d34dafb5428a3636f1c26d3d014c15fc9659ccd0"
   integrity sha1-002vtUKKNjbxwm09AUwV/JZZzNA=
 
-vuex@^4.0.0-rc.1:
-  version "4.0.0-rc.1"
-  resolved "https://registry.npm.taobao.org/vuex/download/vuex-4.0.0-rc.1.tgz?cache=0&sync_timestamp=1604065489763&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fvuex%2Fdownload%2Fvuex-4.0.0-rc.1.tgz#160cd5957972a61c7c01ab585995b78e092a298d"
-  integrity sha1-FgzVlXlyphx8AatYWZW3jgkqKY0=
+vuex@^4.0.0-rc.2:
+  version "4.0.0-rc.2"
+  resolved "https://registry.npm.taobao.org/vuex/download/vuex-4.0.0-rc.2.tgz?cache=0&sync_timestamp=1606318256705&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fvuex%2Fdownload%2Fvuex-4.0.0-rc.2.tgz#3681c84eb6f5171b039edaa17cc78105e20724f3"
+  integrity sha1-NoHITrb1FxsDntqhfMeBBeIHJPM=
 
 warning@^4.0.0:
   version "4.0.3"

@@ -2,7 +2,7 @@ import type { MenuModule } from '/@/router/types.d';
 const menu: MenuModule = {
   orderNo: 1,
   menu: {
-    name: '通证',
+    name: 'routes.menu.token',
     path: '/token',
     // tag: {
     //   dot: true,
@@ -10,18 +10,18 @@ const menu: MenuModule = {
     children: [
       {
         path: '/issuer',
-        name: '发行',
+        name: 'routes.menu.issuer',
         // tag: {
         //   content: 'new',
         // },
       },
       {
         path: '/management',
-        name: '管理',
+        name: 'routes.menu.management',
       },
       {
         path: '/wallet',
-        name: '钱包',
+        name: 'routes.menu.wallet',
       },
     ],
   },

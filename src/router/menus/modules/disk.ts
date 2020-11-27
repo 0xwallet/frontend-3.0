@@ -2,7 +2,7 @@ import type { MenuModule } from '/@/router/types.d';
 const menu: MenuModule = {
   orderNo: 10,
   menu: {
-    name: '网盘',
+    name: 'routes.menu.disk',
     path: '/disk',
     // tag: {
     //   dot: true,
@@ -10,18 +10,18 @@ const menu: MenuModule = {
     children: [
       {
         path: '/files',
-        name: '文件列表',
+        name: 'routes.menu.files',
         // tag: {
         //   content: 'new',
         // },
       },
       {
         path: '/share',
-        name: '我的分享',
+        name: 'routes.menu.share',
       },
       {
         path: '/recycle',
-        name: '回收站',
+        name: 'routes.menu.recycle',
       },
     ],
   },
