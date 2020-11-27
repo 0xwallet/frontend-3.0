@@ -116,7 +116,7 @@
             const list = res.data?.driveListFiles;
             // 重置文件夹列表，文件列表
 
-            let temp = [];
+            let temp: File[] = [];
             if (!list) {
               return;
             }

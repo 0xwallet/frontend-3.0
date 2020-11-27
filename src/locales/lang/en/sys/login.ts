@@ -1,7 +1,7 @@
 export default {
   loginButton: 'Login',
   backLoginButton: 'Back Login',
-  autoLogin: 'AutoLogin',
+  autoLogin: 'Remember',
 
   forgetPassword: 'Forget Password',
   emailLabel: 'Email',

@@ -6,8 +6,7 @@
         <div class="login-form__content px-2 py-10">
           <AppLocalePicker v-if="showLocale" class="login-form__locale" />
           <header>
-            <img :src="logo" class="mr-4" />
-            <h1>{{ title }}</h1>
+            <img :src="logo" />
           </header>
 
           <a-form
@@ -18,7 +17,9 @@
             layout="vertical"
           >
             <a-form-item name="email" :label="t('emailLabel')">
-              <a-input size="large" v-model:value="formData.email" placeholder="email" />
+              <a-input size="large" v-model:value="formData.email" placeholder="email">
+                <template #addonBefore><MailOutlined /></template
+              ></a-input>
             </a-form-item>
             <a-form-item name="password" :label="t('passwordLabel')">
               <a-input-password
@@ -26,7 +27,9 @@
                 visibilityToggle
                 v-model:value="formData.password"
                 placeholder="password: 123456"
-              />
+              >
+                <template #addonBefore><LockOutlined /></template>
+              </a-input-password>
             </a-form-item>
 
             <!-- <a-form-item name="verify" v-if="openLoginVerify">
@@ -34,11 +37,11 @@
             </a-form-item> -->
             <a-row>
               <a-col :span="12">
-                <!--                <a-form-item>-->
-                <!--                  <a-checkbox v-model:checked="autoLogin" size="small">{{-->
-                <!--                    t('sys.login.autoLogin')-->
-                <!--                  }}</a-checkbox>-->
-                <!--                </a-form-item>-->
+                <a-form-item>
+                  <a-checkbox v-model:checked="autoLogin" size="small">{{
+                    t('sys.login.autoLogin')
+                  }}</a-checkbox>
+                </a-form-item>
               </a-col>
               <a-col :span="12">
                 <a-form-item :style="{ 'text-align': 'right' }">
@@ -81,7 +84,7 @@
 <script lang="ts">
   import { defineComponent, reactive, ref, unref, toRaw } from 'vue';
   import { Checkbox } from 'ant-design-vue';
-
+  import { MailOutlined, LockOutlined } from '@ant-design/icons-vue';
   import { Button } from '/@/components/Button';
   import { AppLocalePicker } from '/@/components/Application';
   // import { BasicDragVerify, DragVerifyActionType } from '/@/components/Verify/index';
@@ -104,6 +107,8 @@
       AButton: Button,
       ACheckbox: Checkbox,
       AppLocalePicker,
+      MailOutlined,
+      LockOutlined,
     },
     setup() {
       localStorage.setItem('walletJson', undefined);
@@ -291,7 +296,7 @@
 
           img {
             display: inline-block;
-            width: 48px;
+            width: 70%;
           }
 
           h1 {

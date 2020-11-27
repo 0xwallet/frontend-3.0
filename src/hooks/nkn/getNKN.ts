@@ -39,7 +39,7 @@ export function useWallet(): Promise<any> {
       reject('no walletPassword');
       return;
     }
-
+    console.log(json);
     useNKN().then((nkn: any) => {
       wallet = nkn.Wallet.fromJSON(json, { password });
       resolve(wallet);
