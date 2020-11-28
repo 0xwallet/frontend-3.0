@@ -6,10 +6,12 @@ const demoList = (() => {
   for (let index = 0; index < 60; index++) {
     result.push({
       id: `${index}`,
-      createAt: '@datetime',
-      'type|1': ['folder', 'pdf', 'txt'],
-      'size|100000-10000000': 100000,
-      name: '@word()',
+      beginTime: '@datetime',
+      endTime: '@datetime',
+      address: '@city()',
+      name: '@cname()',
+      'no|100000-10000000': 100000,
+      'status|1': ['normal', 'enable', 'disable'],
     });
   }
   return result;

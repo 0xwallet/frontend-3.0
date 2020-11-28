@@ -3,7 +3,6 @@ import { DemoParams, DemoListGetResultModel } from './model/tableModel';
 
 enum Api {
   DEMO_LIST = '/table/getDemoList',
-  SHARE_LIST = '/table/getShareList',
 }
 
 /**
@@ -17,12 +16,5 @@ export function demoListApi(params: DemoParams) {
     headers: {
       ignoreCancelToken: true,
     },
-  });
-}
-export function demoShareList(params: DemoParams) {
-  return defHttp.request<DemoListGetResultModel>({
-    url: Api.SHARE_LIST,
-    method: 'GET',
-    params,
   });
 }

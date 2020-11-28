@@ -1,6 +1,6 @@
 import { appStore } from './app';
 import type {
-  // LoginParams,
+  LoginParams,
   GetUserInfoByUserIdModel,
   GetUserInfoByUserIdParams,
 } from '/@/api/sys/model/userModel';
@@ -17,9 +17,8 @@ import { useMessage } from '/@/hooks/web/useMessage';
 
 import router from '/@/router';
 
-import { getUserInfoById } from '/@/api/sys/user';
+import { loginApi, getUserInfoById } from '/@/api/sys/user';
 
-// import { FULL_PAGE_NOT_FOUND_ROUTE } from '/@/router/constant';
 import { setLocal, getLocal, getSession, setSession } from '/@/utils/helper/persistent';
 import { useProjectSetting } from '/@/hooks/setting';
 import { useI18n } from '/@/hooks/web/useI18n';
@@ -96,22 +95,25 @@ class User extends VuexModule {
    * @description: login
    */
   @Action
-  async login(goHome = true): Promise<GetUserInfoByUserIdModel | null> {
+  async login(params: LoginParams, goHome = true): Promise<GetUserInfoByUserIdModel | null> {
     try {
+      const data = await loginApi(params);
+      const { token, userId } = data;
       // get user info
-      // const userInfo = await this.getUserInfoAction({ userId });
+      const userInfo = await this.getUserInfoAction({ userId });
 
       // save token
-      this.commitTokenState('111');
-      // this.commitUserInfoState();
-      this.commitRoleListState(['super'] as RoleEnum[]);
+      this.commitTokenState(token);
+
+      // const name = FULL_PAGE_NOT_FOUND_ROUTE.name;
+      // name && router.removeRoute(name);
       goHome &&
         (await router.push(PageEnum.BASE_HOME).then(() => {
           setTimeout(() => {
             appStore.commitPageLoadingState(false);
           }, 30);
         }));
-      return null;
+      return userInfo;
     } catch (error) {
       return null;
     }
