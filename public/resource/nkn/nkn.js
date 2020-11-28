@@ -1565,7 +1565,7 @@ async function sign(privateKey, message) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.InvalidDestinationError = exports.ServerError = exports.InvalidResponseError = exports.InvalidArgumentError = exports.InvalidWalletVersionError = exports.InvalidWalletFormatError = exports.InvalidAddressError = exports.WrongPasswordError = exports.NotEnoughBalanceError = exports.UnknownError = exports.DecryptionError = exports.DataSizeTooLargeError = exports.ClientNotReadyError = exports.AddrNotAllowedError = exports.rpcRespErrCodes = void 0;
+exports.RpcError = exports.RpcTimeoutError = exports.InvalidDestinationError = exports.ServerError = exports.InvalidResponseError = exports.InvalidArgumentError = exports.InvalidWalletVersionError = exports.InvalidWalletFormatError = exports.InvalidAddressError = exports.WrongPasswordError = exports.NotEnoughBalanceError = exports.UnknownError = exports.DecryptionError = exports.DataSizeTooLargeError = exports.ClientNotReadyError = exports.AddrNotAllowedError = exports.rpcRespErrCodes = void 0;
 const rpcRespErrCodes = {
   success: 0,
   wrongNode: 48001,
@@ -1794,6 +1794,36 @@ class InvalidDestinationError extends Error {
 }
 
 exports.InvalidDestinationError = InvalidDestinationError;
+
+class RpcTimeoutError extends Error {
+  constructor(message = 'rpc timeout', ...params) {
+    super(message, ...params);
+
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, RpcTimeoutError);
+    }
+
+    this.name = 'RpcTimeoutError';
+  }
+
+}
+
+exports.RpcTimeoutError = RpcTimeoutError;
+
+class RpcError extends Error {
+  constructor(message = 'rpc error', ...params) {
+    super(message, ...params);
+
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, RpcError);
+    }
+
+    this.name = 'RpcError';
+  }
+
+}
+
+exports.RpcError = RpcError;
 },{}],9:[function(require,module,exports){
 'use strict';
 
@@ -9518,6 +9548,7 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+const rpcTimeout = 10000;
 const methods = {
   getWsAddr: {
     method: 'getwsaddr'
@@ -9568,17 +9599,36 @@ for (let method in methods) {
 }
 
 async function rpcCall(addr, method, params = {}) {
-  let response = await (0, _axios.default)({
-    url: addr,
-    method: 'POST',
-    timeout: 10000,
-    data: {
-      id: 'nkn-sdk-js',
-      jsonrpc: '2.0',
-      method: method,
-      params: params
+  const source = _axios.default.CancelToken.source();
+
+  let response = null;
+  setTimeout(() => {
+    if (response === null) {
+      source.cancel('rpc timeout');
     }
-  });
+  }, rpcTimeout);
+
+  try {
+    response = await (0, _axios.default)({
+      url: addr,
+      method: 'POST',
+      timeout: rpcTimeout,
+      cancelToken: source.token,
+      data: {
+        id: 'nkn-sdk-js',
+        jsonrpc: '2.0',
+        method: method,
+        params: params
+      }
+    });
+  } catch (e) {
+    if (_axios.default.isCancel(e)) {
+      throw new errors.RpcTimeoutError(e.message);
+    } else {
+      throw new errors.RpcError(e.message);
+    }
+  }
+
   let data = response.data;
 
   if (data.error) {
@@ -9820,6 +9870,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.hexToBytes = hexToBytes;
 exports.bytesToHex = bytesToHex;
+exports.setPRNG = setPRNG;
 exports.randomBytesHex = randomBytesHex;
 exports.randomInt32 = randomInt32;
 exports.randomUint64 = randomUint64;
@@ -9865,13 +9916,11 @@ function bytesToHex(bytes) {
   }).join('');
 }
 
-var randomBytes;
+var randomBytes = _tweetnacl.default.randomBytes;
 exports.randomBytes = randomBytes;
 
-if (typeof navigator != 'undefined' && navigator.product === 'ReactNative') {
-  exports.randomBytes = randomBytes = require('crypto').randomBytes;
-} else {
-  exports.randomBytes = randomBytes = _tweetnacl.default.randomBytes;
+function setPRNG(f) {
+  _tweetnacl.default.setPRNG(f);
 }
 
 function randomBytesHex(len) {
@@ -9925,13 +9974,14 @@ function toLowerKeys(obj) {
   }), {});
 }
 }).call(this,require("buffer").Buffer)
-},{"./serialize":18,"buffer":117,"crypto":87,"tweetnacl":381}],20:[function(require,module,exports){
+},{"./serialize":18,"buffer":117,"tweetnacl":381}],20:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 var _exportNames = {
+  setPRNG: true,
   ready: true,
   Client: true,
   MultiClient: true,
@@ -9961,7 +10011,7 @@ Object.defineProperty(exports, "Wallet", {
     return _wallet.default;
   }
 });
-exports.default = void 0;
+exports.setPRNG = exports.default = void 0;
 
 var _libsodiumWrappers = require("libsodium-wrappers");
 
@@ -9990,10 +10040,13 @@ function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return 
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
+var setPRNG = nkn.util.setPRNG;
+exports.setPRNG = setPRNG;
 nkn.ready = _libsodiumWrappers.ready;
 nkn.Client = _client.default;
 nkn.MultiClient = _multiclient.default;
 nkn.Wallet = _wallet.default;
+nkn.setPRNG = setPRNG;
 var _default = nkn;
 exports.default = _default;
 },{"./client":3,"./common":10,"./multiclient":22,"./wallet":28,"libsodium-wrappers":308}],21:[function(require,module,exports){
@@ -11323,35 +11376,24 @@ class Wallet {
         break;
     }
 
-    let passwordKey;
-
-    if (options.passwordKey && options.passwordKey[this.version]) {
-      passwordKey = options.passwordKey[this.version];
-    } else {
-      passwordKey = Wallet._computePasswordKey({
-        version: this.version,
-        password: options.password,
-        scrypt: this.scryptParams,
-        async: false
-      });
-    }
-
-    let iv = options.iv || common.util.randomBytesHex(16);
-    let masterKey = options.masterKey || common.util.randomBytesHex(32);
     this.options = options;
-    this.general = new _account.default(options.seed, {
+    this.account = new _account.default(options.seed, {
       worker: options.worker
     });
-    this.iv = iv;
-    this.masterKey = common.aes.encrypt(masterKey, passwordKey, iv);
     this.address = this.account.address;
     this.programHash = this.account.programHash;
-    this.seedEncrypted = common.aes.encrypt(this.account.getSeed(), masterKey, iv);
+
+    if (options.iv || options.masterKey || options.password || options.passwordKey) {
+      this._completeWallet(Object.assign({}, options, {
+        async: false
+      }));
+    }
+
     delete options.seed;
-    delete options.password;
-    delete options.passwordKey;
     delete options.iv;
     delete options.masterKey;
+    delete options.password;
+    delete options.passwordKey;
   }
 
   static _computePasswordKey(options) {
@@ -11367,7 +11409,7 @@ class Wallet {
     switch (options.version) {
       case 1:
         if (options.async) {
-          return new Promise(resolve => resolve(common.hash.doubleSha256(options.password)));
+          return Promise.resolve(common.hash.doubleSha256(options.password));
         } else {
           return common.hash.doubleSha256(options.password);
         }
@@ -11419,6 +11461,54 @@ class Wallet {
     }
 
     return new Wallet(options);
+  }
+
+  _completeWallet(options = {}) {
+    if (this.seedEncrypted) {
+      if (options.async) {
+        return Promise.resolve();
+      } else {
+        return;
+      }
+    }
+
+    let completeWallet = passwordKey => {
+      let iv = options.iv || common.util.randomBytesHex(16);
+      let masterKey = options.masterKey || common.util.randomBytesHex(32);
+      this.iv = iv;
+      this.masterKey = common.aes.encrypt(masterKey, passwordKey, iv);
+      this.seedEncrypted = common.aes.encrypt(this.account.getSeed(), masterKey, iv);
+    };
+
+    let passwordKey;
+
+    if (options.passwordKey && options.passwordKey['' + this.version]) {
+      passwordKey = options.passwordKey['' + this.version];
+    } else {
+      if (options.async) {
+        return Wallet._computePasswordKey({
+          version: this.version,
+          password: options.password || '',
+          scrypt: this.scryptParams,
+          async: true
+        }).then(completeWallet);
+      } else {
+        passwordKey = Wallet._computePasswordKey({
+          version: this.version,
+          password: options.password || '',
+          scrypt: this.scryptParams,
+          async: false
+        });
+      }
+    }
+
+    completeWallet(passwordKey);
+
+    if (options.async) {
+      return Promise.resolve();
+    } else {
+      return;
+    }
   }
   /**
    * Recover wallet from JSON string and password.
@@ -11488,6 +11578,10 @@ class Wallet {
 
 
   toJSON() {
+    this._completeWallet({
+      async: false
+    });
+
     let walletJson = {
       Version: this.version,
       MasterKey: this.masterKey,
@@ -11535,6 +11629,10 @@ class Wallet {
   }
 
   _verifyPassword(passwordKey) {
+    this._completeWallet({
+      async: false
+    });
+
     let masterKey = common.aes.decrypt(this.masterKey, passwordKey, this.iv);
     let seed = common.aes.decrypt(this.seedEncrypted, masterKey, this.iv);
     let account = new _account.default(seed, {
@@ -11558,10 +11656,20 @@ class Wallet {
     };
 
     if (options.async) {
-      return Wallet._computePasswordKey(opts).then(passwordKey => {
+      let verifyPassword = async () => {
+        await this._completeWallet({
+          async: true
+        });
+        let passwordKey = await Wallet._computePasswordKey(opts);
         return this._verifyPassword(passwordKey);
-      });
+      };
+
+      return verifyPassword();
     } else {
+      this._completeWallet({
+        async: false
+      });
+
       let passwordKey = Wallet._computePasswordKey(opts);
 
       return this._verifyPassword(passwordKey);
@@ -47725,9 +47833,9 @@ module.exports = require('./lib/heap');
 
   /*
   Insert item x in list a, and keep it sorted assuming a is sorted.
-
+  
   If x is already in a, insert it to the right of the rightmost x.
-
+  
   Optional args lo (default 0) and hi (default a.length) bound the slice
   of a to be searched.
    */
@@ -47794,7 +47902,7 @@ module.exports = require('./lib/heap');
 
   /*
   Pop and return the current smallest value, and add the new item.
-
+  
   This is more efficient than heappop() followed by heappush(), and can be
   more appropriate when using a fixed size heap. Note that the value
   returned may be larger than item! That constrains reasonable use of
@@ -55921,7 +56029,7 @@ var TBSCertificate = asn.define('TBSCertificate', function () {
     this.key('version').explicit(0).int().optional(),
     this.key('serialNumber').int(),
     this.key('signature').use(AlgorithmIdentifier),
-    this.key('organization').use(Name),
+    this.key('issuer').use(Name),
     this.key('validity').use(Validity),
     this.key('subject').use(Name),
     this.key('subjectPublicKeyInfo').use(SubjectPublicKeyInfo),
@@ -64111,13 +64219,13 @@ Script.prototype.runInContext = function (context) {
     if (!(context instanceof Context)) {
         throw new TypeError("needs a 'context' argument.");
     }
-
+    
     var iframe = document.createElement('iframe');
     if (!iframe.style) iframe.style = {};
     iframe.style.display = 'none';
-
+    
     document.body.appendChild(iframe);
-
+    
     var win = iframe.contentWindow;
     var wEval = win.eval, wExecScript = win.execScript;
 
@@ -64126,7 +64234,7 @@ Script.prototype.runInContext = function (context) {
         wExecScript.call(win, 'null');
         wEval = win.eval;
     }
-
+    
     forEach(Object_keys(context), function (key) {
         win[key] = context[key];
     });
@@ -64135,11 +64243,11 @@ Script.prototype.runInContext = function (context) {
             win[key] = context[key];
         }
     });
-
+    
     var winKeys = Object_keys(win);
 
     var res = wEval.call(win, this.code);
-
+    
     forEach(Object_keys(win), function (key) {
         // Avoid copying circular objects like `top` and `window` by only
         // updating existing context properties or new properties in the `win`
@@ -64154,9 +64262,9 @@ Script.prototype.runInContext = function (context) {
             defineProp(context, key, win[key]);
         }
     });
-
+    
     document.body.removeChild(iframe);
-
+    
     return res;
 };
 
