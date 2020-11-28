@@ -10,7 +10,7 @@ const account: AppRouteModule = {
     redirect: '/history/payment',
     meta: {
       icon: 'ant-design:home-outlined',
-      title: 'History',
+      title: 'routes.menu.history',
     },
   },
 
@@ -20,7 +20,7 @@ const account: AppRouteModule = {
       name: 'Payment',
       component: () => import('/@/views/history/payment/index.vue'),
       meta: {
-        title: '支付',
+        title: 'routes.menu.payment',
       },
     },
     {
@@ -28,7 +28,7 @@ const account: AppRouteModule = {
       name: 'Settlement',
       component: () => import('/@/views/history/settlement/index.vue'),
       meta: {
-        title: '结算',
+        title: 'routes.menu.settlement',
       },
     },
     {
@@ -36,7 +36,7 @@ const account: AppRouteModule = {
       name: 'Activity',
       component: () => import('/@/views/history/activity/index.vue'),
       meta: {
-        title: '审计',
+        title: 'routes.menu.settlement',
       },
     },
   ],

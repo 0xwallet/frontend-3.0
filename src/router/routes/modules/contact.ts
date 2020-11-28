@@ -10,7 +10,7 @@ const account: AppRouteModule = {
     redirect: '/contact/organization',
     meta: {
       icon: 'ant-design:home-outlined',
-      title: 'Contact',
+      title: 'routes.menu.contact',
     },
   },
 
@@ -20,7 +20,7 @@ const account: AppRouteModule = {
       name: 'Organization',
       component: () => import('/@/views/contact/organization/index.vue'),
       meta: {
-        title: '组织',
+        title: 'routes.menu.organization',
       },
     },
     {
@@ -28,7 +28,7 @@ const account: AppRouteModule = {
       name: 'Client',
       component: () => import('/@/views/contact/client/index.vue'),
       meta: {
-        title: '客户',
+        title: 'routes.menu.client',
       },
     },
     {
@@ -36,7 +36,7 @@ const account: AppRouteModule = {
       name: 'ContactGeneral',
       component: () => import('/@/views/contact/general/index.vue'),
       meta: {
-        title: '全部',
+        title: 'routes.menu.general',
       },
     },
   ],

@@ -3,6 +3,7 @@ import gql from 'graphql-tag';
 export const User = `
   id
   avatar
+  username
   email
   loginNknAddress
   personalInfo {

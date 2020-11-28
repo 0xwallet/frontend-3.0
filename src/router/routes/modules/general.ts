@@ -10,7 +10,7 @@ const general: AppRouteModule = {
     redirect: '/general/account',
     meta: {
       icon: 'ant-design:home-outlined',
-      title: 'General',
+      title: 'routes.menu.general',
     },
   },
 
@@ -20,7 +20,7 @@ const general: AppRouteModule = {
       name: 'Account',
       component: () => import('/@/views/general/account/index.vue'),
       meta: {
-        title: '账户',
+        title: 'routes.menu.account',
       },
     },
     {
@@ -28,7 +28,7 @@ const general: AppRouteModule = {
       name: 'Security',
       component: () => import('/@/views/general/security/index.vue'),
       meta: {
-        title: '安全',
+        title: 'routes.menu.security',
       },
     },
     {
@@ -36,7 +36,7 @@ const general: AppRouteModule = {
       name: 'Metanet',
       component: () => import('/@/views/general/metanet/index.vue'),
       meta: {
-        title: '元网',
+        title: 'routes.menu.metanet',
       },
     },
   ],

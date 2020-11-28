@@ -39,7 +39,6 @@ export function useWallet(): Promise<any> {
       reject('no walletPassword');
       return;
     }
-    console.log(json);
     useNKN().then((nkn: any) => {
       wallet = nkn.Wallet.fromJSON(json, { password });
       resolve(wallet);
@@ -90,16 +89,3 @@ export function useCrypto() {
     }, 100);
   });
 }
-
-// // 循环获取Crypto-js
-// export function getProto() {
-//   return new Promise((resolve) => {
-//     let t = setInterval(() => {
-//       const global = getGlobal();
-//       if (global && global.proto) {
-//         clearInterval(t);
-//         resolve(global.proto);
-//       }
-//     }, 100);
-//   });
-// }

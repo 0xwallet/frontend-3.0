@@ -10,7 +10,7 @@ const account: AppRouteModule = {
     redirect: '/token/organization',
     meta: {
       icon: 'ant-design:home-outlined',
-      title: 'Token',
+      title: 'routes.menu.token',
     },
   },
 
@@ -20,7 +20,7 @@ const account: AppRouteModule = {
       name: 'Issuer',
       component: () => import('/@/views/token/issuer/index.vue'),
       meta: {
-        title: '发行',
+        title: 'routes.menu.issuer',
       },
     },
     {
@@ -28,7 +28,7 @@ const account: AppRouteModule = {
       name: 'Management',
       component: () => import('/@/views/token/management/index.vue'),
       meta: {
-        title: '发行',
+        title: 'routes.menu.management',
       },
     },
     {
@@ -36,7 +36,7 @@ const account: AppRouteModule = {
       name: 'Wallet',
       component: () => import('/@/views/token/wallet/index.vue'),
       meta: {
-        title: '发行',
+        title: 'routes.menu.wallet',
       },
     },
   ],

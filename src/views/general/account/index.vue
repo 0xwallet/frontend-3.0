@@ -1,43 +1,25 @@
 <template>
-  <ScrollContainer>
-    <div ref="wrapperRef" class="m-4 account">
-      <Dashboard />
-      <Tabs tab-position="left">
-        <template v-for="item in settingList" :key="item.key">
-          <TabPane :tab="item.name">
-            <component :is="item.component" />
-          </TabPane>
-        </template>
-      </Tabs>
-    </div>
-  </ScrollContainer>
+  <div class="bg">
+    <Row :gutter="[10, 10]">
+      <Col :span="12"><Profile /></Col>
+      <Col :span="12">22</Col>
+    </Row>
+  </div>
 </template>
 
 <script lang="ts">
   import { defineComponent } from 'vue';
-  import { Tabs } from 'ant-design-vue';
-  import Dashboard from '../dashboard/index.vue';
-  import { ScrollContainer } from '/@/components/Container/index';
-  import { settingList } from './data';
-
-  import BaseSetting from './BaseSetting.vue';
-  import SecureSetting from './SecureSetting.vue';
-  import AccountBind from './AccountBind.vue';
-  import MsgNotify from './MsgNotify.vue';
+  import { Row, Col } from 'ant-design-vue';
+  import Profile from './profile.vue';
 
   export default defineComponent({
     components: {
-      ScrollContainer,
-      Tabs,
-      TabPane: Tabs.TabPane,
-      BaseSetting,
-      SecureSetting,
-      AccountBind,
-      MsgNotify,
-      Dashboard,
+      Row,
+      Col,
+      Profile,
     },
     setup() {
-      return { settingList };
+      return {};
     },
   });
 </script>
@@ -56,5 +38,8 @@
     /deep/ .ant-tabs-tab-active {
       background-color: #e6f7ff;
     }
+  }
+  .bg {
+    margin: 10px;
   }
 </style>
