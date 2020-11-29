@@ -4,7 +4,7 @@ import { PropType, toRef } from 'vue';
 import type { Menu } from '/@/router/types';
 
 import { computed, defineComponent, unref } from 'vue';
-import { BasicMenu } from '/@/components/Menu/index';
+import { BasicMenu } from '/@/components/Menu';
 import { AppLogo } from '/@/components/Application';
 
 import { MenuModeEnum, MenuSplitTyeEnum } from '/@/enums/menuEnum';

@@ -5,7 +5,7 @@
     @click="handleGoHome"
   >
     <img src="/@/assets/images/logo.png" />
-    <div class="app-logo__title ml-2 ellipsis" v-show="showTitle">{{ globSetting.title }}</div>
+    <!--    <div class="app-logo__title ml-2 ellipsis" v-show="showTitle">{{ globSetting.title }}</div>-->
   </div>
 </template>
 <script lang="ts">
@@ -56,6 +56,12 @@
     align-items: center;
     padding-left: 10px;
     cursor: pointer;
+
+    img {
+      display: inline-block;
+      width: 70%;
+      margin-left: 30px;
+    }
 
     &.collapsed-show-title {
       padding-left: 20px;
