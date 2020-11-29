@@ -15,8 +15,5 @@ export default {
   account: '账户',
   security: '安全',
   metanet: '元网',
-  disk: '网盘',
-  files: '我的文件',
-  share: '我的分享',
-  recycle: '回收站',
+  shareFile: '文件分享',
 };

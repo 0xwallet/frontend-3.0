@@ -34,8 +34,8 @@
   import GIcon from '/@/components/Icon';
   import { useApollo } from '/@/hooks/apollo/apollo';
   import { driveListShares } from '/@/hooks/apollo/gqlFile';
-  import { getBasicColumns } from '/@/views/disk/share/shareData';
-  import { File } from '/@/views/disk/type/file';
+  import { getBasicColumns } from './shareData';
+  import { File } from '../type/file';
   import { BasicHelp } from '/@/components/Basic';
   export default defineComponent({
     components: { BasicTable, GIcon, BasicHelp },

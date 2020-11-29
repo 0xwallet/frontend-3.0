@@ -15,8 +15,5 @@ export default {
   account: 'Account',
   security: 'Security',
   metanet: 'Metanet',
-  disk: 'NetDisk',
-  files: 'Files',
-  share: 'Share',
-  recycle: 'Recycle',
+  shareFile: 'shareFile',
 };

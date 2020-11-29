@@ -1,6 +1,6 @@
 import type { MenuModule } from '/@/router/types.d';
 const menu: MenuModule = {
-  orderNo: 3,
+  orderNo: 4,
   menu: {
     name: 'routes.menu.history',
     path: '/history',

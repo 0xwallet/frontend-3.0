@@ -5,60 +5,9 @@ import { checkImgType, isImgTypeByName } from './utils';
 import { Progress, Tag } from 'ant-design-vue';
 
 import TableAction from '/@/components/Table/src/components/TableAction';
-import { forIn } from 'lodash-es';
 
 // 文件上传列表
-export function createTableColumns(): (
-  | {
-      customRender: ({
-        record,
-      }: {
-        record: any;
-      }) => VNode<RendererNode, RendererElement, { [p: string]: any }>;
-      dataIndex: string;
-      width: number;
-      title: string;
-    }
-  | {
-      customRender: ({
-        text,
-        record,
-      }: {
-        text: any;
-        record: any;
-      }) => VNode<RendererNode, RendererElement, { [p: string]: any }>;
-      dataIndex: string;
-      title: string;
-      align: string;
-    }
-  | {
-      customRender: ({
-        text,
-      }: {
-        text: any;
-      }) => VNode<RendererNode, RendererElement, { [p: string]: any }>;
-      dataIndex: string;
-      width: number;
-      title: string;
-    }
-  | {
-      customRender: ({ text }: { text?: any }) => string;
-      dataIndex: string;
-      width: number;
-      title: string;
-    }
-  | { dataIndex: string; width: number; title: string }
-  | {
-      customRender: ({
-        text,
-      }: {
-        text: any;
-      }) => VNode<RendererNode, RendererElement, { [p: string]: any }>;
-      dataIndex: string;
-      width: number;
-      title: string;
-    }
-)[] {
+export function createTableColumns() {
   return [
     {
       dataIndex: 'thumbUrl',

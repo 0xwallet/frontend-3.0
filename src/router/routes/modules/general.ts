@@ -39,6 +39,14 @@ const general: AppRouteModule = {
         title: 'routes.menu.metanet',
       },
     },
+    {
+      path: '/shareFile/:uri',
+      name: 'ShareFile',
+      component: () => import('/@/views/general/metanet/share/shareFile.vue'),
+      meta: {
+        title: 'routes.menu.shareFile',
+      },
+    },
   ],
 };
 

@@ -48,9 +48,9 @@
   import { useMessage } from '/@/hooks/web/useMessage';
   import ShareFileModal from './ShareFileModal.vue';
   import { useModal } from '/@/components/Modal';
-  import { File } from '/@/views/disk/type/file';
+  import { File } from '../type/file';
   import { useTable, BasicTable } from '/@/components/Table';
-  import { getBasicColumns } from '/@/views/disk/share/tableData';
+  import { getBasicColumns } from './tableData';
   import { toLower } from 'lodash-es';
   import { createImgPreview } from '/@/components/Preview';
   import { downloadByUrl } from '/@/utils/file/download';

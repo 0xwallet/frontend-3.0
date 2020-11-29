@@ -144,7 +144,7 @@ export class File {
     if (this.uri === '') {
       return '';
     }
-    const url = `${window.location.origin}/#/disk/shareFile/${this.uri}`;
+    const url = `${window.location.origin}/#/general/shareFile/${this.uri}`;
     this.copyShareUrl();
     return url;
   }
@@ -153,7 +153,7 @@ export class File {
     if (this.uri === '') {
       return '';
     }
-    clipboardRef.value = `${window.location.origin}/#/disk/shareFile/${this.uri}`;
+    clipboardRef.value = `${window.location.origin}/#/general/shareFile/${this.uri}`;
     if (unref(copiedRef)) {
       createMessage.success('copy success！');
     }

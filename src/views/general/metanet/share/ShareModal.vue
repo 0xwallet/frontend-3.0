@@ -16,7 +16,7 @@
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { BasicForm, FormSchema, useForm } from '/@/components/Form';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { File } from '/@/views/disk/type/file';
+  import { File } from '../type/file';
 
   function randomString(len) {
     len = len || 32;

@@ -72,7 +72,7 @@
   import { useApollo } from '/@/hooks/apollo/apollo';
   import { driveListFiles, driveDeleteFiles } from '/@/hooks/apollo/gqlFile';
   import { useModal } from '/@/components/Modal';
-  import { File } from '/@/views/disk/type/file';
+  import { File } from './type/file';
   export default defineComponent({
     components: {
       BasicTable,
@@ -90,7 +90,7 @@
       const path = ref([]);
       let dirId = 'root';
       // 表格数据
-      // 文件夹数据+文件数据
+      // 文件列表
       const tableData = computed(() => {
         return folder.value.concat(files.value);
       });
