@@ -31,6 +31,42 @@
       </Tag>
     </Card>
     <Divider />
+    <Row class="line">
+      <Col :span="8">Email</Col>
+      <Col :span="8">Country</Col>
+      <Col :span="8">Passport</Col>
+    </Row>
+    <Row class="line strong">
+      <Col :span="8">{{ userInfo.email }}</Col>
+      <Col :span="8">{{ userInfo.personalInfo?.country || 'UnKnow' }}</Col>
+      <Col :span="8">{{ userInfo.personalInfo?.passport || 'UnKnow' }}</Col>
+    </Row>
+    <Row class="line">
+      <Col :span="8"><CheckOutlined />Verified</Col>
+      <Col :span="8"><CloseOutlined />UnVerified</Col>
+      <Col :span="8"><CloseOutlined />UnVerified</Col>
+    </Row>
+    <Divider />
+    <Row class="line">
+      <Col :span="12">Name</Col>
+      <Col :span="12">Bio</Col>
+    </Row>
+    <Row class="line">
+      <Col :span="12">{{ userInfo.username }}</Col>
+      <Col :span="12">{{ userInfo.bio }}</Col>
+    </Row>
+    <Divider />
+    <Row class="line strong">
+      <Col :span="12">0xWallet ID</Col>
+    </Row>
+    <Row class="line">
+      <Col :span="12">{{ userInfo.username }}</Col>
+      <Col :span="12"
+        ><span class="setRight"
+          ><a-button type="primary" shape="round"> Change My ID</a-button></span
+        ></Col
+      >
+    </Row>
   </Card>
   <Modal v-model:visible="visible" :footer="null">
     <QrCode :value="publicKey" />
@@ -40,7 +76,7 @@
 <script lang="ts">
   import { defineComponent, ref, unref, nextTick } from 'vue';
   import { BasicTitle, BasicHelp } from '/@/components/Basic';
-  import { Card, Avatar, Divider, Modal, Tag } from 'ant-design-vue';
+  import { Card, Avatar, Divider, Modal, Tag, Row, Col } from 'ant-design-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useApollo } from '/@/hooks/apollo/apollo';
   import { me } from '/@/hooks/apollo/gqlUser';
@@ -50,6 +86,8 @@
     CopyOutlined,
     CheckCircleTwoTone,
     QuestionCircleTwoTone,
+    CheckOutlined,
+    CloseOutlined,
   } from '@ant-design/icons-vue';
   import { QrCode } from '/@/components/Qrcode/index';
   import { useCopyToClipboard } from '/@/hooks/web/useCopyToClipboard';
@@ -70,12 +108,17 @@
       QrCode,
       CheckCircleTwoTone,
       QuestionCircleTwoTone,
+      CheckOutlined,
+      CloseOutlined,
+      Row,
+      Col,
     },
     setup() {
       const { t } = useI18n('general.account');
       const userInfo = ref({});
       const publicKey = ref('');
       const visible = ref(false);
+      const wallet = ref({});
       const status = ref('Connecting...');
       const { clipboardRef, copiedRef } = useCopyToClipboard();
       const { createMessage } = useMessage();
@@ -85,6 +128,17 @@
           .query({ query: me })
           .then((res) => {
             userInfo.value = res.data?.me;
+            res.data?.me?.wallets.forEach((v) => {
+              if (v.tags.length > 0) {
+                v.tags.forEach((v1) => {
+                  if (v1 === 'MESSAGE') {
+                    wallet.value = v;
+                  }
+                });
+              }
+            });
+            console.log(userInfo);
+            console.log(wallet);
           });
         useWallet().then((w) => {
           publicKey.value = w.getPublicKey();
@@ -124,5 +178,13 @@
 <style lang="less" scoped>
   .setRight {
     float: right;
+  }
+
+  .line {
+    margin: 10px;
+  }
+
+  .strong {
+    font-weight: bold;
   }
 </style>

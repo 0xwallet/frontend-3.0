@@ -27,8 +27,8 @@ export async function useMClient(): Promise<any> {
 }
 
 export function useWallet(): Promise<any> {
-  if (wallet) return wallet;
   return new Promise((resolve, reject) => {
+    if (wallet) resolve(wallet);
     const password = localStorage.getItem('walletPassword');
     const json = localStorage.getItem('walletJson');
     if (json === 'undefined' || json === 'null' || json === '') {
@@ -51,16 +51,9 @@ export async function initJS() {
   const { toPromise: loadNKN } = useScript({
     src: `./resource/nkn/nkn.js`,
   });
-  // 加载crypto-js
-  const { toPromise: loadCrypto } = useScript({
-    src: `./resource/crypto-js/crypto-js.js`,
-  });
 
   loadNKN().then(() => {
     console.log('NKN加载成功');
-  });
-  loadCrypto().then(() => {
-    console.log('crypto加载成功');
   });
 }
 
@@ -72,19 +65,6 @@ export function useNKN() {
       if (global && global.nkn) {
         clearInterval(t);
         resolve(global.nkn);
-      }
-    }, 100);
-  });
-}
-
-// 循环获取Crypto-js
-export function useCrypto() {
-  return new Promise((resolve) => {
-    let t = setInterval(() => {
-      const global = getGlobal();
-      if (global && global.CryptoJS) {
-        clearInterval(t);
-        resolve(global.CryptoJS);
       }
     }, 100);
   });

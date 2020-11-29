@@ -4,12 +4,20 @@ export const User = `
   id
   avatar
   username
+  bio
   email
   loginNknAddress
   personalInfo {
     country
     passport
     phoneNumber
+  }
+  wallets{
+  id
+  tags
+  info{
+  publicKey
+  }
   }
   role
   type

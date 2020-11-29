@@ -62,6 +62,7 @@
   import { driveUploadByHash } from '/@/hooks/apollo/gqlFile';
   import { encode } from '@msgpack/msgpack';
   import { useCrypto, useMClient } from '/@/hooks/nkn/getNKN';
+  import CryptoES from 'crypto-es';
   export default defineComponent({
     components: { BasicModal, Upload, Alert, FileList },
     props: basicProps,
@@ -131,52 +132,50 @@
 
         let hash = '';
         file.arrayBuffer().then((res) => {
-          useCrypto().then((CryptoJS) => {
-            let wordArray = CryptoJS.lib.WordArray.create(res);
-            hash = CryptoJS.SHA256(wordArray).toString();
-            let status = '';
+          let wordArray = CryptoES.lib.WordArray.create(res);
+          hash = CryptoES.SHA256(wordArray).toString();
+          let status = '';
 
-            useApollo()
-              .mutate({
-                mutation: driveUploadByHash,
-                variables: {
-                  fullName: [...path, name],
-                  hash: hash,
-                },
-              })
-              .then(() => {
-                status = 'success';
-              })
-              .catch((err) => {})
-              .finally(() => {
-                const commonItem = {
-                  uuid: buildUUID(),
-                  file,
-                  size,
-                  name,
-                  hash,
-                  percent: 0,
-                  type: name.split('.').pop(),
-                  status,
-                };
-                // 生成图片缩略图
-                if (checkImgType(file)) {
-                  // beforeUpload，如果异步会调用自带上传方法
-                  // file.thumbUrl = await getBase64(file);
-                  getBase64WithFile(file).then(({ result: thumbUrl }) => {
-                    fileListRef.value = [
-                      ...unref(fileListRef),
-                      {
-                        thumbUrl,
-                        ...commonItem,
-                      },
-                    ];
-                  });
-                } else {
-                  fileListRef.value = [...unref(fileListRef), commonItem];
-                }
-              });
-          });
+          useApollo()
+            .mutate({
+              mutation: driveUploadByHash,
+              variables: {
+                fullName: [...path, name],
+                hash: hash,
+              },
+            })
+            .then(() => {
+              status = 'success';
+            })
+            .catch((err) => {})
+            .finally(() => {
+              const commonItem = {
+                uuid: buildUUID(),
+                file,
+                size,
+                name,
+                hash,
+                percent: 0,
+                type: name.split('.').pop(),
+                status,
+              };
+              // 生成图片缩略图
+              if (checkImgType(file)) {
+                // beforeUpload，如果异步会调用自带上传方法
+                // file.thumbUrl = await getBase64(file);
+                getBase64WithFile(file).then(({ result: thumbUrl }) => {
+                  fileListRef.value = [
+                    ...unref(fileListRef),
+                    {
+                      thumbUrl,
+                      ...commonItem,
+                    },
+                  ];
+                });
+              } else {
+                fileListRef.value = [...unref(fileListRef), commonItem];
+              }
+            });
         });
 
         return false;

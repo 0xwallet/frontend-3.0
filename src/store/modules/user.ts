@@ -1,6 +1,6 @@
 import { appStore } from './app';
 import type {
-  LoginParams,
+  // LoginParams,
   GetUserInfoByUserIdModel,
   GetUserInfoByUserIdParams,
 } from '/@/api/sys/model/userModel';
@@ -17,7 +17,7 @@ import { useMessage } from '/@/hooks/web/useMessage';
 
 import router from '/@/router';
 
-import { loginApi, getUserInfoById } from '/@/api/sys/user';
+import { getUserInfoById } from '/@/api/sys/user';
 
 import { setLocal, getLocal, getSession, setSession } from '/@/utils/helper/persistent';
 import { useProjectSetting } from '/@/hooks/setting';
@@ -95,25 +95,19 @@ class User extends VuexModule {
    * @description: login
    */
   @Action
-  async login(params: LoginParams, goHome = true): Promise<GetUserInfoByUserIdModel | null> {
+  async login(goHome = true): Promise<GetUserInfoByUserIdModel | null> {
     try {
-      const data = await loginApi(params);
-      const { token, userId } = data;
-      // get user info
-      const userInfo = await this.getUserInfoAction({ userId });
-
       // save token
-      this.commitTokenState(token);
-
-      // const name = FULL_PAGE_NOT_FOUND_ROUTE.name;
-      // name && router.removeRoute(name);
+      this.commitTokenState('111');
+      // this.commitUserInfoState();
+      this.commitRoleListState(['super'] as RoleEnum[]);
       goHome &&
         (await router.push(PageEnum.BASE_HOME).then(() => {
           setTimeout(() => {
             appStore.commitPageLoadingState(false);
           }, 30);
         }));
-      return userInfo;
+      return null;
     } catch (error) {
       return null;
     }

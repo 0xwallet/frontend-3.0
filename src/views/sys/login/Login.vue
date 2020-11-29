@@ -98,9 +98,9 @@
   import { signIn } from '/@/hooks/apollo/gqlUser';
   import { useApollo } from '/@/hooks/apollo/apollo';
 
-  import { useCrypto, useMClient, useWallet } from '/@/hooks/nkn/getNKN';
+  import { useMClient, useWallet } from '/@/hooks/nkn/getNKN';
   import { useI18n } from '/@/hooks/web/useI18n';
-
+  import CryptoES from 'crypto-es';
   export default defineComponent({
     components: {
       //  BasicDragVerify,
@@ -161,21 +161,15 @@
             .then((res) => {
               // 取得token，存入缓存
               console.log(res);
-              useCrypto().then((CryptoJS) => {
-                const secret = CryptoJS.enc.Base64.stringify(
-                  CryptoJS.HmacSHA512(data.email, data.password)
-                );
-                localStorage.setItem('walletPassword', secret);
-                localStorage.setItem(
-                  'walletJson',
-                  res?.data?.signin?.User?.wallets.filter((v) => v.tags[0] == 'MESSAGE')[0]?.info
-                    ?.encryptedWallet
-                );
-                useWallet().then(() => {
-                  console.log('wallet ready');
-                  useMClient();
-                });
-              });
+              const secret = CryptoES.enc.Base64.stringify(
+                CryptoES.HmacSHA512(data.email, data.password)
+              );
+              localStorage.setItem('walletPassword', secret);
+              localStorage.setItem(
+                'walletJson',
+                res?.data?.signin?.User?.wallets.filter((v) => v.tags[0] == 'MESSAGE')[0]?.info
+                  ?.encryptedWallet
+              );
 
               // const wallet = res?.data?.signin?.User?.wallets.filter(
               //   (v) => v.tags[0] == 'MESSAGE'
@@ -202,6 +196,10 @@
         } catch {
         } finally {
           formState.loading = false;
+          useWallet().then(() => {
+            console.log('wallet ready');
+            useMClient();
+          });
         }
       }
       return {
