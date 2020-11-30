@@ -75,6 +75,8 @@
         ></Col
       >
     </Row>
+    <Divider />
+    <div>{{ token }}</div>
   </Card>
   <Modal v-model:visible="visible" :footer="null">
     <QrCode :value="publicKey" />
@@ -131,6 +133,8 @@
       const visible = ref(false);
       const wallet = ref({});
       const status = ref('Connecting...');
+      const token = localStorage.getItem('token');
+      console.log(token);
       const { clipboardRef, copiedRef } = useCopyToClipboard();
       const { createMessage } = useMessage();
       const [registerPWModal, { openModal: openPwModal }] = useModal();
@@ -185,6 +189,7 @@
         status,
         openPWModal,
         registerPWModal,
+        token,
       };
     },
   });

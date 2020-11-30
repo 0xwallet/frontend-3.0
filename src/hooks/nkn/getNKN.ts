@@ -49,7 +49,7 @@ export function useWallet(): Promise<any> {
 export async function initJS() {
   // 加载nkn.JS
   const { toPromise: loadNKN } = useScript({
-    src: `./resource/nkn/nkn.js`,
+    src: `./resource/nkn/nkn.min.js`,
   });
 
   loadNKN().then(() => {
