@@ -13,6 +13,7 @@ export async function useMClient(): Promise<any> {
     let disk = new NKN.MultiClient({
       seed,
       numSubClients,
+      tls: false,
     });
     await new Promise((resolve) => disk.onConnect(resolve));
     session = await disk.dial(
