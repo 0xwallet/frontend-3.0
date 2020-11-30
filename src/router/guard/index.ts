@@ -28,7 +28,6 @@ export function createGuard(router: Router) {
     // Determine whether the tab has been opened
     const isOpen = getIsOpenTab(to.fullPath);
     to.meta.inTab = isOpen;
-
     // Notify routing changes
     const { fullPath, path, query, params, name, meta } = to;
     tabStore.commitLastChangeRouteState({

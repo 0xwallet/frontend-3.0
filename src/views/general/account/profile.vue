@@ -47,7 +47,7 @@
       <Col :span="8"><CloseOutlined />UnVerified</Col>
     </Row>
     <Divider />
-    <Row class="line">
+    <Row class="line strong">
       <Col :span="12">Name</Col>
       <Col :span="12">Bio</Col>
     </Row>
@@ -58,12 +58,20 @@
     <Divider />
     <Row class="line strong">
       <Col :span="12">0xWallet ID</Col>
+      <Col :span="12">Password</Col>
     </Row>
     <Row class="line">
-      <Col :span="12">{{ userInfo.username }}</Col>
+      <Col :span="12"
+        >{{ userInfo.username
+        }}<span class="setRight"
+          ><a-button type="primary" shape="round"> Change My ID</a-button></span
+        ></Col
+      >
       <Col :span="12"
         ><span class="setRight"
-          ><a-button type="primary" shape="round"> Change My ID</a-button></span
+          ><a-button type="primary" shape="round" @click="openPWModal">
+            Change Password</a-button
+          ></span
         ></Col
       >
     </Row>
@@ -71,6 +79,7 @@
   <Modal v-model:visible="visible" :footer="null">
     <QrCode :value="publicKey" />
   </Modal>
+  <PWModal @register="registerPWModal" />
 </template>
 
 <script lang="ts">
@@ -92,7 +101,8 @@
   import { QrCode } from '/@/components/Qrcode/index';
   import { useCopyToClipboard } from '/@/hooks/web/useCopyToClipboard';
   import { useMessage } from '/@/hooks/web/useMessage';
-
+  import PWModal from './changePWModal.vue';
+  import { useModal } from '/@/components/Modal';
   export default defineComponent({
     components: {
       BasicTitle,
@@ -112,6 +122,7 @@
       CloseOutlined,
       Row,
       Col,
+      PWModal,
     },
     setup() {
       const { t } = useI18n('general.account');
@@ -122,7 +133,7 @@
       const status = ref('Connecting...');
       const { clipboardRef, copiedRef } = useCopyToClipboard();
       const { createMessage } = useMessage();
-
+      const [registerPWModal, { openModal: openPwModal }] = useModal();
       function fetchData() {
         useApollo()
           .query({ query: me })
@@ -137,8 +148,6 @@
                 });
               }
             });
-            console.log(userInfo);
-            console.log(wallet);
           });
         useWallet().then((w) => {
           publicKey.value = w.getPublicKey();
@@ -157,6 +166,9 @@
       function openQr() {
         visible.value = true;
       }
+      function openPWModal() {
+        openPwModal(true);
+      }
       function copyKey() {
         clipboardRef.value = publicKey.value;
         if (unref(copiedRef)) {
@@ -171,6 +183,8 @@
         visible,
         copyKey,
         status,
+        openPWModal,
+        registerPWModal,
       };
     },
   });

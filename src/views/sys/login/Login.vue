@@ -82,7 +82,7 @@
   </div>
 </template>
 <script lang="ts">
-  import { defineComponent, reactive, ref, unref, toRaw } from 'vue';
+  import { defineComponent, reactive, ref, unref } from 'vue';
   import { Checkbox } from 'ant-design-vue';
   import { MailOutlined, LockOutlined } from '@ant-design/icons-vue';
   import { Button } from '/@/components/Button';
@@ -174,8 +174,9 @@
               // const wallet = res?.data?.signin?.User?.wallets.filter(
               //   (v) => v.tags[0] == 'MESSAGE'
               // )[0]?.info?.encryptedWallet;
-
+              console.log(res.data?.signin?.token);
               localStorage.setItem('token', res.data?.signin?.token || '');
+
               localStorage.setItem('uid', res.data?.signin?.User?.id || 0);
 
               // websocket调试;

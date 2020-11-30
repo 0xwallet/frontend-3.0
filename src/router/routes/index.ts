@@ -36,6 +36,14 @@ export const LoginRoute: AppRouteRecordRaw = {
     title: 'routes.basic.login',
   },
 };
+export const RegisterRoute: AppRouteRecordRaw = {
+  path: '/register',
+  name: 'Register',
+  component: () => import('/@/views/sys/register/Register.vue'),
+  meta: {
+    title: 'routes.basic.register',
+  },
+};
 
 // 基础路由 不用权限
-export const basicRoutes = [LoginRoute, RootRoute];
+export const basicRoutes = [LoginRoute, RootRoute, RegisterRoute];
