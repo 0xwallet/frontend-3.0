@@ -24,16 +24,17 @@
       </CardMeta>
       <Divider />
 
-      <Tag :color="status === 'Connected' ? '#52c41a' : '#f50'">
-        <CheckCircleTwoTone v-if="status === 'Connected'" twoToneColor="#52c41a" />
-        <QuestionCircleTwoTone v-if="status !== 'Connected'" twoToneColor="#f50" />
-        {{ status }} Primary NKN Public Address
+      <Tag :color="status ? '#52c41a' : '#f50'">
+        <CheckCircleTwoTone v-if="status" twoToneColor="#52c41a" />
+        <QuestionCircleTwoTone v-if="!status" twoToneColor="#f50" />
+
+        {{ status ? t('connected') : t('connecting') }} Primary NKN Public Address
       </Tag>
     </Card>
     <Divider />
     <Row class="line">
-      <Col :span="8">Email</Col>
-      <Col :span="8">Country</Col>
+      <Col :span="8">{{ t('email') }}</Col>
+      <Col :span="8">{{ t('country') }}</Col>
       <Col :span="8">Passport</Col>
     </Row>
     <Row class="line strong">
@@ -42,14 +43,14 @@
       <Col :span="8">{{ userInfo.personalInfo?.passport || 'UnKnow' }}</Col>
     </Row>
     <Row class="line">
-      <Col :span="8"><CheckOutlined />Verified</Col>
-      <Col :span="8"><CloseOutlined />UnVerified</Col>
-      <Col :span="8"><CloseOutlined />UnVerified</Col>
+      <Col :span="8"><CheckOutlined />{{ t('verified') }}</Col>
+      <Col :span="8"><CloseOutlined />{{ t('unVerified') }}</Col>
+      <Col :span="8"><CloseOutlined />{{ t('unVerified') }}</Col>
     </Row>
     <Divider />
     <Row class="line strong">
-      <Col :span="12">Name</Col>
-      <Col :span="12">Bio</Col>
+      <Col :span="12">{{ t('name') }}</Col>
+      <Col :span="12">{{ t('bio') }}</Col>
     </Row>
     <Row class="line">
       <Col :span="12">{{ userInfo.username }}</Col>
@@ -61,22 +62,18 @@
       <Col :span="12">Password</Col>
     </Row>
     <Row class="line">
+      <Col :span="12">{{ userInfo.username }}</Col>
+      <Col :span="12"> {{ token }}</Col>
+    </Row>
+    <Row class="line">
+      <Col :span="12"> <a-button type="primary" shape="round"> Change My ID</a-button></Col>
+
       <Col :span="12"
-        >{{ userInfo.username
-        }}<span class="setRight"
-          ><a-button type="primary" shape="round"> Change My ID</a-button></span
-        ></Col
-      >
-      <Col :span="12"
-        ><span class="setRight"
-          ><a-button type="primary" shape="round" @click="openPWModal">
-            Change Password</a-button
-          ></span
+        ><a-button type="primary" shape="round" @click="openPWModal">
+          Change Password</a-button
         ></Col
       >
     </Row>
-    <Divider />
-    <div>{{ token }}</div>
   </Card>
   <Modal v-model:visible="visible" :footer="null">
     <QrCode :value="publicKey" />
@@ -132,7 +129,7 @@
       const publicKey = ref('');
       const visible = ref(false);
       const wallet = ref({});
-      const status = ref('Connecting...');
+      const status = ref(false);
       const token = localStorage.getItem('token');
       console.log(token);
       const { clipboardRef, copiedRef } = useCopyToClipboard();
