@@ -1,5 +1,5 @@
 import { useScript } from '/@/hooks/web/useScript';
-
+import moment from 'moment';
 export const getGlobal = (): any => (typeof window !== 'undefined' ? window : global);
 export let wallet: any = null;
 export let session: any = null;
@@ -13,7 +13,7 @@ export async function useMClient(): Promise<any> {
     let disk = new NKN.MultiClient({
       seed,
       numSubClients,
-      tls: false,
+      identifier: moment.now(),
     });
     await new Promise((resolve) => disk.onConnect(resolve));
     session = await disk.dial(
