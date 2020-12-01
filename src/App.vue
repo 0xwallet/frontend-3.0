@@ -47,7 +47,7 @@
         useMClient();
       });
       const time = setInterval(() => {
-        if (localStorage.getItem('token') !== 'undefined' && !useApolloWS()) {
+        if (localStorage.getItem('token') !== '' && !useApolloWS()) {
           // 启动ws
           apollo.initWS({ url: 'wss://owaf.io/socket' });
           const ob = useApolloWS().subscribe({

@@ -76,6 +76,7 @@ const init = (options) => {
 const initWS = (option) => {
   try {
     const { url } = option;
+
     if (apolloWSClient) return apolloWSClient;
     const link = createAbsintheSocketLink(
       AbsintheSocket.create(

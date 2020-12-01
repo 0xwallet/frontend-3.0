@@ -111,10 +111,10 @@
       LockOutlined,
     },
     setup() {
-      localStorage.setItem('walletJson', undefined);
-      localStorage.setItem('walletPassword', undefined);
-      localStorage.setItem('token', undefined);
-      localStorage.setItem('uid', undefined);
+      localStorage.setItem('walletJson', '');
+      localStorage.setItem('walletPassword', '');
+      localStorage.setItem('token', '');
+      localStorage.setItem('uid', '');
       const formRef = ref<any>(null);
       const autoLoginRef = ref(false);
       // const verifyRef = ref<RefInstanceType<DragVerifyActionType>>(null);

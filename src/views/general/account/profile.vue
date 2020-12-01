@@ -157,9 +157,9 @@
       nextTick(() => {
         setInterval(() => {
           if (session) {
-            status.value = 'Connected';
+            status.value = true;
           } else {
-            status.value = 'Connecting...';
+            status.value = false;
           }
         }, 1000);
       });
