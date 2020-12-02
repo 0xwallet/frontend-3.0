@@ -133,7 +133,7 @@
                 type: 'folder',
                 name: '...',
                 size: 0,
-                createAt: '',
+                updatedAt: '',
                 hash: '',
                 space: list[1].space,
                 desc: '',
@@ -163,6 +163,7 @@
                 f.push(new File({ userFile: v }));
               }
             });
+            console.log(f);
             folder.value = temp.concat(p);
             files.value = f;
           })

@@ -72,7 +72,7 @@ export function getBasicColumns(): BasicColumn[] {
     {
       title: t('time'),
       width: 150,
-      dataIndex: 'createAt',
+      dataIndex: 'updatedAt',
       fixed: 'right',
     },
   ];

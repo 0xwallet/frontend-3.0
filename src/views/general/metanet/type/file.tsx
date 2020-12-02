@@ -11,6 +11,7 @@ import { createImgPreview } from '/@/components/Preview';
 import { unref } from 'vue';
 import { useCopyToClipboard } from '/@/hooks/web/useCopyToClipboard';
 import { useMessage } from '/@/hooks/web/useMessage';
+import moment from 'moment';
 const { clipboardRef, copiedRef } = useCopyToClipboard();
 const { createMessage } = useMessage();
 interface fileParams {
@@ -20,6 +21,7 @@ interface fileParams {
   uri?: string;
   token?: string;
   expiredAt?: string;
+  updatedAt: string;
 }
 
 interface userFile {
@@ -29,6 +31,7 @@ interface userFile {
   info: { size: string; description: string };
   isDir: boolean;
   space: string;
+  updatedAt: string;
 }
 
 export class File {
@@ -42,6 +45,7 @@ export class File {
   hash?: string;
   shareId?: string;
   code?: string;
+  updatedAt: string;
   expiredAt?: string;
   uri?: string;
   token?: string;
@@ -65,6 +69,7 @@ export class File {
     this.size = Number(params.userFile.info.size);
     this.desc = params.userFile.info.description;
 
+    this.updatedAt = moment(params.userFile.updatedAt).toString();
     this.code = params.code;
     this.token = params.token;
     this.uri = params.uri;
