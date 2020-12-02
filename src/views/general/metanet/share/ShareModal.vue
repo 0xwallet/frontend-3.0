@@ -1,6 +1,6 @@
 <template>
   <BasicModal v-bind="$attrs" @register="register" title="分享文件" @ok="shareFile">
-    <p> 文件名：{{ file.fullName + '.' + file.type }}</p>
+    <p> 文件名：{{ file.name + '.' + file.type }}</p>
     <BasicForm @register="registerForm" :model="model" v-if="!shareUrl" />
     <div v-if="shareUrl">
       <p>
