@@ -51,7 +51,7 @@
         <a-button type="primary" @click="openUploadModal"> {{ t('uploadButton') }} </a-button>
 
         <a-button type="primary" @click="openCreateFolderModal"> {{ t('createFolder') }} </a-button>
-        <a-button type="primary" @click="fetchData"> {{ t('refresh') }} </a-button>
+        <a-button type="primary" @click="refresh"> {{ t('refresh') }} </a-button>
       </template></BasicTable
     >
     <CreateFolderModal @register="registerCreateFolder" />
@@ -366,6 +366,9 @@
         path.value.push({ name: f.name, dirId: f.id });
         // 根据ID获取最新进入目录文件
       }
+      function refresh() {
+        fetchData({ dirId });
+      }
 
       return {
         registerTable,
@@ -387,8 +390,8 @@
         goPath,
         delFiles,
         getSelectRowKeys,
-        fetchData,
         t,
+        refresh,
       };
     },
   });
