@@ -15,41 +15,43 @@
       </template>
       <template #action="{ record }">
         <div>
-          <a-button type="link" v-if="record.type !== 'folder'" @click="preview(record)"
-            >预览</a-button
-          >
-          <a-button type="link" @click="openShareModal(record)">分享</a-button>
-          <a-button type="link" @click="download(record)" v-if="record.type !== 'folder'"
-            >下载</a-button
-          >
+          <a-button type="link" v-if="record.type !== 'folder'" @click="preview(record)">{{
+            t('previewButton')
+          }}</a-button>
+          <a-button type="link" @click="openShareModal(record)">{{ t('shareButton') }}</a-button>
+          <a-button type="link" @click="download(record)" v-if="record.type !== 'folder'">{{
+            t('downloadButton')
+          }}</a-button>
           <a-button
             type="link"
             color="error"
-            :pop="{ title: '删除' + record.fullName + '?' }"
+            :pop="{ title: t('delButton') + record.fullName + '?' }"
             @click="delFile(record)"
-            >删除</a-button
+            >{{ t('delButton') }}</a-button
           ></div
         >
       </template>
       <template #toolbar>
         <a-button type="primary" @click="setSelectedRowKeyList">
-          {{ !choose ? '全选' : '取消' }}
+          {{ !choose ? t('selectAll') : t('cancelAll') }}
         </a-button>
         <a-button
           v-show="choose"
           type="primary"
           color="success"
-          :pop="{ title: `删除选中的${getSelectRowKeys().length}个文件?` }"
+          :pop="{ title: `${t('delSelect')} ${getSelectRowKeys().length} ${t('file')}?` }"
           @click="delFiles"
-          >删除</a-button
+          >{{ t('delButton') }}</a-button
         >
-        <a-button type="primary" v-show="choose"> 下载 </a-button>
-        <a-button type="primary" v-show="choose" @click="openMoveModal"> 移动 </a-button>
-        <a-button type="primary" v-show="choose"> 分享 </a-button>
-        <a-button type="primary" @click="openUploadModal"> 上传 </a-button>
+        <a-button type="primary" v-show="choose"> {{ t('downloadButton') }} </a-button>
+        <a-button type="primary" v-show="choose" @click="openMoveModal">
+          {{ t('moveButton') }}
+        </a-button>
+        <a-button type="primary" v-show="choose"> {{ t('share') }} </a-button>
+        <a-button type="primary" @click="openUploadModal"> {{ t('uploadButton') }} </a-button>
 
-        <a-button type="primary" @click="openCreateFolderModal"> 新建文件夹 </a-button>
-        <a-button type="primary" @click="fetchData()"> 刷新 </a-button>
+        <a-button type="primary" @click="openCreateFolderModal"> {{ t('createFolder') }} </a-button>
+        <a-button type="primary" @click="fetchData"> {{ t('refresh') }} </a-button>
       </template></BasicTable
     >
     <CreateFolderModal @register="registerCreateFolder" />
@@ -180,7 +182,7 @@
         { getSelectRowKeys, setSelectedRowKeys, clearSelectedRowKeys, getDataSource, reload },
       ] = useTable({
         canResize: false,
-        title: '文件列表',
+        title: t('files'),
         dataSource: (tableData as unknown) as any[],
         columns: getBasicColumns(),
         rowKey: 'id',

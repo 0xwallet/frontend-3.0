@@ -9,7 +9,8 @@
 <script>
   import { defineComponent, computed, ref, watch } from 'vue';
   import { Breadcrumb } from 'ant-design-vue';
-
+  import { useI18n } from '/@/hooks/web/useI18n';
+  const { t } = useI18n('general.metanet');
   export default defineComponent({
     name: 'BreadCrumb',
     props: {
@@ -18,7 +19,7 @@
     components: { Breadcrumb, BreadcrumbItem: Breadcrumb.Item },
     setup(props, { emit }) {
       const paths = computed(() => {
-        return [{ name: '全部', dirId: 'root' }].concat(props.path);
+        return [{ name: t('root'), dirId: 'root' }].concat(props.path);
       });
       function go(path) {
         emit('jump', path);
