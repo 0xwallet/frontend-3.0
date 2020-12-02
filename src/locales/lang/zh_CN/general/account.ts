@@ -1,0 +1,16 @@
+export default {
+  profileTitle: '个人信息',
+  email: 'Email',
+  country: '国家',
+  name: '姓名',
+  bio: '签名',
+  month: '月',
+  year: '年',
+  verified: '已验证',
+  unVerified: '未验证',
+  connected: '已连接 ',
+  connecting: '连接中... ',
+  cardNumber: '信用卡号',
+  creditCardTitle: '信用卡',
+  appsTitle: '应用',
+};

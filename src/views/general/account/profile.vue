@@ -75,20 +75,22 @@
       >
     </Row>
   </Card>
-  <Modal v-model:visible="visible" :footer="null">
-    <QrCode :value="publicKey" />
+  <Modal v-model:visible="visible" :footer="null" centered>
+    <Row type="flex" justify="center">
+      <Col :span="12"><QrCode :value="publicKey" /></Col>
+    </Row>
   </Modal>
   <PWModal @register="registerPWModal" />
 </template>
 
 <script lang="ts">
-  import { defineComponent, ref, unref, nextTick } from 'vue';
+  import { defineComponent, ref, unref, computed } from 'vue';
   import { BasicTitle, BasicHelp } from '/@/components/Basic';
   import { Card, Avatar, Divider, Modal, Tag, Row, Col } from 'ant-design-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useApollo } from '/@/hooks/apollo/apollo';
   import { me } from '/@/hooks/apollo/gqlUser';
-  import { session, useWallet } from '/@/hooks/nkn/getNKN';
+  import { useWallet } from '/@/hooks/nkn/getNKN';
   import {
     QrcodeOutlined,
     CopyOutlined,
@@ -102,6 +104,8 @@
   import { useMessage } from '/@/hooks/web/useMessage';
   import PWModal from './changePWModal.vue';
   import { useModal } from '/@/components/Modal';
+  import { userStore } from '/@/store/modules/user';
+
   export default defineComponent({
     components: {
       BasicTitle,
@@ -123,13 +127,17 @@
       Col,
       PWModal,
     },
+
     setup() {
       const { t } = useI18n('general.account');
       const userInfo = ref({});
       const publicKey = ref('');
       const visible = ref(false);
       const wallet = ref({});
-      const status = ref(false);
+      const status = computed(() => {
+        return userStore.userNKNstatus;
+      });
+
       const token = localStorage.getItem('token');
       console.log(token);
       const { clipboardRef, copiedRef } = useCopyToClipboard();
@@ -154,15 +162,7 @@
           publicKey.value = w.getPublicKey();
         });
       }
-      nextTick(() => {
-        setInterval(() => {
-          if (session) {
-            status.value = true;
-          } else {
-            status.value = false;
-          }
-        }, 1000);
-      });
+
       fetchData();
       function openQr() {
         visible.value = true;
@@ -202,5 +202,9 @@
 
   .strong {
     font-weight: bold;
+  }
+
+  .center {
+    margin: auto;
   }
 </style>

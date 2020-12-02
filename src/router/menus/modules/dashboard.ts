@@ -4,13 +4,6 @@ const menu: MenuModule[] = [
   {
     orderNo: 1,
     menu: {
-      path: '/dashboard/welcome',
-      name: 'routes.dashboard.welcome',
-    },
-  },
-  {
-    orderNo: 10,
-    menu: {
       name: 'routes.dashboard.dashboard',
       path: '/dashboard',
       children: [
@@ -18,10 +11,7 @@ const menu: MenuModule[] = [
           path: '/workbench',
           name: 'routes.dashboard.workbench',
         },
-        {
-          path: '/analysis',
-          name: 'routes.dashboard.analysis',
-        },
+
         // {
         //   path: '/welcome',
         //   name: 'routes.dashboard.welcome',

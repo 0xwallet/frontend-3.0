@@ -1,6 +1,5 @@
 export default {
   profileTitle: 'Profile',
-
   email: 'Email',
   country: 'Country',
   name: 'Name',

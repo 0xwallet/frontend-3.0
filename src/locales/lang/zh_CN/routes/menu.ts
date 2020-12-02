@@ -14,6 +14,6 @@ export default {
   GENERAL: '通用',
   account: '账户',
   security: '安全',
-  metanet: '元网',
+  metanet: '网盘',
   shareFile: '文件分享',
 };

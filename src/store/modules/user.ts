@@ -22,7 +22,7 @@ import { getUserInfoById } from '/@/api/sys/user';
 import { setLocal, getLocal, getSession, setSession } from '/@/utils/helper/persistent';
 import { useProjectSetting } from '/@/hooks/setting';
 import { useI18n } from '/@/hooks/web/useI18n';
-
+import { session } from '/@/hooks/nkn/getNKN';
 export type UserInfo = Omit<GetUserInfoByUserIdModel, 'roles'>;
 
 const NAME = 'user';
@@ -48,6 +48,7 @@ class User extends VuexModule {
   // user info
   private userInfoState: UserInfo | null = null;
 
+  public userNKNstatus: boolean = false;
   // token
   private tokenState = '';
 
@@ -90,7 +91,21 @@ class User extends VuexModule {
     this.tokenState = info;
     setCache(TOKEN_KEY, info);
   }
+  @Mutation
+  commitNKNState(info: boolean): void {
+    this.userNKNstatus = info;
+  }
 
+  @Action
+  checkNKN(): void {
+    setInterval(() => {
+      if (session) {
+        this.commitNKNState(true);
+      } else {
+        this.commitNKNState(false);
+      }
+    }, 1000);
+  }
   /**
    * @description: login
    */

@@ -25,6 +25,7 @@
   });
   import { useLocale } from '/@/hooks/web/useLocale';
   import { createBreakpointListen } from '/@/hooks/event/useBreakpoint';
+  import { userStore } from '/@/store/modules/user';
 
   export default defineComponent({
     name: 'App',
@@ -46,6 +47,7 @@
         console.log('wallet ready');
         useMClient();
       });
+      userStore.checkNKN();
       const time = setInterval(() => {
         if (localStorage.getItem('token') !== '' && !useApolloWS()) {
           // 启动ws
