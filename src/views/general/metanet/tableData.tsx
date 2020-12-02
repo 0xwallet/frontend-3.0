@@ -1,7 +1,14 @@
 import { FormProps, FormSchema } from '/@/components/Table';
 import { BasicColumn } from '/@/components/Table/src/types/table';
 import { byteTransfer } from '/@/utils/disk/file';
-
+import { useCopyToClipboard } from '/@/hooks/web/useCopyToClipboard';
+import { unref } from 'vue';
+import { useMessage } from '/@/hooks/web/useMessage';
+import { Tooltip } from 'ant-design-vue';
+import { useI18n } from '/@/hooks/web/useI18n';
+const { clipboardRef, copiedRef } = useCopyToClipboard();
+const { createMessage } = useMessage();
+const { t } = useI18n('general.metanet');
 export function getBasicColumns(): BasicColumn[] {
   return [
     {
@@ -27,14 +34,24 @@ export function getBasicColumns(): BasicColumn[] {
         for (let i = 1; i < 11; i++) {
           list.push(text.slice(2 + 6 * (i - 1), 2 + 6 * i));
         }
+
         return (
-          <span>
-            {text.slice(0, 2)}
-            {list.map((value) => (
-              <span style={'background-color:#' + value}>&nbsp;&nbsp;&nbsp;</span>
-            ))}
-            {text.slice(text.length - 2, text.length)}
-          </span>
+          <Tooltip title={t('copy')}>
+            <span
+              onClick={() => {
+                clipboardRef.value = text;
+                if (unref(copiedRef)) {
+                  createMessage.warning(t('copySuccess'));
+                }
+              }}
+            >
+              {text.slice(0, 2)}
+              {list.map((value) => (
+                <span style={'background-color:#' + value}>&nbsp;&nbsp;&nbsp;</span>
+              ))}
+              {text.slice(text.length - 2, text.length)}
+            </span>
+          </Tooltip>
         );
       },
     },

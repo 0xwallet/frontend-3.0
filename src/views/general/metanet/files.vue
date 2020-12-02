@@ -73,6 +73,9 @@
   import { driveListFiles, driveDeleteFiles } from '/@/hooks/apollo/gqlFile';
   import { useModal } from '/@/components/Modal';
   import { File } from './type/file';
+  import { useI18n } from '/@/hooks/web/useI18n';
+  const { t } = useI18n('general.metanet');
+
   export default defineComponent({
     components: {
       BasicTable,
@@ -383,6 +386,7 @@
         delFiles,
         getSelectRowKeys,
         fetchData,
+        t,
       };
     },
   });

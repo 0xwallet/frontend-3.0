@@ -147,9 +147,6 @@
                 let url = `https://drive-s.owaf.io/preview/${id}/${toLower(file.space)}/${
                   file.id
                 }/${file.fullName}.${file.type}?token=${token}`;
-                console.log(url);
-
-                console.log(token);
                 // /preview/:user_id/:space/:user_file_id/:filename?token=:token
                 createImgPreview({
                   imageList: [url],
