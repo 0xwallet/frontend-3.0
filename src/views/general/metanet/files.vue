@@ -112,7 +112,7 @@
           .query({
             query: driveListFiles,
             variables: params,
-            fetchPolicy: 'no-cache',
+            fetchPolicy: 'network-only',
           })
           .then((res) => {
             // 取得返回值

@@ -2,14 +2,13 @@
   <BasicModal
     width="800px"
     title="上传"
-    okText="保存"
     v-bind="$attrs"
     @register="register"
-    @ok="handleOk"
     :closeFunc="handleCloseFunc"
     :maskClosable="false"
     :keyboard="false"
     wrapClassName="upload-modal"
+    :showOkBtn="false"
     :okButtonProps="getOkButtonProps"
     :cancelButtonProps="{ disabled: isUploadingRef }"
   >
@@ -61,7 +60,7 @@
 
   import { driveUploadByHash } from '/@/hooks/apollo/gqlFile';
   import { encode } from '@msgpack/msgpack';
-  import { useCrypto, useMClient } from '/@/hooks/nkn/getNKN';
+  import { useMClient } from '/@/hooks/nkn/getNKN';
   import CryptoES from 'crypto-es';
   export default defineComponent({
     components: { BasicModal, Upload, Alert, FileList },

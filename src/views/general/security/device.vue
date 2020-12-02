@@ -6,7 +6,7 @@
     <template #extra>
       <a-button type="link" @click="openDeviceModal">{{ t('deviceModalTitle') }}</a-button>
     </template>
-    <List item-layout="horizontal" :data-source="data">
+    <List item-layout="horizontal" :data-source="deviceList">
       <template #renderItem="{ item, index }">
         <ListItem>
           <ListItemMeta :description="item.publicKey">
@@ -20,7 +20,7 @@
 </template>
 
 <script lang="ts">
-  import { defineComponent } from 'vue';
+  import { defineComponent, ref } from 'vue';
   import { BasicTitle } from '/@/components/Basic';
   import { Card, List, Tag } from 'ant-design-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
@@ -29,7 +29,6 @@
   import { useModal } from '/@/components/Modal';
   import { getMe } from '/@/hooks/apollo/apollo';
 
-  const data = [];
   export default defineComponent({
     components: {
       BasicTitle,
@@ -45,12 +44,13 @@
       const { t } = useI18n('general.security');
       const { createMessage } = useMessage();
       const [register, { openModal, setModalProps }] = useModal();
-
+      const deviceList = ref([]);
       function fetchData() {
         getMe().then((res) => {
+          deviceList.value = [];
           res.wallets.forEach((v) => {
             if (v.tags[0] !== 'MESSAGE' && v.info.publicKey !== null) {
-              data.push({ publicKey: v.info.publicKey });
+              deviceList.value.push({ publicKey: v.info.publicKey });
             }
           });
         });
@@ -62,13 +62,16 @@
         setModalProps({
           title: t('deviceModalTitle'),
           canFullscreen: false,
+          afterClose: () => {
+            fetchData();
+          },
         });
       }
       return {
         t,
         register,
         openDeviceModal,
-        data,
+        deviceList,
       };
     },
   });
