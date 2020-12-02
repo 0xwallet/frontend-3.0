@@ -3,8 +3,8 @@
     <BasicTable @register="registerTable">
       <template #urltitle>
         <span>
-          网址
-          <BasicHelp class="ml-2" text="点击复制分享链接" />
+          {{ t('url') }}
+          <BasicHelp class="ml-2" :text="t('copyShare')" />
         </span>
       </template>
       <template #uri="{ record, text }">
@@ -15,20 +15,20 @@
           <a-button
             type="link"
             color="error"
-            :pop="{ title: '删除' + record.fullName + '.' + record.type + '?' }"
+            :pop="{ title: t('delButton') + record.name + '.' + record.type + '?' }"
             @click="del(record)"
-            >删除</a-button
+            >{{ t('delButton') }}</a-button
           ></div
         >
       </template>
       <template #toolbar>
-        <a-button type="primary" @click="fetchData()"> 刷新</a-button>
+        <a-button type="primary" @click="fetchData">{{ t('refresh') }}</a-button>
       </template>
     </BasicTable>
   </div>
 </template>
 <script lang="ts">
-  import { defineComponent, computed, ref, unref } from 'vue';
+  import { defineComponent, computed, ref } from 'vue';
   import { BasicTable, useTable } from '/@/components/Table';
   import { useMessage } from '/@/hooks/web/useMessage';
   import GIcon from '/@/components/Icon';
@@ -37,6 +37,8 @@
   import { getBasicColumns } from './shareData';
   import { File } from '../type/file';
   import { BasicHelp } from '/@/components/Basic';
+  import { useI18n } from '/@/hooks/web/useI18n';
+  const { t } = useI18n('general.metanet');
   export default defineComponent({
     components: { BasicTable, GIcon, BasicHelp },
     setup() {
@@ -59,7 +61,7 @@
         useApollo()
           .query({
             query: driveListShares,
-            fetchPolicy: 'no-cache',
+            fetchPolicy: 'network-only',
           })
           .then((res) => {
             const list = res?.data?.driveListShares;
@@ -126,6 +128,7 @@
         del,
         copyUrl,
         fetchData,
+        t,
       };
     },
   });

@@ -12,6 +12,8 @@ import { unref } from 'vue';
 import { useCopyToClipboard } from '/@/hooks/web/useCopyToClipboard';
 import { useMessage } from '/@/hooks/web/useMessage';
 import moment from 'moment';
+import { useI18n } from '/@/hooks/web/useI18n';
+const { t } = useI18n();
 const { clipboardRef, copiedRef } = useCopyToClipboard();
 const { createMessage } = useMessage();
 interface fileParams {
@@ -47,7 +49,7 @@ export class File {
   code?: string;
   updatedAt: string;
   expiredAt?: string;
-  uri?: string;
+  uri: string;
   token?: string;
   space: string;
   desc: string;
@@ -63,6 +65,7 @@ export class File {
       this.name = path;
     } else {
       this.name = path.substring(0, path.lastIndexOf('.'));
+      // @ts-ignore
       this.type = path.split('.').pop().toLowerCase();
     }
     this.path = params.userFile.fullName.slice(0, params.userFile.fullName.length - 1);
@@ -72,7 +75,7 @@ export class File {
     this.updatedAt = moment(params.userFile.updatedAt).toString();
     this.code = params.code;
     this.token = params.token;
-    this.uri = params.uri;
+    this.uri = params.uri || '';
     this.expiredAt = params.expiredAt;
     this.hash = params.userFile.hash;
     this.shareId = params.id;
@@ -150,17 +153,27 @@ export class File {
       return '';
     }
     const url = `${window.location.origin}/#/general/shareFile/${this.uri}`;
-    this.copyShareUrl();
+    this.copyShareUrl(1);
     return url;
   }
   // 分享链接放出剪切板
-  copyShareUrl() {
+  copyShareUrl(mode: number) {
     if (this.uri === '') {
       return '';
     }
-    clipboardRef.value = `${window.location.origin}/#/general/shareFile/${this.uri}`;
+    let temp = '';
+    if (mode === 1 || mode === 3) {
+      temp += `${t('general.metanet.shareUrl')}:${window.location.origin}/#/general/shareFile/${
+        this.uri
+      }   `;
+    }
+    if (mode === 2 || mode === 3) {
+      temp += `${t('general.metanet.code')}:${this.code}`;
+    }
+
+    clipboardRef.value = temp;
     if (unref(copiedRef)) {
-      createMessage.success('copy success！');
+      createMessage.success(t('general.metanet.copySuccess'));
     }
   }
   // 删除文件

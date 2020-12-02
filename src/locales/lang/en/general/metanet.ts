@@ -21,4 +21,9 @@ export default {
   action: 'Actions',
   size: 'Size',
   time: 'Time',
+  failed: 'Failed',
+  shareUrl: 'Share Url',
+  code: 'Share Code',
+  copyShare: 'Copy Url and Code',
+  url: 'Url',
 };

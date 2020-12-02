@@ -14,22 +14,37 @@
         >
       </template>
       <template #action="{ record }">
-        <div>
-          <a-button type="link" v-if="record.type !== 'folder'" @click="preview(record)">{{
-            t('previewButton')
-          }}</a-button>
-          <a-button type="link" @click="openShareModal(record)">{{ t('shareButton') }}</a-button>
-          <a-button type="link" @click="download(record)" v-if="record.type !== 'folder'">{{
-            t('downloadButton')
-          }}</a-button>
-          <a-button
-            type="link"
-            color="error"
-            :pop="{ title: t('delButton') + record.fullName + '?' }"
-            @click="delFile(record)"
-            >{{ t('delButton') }}</a-button
-          ></div
-        >
+        <Dropdown>
+          <a class="ant-dropdown-link"> ... </a>
+          <template #overlay>
+            <Menu>
+              <MenuItem>
+                <a-button type="link" v-if="record.type !== 'folder'" @click="preview(record)">{{
+                  t('previewButton')
+                }}</a-button>
+              </MenuItem>
+              <MenuItem>
+                <a-button type="link" @click="openShareModal(record)">{{
+                  t('shareButton')
+                }}</a-button>
+              </MenuItem>
+              <MenuItem>
+                <a-button type="link" @click="download(record)" v-if="record.type !== 'folder'">{{
+                  t('downloadButton')
+                }}</a-button>
+              </MenuItem>
+              <MenuItem>
+                <a-button
+                  type="link"
+                  color="error"
+                  :pop="{ title: t('delButton') + record.fullName + '?' }"
+                  @click="delFile(record)"
+                  >{{ t('delButton') }}</a-button
+                >
+              </MenuItem>
+            </Menu>
+          </template>
+        </Dropdown>
       </template>
       <template #toolbar>
         <a-button type="primary" @click="setSelectedRowKeyList">
@@ -77,6 +92,7 @@
   import { File } from './type/file';
   import { useI18n } from '/@/hooks/web/useI18n';
   const { t } = useI18n('general.metanet');
+  import { Dropdown, Menu } from 'ant-design-vue';
 
   export default defineComponent({
     components: {
@@ -87,6 +103,9 @@
       CreateFolderModal,
       MoveModal,
       ShareModal,
+      Dropdown,
+      Menu,
+      MenuItem: Menu.Item,
     },
     setup() {
       // 信息框
@@ -163,7 +182,6 @@
                 f.push(new File({ userFile: v }));
               }
             });
-            console.log(f);
             folder.value = temp.concat(p);
             files.value = f;
           })
@@ -195,6 +213,7 @@
             name: record.name,
           }),
         },
+
         scroll: { x: 1000, y: 800 },
       });
       // 新建文件夹Modal
@@ -256,12 +275,12 @@
       }
       // 打开分享窗口
       function openShareModal(record) {
-        openModal4(true, { record }, true);
+        openModal4(true, { record });
 
         nextTick(() => {
           setModal4({
             canFullscreen: false,
-            width: '30%',
+            width: '50%',
             destroyOnClose: true,
             afterClose: () => {
               fetchData({ dirId });

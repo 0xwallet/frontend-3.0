@@ -21,4 +21,9 @@ export default {
   action: '操作',
   size: '大小',
   time: '时间',
+  failed: '失败',
+  shareUrl: '分享链接',
+  copyShare: '复制链接及提取码',
+  url: '链接',
+  code: '提取码',
 };

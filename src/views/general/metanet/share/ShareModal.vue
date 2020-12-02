@@ -1,23 +1,41 @@
 <template>
-  <BasicModal v-bind="$attrs" @register="register" title="分享文件" @ok="shareFile">
-    <p> 文件名：{{ file.name + '.' + file.type }}</p>
-    <BasicForm @register="registerForm" :model="model" v-if="!shareUrl" />
-    <div v-if="shareUrl">
-      <p>
-        分享url：<a-button type="link" @click="copyUrl">{{ file.shareUrl() }}</a-button>
-      </p>
-      <p> 分享token：{{ file.token }}</p>
-      <p> 分享code：{{ file.code }}</p>
+  <BasicModal v-bind="$attrs" @register="register" :title="t('shareButton')" @ok="shareFile">
+    <span class="title"> {{ t('fileName') }}：</span>
+    <span class="title">{{ file.name + '.' + file.type }}</span>
+    <BasicForm @register="registerForm" :model="model" layout="vertical" v-if="file.uri === ''" />
+    <div v-if="file.uri !== ''">
+      <Row>
+        <Col :span="4"> {{ t('shareUrl') }}</Col>
+        <Col :span="20">
+          <a-button type="link" @click="copy(1)">{{ shareUrl }}</a-button>
+        </Col>
+      </Row>
+      <Row>
+        <Col :span="4"> 提取码</Col>
+        <Col :span="20">
+          <a-button type="link" @click="copy(2)">{{ file.code }}</a-button>
+        </Col>
+        <!--        <Col> 提取码：{{ file.code }}</Col>-->
+        <!--        <Col> 7天内有效，</Col>-->
+      </Row>
+      <Row type="flex" justify="center">
+        <Col :span="12"> 7天内有效</Col>
+        <Col :span="12"
+          ><a-button type="link" @click="copy(3)">{{ t('copyShare') }}</a-button>
+        </Col>
+      </Row>
     </div>
   </BasicModal>
 </template>
 <script lang="ts">
-  import { defineComponent, ref } from 'vue';
+  import { computed, defineComponent, ref, unref } from 'vue';
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { BasicForm, FormSchema, useForm } from '/@/components/Form';
   import { useMessage } from '/@/hooks/web/useMessage';
+  import { Row, Col } from 'ant-design-vue';
   import { File } from '../type/file';
-
+  import { useI18n } from '/@/hooks/web/useI18n';
+  const { t } = useI18n('general.metanet');
   function randomString(len) {
     len = len || 32;
     const chars =
@@ -42,13 +60,14 @@
     },
   ];
   export default defineComponent({
-    components: { BasicModal, BasicForm },
+    components: { BasicModal, BasicForm, Row, Col },
     setup() {
       const modelRef = ref({});
-      const file = ref({});
-      const shareUrl = ref(false);
+      const file = ref(File);
+      const shareUrl = computed(() => {
+        return `${window.location.origin}/#/general/shareFile/${file.value.uri}`;
+      });
       const [registerForm, { validateFields }] = useForm({
-        labelWidth: 120,
         schemas,
         showActionButtonGroup: false,
         actionColOptions: {
@@ -57,23 +76,28 @@
       });
 
       const { createErrorModal } = useMessage();
-      const [register, { closeModal }] = useModalInner((data) => {
-        file.value = data.record;
+      const [register, { closeModal, setModalProps }] = useModalInner((data) => {
+        shareUrl.value = false;
+
+        file.value = unref(data.record);
+        console.log(file);
       });
 
       async function shareFile() {
-        const paramas = await validateFields();
+        const params = await validateFields();
 
-        const f: File = file.value;
-        if (!(await f.share(paramas.code))) {
-          createErrorModal({ title: '失败', content: '分享失败' });
+        if (!(await file.value.share(params.code))) {
+          createErrorModal({ title: t('failed'), content: t('share') + ' ' + t('failed') });
         }
+        setModalProps({
+          footer: null,
+        });
         shareUrl.value = true;
       }
-      function copyUrl() {
-        const f: File = file.value;
-        f.copyShareUrl();
+      function copy(v) {
+        file.value.copyShareUrl(v);
       }
+      function copyUrl() {}
       return {
         register,
         schemas,
@@ -82,8 +106,16 @@
         shareFile,
         file,
         shareUrl,
+        copy,
         copyUrl,
+        t,
       };
     },
   });
 </script>
+
+<style>
+  .title {
+    font-size: 25px;
+  }
+</style>
