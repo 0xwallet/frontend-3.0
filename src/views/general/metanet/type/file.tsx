@@ -58,8 +58,8 @@ export class File {
       this.type = 'folder';
       this.name = path;
     } else {
-      this.name = path.split('.')[0];
-      this.type = path.split('.')[1];
+      this.name = path.substring(0, path.lastIndexOf('.'));
+      this.type = path.split('.').pop().toLowerCase();
     }
     this.path = params.userFile.fullName.slice(0, params.userFile.fullName.length - 1);
     this.size = Number(params.userFile.info.size);
