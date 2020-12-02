@@ -9,15 +9,8 @@
     <List item-layout="horizontal" :data-source="data">
       <template #renderItem="{ item, index }">
         <ListItem>
-          <ListItemMeta
-            description="Ant Design, a design language for background applications, is refined by Ant UED Team"
-          >
-            <template #title>
-              <a href="https://www.antdv.com/">{{ item.title }}</a>
-            </template>
-            <template #avatar>
-              <a-avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
-            </template>
+          <ListItemMeta :description="item.publicKey">
+            <template #title> Public Key </template>
           </ListItemMeta>
         </ListItem>
       </template>
@@ -27,28 +20,16 @@
 </template>
 
 <script lang="ts">
-  import { defineComponent, ref, unref, nextTick } from 'vue';
+  import { defineComponent } from 'vue';
   import { BasicTitle } from '/@/components/Basic';
   import { Card, List, Tag } from 'ant-design-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
   import DeviceModal from './deviceModal.vue';
   import { useModal } from '/@/components/Modal';
+  import { getMe } from '/@/hooks/apollo/apollo';
 
-  const data = [
-    {
-      title: 'Ant Design Title 1',
-    },
-    {
-      title: 'Ant Design Title 2',
-    },
-    {
-      title: 'Ant Design Title 3',
-    },
-    {
-      title: 'Ant Design Title 4',
-    },
-  ];
+  const data = [];
   export default defineComponent({
     components: {
       BasicTitle,
@@ -64,6 +45,18 @@
       const { t } = useI18n('general.security');
       const { createMessage } = useMessage();
       const [register, { openModal, setModalProps }] = useModal();
+
+      function fetchData() {
+        getMe().then((res) => {
+          res.wallets.forEach((v) => {
+            if (v.tags[0] !== 'MESSAGE' && v.info.publicKey !== null) {
+              data.push({ publicKey: v.info.publicKey });
+            }
+          });
+        });
+      }
+      fetchData();
+
       function openDeviceModal() {
         openModal(true);
         setModalProps({

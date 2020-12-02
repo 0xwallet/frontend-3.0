@@ -79,6 +79,9 @@
     <Row type="flex" justify="center">
       <Col :span="12"><QrCode :value="publicKey" /></Col>
     </Row>
+    <Row type="flex" justify="center">
+      <Col :span="12">{{ t('QrText') }}</Col>
+    </Row>
   </Modal>
   <PWModal @register="registerPWModal" />
 </template>
@@ -88,7 +91,7 @@
   import { BasicTitle, BasicHelp } from '/@/components/Basic';
   import { Card, Avatar, Divider, Modal, Tag, Row, Col } from 'ant-design-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import { useApollo } from '/@/hooks/apollo/apollo';
+  import { useApollo, getMe } from '/@/hooks/apollo/apollo';
   import { me } from '/@/hooks/apollo/gqlUser';
   import { useWallet } from '/@/hooks/nkn/getNKN';
   import {
@@ -144,20 +147,19 @@
       const { createMessage } = useMessage();
       const [registerPWModal, { openModal: openPwModal }] = useModal();
       function fetchData() {
-        useApollo()
-          .query({ query: me })
-          .then((res) => {
-            userInfo.value = res.data?.me;
-            res.data?.me?.wallets.forEach((v) => {
-              if (v.tags.length > 0) {
-                v.tags.forEach((v1) => {
-                  if (v1 === 'MESSAGE') {
-                    wallet.value = v;
-                  }
-                });
-              }
-            });
+        getMe().then((res) => {
+          userInfo.value = res;
+          res.wallets.forEach((v) => {
+            if (v.tags.length > 0) {
+              v.tags.forEach((v1) => {
+                if (v1 === 'MESSAGE') {
+                  wallet.value = v;
+                }
+              });
+            }
           });
+        });
+
         useWallet().then((w) => {
           publicKey.value = w.getPublicKey();
         });

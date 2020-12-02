@@ -92,3 +92,21 @@ export const signIn = gql`
     }
   }
 `;
+
+export const bindNknAddress = gql`
+  mutation bindNknAddress(
+    $code: String
+    $encryptedWallet: String
+    $nknPublicKey: String
+    $tag: WalletTag
+  ) {
+    bindNknAddress(
+      code: $code
+      encryptedWallet: $encryptedWallet
+      nknPublicKey: $nknPublicKey
+      tag: $tag
+    ) {
+      id
+    }
+  }
+`;

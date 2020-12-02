@@ -13,4 +13,5 @@ export default {
   cardNumber: '信用卡号',
   creditCardTitle: '信用卡',
   appsTitle: '应用',
+  QrText: '扫一扫二维码，添加到联系人',
 };

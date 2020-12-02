@@ -13,4 +13,5 @@ export default {
   cardNumber: 'Credit Card Number',
   creditCardTitle: 'Credit Card',
   appsTitle: 'Apps',
+  QrText: 'Scan QR code and add to contact',
 };
