@@ -8,7 +8,9 @@
         </span>
       </template>
       <template #uri="{ record, text }">
-        <a-button type="link" @click="copyUrl(record)"> {{ text }}</a-button>
+        <Tooltip :title="t('copy')"
+          ><a-button type="link" @click="copyUrl(record)"> {{ text }}</a-button></Tooltip
+        >
       </template>
       <template #action="{ record }">
         <div v-if="record.name !== 'deleted'">
@@ -37,10 +39,12 @@
   import { getBasicColumns } from './shareData';
   import { File } from '../type/file';
   import { BasicHelp } from '/@/components/Basic';
+
   import { useI18n } from '/@/hooks/web/useI18n';
+  import { Tooltip } from 'ant-design-vue';
   const { t } = useI18n('general.metanet');
   export default defineComponent({
-    components: { BasicTable, GIcon, BasicHelp },
+    components: { BasicTable, GIcon, BasicHelp, Tooltip },
     setup() {
       const { createMessage, createErrorModal } = useMessage();
       const path = ref([]);
@@ -51,7 +55,7 @@
       ] = useTable({
         canResize: false,
 
-        title: '分享列表',
+        title: t('share'),
         dataSource: tableData,
         columns: getBasicColumns(),
         rowKey: 'shareId',
@@ -70,12 +74,14 @@
               if (v.userFile === null) {
                 temp.push({
                   name: 'deleted',
+                  shareId: v.id,
                 });
                 return;
               }
               let f = new File(v);
               temp.push(f);
             });
+            console.log(temp);
             tableData.value = temp;
             // console.log(data.driveListFiles);
           })
@@ -116,7 +122,7 @@
       }
       function copyUrl(record) {
         const f: File = record;
-        f.copyShareUrl();
+        f.copyShareUrl(1);
       }
 
       return {
