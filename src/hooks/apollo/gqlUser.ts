@@ -99,12 +99,14 @@ export const bindNknAddress = gql`
     $encryptedWallet: String
     $nknPublicKey: String
     $tag: WalletTag
+    $password: String!
   ) {
     bindNknAddress(
       code: $code
       encryptedWallet: $encryptedWallet
       nknPublicKey: $nknPublicKey
       tag: $tag
+      password: $password
     ) {
       id
     }

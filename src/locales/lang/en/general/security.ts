@@ -11,4 +11,5 @@ export default {
   verifyCode: 'VerifyCode',
   publicKey: 'Public Key',
   dataTitle: 'Data',
+  password: 'password',
 };

@@ -1,6 +1,6 @@
 <template>
   <BasicModal v-bind="$attrs" @register="register" @ok="bindDevice">
-    <InputSearch v-model:value="email" placeholder="input Email" @search="getVerifyCode">
+    <InputSearch v-model:value="code" placeholder="input Code" @search="getVerifyCode">
       <template #enterButton>
         <a-button type="primary"> {{ button }}</a-button>
       </template>
@@ -17,20 +17,11 @@
   import { BasicForm, FormSchema, useForm } from '/@/components/Form';
   import { Input, Divider } from 'ant-design-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import { useApollo } from '/@/hooks/apollo/apollo';
+  import { getMe, useApollo } from '/@/hooks/apollo/apollo';
   import { sendVerifyCode, bindNknAddress } from '/@/hooks/apollo/gqlUser';
 
   const { t } = useI18n('general.security');
   const schemas: FormSchema[] = [
-    {
-      field: 'code',
-      component: 'Input',
-      label: t('verifyCode'),
-      colProps: {
-        span: 24,
-      },
-      rules: [{ required: true }],
-    },
     {
       field: 'publicKey',
       component: 'Input',
@@ -40,12 +31,20 @@
       },
       rules: [{ required: true }],
     },
+    {
+      field: 'password',
+      component: 'InputPassword',
+      label: t('password'),
+      colProps: {
+        span: 24,
+      },
+      rules: [{ required: true }],
+    },
   ];
   export default defineComponent({
     components: { BasicModal, BasicForm, InputSearch: Input.Search, Divider },
     setup() {
-      const email = ref('');
-
+      const code = ref('');
       const emailButton = ref(0);
       const button = computed(() => {
         return emailButton.value < 1
@@ -60,17 +59,19 @@
       });
       const [register, { closeModal }] = useModalInner((data) => {});
 
-      function getVerifyCode() {
+      async function getVerifyCode() {
+        const user = await getMe();
+        console.log(user);
         if (emailButton.value > 0) {
           createMessage.error(`wait ${emailButton.value} ${t('seconds')}`);
           return;
         }
-        if (email.value === '') {
+        if (user.email === '') {
           createMessage.error(t('noEmail'));
           return;
         }
         if (
-          email.value.match(`^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$`) ===
+          user.email.match(`^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$`) ===
           null
         ) {
           createMessage.error(t('emailFormat'));
@@ -81,11 +82,11 @@
           .mutate({
             mutation: sendVerifyCode,
             variables: {
-              email: email.value,
+              email: user.email,
               type: 'CHANGE_INFO',
             },
           })
-          .finally(() => {
+          .then(() => {
             createMessage.success(t('verificationSend'));
             emailButton.value = 60;
             setInterval(() => {
@@ -96,18 +97,21 @@
               }
               emailButton.value -= 1;
             }, 1000);
+          })
+          .catch((err) => {
+            createErrorModal({ content: err });
           });
       }
       async function bindDevice() {
         try {
           const data = await validate();
-          console.log(data);
           await useApollo().mutate({
             mutation: bindNknAddress,
             variables: {
-              code: data.code,
+              code: code.value,
               nknPublicKey: data.publicKey,
-              tag: 'LOGIN_CODE',
+              tag: 'LOGIN',
+              password: data.password,
             },
           });
           createMessage.success('success');
@@ -116,7 +120,7 @@
           console.log(err);
         }
       }
-      return { register, registerForm, getVerifyCode, email, t, button, emailButton, bindDevice };
+      return { register, registerForm, getVerifyCode, code, t, button, emailButton, bindDevice };
     },
   });
 </script>
