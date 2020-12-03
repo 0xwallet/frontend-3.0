@@ -54,7 +54,7 @@ export const sendVerifyCode = gql`
 
 // 用户注册
 export const signUp = gql`
-  mutation(
+  mutation signup(
     $email: String!
     $username: String!
     $password: String!
@@ -72,7 +72,9 @@ export const signUp = gql`
       nknEncryptedWallet: $nknEncryptedWallet
       nknPublicKey: $nknPublicKey
     ) {
-      ${User}
+      Session {
+        token
+      }
     }
   }
 `;
