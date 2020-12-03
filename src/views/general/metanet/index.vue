@@ -43,7 +43,7 @@
           tab: t('recycle'),
         },
       ];
-      const tabKey = ref('');
+      const tabKey = ref('files');
       function onTabChange(key) {
         tabKey.value = key;
       }

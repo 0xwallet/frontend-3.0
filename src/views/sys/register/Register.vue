@@ -130,12 +130,6 @@
           info.value = '邮箱格式不正确';
           return;
         }
-        emailButton.value = 60;
-        //TODO 先用定时器，之后换缓存
-
-        setInterval(() => {
-          emailButton.value -= 1;
-        }, 1000);
 
         useApollo()
           .mutate({
@@ -144,6 +138,18 @@
               email: formData.email,
               type: 'ACTIVE_EMAIL',
             },
+          })
+          .then(() => {
+            emailButton.value = 60;
+            //TODO 先用定时器，之后换缓存
+            setInterval(() => {
+              if (emailButton.value > 0) {
+                emailButton.value -= 1;
+              }
+              if (emailButton.value === 0) {
+                clearInterval();
+              }
+            }, 1000);
           })
           .finally(() => {
             info.value = t('verificationSend');

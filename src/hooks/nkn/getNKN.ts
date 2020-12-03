@@ -59,7 +59,7 @@ export async function initJS() {
 }
 
 // 循环获取NKN.JS
-export function useNKN() {
+export function useNKN(): Promise<any> {
   return new Promise((resolve) => {
     let t = setInterval(() => {
       const global = getGlobal();

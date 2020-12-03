@@ -17,6 +17,7 @@ export const User = `
   tags
   info{
   publicKey
+  encryptedWallet
   }
   }
   role

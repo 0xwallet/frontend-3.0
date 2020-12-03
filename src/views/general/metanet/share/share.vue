@@ -1,7 +1,7 @@
 <template>
   <div class="p-4">
     <BasicTable @register="registerTable">
-      <template #urltitle>
+      <template #urlTitle>
         <span>
           {{ t('url') }}
           <BasicHelp class="ml-2" :text="t('copyShare')" />

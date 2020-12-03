@@ -57,7 +57,7 @@ export function getBasicColumns(): BasicColumn[] {
               onClick={() => {
                 clipboardRef.value = text;
                 if (unref(copiedRef)) {
-                  createMessage.warning(t('copySuccess'));
+                  createMessage.success(t('copySuccess'));
                 }
               }}
             >
@@ -75,7 +75,7 @@ export function getBasicColumns(): BasicColumn[] {
       // title: '网址',
       dataIndex: 'uri',
       width: 300,
-      slots: { customRender: 'uri', title: 'urltitle' },
+      slots: { customRender: 'uri', title: 'urlTitle' },
     },
     {
       title: t('code'),

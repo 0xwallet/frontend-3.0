@@ -161,14 +161,18 @@
             .then((res) => {
               // 取得token，存入缓存
               console.log(res);
+              console.log(
+                res.data.signin.User.wallets.filter((v) => v.tags[0] === 'MESSAGE')[0].info
+                  .encryptedWallet
+              );
               const secret = CryptoES.enc.Base64.stringify(
                 CryptoES.HmacSHA512(data.email, data.password)
               );
               localStorage.setItem('walletPassword', secret);
               localStorage.setItem(
                 'walletJson',
-                res?.data?.signin?.User?.wallets.filter((v) => v.tags[0] == 'MESSAGE')[0]?.info
-                  ?.encryptedWallet
+                res.data.signin.User.wallets.filter((v) => v.tags[0] === 'MESSAGE')[0].info
+                  .encryptedWallet
               );
 
               // const wallet = res?.data?.signin?.User?.wallets.filter(
