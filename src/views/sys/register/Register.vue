@@ -96,7 +96,7 @@
       const formRef = ref<any>(null);
       const go = useGo();
       const globSetting = useGlobSetting();
-      const { notification } = useMessage();
+      const { notification, createErrorModal } = useMessage();
       const info = ref('');
       const emailButton = ref(0);
       const { t } = useI18n('sys.login');
@@ -194,6 +194,7 @@
               go('/login');
             });
         } catch (error) {
+          createErrorModal({ content: error });
         } finally {
           // resetVerify();
           formState.loading = false;
