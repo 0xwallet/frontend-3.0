@@ -10,7 +10,7 @@ const general: AppRouteModule = {
     redirect: '/general/account',
     meta: {
       icon: 'ant-design:home-outlined',
-      title: 'routes.menu.general',
+      title: 'routes.menu.GENERAL',
     },
   },
 

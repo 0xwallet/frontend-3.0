@@ -1,14 +1,19 @@
 <template>
-  <Tabs>
-    <TabPane key="1" :tab="t('files')"> <Files /></TabPane>
-    <TabPane key="2" :tab="t('share')"> <Share /> </TabPane>
-    <TabPane key="3" :tab="t('recycle')"> <Recycle /> </TabPane>
-  </Tabs>
+  <Card
+    :tab-list="tabList"
+    :active-tab-key="tabKey"
+    @tabChange="(key) => onTabChange(key)"
+    class="tabs"
+  >
+    <p v-if="tabKey === 'files'"><Files /></p>
+    <p v-else-if="tabKey === 'share'"> <Share /> </p>
+    <p v-else="tabKey === 'recycle'"> <Recycle /> </p>
+  </Card>
 </template>
 
 <script lang="ts">
-  import { defineComponent } from 'vue';
-  import { Tabs } from 'ant-design-vue';
+  import { defineComponent, ref } from 'vue';
+  import { Tabs, Card } from 'ant-design-vue';
   import Files from './files.vue';
   import Share from './share/share.vue';
   import Recycle from './recycle.vue';
@@ -21,10 +26,33 @@
       Files,
       Share,
       Recycle,
+      Card,
     },
     setup() {
-      return { t };
+      const tabList = [
+        {
+          key: 'files',
+          tab: t('files'),
+        },
+        {
+          key: 'share',
+          tab: t('share'),
+        },
+        {
+          key: 'recycle',
+          tab: t('recycle'),
+        },
+      ];
+      const tabKey = ref('');
+      function onTabChange(key) {
+        tabKey.value = key;
+      }
+      return { t, tabList, tabKey, onTabChange };
     },
   });
 </script>
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+  .tabs {
+    margin: 10px;
+  }
+</style>
