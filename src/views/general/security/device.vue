@@ -6,12 +6,10 @@
     <template #extra>
       <a-button type="link" @click="openDeviceModal">{{ t('deviceModalTitle') }}</a-button>
     </template>
-    <List item-layout="horizontal" :data-source="deviceList">
+    <List :grid="{ gutter: 2, column: 4 }" :data-source="deviceList">
       <template #renderItem="{ item, index }">
         <ListItem>
-          <ListItemMeta :description="item.publicKey">
-            <template #title> Public Key </template>
-          </ListItemMeta>
+          <a-card :title="item.type" class="ellipsis">{{ item.publicKey }} </a-card>
         </ListItem>
       </template>
     </List>
@@ -48,11 +46,15 @@
       function fetchData() {
         getMe().then((res) => {
           deviceList.value = [];
+          deviceList.value.push({ publicKey: '', type: '新设备' });
           res.wallets.forEach((v) => {
             if (v.tags[0] !== 'MESSAGE' && v.info.publicKey !== null) {
-              deviceList.value.push({ publicKey: v.info.publicKey });
+              deviceList.value.push({ publicKey: v.info.publicKey, type: 'NKN-nMobile' });
             }
           });
+          deviceList.value.push({ publicKey: '', type: 'Fido-USB' });
+          deviceList.value.push({ publicKey: '', type: 'Fido-Fingerprint' });
+          deviceList.value.push({ publicKey: '', type: 'Fido-Bluetooth' });
         });
       }
       fetchData();
