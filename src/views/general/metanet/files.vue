@@ -37,7 +37,7 @@
                 <a-button
                   type="link"
                   color="error"
-                  :pop="{ title: t('delButton') + record.fullName + '?' }"
+                  :pop="{ title: t('delButton') + ' ' + record.fullName + '?' }"
                   @click="delFile(record)"
                   >{{ t('delButton') }}</a-button
                 >
@@ -73,6 +73,7 @@
     <MoveModal @register="registerMoveModal" />
     <UploadModal @register="registerUploadModal" />
     <ShareModal @register="registerShareModal" />
+    <MarkdownModal @register="registerMDModal" />
   </div>
 </template>
 <script lang="ts">
@@ -85,6 +86,7 @@
   import CreateFolderModal from './component/CreateFolderModal.vue';
   import ShareModal from './share/ShareModal.vue';
   import MoveModal from './component/MoveModal.vue';
+  import MarkdownModal from './component/editor/Markdown.vue';
   import GIcon from '/@/components/Icon/index';
   import { useApollo } from '/@/hooks/apollo/apollo';
   import { driveListFiles, driveDeleteFiles } from '/@/hooks/apollo/gqlFile';
@@ -106,6 +108,7 @@
       Dropdown,
       Menu,
       MenuItem: Menu.Item,
+      MarkdownModal,
     },
     setup() {
       // 信息框
@@ -227,6 +230,8 @@
       const [registerUploadModal, { openModal: openModal3, setModalProps: setModal3 }] = useModal();
       //分享Modal
       const [registerShareModal, { openModal: openModal4, setModalProps: setModal4 }] = useModal();
+      // MarkdownModal
+      const [registerMDModal, { openModal: openModal5, setModalProps: setModal5 }] = useModal();
 
       // 打开新建文件夹modal
       // 传入上级文件夹ID dirId
@@ -281,6 +286,19 @@
           setModal4({
             canFullscreen: false,
             width: '50%',
+            destroyOnClose: true,
+            afterClose: () => {
+              fetchData({ dirId });
+            },
+          });
+        });
+      }
+      function openMDModal(record) {
+        openModal5(true, { record }, true);
+
+        nextTick(() => {
+          setModal5({
+            width: '80%',
             destroyOnClose: true,
             afterClose: () => {
               fetchData({ dirId });
@@ -357,33 +375,38 @@
       }
       // 打开文件或者进入目录
       function openFile(f: File) {
-        if (!f.isDir) {
-          return;
-        }
-
-        dirId = f.id;
-        fetchData({ dirId: f.id });
-        if (f.id === 'root') {
-          path.value = [];
-          return;
-        }
-
-        if (f.name === '...') {
-          let p = unref(path);
-          p.forEach((v) => {
-            if (v.dirId == f.id) {
-              path.value.pop();
-              return;
-            }
-          });
-          // TODO 这里有个迷之BUG，name自己变成...
-          if (f.fullName.length > 0) {
-            path.value.push({ name: f.fullName[f.fullName.length - 1], dirId: f.id });
-            console.log(22, path.value);
+        if (f.isDir) {
+          dirId = f.id;
+          fetchData({ dirId: f.id });
+          if (f.id === 'root') {
+            path.value = [];
             return;
           }
+
+          if (f.name === '...') {
+            let p = unref(path);
+            p.forEach((v) => {
+              if (v.dirId == f.id) {
+                path.value.pop();
+                return;
+              }
+            });
+            // TODO 这里有个迷之BUG，name自己变成...
+            if (f.fullName.length > 0) {
+              path.value.push({ name: f.fullName[f.fullName.length - 1], dirId: f.id });
+              console.log(22, path.value);
+              return;
+            }
+          }
+          path.value.push({ name: f.name, dirId: f.id });
+          return;
         }
-        path.value.push({ name: f.name, dirId: f.id });
+        if (f.type === 'md') {
+          openMDModal(f);
+        } else if (f.type === 'png') {
+          f.preview();
+        }
+
         // 根据ID获取最新进入目录文件
       }
       function refresh() {
@@ -404,6 +427,8 @@
         openUploadModal,
         registerShareModal,
         openShareModal,
+        registerMDModal,
+        openMDModal,
         delFile,
         preview,
         download,

@@ -1,7 +1,7 @@
 <template>
   <BasicModal
     width="800px"
-    title="上传"
+    :title="t('uploadButton')"
     v-bind="$attrs"
     @register="register"
     :closeFunc="handleCloseFunc"
@@ -30,7 +30,7 @@
         :before-upload="beforeUpload"
         class="upload-modal-toolbar__btn"
       >
-        <a-button type="primary"> 选择文件 </a-button>
+        <a-button type="primary"> {{ t('select') }} {{ t('file') }}</a-button>
       </Upload>
     </div>
     <FileList :dataSource="fileListRef" :columns="columns" :actionColumn="actionColumn" />
@@ -62,6 +62,8 @@
   import { encode } from '@msgpack/msgpack';
   import { useMClient } from '/@/hooks/nkn/getNKN';
   import CryptoES from 'crypto-es';
+  import { useI18n } from '/@/hooks/web/useI18n';
+  const { t } = useI18n('general.metanet');
   export default defineComponent({
     components: { BasicModal, Upload, Alert, FileList },
     props: basicProps,
@@ -110,7 +112,11 @@
         const someError = fileListRef.value.some(
           (item) => item.status === UploadResultStatus.ERROR
         );
-        return isUploadingRef.value ? '上传中' : someError ? '重新上传失败文件' : '开始上传';
+        return isUploadingRef.value
+          ? t('uploading')
+          : someError
+          ? t('reUpload')
+          : t('uploadButton');
       });
 
       // 上传前校验
@@ -397,6 +403,7 @@
         handleCloseFunc,
         getIsSelectFile,
         getUploadBtnText,
+        t,
       };
     },
   });

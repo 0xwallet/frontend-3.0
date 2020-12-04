@@ -16,8 +16,8 @@
             :rules="formRules"
             ref="formRef"
           >
-            <a-form-item name="email" label="email">
-              <a-input v-model:value="formData.email" placeholder="email" />
+            <a-form-item name="email" label="Email">
+              <a-input v-model:value="formData.email" placeholder="Email" />
               <div class="email-button"
                 ><a-button @click="getVerifyCode" :disabled="emailButton !== 0"
                   >{{ t('verificationButton')

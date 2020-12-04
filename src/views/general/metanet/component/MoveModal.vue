@@ -1,7 +1,7 @@
 <template>
-  <BasicModal v-bind="$attrs" @register="register" title="移动文件" @ok="moveFile">
+  <BasicModal v-bind="$attrs" @register="register" :title="t('moveFile')" @ok="moveFile">
     <Row
-      ><Col>选择了{{ total }}个文件,已处理{{ now }}个</Col
+      ><Col>{{ t('select') }} {{ total }} {{ t('file') }},{{ t('processed') }} {{ now }} </Col
       ><Col><Progress :percent="total === 0 ? 0 : (now / total) * 100" /></Col
     ></Row>
     <Tree :treeData="treeData" :loadData="onLoadData" v-model:selectedKeys="path" />
@@ -14,7 +14,9 @@
   import { useApollo } from '/@/hooks/apollo/apollo';
   import { driveListFiles, driveMoveFile } from '/@/hooks/apollo/gqlFile';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { TreeItem } from '/@/components/Tree/index';
+  import { TreeItem } from '/@/components/Tree';
+  import { useI18n } from '/@/hooks/web/useI18n';
+  const { t } = useI18n('general.metanet');
   export default defineComponent({
     components: { BasicModal, Tree, Progress, Row, Col },
     setup() {
@@ -75,12 +77,12 @@
           //
         } catch (err) {
           console.log(err);
-          createErrorModal({ title: '错误', content: err.message });
+          createErrorModal({ title: t('error'), content: err.message });
         } finally {
-          createMessage.success('成功移动' + now.value + '个文件');
+          createMessage.success(`${t('success')} ${t('moveButton')}` + now.value + t('file'));
         }
       }
-      return { register, treeData, onLoadData, moveFile, path, total, now };
+      return { register, treeData, onLoadData, moveFile, path, total, now, t };
     },
   });
 </script>

@@ -13,9 +13,11 @@ import { useCopyToClipboard } from '/@/hooks/web/useCopyToClipboard';
 import { useMessage } from '/@/hooks/web/useMessage';
 import moment from 'moment';
 import { useI18n } from '/@/hooks/web/useI18n';
+import { getFile } from '/@/api/general/metanet/file';
 const { t } = useI18n();
 const { clipboardRef, copiedRef } = useCopyToClipboard();
 const { createMessage } = useMessage();
+
 interface fileParams {
   userFile: userFile;
   id?: string;
@@ -94,7 +96,6 @@ export class File {
         let url = `https://drive-s.owaf.io/download/${id}/${toLower(this.space)}/${this.id}/${
           this.fullName
         }?token=${token}`;
-
         // /preview/:user_id/:space/:user_file_id/:filename?token=:token
         downloadByUrl({
           url: url,
@@ -103,22 +104,27 @@ export class File {
       });
   }
   // 文件预览
-  preview() {
+  preview(): Promise<any> {
     if (this.type === 'folder') {
-      return;
+      return new Promise<any>((_, reject) => reject);
     }
     const id = localStorage.getItem('uid');
     let token = '';
-    useApollo()
+    return useApollo()
       .mutate({ mutation: drivePreviewToken })
       .then((res) => {
         token = res?.data?.drivePreviewToken;
         let url = `https://drive-s.owaf.io/preview/${id}/${toLower(this.space)}/${this.id}/${
           this.fullName
         }?token=${token}`;
-        createImgPreview({
-          imageList: [url],
-        });
+        if (this.type === 'png') {
+          createImgPreview({
+            imageList: [url],
+          });
+          return;
+        } else if (this.type === 'md') {
+          return getFile(url);
+        }
       });
   }
   // 文件分享

@@ -5,13 +5,14 @@ import { checkImgType, isImgTypeByName } from './utils';
 import { Progress, Tag } from 'ant-design-vue';
 
 import TableAction from '/@/components/Table/src/components/TableAction';
-
+import { useI18n } from '/@/hooks/web/useI18n';
+const { t } = useI18n('general.metanet');
 // 文件上传列表
 export function createTableColumns() {
   return [
     {
       dataIndex: 'thumbUrl',
-      title: '图例',
+      title: t('legend'),
       width: 100,
       customRender: ({ record }) => {
         const { thumbUrl, type } = (record as FileItem) || {};
@@ -20,7 +21,7 @@ export function createTableColumns() {
     },
     {
       dataIndex: 'name',
-      title: '文件名',
+      title: t('fileName'),
       align: 'left',
       customRender: ({ text, record }) => {
         const { percent, status: uploadStatus } = (record as FileItem) || {};
@@ -44,7 +45,7 @@ export function createTableColumns() {
     },
     {
       dataIndex: 'hash',
-      title: '文件HASH',
+      title: 'HASH',
       width: 100,
       customRender: ({ text }) => {
         let list = [];
@@ -64,7 +65,7 @@ export function createTableColumns() {
     },
     {
       dataIndex: 'size',
-      title: '文件大小',
+      title: t('size'),
       width: 100,
       customRender: ({ text = 0 }) => {
         return text && (text / 1024).toFixed(2) + 'KB';
@@ -72,12 +73,12 @@ export function createTableColumns() {
     },
     {
       dataIndex: 'type',
-      title: '文件类型',
+      title: t('type'),
       width: 100,
     },
     {
       dataIndex: 'status',
-      title: '状态',
+      title: t('status'),
       width: 100,
       customRender: ({ text }) => {
         if (text === UploadResultStatus.SUCCESS) {
@@ -96,20 +97,20 @@ export function createTableColumns() {
 export function createActionColumn(handleRemove: Function, handlePreview: Function): BasicColumn {
   return {
     width: 120,
-    title: '操作',
+    title: t('action'),
     dataIndex: 'action',
     fixed: false,
     customRender: ({ record }) => {
       const actions: ActionItem[] = [
         {
-          label: '删除',
+          label: t('delButton'),
           color: 'error',
           onClick: handleRemove.bind(null, record),
         },
       ];
       if (checkImgType(record)) {
         actions.unshift({
-          label: '预览',
+          label: t('previewButton'),
           onClick: handlePreview.bind(null, record),
         });
       }
