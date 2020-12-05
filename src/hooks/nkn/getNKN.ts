@@ -1,5 +1,6 @@
 import { useScript } from '/@/hooks/web/useScript';
 import moment from 'moment';
+import CryptoES from 'crypto-es';
 export const getGlobal = (): any => (typeof window !== 'undefined' ? window : global);
 export let wallet: any = null;
 export let session: any = null;
@@ -45,6 +46,14 @@ export function useWallet(): Promise<any> {
       resolve(wallet);
     });
   });
+}
+
+export function saveWallet(params: { email: string; password: string; walletJson?: string }) {
+  const secret = CryptoES.enc.Base64.stringify(CryptoES.HmacSHA512(params.email, params.password));
+  localStorage.setItem('walletPassword', secret);
+  if (params.walletJson) {
+    localStorage.setItem('walletJson', params.walletJson);
+  }
 }
 
 export async function initJS() {

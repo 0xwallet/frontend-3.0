@@ -98,7 +98,7 @@
   import { signIn } from '/@/hooks/apollo/gqlUser';
   import { useApollo } from '/@/hooks/apollo/apollo';
 
-  import { useMClient, useWallet } from '/@/hooks/nkn/getNKN';
+  import { useMClient, useWallet, saveWallet } from '/@/hooks/nkn/getNKN';
   import { useI18n } from '/@/hooks/web/useI18n';
   import CryptoES from 'crypto-es';
   export default defineComponent({
@@ -165,20 +165,17 @@
                 res.data.signin.User.wallets.filter((v) => v.tags[0] === 'MESSAGE')[0].info
                   .encryptedWallet
               );
-              const secret = CryptoES.enc.Base64.stringify(
-                CryptoES.HmacSHA512(data.email, data.password)
-              );
-              localStorage.setItem('walletPassword', secret);
-              localStorage.setItem(
-                'walletJson',
-                res.data.signin.User.wallets.filter((v) => v.tags[0] === 'MESSAGE')[0].info
-                  .encryptedWallet
-              );
+              useWallet();
+              saveWallet({
+                email: data.email,
+                password: data.password,
+                walletJson: res.data.signin.User.wallets.filter((v) => v.tags[0] === 'MESSAGE')[0]
+                  .info.encryptedWallet,
+              });
 
               // const wallet = res?.data?.signin?.User?.wallets.filter(
               //   (v) => v.tags[0] == 'MESSAGE'
               // )[0]?.info?.encryptedWallet;
-              console.log(res.data?.signin?.token);
               localStorage.setItem('token', res.data?.signin?.token || '');
 
               localStorage.setItem('uid', res.data?.signin?.User?.id || 0);
