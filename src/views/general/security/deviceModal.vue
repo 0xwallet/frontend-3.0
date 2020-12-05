@@ -1,6 +1,5 @@
 <template>
   <BasicModal v-bind="$attrs" @register="register" @ok="bindDevice">
-    <Divider />
     <BasicForm @register="registerForm" layout="vertical">
       <template #publicKey="{ model, field }">
         <InputSearch
@@ -24,8 +23,8 @@
   import { BasicForm, FormSchema, useForm } from '/@/components/Form';
   import { Input, Divider } from 'ant-design-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import { getMe, useApollo } from '/@/hooks/apollo/apollo';
-  import { sendVerifyCode, bindNknAddress } from '/@/hooks/apollo/gqlUser';
+  import { useApollo } from '/@/hooks/apollo/apollo';
+  import { sendVerifyCode, bindNknSecurityDevice } from '/@/hooks/apollo/gqlUser';
 
   const { t } = useI18n('general.security');
   const schemas: FormSchema[] = [
@@ -39,6 +38,24 @@
       slot: 'publicKey',
       rules: [{ required: true }],
     },
+    {
+      field: 'code',
+      component: 'Input',
+      label: t('nknVerifyCode'),
+      rules: [{ required: true }],
+      colProps: {
+        span: 24,
+      },
+    },
+    {
+      field: 'password',
+      component: 'InputPassword',
+      label: t('password'),
+      rules: [{ required: true }],
+      colProps: {
+        span: 24,
+      },
+    },
   ];
   export default defineComponent({
     components: { BasicModal, BasicForm, InputSearch: Input.Search, Divider },
@@ -51,23 +68,19 @@
           : `wait ${emailButton.value} ${t('seconds')}`;
       });
       const { createMessage, createErrorModal } = useMessage();
-      const [registerForm, { validate }] = useForm({
+      const [registerForm, { validate, validateFields }] = useForm({
         schemas,
         showActionButtonGroup: false,
         compact: false,
       });
       const [register, { closeModal }] = useModalInner((data) => {});
-
+      // 发送NKN验证码
       async function getVerifyCode() {
-        const user = await getMe();
-
         if (emailButton.value > 0) {
           createMessage.error(`wait ${emailButton.value} ${t('seconds')}`);
           return;
         }
-        const params = await validate();
-        console.log(params);
-
+        const params = await validateFields(['publicKey']);
         useApollo()
           .mutate({
             mutation: sendVerifyCode,
@@ -76,7 +89,7 @@
               type: 'ACTIVE_NKN',
             },
           })
-          .then((res) => {
+          .then(() => {
             createMessage.success(t('verificationSend'));
             emailButton.value = 60;
             setInterval(() => {
@@ -87,28 +100,27 @@
               }
               emailButton.value -= 1;
             }, 1000);
-            console.log(res);
           })
           .catch((err) => {
             createErrorModal({ content: err });
           });
       }
+      // 绑定设备
       async function bindDevice() {
         try {
           const data = await validate();
           await useApollo().mutate({
-            mutation: bindNknAddress,
+            mutation: bindNknSecurityDevice,
             variables: {
-              code: code.value,
+              code: data.code,
               nknPublicKey: data.publicKey,
-              tag: 'LOGIN',
               password: data.password,
             },
           });
           createMessage.success('success');
           closeModal();
         } catch (err) {
-          console.log(err);
+          createErrorModal({ content: err });
         }
       }
       return {

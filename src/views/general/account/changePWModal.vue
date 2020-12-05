@@ -55,7 +55,7 @@
   ];
   export default defineComponent({
     components: { BasicModal, BasicForm },
-    setup(_, { emit }) {
+    setup() {
       const modelRef = ref({});
       const [registerForm, { validateFields }] = useForm({
         labelWidth: 180,
@@ -66,7 +66,7 @@
         },
       });
       const { createErrorModal, createMessage } = useMessage();
-      const [register, { closeModal }] = useModalInner((data) => {});
+      const [register, { closeModal }] = useModalInner();
 
       async function changePassword() {
         const data = await validateFields();
@@ -102,8 +102,6 @@
         } finally {
           closeModal();
         }
-
-        // useApollo().mutate({mutation:resetPassword,variables:data})
       }
 
       return { register, registerForm, model: modelRef, changePassword, t };

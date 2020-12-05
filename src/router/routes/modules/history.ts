@@ -1,22 +1,20 @@
 import type { AppRouteModule } from '/@/router/types';
 
-import { PAGE_LAYOUT_COMPONENT } from '/@/router/constant';
+import { LAYOUT } from '/@/router/constant';
 
 const account: AppRouteModule = {
-  layout: {
-    path: '/history',
-    name: 'History',
-    component: PAGE_LAYOUT_COMPONENT,
-    redirect: '/history/payment',
-    meta: {
-      icon: 'ant-design:home-outlined',
-      title: 'routes.menu.history',
-    },
+  path: '/history',
+  name: 'History',
+  component: LAYOUT,
+  redirect: '/history/payment',
+  meta: {
+    icon: 'ant-design:home-outlined',
+    title: 'routes.menu.history',
   },
 
-  routes: [
+  children: [
     {
-      path: '/payment',
+      path: 'payment',
       name: 'Payment',
       component: () => import('/@/views/history/payment/index.vue'),
       meta: {
@@ -24,7 +22,7 @@ const account: AppRouteModule = {
       },
     },
     {
-      path: '/settlement',
+      path: 'settlement',
       name: 'Settlement',
       component: () => import('/@/views/history/settlement/index.vue'),
       meta: {
@@ -32,7 +30,7 @@ const account: AppRouteModule = {
       },
     },
     {
-      path: '/activity',
+      path: 'activity',
       name: 'Activity',
       component: () => import('/@/views/history/activity/index.vue'),
       meta: {

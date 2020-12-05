@@ -1,22 +1,20 @@
 import type { AppRouteModule } from '/@/router/types';
 
-import { PAGE_LAYOUT_COMPONENT } from '/@/router/constant';
+import { LAYOUT } from '/@/router/constant';
 
 const account: AppRouteModule = {
-  layout: {
-    path: '/token',
-    name: 'Token',
-    component: PAGE_LAYOUT_COMPONENT,
-    redirect: '/token/organization',
-    meta: {
-      icon: 'ant-design:home-outlined',
-      title: 'routes.menu.token',
-    },
+  path: '/token',
+  name: 'Token',
+  component: LAYOUT,
+  redirect: '/token/issuer',
+  meta: {
+    icon: 'ant-design:home-outlined',
+    title: 'routes.menu.token',
   },
 
-  routes: [
+  children: [
     {
-      path: '/issuer',
+      path: 'issuer',
       name: 'Issuer',
       component: () => import('/@/views/token/issuer/index.vue'),
       meta: {
@@ -24,7 +22,7 @@ const account: AppRouteModule = {
       },
     },
     {
-      path: '/management',
+      path: 'management',
       name: 'Management',
       component: () => import('/@/views/token/management/index.vue'),
       meta: {
@@ -32,7 +30,7 @@ const account: AppRouteModule = {
       },
     },
     {
-      path: '/wallet',
+      path: 'wallet',
       name: 'Wallet',
       component: () => import('/@/views/token/wallet/index.vue'),
       meta: {
