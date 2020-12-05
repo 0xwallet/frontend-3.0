@@ -152,3 +152,8 @@ export const bindNknSecurityDevice = gql`
     }
   }
 `;
+export const sendLoginCode = gql`
+  mutation sendLoginCode($email: String!) {
+    sendLoginCode(email: $email)
+  }
+`;

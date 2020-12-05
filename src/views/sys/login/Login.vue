@@ -21,15 +21,30 @@
                 <template #addonBefore><MailOutlined /></template
               ></a-input>
             </a-form-item>
-            <a-form-item name="password" :label="t('passwordLabel')">
+            <a-form-item
+              name="password"
+              :label="loginMode === 'basic' ? t('passwordLabel') : t('nknVerifyCode')"
+            >
               <a-input-password
                 size="large"
                 visibilityToggle
                 v-model:value="formData.password"
                 placeholder="password: 123456"
+                v-if="loginMode === 'basic'"
               >
                 <template #addonBefore><LockOutlined /></template>
               </a-input-password>
+              <InputSearch
+                v-model:value="formData.password"
+                :placeholder="t('verificationPlaceholder')"
+                @search="getVerifyCode"
+                v-if="loginMode === 'nkn'"
+              >
+                <template #addonBefore><LockOutlined /></template>
+                <template #enterButton>
+                  <a-button type="primary"> {{ button }}</a-button>
+                </template>
+              </InputSearch>
             </a-form-item>
 
             <!-- <a-form-item name="verify" v-if="openLoginVerify">
@@ -76,14 +91,26 @@
               >
             </a-form-item>
           </a-form>
+          <Divider>or</Divider>
+          <Row :gutter="20" type="flex" justify="center">
+            <Col :span="8" class="center"><a-button type="link">WebAuth</a-button></Col>
+            <Col :span="8" class="center"
+              ><a-button type="link" @click="changeLoginMode">{{
+                loginMode === 'basic' ? 'NKN' : t('passwordLabel')
+              }}</a-button></Col
+            >
+            <Col :span="8" class="center"
+              ><a-button type="link">{{ t('registerButton') }}</a-button></Col
+            >
+          </Row>
         </div>
       </div>
     </div>
   </div>
 </template>
 <script lang="ts">
-  import { defineComponent, reactive, ref, unref } from 'vue';
-  import { Checkbox } from 'ant-design-vue';
+  import { computed, defineComponent, reactive, ref, unref } from 'vue';
+  import { Checkbox, Divider, Row, Col, Input } from 'ant-design-vue';
   import { MailOutlined, LockOutlined } from '@ant-design/icons-vue';
   import { Button } from '/@/components/Button';
   import { AppLocalePicker } from '/@/components/Application';
@@ -92,7 +119,7 @@
   import { useGlobSetting, useProjectSetting } from '/@/hooks/setting';
   import logo from '/@/assets/images/logo.png';
   import { useGo } from '/@/hooks/web/usePage';
-  import { signIn } from '/@/hooks/apollo/gqlUser';
+  import { signIn, sendLoginCode } from '/@/hooks/apollo/gqlUser';
   import { useApollo } from '/@/hooks/apollo/apollo';
   import { useMClient, useWallet, saveWallet } from '/@/hooks/nkn/getNKN';
   import { useI18n } from '/@/hooks/web/useI18n';
@@ -103,17 +130,26 @@
       AppLocalePicker,
       MailOutlined,
       LockOutlined,
+      Divider,
+      Row,
+      Col,
+      InputSearch: Input.Search,
     },
     setup() {
       localStorage.setItem('walletJson', '');
       localStorage.setItem('walletPassword', '');
       localStorage.setItem('token', '');
       localStorage.setItem('uid', '');
+      const loginMode = ref('basic');
       const formRef = ref<any>(null);
       const autoLoginRef = ref(false);
+      const emailButton = ref(0);
+      const button = computed(() => {
+        return emailButton.value < 1 ? t('send') : `wait ${emailButton.value} ${t('seconds')}`;
+      });
       // const verifyRef = ref<RefInstanceType<DragVerifyActionType>>(null);
       const go = useGo();
-      const { notification, createErrorModal } = useMessage();
+      const { notification, createErrorModal, createMessage } = useMessage();
 
       const globSetting = useGlobSetting();
       const { locale } = useProjectSetting();
@@ -142,15 +178,16 @@
         try {
           const data = await form.validate();
           // 登录
-
+          let variables = { email: data.email, password: '', code: '' };
+          if (loginMode.value === 'baisc') {
+            variables.password = data.password;
+          } else {
+            variables.code = data.password;
+          }
           useApollo()
             .mutate({
               mutation: signIn,
-              variables: {
-                email: data.email,
-                password: data.password,
-                code: '',
-              },
+              variables,
             })
             .then((res) => {
               // 取得token，存入缓存
@@ -178,7 +215,6 @@
             })
             .catch((err) => {
               createErrorModal({
-                title: '错误',
                 content: err.message,
               });
             });
@@ -188,6 +224,31 @@
           useWallet().then(() => {
             console.log('wallet ready');
             useMClient();
+          });
+        }
+      }
+      async function changeLoginMode() {
+        if (loginMode.value === 'basic') {
+          loginMode.value = 'nkn';
+        } else {
+          loginMode.value = 'basic';
+        }
+      }
+      async function getVerifyCode() {
+        const form = unref(formRef);
+        if (!form) return;
+        const data = await form.validateField(['email']);
+        try {
+          await useApollo().mutate({
+            mutation: sendLoginCode,
+            variables: {
+              email: data.email,
+            },
+          });
+          createMessage.success(t('verificationSend'));
+        } catch (err) {
+          createErrorModal({
+            content: err.message,
           });
         }
       }
@@ -205,12 +266,20 @@
         go,
         t,
         showLocale: locale.show,
+        changeLoginMode,
+        loginMode,
+        getVerifyCode,
+        button,
       };
     },
   });
 </script>
 <style lang="less" scoped>
   @import (reference) '../../../design/index.less';
+
+  .center {
+    text-align: center;
+  }
 
   .login-form__locale {
     position: absolute;

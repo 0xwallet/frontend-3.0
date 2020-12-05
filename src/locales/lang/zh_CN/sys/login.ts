@@ -10,6 +10,8 @@ export default {
   registerButton: '注册',
   registerSuccess: '注册成功',
   verification: '验证码',
+  send: '发送',
+  nknVerifyCode: 'NKN 验证码',
   verificationButton: '发送验证码',
   verificationPlaceholder: '请输入验证码',
   verificationSend: '验证码已发送',

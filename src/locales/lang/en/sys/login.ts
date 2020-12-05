@@ -9,13 +9,14 @@ export default {
   passwordLabel2: 'confirm Password',
   //register
   sec: 'seconds',
-  registerButton: 'Register',
+  registerButton: 'Sign up',
   registerSuccess: 'Register Success',
   verificationButton: 'Send Verification code',
+  send: 'Send',
   verification: 'Verification code',
   verificationPlaceholder: 'Please input Verification code',
   verificationSend: 'Verification code is Sent',
-
+  nknVerifyCode: 'NKN Verify Code',
   // notify
   loginSuccessTitle: 'Login successful',
   loginSuccessDesc: 'Welcome back',
