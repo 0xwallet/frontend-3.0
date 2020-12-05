@@ -1,80 +1,101 @@
 <template>
-  <Card hoverable>
-    <template #title>
-      <BasicTitle>{{ t('profileTitle') }}</BasicTitle>
-    </template>
-
-    <CardMeta :title="userInfo.username">
-      <template #avatar>
-        <Avatar :src="userInfo.avatar" />
-      </template>
-    </CardMeta>
-    <Divider />
-    <div> <BasicHelp text="提示" /> How <b>D-Chat</b> Works </div>
+  <Spin :spinning="spinning">
     <Card hoverable>
-      <template class="ant-card-actions" #actions> </template>
+      <template #title>
+        <BasicTitle>{{ t('profileTitle') }}</BasicTitle>
+      </template>
+      <template #extra><Switch v-model:checked="edit" @change="editInfo" /></template>
       <CardMeta>
-        <template #title
-          >Public Key
-          <span class="setRight" @click="openQr" v-if="publicKey !== ''"><QrcodeOutlined /></span>
+        <template #title>
+          <span>{{ userInfo.username }}</span>
         </template>
-        <template #description
-          >{{ publicKey }} <span class="setRight" @click="copyKey"><CopyOutlined /></span
-        ></template>
+
+        <template #avatar>
+          <Avatar :src="userInfo.avatar" />
+        </template>
       </CardMeta>
       <Divider />
+      <div> <BasicHelp text="提示" /> How <b>D-Chat</b> Works </div>
+      <Card hoverable>
+        <template class="ant-card-actions" #actions> </template>
+        <CardMeta>
+          <template #title
+            >Public Key
+            <span class="setRight" @click="openQr" v-if="publicKey !== ''"><QrcodeOutlined /></span>
+          </template>
+          <template #description
+            >{{ publicKey }} <span class="setRight" @click="copyKey"><CopyOutlined /></span
+          ></template>
+        </CardMeta>
+        <Divider />
 
-      <Tag :color="status ? '#52c41a' : '#f50'">
-        <CheckCircleTwoTone v-if="status" twoToneColor="#52c41a" />
-        <QuestionCircleTwoTone v-if="!status" twoToneColor="#f50" />
+        <Tag :color="status ? '#52c41a' : '#f50'">
+          <CheckCircleTwoTone v-if="status" twoToneColor="#52c41a" />
+          <QuestionCircleTwoTone v-if="!status" twoToneColor="#f50" />
 
-        {{ status ? t('connected') : t('connecting') }} Primary NKN Public Address
-      </Tag>
+          {{ status ? t('connected') : t('connecting') }} Primary NKN Public Address
+        </Tag>
+      </Card>
+      <Divider />
+      <Row class="line" :gutter="15">
+        <Col :span="8">{{ t('email') }}</Col>
+        <Col :span="8">{{ t('country') }}</Col>
+        <Col :span="8">Passport</Col>
+      </Row>
+      <Row class="line strong" :gutter="15">
+        <Col :span="8">
+          <span v-if="!edit">{{ userInfo.email }}</span>
+          <Input v-model:value="userInfo.email" v-if="edit"></Input>
+        </Col>
+        <Col :span="8">
+          <span v-if="!edit">{{ userInfo.country || 'UnKnow' }}</span>
+          <Input v-model:value="userInfo.country" v-if="edit"></Input>
+        </Col>
+        <Col :span="8">
+          <span v-if="!edit">{{ userInfo.passport || 'UnKnow' }}</span>
+          <Input v-model:value="userInfo.passport" v-if="edit"></Input
+        ></Col>
+      </Row>
+      <Row class="line" :gutter="15">
+        <Col :span="8"><CheckOutlined />{{ t('verified') }}</Col>
+        <Col :span="8"><CloseOutlined />{{ t('unVerified') }}</Col>
+        <Col :span="8"><CloseOutlined />{{ t('unVerified') }}</Col>
+      </Row>
+      <Divider />
+      <Row class="line strong" :gutter="15">
+        <Col :span="12">{{ t('name') }}</Col>
+        <Col :span="12">{{ t('bio') }}</Col>
+      </Row>
+      <Row class="line" :gutter="15">
+        <Col :span="12">
+          <span v-if="!edit">{{ userInfo.username }}</span>
+          <Input v-model:value="userInfo.username" v-if="edit"></Input>
+        </Col>
+        <Col :span="12">
+          <span v-if="!edit">{{ userInfo.bio }}</span>
+          <Input v-model:value="userInfo.bio" v-if="edit"></Input>
+        </Col>
+      </Row>
+      <Divider />
+      <Row class="line strong" :gutter="15">
+        <Col :span="12">0xWallet ID</Col>
+        <Col :span="12">Password</Col>
+      </Row>
+      <Row class="line" :gutter="15">
+        <Col :span="12">{{ userInfo.username }}</Col>
+        <Col :span="12"> {{ token }}</Col>
+      </Row>
+      <Row class="line" :gutter="15">
+        <Col :span="12"> <a-button type="primary" shape="round"> Change My ID</a-button></Col>
+
+        <Col :span="12"
+          ><a-button type="primary" shape="round" @click="openPWModal">
+            Change Password</a-button
+          ></Col
+        >
+      </Row>
     </Card>
-    <Divider />
-    <Row class="line">
-      <Col :span="8">{{ t('email') }}</Col>
-      <Col :span="8">{{ t('country') }}</Col>
-      <Col :span="8">Passport</Col>
-    </Row>
-    <Row class="line strong">
-      <Col :span="8">{{ userInfo.email }}</Col>
-      <Col :span="8">{{ userInfo.personalInfo?.country || 'UnKnow' }}</Col>
-      <Col :span="8">{{ userInfo.personalInfo?.passport || 'UnKnow' }}</Col>
-    </Row>
-    <Row class="line">
-      <Col :span="8"><CheckOutlined />{{ t('verified') }}</Col>
-      <Col :span="8"><CloseOutlined />{{ t('unVerified') }}</Col>
-      <Col :span="8"><CloseOutlined />{{ t('unVerified') }}</Col>
-    </Row>
-    <Divider />
-    <Row class="line strong">
-      <Col :span="12">{{ t('name') }}</Col>
-      <Col :span="12">{{ t('bio') }}</Col>
-    </Row>
-    <Row class="line">
-      <Col :span="12">{{ userInfo.username }}</Col>
-      <Col :span="12">{{ userInfo.bio }}</Col>
-    </Row>
-    <Divider />
-    <Row class="line strong">
-      <Col :span="12">0xWallet ID</Col>
-      <Col :span="12">Password</Col>
-    </Row>
-    <Row class="line">
-      <Col :span="12">{{ userInfo.username }}</Col>
-      <Col :span="12"> {{ token }}</Col>
-    </Row>
-    <Row class="line">
-      <Col :span="12"> <a-button type="primary" shape="round"> Change My ID</a-button></Col>
-
-      <Col :span="12"
-        ><a-button type="primary" shape="round" @click="openPWModal">
-          Change Password</a-button
-        ></Col
-      >
-    </Row>
-  </Card>
+  </Spin>
   <Modal v-model:visible="visible" :footer="null" centered>
     <Row type="flex" justify="center">
       <Col :span="12"><QrCode :value="publicKey" /></Col>
@@ -87,12 +108,11 @@
 </template>
 
 <script lang="ts">
-  import { defineComponent, ref, unref, computed } from 'vue';
+  import { defineComponent, ref, unref, computed, reactive } from 'vue';
   import { BasicTitle, BasicHelp } from '/@/components/Basic';
-  import { Card, Avatar, Divider, Modal, Tag, Row, Col } from 'ant-design-vue';
+  import { Card, Avatar, Divider, Modal, Tag, Row, Col, Switch, Input, Spin } from 'ant-design-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useApollo, getMe } from '/@/hooks/apollo/apollo';
-  import { me } from '/@/hooks/apollo/gqlUser';
   import { useWallet } from '/@/hooks/nkn/getNKN';
   import {
     QrcodeOutlined,
@@ -108,6 +128,7 @@
   import PWModal from './changePWModal.vue';
   import { useModal } from '/@/components/Modal';
   import { userStore } from '/@/store/modules/user';
+  import { editCurrentUser } from '/@/hooks/apollo/gqlUser';
 
   export default defineComponent({
     components: {
@@ -129,36 +150,56 @@
       Row,
       Col,
       PWModal,
+      Switch,
+      Input,
+      Spin,
     },
 
     setup() {
       const { t } = useI18n('general.account');
-      const userInfo = ref({});
+      const userInfo = reactive({
+        username: '',
+        email: '',
+        country: '',
+        passport: '',
+        name: '',
+        bio: '',
+        avatar: '',
+      });
+      const spinning = ref(true);
       const publicKey = ref('');
       const visible = ref(false);
       const wallet = ref({});
+      const edit = ref(false);
       const status = computed(() => {
         return userStore.userNKNstatus;
       });
-
       const token = localStorage.getItem('token');
-      console.log(token);
       const { clipboardRef, copiedRef } = useCopyToClipboard();
-      const { createMessage } = useMessage();
+      const { createMessage, createErrorModal } = useMessage();
       const [registerPWModal, { openModal: openPwModal }] = useModal();
       function fetchData() {
-        getMe().then((res) => {
-          userInfo.value = res;
-          res.wallets.forEach((v) => {
-            if (v.tags.length > 0) {
-              v.tags.forEach((v1) => {
-                if (v1 === 'MESSAGE') {
-                  wallet.value = v;
-                }
-              });
-            }
+        getMe()
+          .then((res) => {
+            userInfo.username = res.username;
+            userInfo.avatar = res.avatar;
+            userInfo.email = res.email;
+            userInfo.bio = res.bio;
+            userInfo.country = res.personalInfo.country;
+            userInfo.passport = res.personalInfo?.passport;
+            res.wallets.forEach((v) => {
+              if (v.tags.length > 0) {
+                v.tags.forEach((v1) => {
+                  if (v1 === 'MESSAGE') {
+                    wallet.value = v;
+                  }
+                });
+              }
+            });
+          })
+          .finally(() => {
+            spinning.value = false;
           });
-        });
 
         useWallet().then((w) => {
           publicKey.value = w.getPublicKey();
@@ -178,6 +219,32 @@
           createMessage.success('copy success！');
         }
       }
+      function editInfo(checked: Boolean) {
+        if (!checked) {
+          console.log(userInfo);
+          spinning.value = true;
+          useApollo()
+            .mutate({
+              mutation: editCurrentUser,
+              variables: {
+                avatar: userInfo.avatar,
+                bio: userInfo.bio,
+                username: userInfo.username,
+                personalInfo: {
+                  country: userInfo.country,
+                  passport: userInfo.country,
+                },
+              },
+            })
+            .catch((err) => {
+              createErrorModal({ content: err });
+            })
+            .finally(() => {
+              fetchData();
+            });
+        }
+      }
+
       return {
         t,
         userInfo,
@@ -189,6 +256,9 @@
         openPWModal,
         registerPWModal,
         token,
+        edit,
+        editInfo,
+        spinning,
       };
     },
   });

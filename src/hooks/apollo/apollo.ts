@@ -16,7 +16,7 @@ export function useApolloWS(): ApolloClient<any> {
 export function getMe(): Promise<any> {
   return new Promise((resolve) => {
     useApollo()
-      .query({ query: me })
+      .query({ query: me, fetchPolicy: 'network-only' })
       .then((res) => {
         resolve(res.data.me);
       });

@@ -6,7 +6,7 @@ export const User = `
   username
   bio
   email
-  loginNknAddress
+  messageNknAddress
   personalInfo {
     country
     passport
@@ -47,8 +47,8 @@ export const resetPassword = gql`
 
 // 邮件验证码
 export const sendVerifyCode = gql`
-  mutation($email: String, $type: VerifyCodeType) {
-    sendVerifyCode(email: $email, type: $type)
+  mutation($email: String, $type: VerifyCodeType, $nkn: String) {
+    sendVerifyCode(email: $email, type: $type, nkn: $nkn)
   }
 `;
 
@@ -108,6 +108,26 @@ export const bindNknAddress = gql`
       nknPublicKey: $nknPublicKey
       tag: $tag
       password: $password
+    ) {
+      id
+    }
+  }
+`;
+
+export const editCurrentUser = gql`
+  mutation editCurrentUser(
+    $avatar: String
+    $bio: String
+    $code: String
+    $username: String
+    $personalInfo: PersonalInfoInput
+  ) {
+    editCurrentUser(
+      avatar: $avatar
+      bio: $bio
+      code: $code
+      username: $username
+      personalInfo: $personalInfo
     ) {
       id
     }

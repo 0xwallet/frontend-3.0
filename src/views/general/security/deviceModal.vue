@@ -1,12 +1,19 @@
 <template>
   <BasicModal v-bind="$attrs" @register="register" @ok="bindDevice">
-    <InputSearch v-model:value="code" placeholder="input Code" @search="getVerifyCode">
-      <template #enterButton>
-        <a-button type="primary"> {{ button }}</a-button>
-      </template>
-    </InputSearch>
     <Divider />
-    <BasicForm @register="registerForm" layout="vertical" />
+    <BasicForm @register="registerForm" layout="vertical">
+      <template #publicKey="{ model, field }">
+        <InputSearch
+          v-model:value="model[field]"
+          placeholder="input Public Key"
+          @search="getVerifyCode"
+        >
+          <template #enterButton>
+            <a-button type="primary"> {{ button }}</a-button>
+          </template>
+        </InputSearch>
+      </template>
+    </BasicForm>
   </BasicModal>
 </template>
 <script lang="ts">
@@ -29,22 +36,14 @@
       colProps: {
         span: 24,
       },
-      rules: [{ required: true }],
-    },
-    {
-      field: 'password',
-      component: 'InputPassword',
-      label: t('password'),
-      colProps: {
-        span: 24,
-      },
+      slot: 'publicKey',
       rules: [{ required: true }],
     },
   ];
   export default defineComponent({
     components: { BasicModal, BasicForm, InputSearch: Input.Search, Divider },
     setup() {
-      const code = ref('');
+      const publicKey = ref('');
       const emailButton = ref(0);
       const button = computed(() => {
         return emailButton.value < 1
@@ -61,32 +60,23 @@
 
       async function getVerifyCode() {
         const user = await getMe();
-        console.log(user);
+
         if (emailButton.value > 0) {
           createMessage.error(`wait ${emailButton.value} ${t('seconds')}`);
           return;
         }
-        if (user.email === '') {
-          createMessage.error(t('noEmail'));
-          return;
-        }
-        if (
-          user.email.match(`^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$`) ===
-          null
-        ) {
-          createMessage.error(t('emailFormat'));
-          return;
-        }
+        const params = await validate();
+        console.log(params);
 
         useApollo()
           .mutate({
             mutation: sendVerifyCode,
             variables: {
-              email: user.email,
-              type: 'CHANGE_INFO',
+              nkn: params.publicKey,
+              type: 'active_nkn',
             },
           })
-          .then(() => {
+          .then((res) => {
             createMessage.success(t('verificationSend'));
             emailButton.value = 60;
             setInterval(() => {
@@ -97,6 +87,7 @@
               }
               emailButton.value -= 1;
             }, 1000);
+            console.log(res);
           })
           .catch((err) => {
             createErrorModal({ content: err });
@@ -120,7 +111,16 @@
           console.log(err);
         }
       }
-      return { register, registerForm, getVerifyCode, code, t, button, emailButton, bindDevice };
+      return {
+        register,
+        registerForm,
+        getVerifyCode,
+        publicKey,
+        t,
+        button,
+        emailButton,
+        bindDevice,
+      };
     },
   });
 </script>
