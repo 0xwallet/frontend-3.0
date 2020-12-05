@@ -14,4 +14,9 @@ export default {
   creditCardTitle: '信用卡',
   appsTitle: '应用',
   QrText: '扫一扫二维码，添加到联系人',
+  oldPassword: '旧密码',
+  newPassword: '新密码',
+  newPassword2: '确认新密码',
+  changePassword: '修改密码',
+  changeSuccess: '修改密码成功',
 };

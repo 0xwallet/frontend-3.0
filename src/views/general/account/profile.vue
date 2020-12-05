@@ -2,12 +2,19 @@
   <Spin :spinning="spinning">
     <Card hoverable>
       <template #title>
-        <BasicTitle>{{ t('profileTitle') }}</BasicTitle>
+        <BasicTitle>{{ t('profileTitle') }} </BasicTitle>
       </template>
       <template #extra><Switch v-model:checked="edit" @change="editInfo" /></template>
       <CardMeta>
         <template #title>
-          <span>{{ userInfo.username }}</span>
+          <span
+            >{{ userInfo.username }}
+            <span class="setRight"
+              ><a-button type="primary" shape="round" @click="openPWModal">
+                Change Password</a-button
+              ></span
+            >
+          </span>
         </template>
 
         <template #avatar>
@@ -79,20 +86,12 @@
       <Divider />
       <Row class="line strong" :gutter="15">
         <Col :span="12">0xWallet ID</Col>
-        <Col :span="12">Password</Col>
       </Row>
       <Row class="line" :gutter="15">
         <Col :span="12">{{ userInfo.username }}</Col>
-        <Col :span="12"> {{ token }}</Col>
       </Row>
       <Row class="line" :gutter="15">
         <Col :span="12"> <a-button type="primary" shape="round"> Change My ID</a-button></Col>
-
-        <Col :span="12"
-          ><a-button type="primary" shape="round" @click="openPWModal">
-            Change Password</a-button
-          ></Col
-        >
       </Row>
     </Card>
   </Spin>

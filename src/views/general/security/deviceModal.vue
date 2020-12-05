@@ -73,7 +73,7 @@
             mutation: sendVerifyCode,
             variables: {
               nkn: params.publicKey,
-              type: 'active_nkn',
+              type: 'ACTIVE_NKN',
             },
           })
           .then((res) => {

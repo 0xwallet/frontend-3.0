@@ -33,17 +33,6 @@ export const me = gql`
 `;
 
 // mutations
-// 修改密码
-export const resetPassword = gql`
-  mutation($email: String!, $newPassword: String!, $oldPassword: String = "") {
-    resetPassword(email: $email, newPassword: $newPassword, oldPassword: $oldPassword) {
-      token
-      User {
-        id
-      }
-    }
-  }
-`;
 
 // 邮件验证码
 export const sendVerifyCode = gql`
@@ -129,6 +118,36 @@ export const editCurrentUser = gql`
       username: $username
       personalInfo: $personalInfo
     ) {
+      id
+    }
+  }
+`;
+//修改密码
+export const resetPassword = gql`
+  mutation resetPassword(
+    $code: String
+    $email: String!
+    $encryptedWallet: String!
+    $newPassword: String!
+    $nknPublicKey: String
+    $oldPassword: String
+  ) {
+    resetPassword(
+      code: $code
+      email: $email
+      encryptedWallet: $encryptedWallet
+      newPassword: $newPassword
+      nknPublicKey: $nknPublicKey
+      oldPassword: $oldPassword
+    ) {
+      token
+    }
+  }
+`;
+//绑定NKN device
+export const bindNknSecurityDevice = gql`
+  mutation bindNknSecurityDevice($code: String!, $nknPublicKey: String!, $password: String!) {
+    bindNknSecurityDevice(code: $code, nknPublicKey: $nknPublicKey, password: $password) {
       id
     }
   }

@@ -14,4 +14,9 @@ export default {
   creditCardTitle: 'Credit Card',
   appsTitle: 'Apps',
   QrText: 'Scan QR code and add to contact',
+  oldPassword: 'Old Password',
+  newPassword: 'New Password',
+  newPassword2: 'Confirm New Password',
+  changePassword: 'Change Password',
+  changeSuccess: 'Change Password Success',
 };

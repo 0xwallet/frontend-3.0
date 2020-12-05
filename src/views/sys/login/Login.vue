@@ -87,23 +87,17 @@
   import { MailOutlined, LockOutlined } from '@ant-design/icons-vue';
   import { Button } from '/@/components/Button';
   import { AppLocalePicker } from '/@/components/Application';
-  // import { BasicDragVerify, DragVerifyActionType } from '/@/components/Verify/index';
-
   import { userStore } from '/@/store/modules/user';
-
   import { useMessage } from '/@/hooks/web/useMessage';
   import { useGlobSetting, useProjectSetting } from '/@/hooks/setting';
   import logo from '/@/assets/images/logo.png';
   import { useGo } from '/@/hooks/web/usePage';
   import { signIn } from '/@/hooks/apollo/gqlUser';
   import { useApollo } from '/@/hooks/apollo/apollo';
-
   import { useMClient, useWallet, saveWallet } from '/@/hooks/nkn/getNKN';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import CryptoES from 'crypto-es';
   export default defineComponent({
     components: {
-      //  BasicDragVerify,
       AButton: Button,
       ACheckbox: Checkbox,
       AppLocalePicker,
@@ -160,12 +154,9 @@
             })
             .then((res) => {
               // 取得token，存入缓存
-              console.log(res);
-              console.log(
-                res.data.signin.User.wallets.filter((v) => v.tags[0] === 'MESSAGE')[0].info
-                  .encryptedWallet
-              );
+
               useWallet();
+              // 保存wallet信息
               saveWallet({
                 email: data.email,
                 password: data.password,
@@ -173,11 +164,7 @@
                   .info.encryptedWallet,
               });
 
-              // const wallet = res?.data?.signin?.User?.wallets.filter(
-              //   (v) => v.tags[0] == 'MESSAGE'
-              // )[0]?.info?.encryptedWallet;
               localStorage.setItem('token', res.data?.signin?.token || '');
-
               localStorage.setItem('uid', res.data?.signin?.User?.id || 0);
 
               // websocket调试;
