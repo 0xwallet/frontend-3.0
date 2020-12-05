@@ -3,11 +3,9 @@ import './index.less';
 import { defineComponent, unref } from 'vue';
 import { Loading } from '/@/components/Loading';
 
-import { RouterView } from 'vue-router';
-
 import { useRootSetting } from '/@/hooks/setting/useRootSetting';
 import { useTransitionSetting } from '/@/hooks/setting/useTransitionSetting';
-
+import PageLayout from '/@/layouts/page/index';
 export default defineComponent({
   name: 'LayoutContent',
   setup() {
@@ -18,9 +16,14 @@ export default defineComponent({
       return (
         <div class={['layout-content', unref(getLayoutContentMode)]}>
           {unref(getOpenPageLoading) && (
-            <Loading loading={unref(getPageLoading)} absolute class="layout-content__loading" />
+            <Loading
+              loading={unref(getPageLoading)}
+              background="rgba(240, 242, 245, 0.6)"
+              absolute
+              class="layout-content__loading"
+            />
           )}
-          <RouterView />
+          <PageLayout />
         </div>
       );
     };

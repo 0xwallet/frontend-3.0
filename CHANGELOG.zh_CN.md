@@ -1,13 +1,30 @@
 ## Wip
 
+## (破坏性更新) Breaking changes
+
+- 路由重构, 不再支持以前的格式。改为支持 vue-router 最初的默认结构，具体格式可以参考示例更改。实现多级路由缓存，不再将路由转化为 2 级。
+- 重构面包屑，使用 antd 的面包屑组件。之前的组件已删除
+
 ### ✨ Features
 
 - 还原 antdv 默认 loading，重构 `Loading` 组件，增加`useLoading`和`v-loading`指令。并增加示例
 - i18n 支持 vscode `i18n-ally`插件
+- 新增多级路由缓存示例
+- 打包代码拆分(试验)
+
+### ⚡ Performance Improvements
+
+- 页面切换 loading 逻辑修改。对于已经加载过的页面不管有没有关闭,再次打开不会在显示 loading(已经打开过的页面在此打开速度比较快)，刷新后恢复。
 
 ### 🎫 Chores
 
 - 首屏 loading 修改
+- 升级`vue`到`3.0.4`
+
+### 🐛 Bug Fixes
+
+- 修复表格 i18n 错误
+- 修复菜单图标大小不一致
 
 ## 2.0.0-rc.12 (2020-11-30)
 

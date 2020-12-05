@@ -4,7 +4,7 @@ export enum PageEnum {
   // basic register path
   BASE_REG = '/register',
   // basic home path
-  BASE_HOME = '/dashboard/workbench',
+  BASE_HOME = '/home',
   // error page path
   ERROR_PAGE = '/exception',
 

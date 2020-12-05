@@ -1,6 +1,6 @@
 import { appStore } from './app';
 import type {
-  // LoginParams,
+  LoginParams,
   GetUserInfoByUserIdModel,
   GetUserInfoByUserIdParams,
 } from '/@/api/sys/model/userModel';
@@ -116,12 +116,7 @@ class User extends VuexModule {
       this.commitTokenState('111');
       // this.commitUserInfoState();
       this.commitRoleListState(['super'] as RoleEnum[]);
-      goHome &&
-        (await router.push(PageEnum.BASE_HOME).then(() => {
-          setTimeout(() => {
-            appStore.commitPageLoadingState(false);
-          }, 30);
-        }));
+      goHome && router.push(PageEnum.BASE_HOME);
       return null;
     } catch (error) {
       return null;

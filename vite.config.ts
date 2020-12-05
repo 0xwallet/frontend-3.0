@@ -3,6 +3,7 @@ import { resolve } from 'path';
 
 import { modifyVars } from './build/config/lessModifyVars';
 import { createProxy } from './build/vite/proxy';
+import { configManualChunk } from './build/vite/optimizer';
 
 import globbyTransform from './build/vite/plugin/transform/globby';
 import dynamicImportTransform from './build/vite/plugin/transform/dynamic-import';
@@ -53,6 +54,7 @@ const viteConfig: UserConfig = {
   // terser options
   terserOptions: {
     compress: {
+      keep_infinity: true,
       drop_console: VITE_DROP_CONSOLE,
     },
   },
@@ -88,14 +90,7 @@ const viteConfig: UserConfig = {
     ],
   },
 
-  // Local cross-domain proxy
-  proxy: createProxy(VITE_PROXY),
-  plugins: createVitePlugins(viteEnv),
-  rollupInputOptions: {
-    external: ['react'],
-    // external: ['react', 'vue-demi'],
-    plugins: createRollupPlugin(),
-  },
+
   transforms: [
     globbyTransform({
       resolvers: resolvers,
@@ -105,6 +100,20 @@ const viteConfig: UserConfig = {
     }),
     dynamicImportTransform(VITE_DYNAMIC_IMPORT),
   ],
+
+  proxy: createProxy(VITE_PROXY),
+
+  plugins: createVitePlugins(viteEnv),
+
+  rollupInputOptions: {
+    external: ['react'],
+    plugins: createRollupPlugin(),
+  },
+
+  rollupOutputOptions: {
+    compact: true,
+    manualChunks: configManualChunk,
+  },
 };
 
 export default viteConfig;
