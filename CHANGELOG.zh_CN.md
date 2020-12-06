@@ -14,17 +14,22 @@
 
 ### ⚡ Performance Improvements
 
-- 页面切换 loading 逻辑修改。对于已经加载过的页面不管有没有关闭,再次打开不会在显示 loading(已经打开过的页面在此打开速度比较快)，刷新后恢复。
+- 页面切换 loading 逻辑修改。对于已经加载过的页面不管有没有关闭,再次打开不会在显示 loading(已经打开过的页面再次打开速度比较快,可以不需要 loading,同理顶部进度条逻辑也一样)，刷新后恢复。
 
 ### 🎫 Chores
 
 - 首屏 loading 修改
 - 升级`vue`到`3.0.4`
+- 升级`ant-design-vue`到`2.0.0-rc.3`
+- 重新引入`vueuse`
+- 移除 route meta 内的`afterCloseLoading`属性
 
 ### 🐛 Bug Fixes
 
 - 修复表格 i18n 错误
 - 修复菜单图标大小不一致
+- 修复顶部菜单宽度计算问题
+- 修复表格 tabSetting 问题
 
 ## 2.0.0-rc.12 (2020-11-30)
 

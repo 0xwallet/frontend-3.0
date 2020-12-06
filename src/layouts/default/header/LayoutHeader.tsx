@@ -8,6 +8,8 @@ import {
   unref,
   computed,
   ref,
+  nextTick,
+  watchEffect,
   // nextTick
 } from 'vue';
 
@@ -30,7 +32,7 @@ import { useModal } from '/@/components/Modal';
 
 import { useFullscreen } from '/@/hooks/web/useFullScreen';
 import { useTabs } from '/@/hooks/web/useTabs';
-// import { useWindowSizeFn } from '/@/hooks/event/useWindowSizeFn';
+import { useWindowSizeFn } from '/@/hooks/event/useWindowSizeFn';
 import { useHeaderSetting } from '/@/hooks/setting/useHeaderSetting';
 import { useMenuSetting } from '/@/hooks/setting/useMenuSetting';
 import { useRootSetting } from '/@/hooks/setting/useRootSetting';
@@ -45,6 +47,7 @@ import { MenuModeEnum, MenuSplitTyeEnum } from '/@/enums/menuEnum';
 import { AppLocalePicker } from '/@/components/Application';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { propTypes } from '/@/utils/propTypes';
+import { useLayoutContext } from '../useLayoutContext';
 
 interface TooltipItemProps {
   title: string;
@@ -67,14 +70,23 @@ export default defineComponent({
     fixed: propTypes.bool,
   },
   setup(props) {
-    // let logoEl: Element | null | undefined;
+    let logoEl: Element | null | undefined;
 
-    // const logoWidthRef = ref(200);
+    const logoWidthRef = ref(200);
     const logoRef = ref<ComponentRef>(null);
+
+    const injectValue = useLayoutContext();
+
     const { refreshPage } = useTabs();
     const { t } = useI18n();
 
-    const { getShowTopMenu, getShowHeaderTrigger, getSplit, getTopMenuAlign } = useMenuSetting();
+    const {
+      getShowTopMenu,
+      getShowHeaderTrigger,
+      getSplit,
+      getTopMenuAlign,
+      getIsHorizontal,
+    } = useMenuSetting();
 
     const { getShowLocale } = useLocaleSetting();
     const { getUseErrorHandle, getShowBreadCrumbIcon } = useRootSetting();
@@ -94,26 +106,21 @@ export default defineComponent({
     const [register, { openModal }] = useModal();
     const { toggleFullscreen, isFullscreenRef } = useFullscreen();
 
-    // useWindowSizeFn(
-    //   () => {
-    //     nextTick(() => {
-    //       if (!unref(getShowTopMenu)) return;
-    //       let width = 0;
-    //       if (!logoEl) {
-    //         logoEl = unref(logoRef)?.$el;
-    //       } else {
-    //         width += logoEl.clientWidth;
-    //       }
-    //       logoWidthRef.value = width + 80;
-    //     });
-    //   },
-    //   200,
-    //   { immediate: true }
-    // );
+    useWindowSizeFn(
+      () => {
+        calcTopMenuWidth();
+      },
+      100,
+      { immediate: false }
+    );
 
     const headerClass = computed(() => {
       const theme = unref(getHeaderTheme);
       return theme ? `layout-header__header--${theme}` : '';
+    });
+
+    const isPc = computed(() => {
+      return !unref(injectValue.isMobile);
     });
 
     const getSplitType = computed(() => {
@@ -123,6 +130,25 @@ export default defineComponent({
     const getMenuMode = computed(() => {
       return unref(getSplit) ? MenuModeEnum.HORIZONTAL : null;
     });
+
+    watchEffect(() => {
+      if (unref(getIsHorizontal)) {
+        calcTopMenuWidth();
+      }
+    });
+
+    function calcTopMenuWidth() {
+      nextTick(() => {
+        if (!unref(getShowTopMenu)) return;
+        let width = 0;
+        if (!logoEl) {
+          logoEl = unref(logoRef)?.$el;
+        }
+        if (!logoEl) return;
+        width += logoEl.clientWidth;
+        logoWidthRef.value = width + 80;
+      });
+    }
 
     function handleToErrorList() {
       push(PageEnum.ERROR_LOG_PAGE).then(() => {
@@ -135,7 +161,7 @@ export default defineComponent({
     }
 
     function renderHeaderContent() {
-      // const width = unref(logoWidthRef);
+      const width = unref(logoWidthRef);
       return (
         <div class="layout-header__content ">
           {unref(getShowHeaderLogo) && (
@@ -147,13 +173,15 @@ export default defineComponent({
               {unref(getShowHeaderTrigger) && (
                 <LayoutTrigger theme={unref(getHeaderTheme)} sider={false} />
               )}
-              {unref(getShowBread) && <LayoutBreadcrumb showIcon={unref(getShowBreadCrumbIcon)} />}
+              {unref(getShowBread) && unref(isPc) && (
+                <LayoutBreadcrumb showIcon={unref(getShowBreadCrumbIcon)} />
+              )}
             </div>
           )}
 
-          {unref(getShowTopMenu) && (
-            // <div class={[`layout-header__menu `]} style={{ width: `calc(100% - ${width}px)` }}>
-            <div class={[`layout-header__menu `]}>
+          {unref(getShowTopMenu) && unref(isPc) && (
+            <div class={[`layout-header__menu `]} style={{ width: `calc(100% - ${width}px)` }}>
+              {/* <div class={[`layout-header__menu `]}> */}
               <LayoutMenu
                 isHorizontal={true}
                 class={`justify-${unref(getTopMenuAlign)}`}
@@ -179,7 +207,7 @@ export default defineComponent({
     function renderAction() {
       return (
         <div class={`layout-header__action`}>
-          {unref(getUseErrorHandle) && (
+          {unref(getUseErrorHandle) && unref(isPc) && (
             <TooltipItem title={t('layout.header.tooltipErrorLog')}>
               {() => (
                 <Badge
@@ -194,25 +222,25 @@ export default defineComponent({
             </TooltipItem>
           )}
 
-          {unref(getUseLockPage) && (
+          {unref(getUseLockPage) && unref(isPc) && (
             <TooltipItem title={t('layout.header.tooltipLock')}>
               {() => renderActionDefault(LockOutlined, handleLockPage)}
             </TooltipItem>
           )}
 
-          {unref(getShowNotice) && (
+          {unref(getShowNotice) && unref(isPc) && (
             <TooltipItem title={t('layout.header.tooltipNotify')}>
               {() => <NoticeAction />}
             </TooltipItem>
           )}
 
-          {unref(getShowRedo) && (
+          {unref(getShowRedo) && unref(isPc) && (
             <TooltipItem title={t('layout.header.tooltipRedo')}>
               {() => renderActionDefault(RedoOutlined, refreshPage)}
             </TooltipItem>
           )}
 
-          {unref(getShowFullScreen) && (
+          {unref(getShowFullScreen) && unref(isPc) && (
             <TooltipItem
               title={
                 unref(isFullscreenRef)
