@@ -24,6 +24,7 @@
     apiUrl: 'https://owaf.io/api',
   });
   import { useLocale } from '/@/hooks/web/useLocale';
+  import { userStore } from '/@/store/modules/user';
 
   export default defineComponent({
     name: 'App',

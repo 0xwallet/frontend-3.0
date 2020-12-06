@@ -29,22 +29,18 @@
                 size="large"
                 visibilityToggle
                 v-model:value="formData.password"
-                placeholder="password: 123456"
+                placeholder="password"
                 v-if="loginMode === 'basic'"
               >
                 <template #addonBefore><LockOutlined /></template>
               </a-input-password>
-              <InputSearch
-                v-model:value="formData.password"
+              <CountDown
+                :value="formData.password"
                 :placeholder="t('verificationPlaceholder')"
-                @search="getVerifyCode"
+                @click="getVerifyCode"
                 v-if="loginMode === 'nkn'"
-              >
-                <template #addonBefore><LockOutlined /></template>
-                <template #enterButton>
-                  <a-button type="primary"> {{ button }}</a-button>
-                </template>
-              </InputSearch>
+                :title="t('send')"
+              />
             </a-form-item>
 
             <!-- <a-form-item name="verify" v-if="openLoginVerify">
@@ -76,20 +72,6 @@
                 >{{ t('loginButton') }}</a-button
               >
             </a-form-item>
-            <a-form-item>
-              <a-button
-                type="primary"
-                size="large"
-                class="rounded-sm"
-                :block="true"
-                @click="
-                  () => {
-                    go('/register');
-                  }
-                "
-                >{{ t('registerButton') }}</a-button
-              >
-            </a-form-item>
           </a-form>
           <Divider>or</Divider>
           <Row :gutter="20" type="flex" justify="center">
@@ -100,7 +82,15 @@
               }}</a-button></Col
             >
             <Col :span="8" class="center"
-              ><a-button type="link">{{ t('registerButton') }}</a-button></Col
+              ><a-button
+                type="link"
+                @click="
+                  () => {
+                    go('/register');
+                  }
+                "
+                >{{ t('registerButton') }}</a-button
+              ></Col
             >
           </Row>
         </div>
@@ -123,6 +113,8 @@
   import { useApollo } from '/@/hooks/apollo/apollo';
   import { useMClient, useWallet, saveWallet } from '/@/hooks/nkn/getNKN';
   import { useI18n } from '/@/hooks/web/useI18n';
+  import { CountDown } from '/@/components/CountDown';
+
   export default defineComponent({
     components: {
       AButton: Button,
@@ -134,6 +126,7 @@
       Row,
       Col,
       InputSearch: Input.Search,
+      CountDown,
     },
     setup() {
       localStorage.setItem('walletJson', '');
@@ -158,8 +151,8 @@
       // const openLoginVerifyRef = computed(() => appStore.getProjectConfig.openLoginVerify);
 
       const formData = reactive({
-        email: 'jinmao88@qq.com',
-        password: '123456',
+        // email: 'jinmao88@qq.com',
+        // password: '123456',
       });
       const formState = reactive({
         loading: false,
@@ -195,8 +188,8 @@
               useWallet();
               // 保存wallet信息
               saveWallet({
-                email: data.email,
-                password: data.password,
+                email: variables.email,
+                password: variables.password,
                 walletJson: res.data.signin.User.wallets.filter((v) => v.tags[0] === 'MESSAGE')[0]
                   .info.encryptedWallet,
               });

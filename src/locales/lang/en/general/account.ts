@@ -19,4 +19,10 @@ export default {
   newPassword2: 'Confirm New Password',
   changePassword: 'Change Password',
   changeSuccess: 'Change Password Success',
+  verifyCode: 'Verify Code',
+  verificationSend: 'verification is Send',
+  send: 'Send',
+  forget: 'Forget Password',
+  verificationPlaceholder: 'Please input Verification code',
+  seconds: 'seconds',
 };

@@ -21,7 +21,7 @@
               <div class="email-button"
                 ><a-button @click="getVerifyCode" :disabled="emailButton !== 0"
                   >{{ t('verificationButton')
-                  }}{{ emailButton === 0 ? '' : '(' + emailButton + t('sec') + ')' }}</a-button
+                  }}{{ emailButton === 0 ? '' : '(' + emailButton + t('seconds') + ')' }}</a-button
                 >
                 {{ info }}
               </div>
@@ -86,7 +86,6 @@
   import { useGlobSetting } from '/@/hooks/setting';
   import { useI18n } from '/@/hooks/web/useI18n';
   import CryptoES from 'crypto-es';
-
   export default defineComponent({
     components: {
       AButton: Button,

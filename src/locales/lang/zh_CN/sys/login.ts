@@ -6,7 +6,7 @@ export default {
   emailLabel: '邮箱',
   passwordLabel: '密码',
   passwordLabel2: '确认密码',
-  sec: '秒',
+  seconds: '秒',
   registerButton: '注册',
   registerSuccess: '注册成功',
   verification: '验证码',

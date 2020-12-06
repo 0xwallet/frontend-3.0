@@ -19,4 +19,10 @@ export default {
   newPassword2: '确认新密码',
   changePassword: '修改密码',
   changeSuccess: '修改密码成功',
+  verifyCode: '验证码',
+  verificationSend: '验证码已发送',
+  send: '发送',
+  forget: '忘记密码',
+  verificationPlaceholder: '输入验证码',
+  seconds: '秒',
 };
