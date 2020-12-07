@@ -30,9 +30,9 @@
       unit: propTypes.string.def(t('seconds')),
     },
     setup(props) {
-      const time = ref(0);
+      let time = 0;
       const title = computed(() => {
-        return time.value > 0 ? `${t('wait')} ${time.value} ${props.unit}` : `${props.title} `;
+        return time > 0 ? `${t('wait')} ${time} ${props.unit}` : `${props.title} `;
       });
       const placeholder = computed(() => {
         return String(props.placeholder);
@@ -42,14 +42,14 @@
       });
       const { createMessage } = useMessage();
       function startCountdown() {
-        if (time.value > 0) {
-          createMessage.warning(`${t('wait')} ${time.value} ${props.unit}`);
+        if (time > 0) {
+          createMessage.warning(`${t('wait')} ${time} ${props.unit}`);
           return;
         } else {
-          time.value = props.time;
+          time = props.time;
           setInterval(() => {
-            if (time.value > 0) {
-              time.value -= 1;
+            if (time > 0) {
+              time -= 1;
             } else {
               clearInterval();
             }

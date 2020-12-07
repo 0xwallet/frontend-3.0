@@ -2,30 +2,26 @@
   <BasicModal v-bind="$attrs" @register="register" @ok="bindDevice">
     <BasicForm @register="registerForm" layout="vertical">
       <template #publicKey="{ model, field }">
-        <InputSearch
-          v-model:value="model[field]"
-          placeholder="input Public Key"
-          @search="getVerifyCode"
-        >
-          <template #enterButton>
-            <a-button type="primary"> {{ button }}</a-button>
-          </template>
-        </InputSearch>
+        <CountDown
+          :value="model[field]"
+          :placeholder="t('verificationPlaceholder')"
+          @click="getVerifyCode"
+          :title="t('send')"
+        />
       </template>
     </BasicForm>
   </BasicModal>
 </template>
 <script lang="ts">
   import { computed, defineComponent, ref } from 'vue';
-
+  import { CountDown } from '/@/components/CountDown';
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { BasicForm, FormSchema, useForm } from '/@/components/Form';
-  import { Input, Divider } from 'ant-design-vue';
+  import { Divider } from 'ant-design-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useApollo } from '/@/hooks/apollo/apollo';
   import { sendVerifyCode, bindNknSecurityDevice } from '/@/hooks/apollo/gqlUser';
-
   const { t } = useI18n('general.security');
   const schemas: FormSchema[] = [
     {
@@ -58,7 +54,7 @@
     },
   ];
   export default defineComponent({
-    components: { BasicModal, BasicForm, InputSearch: Input.Search, Divider },
+    components: { BasicModal, BasicForm, Divider, CountDown },
     setup() {
       const publicKey = ref('');
       const emailButton = ref(0);

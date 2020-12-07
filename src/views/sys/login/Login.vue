@@ -57,7 +57,9 @@
               <a-col :span="12">
                 <a-form-item :style="{ 'text-align': 'right' }">
                   <!-- No logic, you need to deal with it yourself -->
-                  <a-button type="link" size="small">{{ t('forgetPassword') }}</a-button>
+                  <a-button type="link" size="small" @click="openFPModal">{{
+                    t('forgetPassword')
+                  }}</a-button>
                 </a-form-item>
               </a-col>
             </a-row>
@@ -97,6 +99,7 @@
       </div>
     </div>
   </div>
+  <ForgetPassword @register="registerFPModal" />
 </template>
 <script lang="ts">
   import { computed, defineComponent, reactive, ref, unref } from 'vue';
@@ -114,6 +117,8 @@
   import { useMClient, useWallet, saveWallet } from '/@/hooks/nkn/getNKN';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { CountDown } from '/@/components/CountDown';
+  import ForgetPassword from '/@/components/ForgetPassword/changePWModal.vue';
+  import { useModal } from '/@/components/Modal';
 
   export default defineComponent({
     components: {
@@ -127,6 +132,7 @@
       Col,
       InputSearch: Input.Search,
       CountDown,
+      ForgetPassword,
     },
     setup() {
       localStorage.setItem('walletJson', '');
@@ -147,12 +153,13 @@
       const globSetting = useGlobSetting();
       const { locale } = useProjectSetting();
       const { t } = useI18n('sys.login');
+      const [registerFPModal, { openModal }] = useModal();
 
       // const openLoginVerifyRef = computed(() => appStore.getProjectConfig.openLoginVerify);
 
       const formData = reactive({
-        // email: 'jinmao88@qq.com',
-        // password: '123456',
+        email: '63992745@qq.com',
+        password: '123456',
       });
       const formState = reactive({
         loading: false,
@@ -245,6 +252,11 @@
           });
         }
       }
+
+      function openFPModal() {
+        openModal(true);
+      }
+
       return {
         formRef,
         // verifyRef,
@@ -263,6 +275,8 @@
         loginMode,
         getVerifyCode,
         button,
+        registerFPModal,
+        openFPModal,
       };
     },
   });

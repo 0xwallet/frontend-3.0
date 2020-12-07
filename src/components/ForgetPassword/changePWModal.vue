@@ -7,7 +7,7 @@
   >
     <Row :gutter="20" type="flex" justify="center">
       <Col :span="8" class="center"
-        ><a-button type="link" @click="forgetPassword">{{ t('forget') }}</a-button></Col
+        ><Button type="link" @click="forgetPassword">{{ t('forget') }}</Button></Col
       ></Row
     >
     <Divider />
@@ -33,7 +33,7 @@
   import { useMessage } from '/@/hooks/web/useMessage';
   import { useWallet, useNKN, saveWallet } from '/@/hooks/nkn/getNKN';
   import CryptoES from 'crypto-es';
-  import { Divider, Row, Col } from 'ant-design-vue';
+  import { Divider, Row, Col, Button } from 'ant-design-vue';
   import { CountDown } from '/@/components/CountDown';
 
   const { t } = useI18n('general.account');
@@ -67,12 +67,12 @@
     },
   ];
   export default defineComponent({
-    components: { BasicModal, BasicForm, Divider, Row, Col, CountDown },
+    components: { BasicModal, BasicForm, Divider, Row, Col, CountDown, Button },
     setup() {
       const modelRef = ref({});
-      const emailButton = ref(0);
+      let time = 0;
       const button = computed(() => {
-        return emailButton.value < 1 ? t('send') : `wait ${emailButton.value} ${t('seconds')}`;
+        return time < 1 ? t('send') : `wait ${time} ${t('seconds')}`;
       });
       const [registerForm, { validateFields, appendSchemaByField, updateSchema }] = useForm({
         labelWidth: 180,
@@ -118,8 +118,8 @@
         }
       }
       async function getVerifyCode() {
-        if (emailButton.value > 0) {
-          createMessage.error(`wait ${emailButton.value} ${t('seconds')}`);
+        if (time > 0) {
+          createMessage.error(`wait ${time} ${t('seconds')}`);
           return;
         }
         const user = await getMe();
@@ -133,14 +133,14 @@
           })
           .then(() => {
             createMessage.success(t('verificationSend'));
-            emailButton.value = 60;
+            time = 60;
             setInterval(() => {
-              if (emailButton.value < 1) {
-                emailButton.value = 0;
+              if (time < 1) {
+                time = 0;
                 clearInterval();
                 return;
               }
-              emailButton.value -= 1;
+              time -= 1;
             }, 1000);
           })
           .catch((err) => {

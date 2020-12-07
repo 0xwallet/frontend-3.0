@@ -1,16 +1,10 @@
-<template> <CountDown :onClick="hah" :placeholder="123" /></template>
+<template> </template>
 
 <script lang="ts">
   import { defineComponent } from 'vue';
-  import { CountDown } from '/@/components/CountDown';
   export default defineComponent({
-    components: { CountDown },
-    setup() {
-      function hah() {
-        console.log(11123);
-      }
-      return { hah };
-    },
+    components: {},
+    setup() {},
   });
 </script>
 
