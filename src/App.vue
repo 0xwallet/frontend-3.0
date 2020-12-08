@@ -4,7 +4,9 @@
     :locale="antConfigLocale"
     :transform-cell-text="transformCellText"
   >
-    <router-view />
+    <AppProvider>
+      <router-view />
+    </AppProvider>
   </ConfigProvider>
 </template>
 
@@ -26,9 +28,11 @@
   import { useLocale } from '/@/hooks/web/useLocale';
   import { userStore } from '/@/store/modules/user';
 
+  import { AppProvider } from '/@/components/Application';
+
   export default defineComponent({
     name: 'App',
-    components: { ConfigProvider },
+    components: { ConfigProvider, AppProvider },
     setup() {
       // Initialize vuex internal system configuration
       initAppConfigStore();
