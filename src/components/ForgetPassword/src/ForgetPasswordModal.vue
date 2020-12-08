@@ -5,16 +5,11 @@
     :title="t('changePassword')"
     @ok="changePassword"
   >
-    <Row :gutter="20" type="flex" justify="center">
-      <Col :span="8" class="center"
-        ><Button type="link" @click="forgetPassword">{{ t('forget') }}</Button></Col
-      ></Row
-    >
     <Divider />
-    <BasicForm @register="registerForm" :model="model">
+    <BasicForm @register="registerForm" :model="model" layout="vertical">
       <template #code="{ model, field }">
         <CountDown
-          :value="model[field]"
+          v-model:value="model[field]"
           :placeholder="t('verificationPlaceholder')"
           @click="getVerifyCode"
           :title="t('send')"
@@ -39,13 +34,17 @@
   const { t } = useI18n('general.account');
   const schemas: FormSchema[] = [
     {
-      field: 'oldPassword',
-      component: 'InputPassword',
-      label: t('oldPassword'),
-      required: true,
-      colProps: {
-        span: 24,
-      },
+      label: t('email'),
+      field: 'email',
+      slot: 'code',
+      component: 'Input',
+      rules: [{ required: true }],
+    },
+    {
+      label: t('verifyCode'),
+      field: 'code',
+      component: 'Input',
+      rules: [{ required: true }],
     },
     {
       field: 'newPassword',
@@ -74,9 +73,9 @@
       const button = computed(() => {
         return time < 1 ? t('send') : `wait ${time} ${t('seconds')}`;
       });
-      const [registerForm, { validateFields, appendSchemaByField, updateSchema }] = useForm({
-        labelWidth: 180,
+      const [registerForm, { validateFields }] = useForm({
         schemas,
+
         showActionButtonGroup: false,
         actionColOptions: {
           span: 24,
@@ -117,47 +116,49 @@
           closeModal();
         }
       }
-      async function getVerifyCode() {
-        if (time > 0) {
-          createMessage.error(`wait ${time} ${t('seconds')}`);
-          return;
-        }
-        const user = await getMe();
-        useApollo()
-          .mutate({
-            mutation: sendVerifyCode,
-            variables: {
-              email: user.email,
-              type: 'RESET_PASSWORD',
-            },
-          })
-          .then(() => {
-            createMessage.success(t('verificationSend'));
-            time = 60;
-            setInterval(() => {
-              if (time < 1) {
-                time = 0;
-                clearInterval();
-                return;
-              }
-              time -= 1;
-            }, 1000);
-          })
-          .catch((err) => {
-            createErrorModal({ content: err });
-          });
+      function getVerifyCode(): Promise<any> {
+        return new Promise<any>((resolve, reject) => {
+          validateFields(['email'])
+            .then((email) => {
+              console.log(email, 1111);
+              resolve();
+            })
+            .catch((err) => {
+              reject(err);
+            });
+        });
+        // validateFields('email').then((email) => {
+        //   console.log(email);
+        // });
+
+        // useApollo()
+        //   .mutate({
+        //     mutation: sendVerifyCode,
+        //     variables: {
+        //       email: user.email,
+        //       type: 'RESET_PASSWORD',
+        //     },
+        //   })
+        //   .then(() => {
+        //     createMessage.success(t('verificationSend'));
+        //     time = 60;
+        //     setInterval(() => {
+        //       if (time < 1) {
+        //         time = 0;
+        //         clearInterval();
+        //         return;
+        //       }
+        //       time -= 1;
+        //     }, 1000);
+        //   })
+        //   .catch((err) => {
+        //     createErrorModal({ content: err });
+        //   });
       }
       function forgetPassword() {
         updateSchema({
           field: 'oldPassword',
           rules: [{ required: false }],
-        });
-        appendSchemaByField({
-          label: t('verifyCode'),
-          field: 'code',
-          slot: 'code',
-          component: 'Input',
-          rules: [{ required: true }],
         });
       }
       return {

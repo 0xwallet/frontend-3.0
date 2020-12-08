@@ -117,7 +117,7 @@
   import { useMClient, useWallet, saveWallet } from '/@/hooks/nkn/getNKN';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { CountDown } from '/@/components/CountDown';
-  import ForgetPassword from '/@/components/ForgetPassword/changePWModal.vue';
+  import { ForgetPassword } from '/@/components/ForgetPassword';
   import { useModal } from '/@/components/Modal';
 
   export default defineComponent({
@@ -281,7 +281,7 @@
     },
   });
 </script>
-<style lang="less" scoped>
+<style lang="less">
   @import (reference) '../../../design/index.less';
 
   .center {
@@ -332,23 +332,16 @@
         // height: 90%;
         justify-content: center;
         align-items: center;
-        .respond-to(large, {
-          width: 600px;
-          right: calc(50% - 270px);
+        .respond-to(xlarge, {
+        justify-content: flex-end;
           });
-        .respond-to(xlarge, { width: 100vw; right:0});
-      }
-
-      &__locale {
-        position: absolute;
-        top: 10px;
-        right: 10px;
       }
 
       &__content {
         position: relative;
         width: 100%;
         height: 100%;
+        padding: 60px 0 40px 0;
         border: 1px solid #999;
         border-radius: 2px;
 
@@ -365,7 +358,6 @@
           h1 {
             margin-bottom: 0;
             font-size: 24px;
-            // color: @primary-color;
             text-align: center;
           }
         }

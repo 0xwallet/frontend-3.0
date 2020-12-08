@@ -1,4 +1,6 @@
-import CountDownLib from './src/BasicCountDown.vue';
+import CountDown from './src/BasicCountDown.vue';
 import { withInstall } from '../util';
 
-export const CountDown = withInstall(CountDownLib);
+withInstall(CountDown);
+
+export { CountDown };
