@@ -158,7 +158,7 @@
       // const openLoginVerifyRef = computed(() => appStore.getProjectConfig.openLoginVerify);
 
       const formData = reactive({
-        email: '63992745@qq.com',
+        email: 'jinmao88@qq.com',
         password: '123456',
       });
       const formState = reactive({
@@ -179,7 +179,7 @@
           const data = await form.validate();
           // 登录
           let variables = { email: data.email, password: '', code: '' };
-          if (loginMode.value === 'baisc') {
+          if (loginMode.value === 'basic') {
             variables.password = data.password;
           } else {
             variables.code = data.password;
