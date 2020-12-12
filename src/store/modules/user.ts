@@ -49,6 +49,7 @@ class User extends VuexModule {
   // user info
   private userInfoState: UserInfo | null = null;
 
+  public userNKNstatus: boolean = false;
   // token
   private tokenState = '';
 
@@ -110,24 +111,21 @@ class User extends VuexModule {
    * @description: login
    */
   @Action
-  async login(
-    params: LoginParams & {
-      goHome?: boolean;
-      mode?: ErrorMessageMode;
-    }
-  ): Promise<GetUserInfoByUserIdModel | null> {
+  async login(): // params: LoginParams & {
+  //   goHome?: boolean;
+  //   mode?: ErrorMessageMode;
+  // }
+  Promise<GetUserInfoByUserIdModel | null> {
     try {
-      const { goHome = true, mode, ...loginParams } = params;
-
+      // const { goHome = true } = params;
 
       // save token
       this.commitTokenState('111');
       // this.commitUserInfoState();
       this.commitRoleListState(['super'] as RoleEnum[]);
-      goHome && (await router.replace(PageEnum.BASE_HOME));
+      // goHome && (await router.replace(PageEnum.BASE_HOME));
+      await router.replace(PageEnum.BASE_HOME);
       return null;
-
-
     } catch (error) {
       return null;
     }

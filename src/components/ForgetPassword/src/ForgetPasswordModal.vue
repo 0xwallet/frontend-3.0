@@ -26,7 +26,7 @@
   import { resetPassword, sendVerifyCode } from '/@/hooks/apollo/gqlUser';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { useWallet, useNKN, saveWallet } from '/@/hooks/nkn/getNKN';
+  import { useWallet, useNKN, saveWallet, newWallet } from '/@/hooks/nkn/getNKN';
   import CryptoES from 'crypto-es';
   import { Divider, Row, Col, Button } from 'ant-design-vue';
   import { CountDown } from '/@/components/CountDown';
@@ -87,27 +87,28 @@
       async function changePassword() {
         try {
           const data = await validateFields();
-          const oldWallet = await useWallet();
-          console.log(oldWallet);
-          const user = await getMe();
-          const secret = CryptoES.enc.Base64.stringify(
-            CryptoES.HmacSHA512(user.email, data.newPassword)
-          );
-          const NKN = await useNKN();
-          let w = new NKN.Wallet({ seed: oldWallet.getSeed(), password: secret });
-          const walletJson = JSON.stringify(w.toJSON());
-
+          // const oldWallet = await useWallet();
+          // console.log(oldWallet);
+          // const user = await getMe();
+          // const secret = CryptoES.enc.Base64.stringify(
+          //   CryptoES.HmacSHA512(user.email, data.newPassword)
+          // );
+          // const NKN = await useNKN();
+          // let w = new NKN.Wallet({ seed: oldWallet.getSeed(), password: secret });
+          // const walletJson = JSON.stringify(w.toJSON());
+          const wallet = await newWallet({ email: data.email, password: data.newPassword });
           const res = await useApollo().mutate({
             mutation: resetPassword,
             variables: {
-              email: user.email,
-              encryptedWallet: walletJson,
+              email: data.email,
+              code: data.code,
+              encryptedWallet: wallet.json,
               newPassword: data.newPassword,
               oldPassword: data.oldPassword,
-              nknPublicKey: w.getPublicKey(),
+              nknPublicKey: wallet.publicKey,
             },
           });
-          saveWallet({ email: user.email, password: data.newPassword, walletJson });
+          saveWallet({ email: data.email, password: data.newPassword, walletJson: wallet.json });
           localStorage.setItem('token', res.data?.resetPassword?.token || '');
           createMessage.success(t('changeSuccess'));
         } catch (err) {
@@ -119,8 +120,30 @@
       function getVerifyCode(): Promise<any> {
         return new Promise<any>((resolve, reject) => {
           validateFields(['email'])
-            .then((email) => {
-              console.log(email, 1111);
+            .then((params) => {
+              useApollo()
+                .mutate({
+                  mutation: sendVerifyCode,
+                  variables: {
+                    email: params.email,
+                    type: 'RESET_PASSWORD',
+                  },
+                })
+                .then(() => {
+                  createMessage.success(t('verificationSend'));
+                  time = 60;
+                  setInterval(() => {
+                    if (time < 1) {
+                      time = 0;
+                      clearInterval();
+                      return;
+                    }
+                    time -= 1;
+                  }, 1000);
+                })
+                .catch((err) => {
+                  createErrorModal({ content: err });
+                });
               resolve();
             })
             .catch((err) => {
@@ -130,30 +153,6 @@
         // validateFields('email').then((email) => {
         //   console.log(email);
         // });
-
-        // useApollo()
-        //   .mutate({
-        //     mutation: sendVerifyCode,
-        //     variables: {
-        //       email: user.email,
-        //       type: 'RESET_PASSWORD',
-        //     },
-        //   })
-        //   .then(() => {
-        //     createMessage.success(t('verificationSend'));
-        //     time = 60;
-        //     setInterval(() => {
-        //       if (time < 1) {
-        //         time = 0;
-        //         clearInterval();
-        //         return;
-        //       }
-        //       time -= 1;
-        //     }, 1000);
-        //   })
-        //   .catch((err) => {
-        //     createErrorModal({ content: err });
-        //   });
       }
       function forgetPassword() {
         updateSchema({

@@ -82,10 +82,9 @@
   import { useGo } from '/@/hooks/web/usePage';
   import { sendVerifyCode, signUp } from '/@/hooks/apollo/gqlUser';
   import { useApollo } from '/@/hooks/apollo/apollo';
-  import { saveWallet, useNKN } from '/@/hooks/nkn/getNKN';
+  import { newWallet, saveWallet } from '/@/hooks/nkn/getNKN';
   import { useGlobSetting } from '/@/hooks/setting';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import CryptoES from 'crypto-es';
   export default defineComponent({
     components: {
       AButton: Button,
@@ -161,15 +160,8 @@
 
         try {
           const data = await form.validate();
-          // 生成wallet并获得walletJson
-          const secret = CryptoES.enc.Base64.stringify(
-            CryptoES.HmacSHA512(data.email, data.password)
-          );
-          const NKN = await useNKN();
-          let w = new NKN.Wallet({ password: secret });
-          const walletJson = JSON.stringify(w.toJSON());
 
-          console.log(walletJson);
+          const wallet = await newWallet({ email: data.mail, password: data.password });
           // 注册账号
           useApollo()
             .mutate({
@@ -179,8 +171,8 @@
                 password: data.password,
                 code: data.code,
                 username: data.email.split('@')[0],
-                nknEncryptedWallet: walletJson,
-                nknPublicKey: w.getPublicKey(),
+                nknEncryptedWallet: wallet.json,
+                nknPublicKey: wallet.publicKey,
               },
             })
             .then(() => {

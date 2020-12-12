@@ -48,6 +48,23 @@ export function useWallet(): Promise<any> {
   });
 }
 
+export function newWallet(params: {
+  email: string;
+  password: string;
+}): Promise<{ json: string; publicKey: string }> {
+  return new Promise((resolve, reject) => {
+    const secret = CryptoES.enc.Base64.stringify(
+      CryptoES.HmacSHA512(params.email, params.password)
+    );
+    useNKN()
+      .then((nkn) => {
+        let w = new nkn.Wallet({ password: secret });
+        resolve({ json: JSON.stringify(w.toJSON()), publicKey: w.getPublicKey() });
+      })
+      .catch((err) => reject(err));
+  });
+}
+
 export function saveWallet(params: { email: string; password: string; walletJson?: string }) {
   const secret = CryptoES.enc.Base64.stringify(CryptoES.HmacSHA512(params.email, params.password));
   localStorage.setItem('walletPassword', secret);

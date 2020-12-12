@@ -3,9 +3,9 @@
     <Popconfirm v-bind="popConfig" :visible="visible" @visibleChange="handleVisibleChange">
       <Button v-bind="getBindValue" :class="[getColor, $attrs.class]">
         <template #default="data">
-          <Icon :icon="preIcon" :class="{ 'mr-1': !getIsCircleBtn }" v-if="preIcon" />
+          <Icon :icon="preIcon" v-if="preIcon" :size="14" />
           <slot v-bind="data" />
-          <Icon :icon="postIcon" :class="{ 'ml-1': !getIsCircleBtn }" v-if="postIcon" />
+          <Icon :icon="postIcon" v-if="postIcon" :size="14" />
         </template>
       </Button>
     </Popconfirm>
@@ -72,7 +72,7 @@
         visible.value = true;
       }
 
-      return { getBindValue, getColor, getIsCircleBtn, visible, handleVisibleChange, popConfig };
+      return { getBindValue, getColor, visible, handleVisibleChange, popConfig };
     },
   });
 </script>
