@@ -1,4 +1,3 @@
-import { appStore } from './app';
 import type {
   LoginParams,
   GetUserInfoByUserIdModel,
@@ -23,6 +22,8 @@ import { setLocal, getLocal, getSession, setSession } from '/@/utils/helper/pers
 import { useProjectSetting } from '/@/hooks/setting';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { session } from '/@/hooks/nkn/getNKN';
+import { ErrorMessageMode } from '/@/utils/http/axios/types';
+
 export type UserInfo = Omit<GetUserInfoByUserIdModel, 'roles'>;
 
 const NAME = 'user';
@@ -48,7 +49,6 @@ class User extends VuexModule {
   // user info
   private userInfoState: UserInfo | null = null;
 
-  public userNKNstatus: boolean = false;
   // token
   private tokenState = '';
 
@@ -110,14 +110,24 @@ class User extends VuexModule {
    * @description: login
    */
   @Action
-  async login(goHome = true): Promise<GetUserInfoByUserIdModel | null> {
+  async login(
+    params: LoginParams & {
+      goHome?: boolean;
+      mode?: ErrorMessageMode;
+    }
+  ): Promise<GetUserInfoByUserIdModel | null> {
     try {
+      const { goHome = true, mode, ...loginParams } = params;
+
+
       // save token
       this.commitTokenState('111');
       // this.commitUserInfoState();
       this.commitRoleListState(['super'] as RoleEnum[]);
-      goHome && router.push(PageEnum.BASE_HOME);
+      goHome && (await router.replace(PageEnum.BASE_HOME));
       return null;
+
+
     } catch (error) {
       return null;
     }

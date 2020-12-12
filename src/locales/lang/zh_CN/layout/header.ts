@@ -4,6 +4,7 @@ export default {
   dropdownItemLoginOut: '退出系统',
 
   // tooltip
+  search: '搜索',
   tooltipErrorLog: '错误日志',
   tooltipLock: '锁定屏幕',
   tooltipNotify: '消息通知',
@@ -15,7 +16,6 @@ export default {
   lockScreenPassword: '锁屏密码',
   lockScreen: '锁定屏幕',
   lockScreenBtn: '锁定',
-  notLockScreenPassword: '不设置密码锁屏',
 
   home: '首页',
 };

@@ -14,9 +14,6 @@
 <script lang="ts">
   import { defineComponent, computed, ref } from 'vue';
   import { Button, Popconfirm } from 'ant-design-vue';
-  // import { extendSlots } from '/@/utils/helper/tsxHelper';
-  // import { useThrottle } from '/@/hooks/core/useThrottle';
-  // import { isFunction } from '/@/utils/is';
   import Icon from '/@/components/Icon';
   import { propTypes } from '/@/utils/propTypes';
 
@@ -34,8 +31,6 @@
       pop: propTypes.object,
     },
     setup(props, { attrs }) {
-      const getIsCircleBtn = computed(() => attrs.shape === 'circle');
-
       const getColor = computed(() => {
         const { color, disabled } = props;
         return {

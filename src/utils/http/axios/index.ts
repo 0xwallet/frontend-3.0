@@ -58,7 +58,7 @@ const transform: AxiosTransform = {
         // errorMessageMode=‘modal’的时候会显示modal错误弹窗，而不是消息提示，用于一些比较重要的错误
         if (options.errorMessageMode === 'modal') {
           createErrorModal({ title: t('sys.api.errorTip'), content: message });
-        } else {
+        } else if (options.errorMessageMode === 'message') {
           createMessage.error(message);
         }
       }
@@ -106,7 +106,7 @@ const transform: AxiosTransform = {
     if (apiUrl && isString(apiUrl)) {
       config.url = `${apiUrl}${config.url}`;
     }
-    if (config.method === RequestEnum.GET) {
+    if (config.method?.toUpperCase() === RequestEnum.GET) {
       const now = new Date().getTime();
       if (!isString(config.params)) {
         config.data = {
@@ -157,14 +157,13 @@ const transform: AxiosTransform = {
     const { t } = useI18n();
     errorStore.setupErrorHandle(error);
     const { response, code, message } = error || {};
-    const msg: string =
-      response && response.data && response.data.error ? response.data.error.message : '';
-    const err: string = error.toString();
+    const msg: string = response?.data?.error ? response.data.error.message : '';
+    const err: string = error?.toString();
     try {
       if (code === 'ECONNABORTED' && message.indexOf('timeout') !== -1) {
         createMessage.error(t('sys.api.apiTimeoutMessage'));
       }
-      if (err && err.includes('Network Error')) {
+      if (err?.includes('Network Error')) {
         createErrorModal({
           title: t('sys.api.networkException'),
           content: t('sys.api.networkExceptionMsg'),
@@ -173,7 +172,7 @@ const transform: AxiosTransform = {
     } catch (error) {
       throw new Error(error);
     }
-    checkStatus(error.response && error.response.status, msg);
+    checkStatus(error?.response?.status, msg);
     return Promise.reject(error);
   },
 };
@@ -201,7 +200,7 @@ function createAxios(opt?: Partial<CreateAxiosOptions>) {
           // 格式化提交参数时间
           formatDate: true,
           // 消息提示类型
-          errorMessageMode: 'none',
+          errorMessageMode: 'message',
           // 接口地址
           apiUrl: globSetting.apiUrl,
         },

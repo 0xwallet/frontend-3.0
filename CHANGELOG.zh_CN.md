@@ -1,5 +1,30 @@
 ## Wip
 
+### ✨ Features
+
+- 移除左侧菜单搜索，新增顶部菜单搜索功能
+
+### ⚡ Performance Improvements
+
+- 异步引入组件
+
+### 🎫 Chores
+
+- 返回顶部样式调整,避免遮住其他元素
+- 升级`ant-design-vue`到`2.0.0-rc.4`
+
+### 🐛 Bug Fixes
+
+- 修复多级路由缓存导致组件渲染多次的问题
+- 修复地图图表切换后消失问题
+- 修复登录成功 notify 消失问题
+- 修改 `VirtualScroll`和`ImportExcel`组件名为`VScroll`与`ImpExcel`,暂时解决含有关键字的组件在 vue 模版内使用内存溢出
+- 修复 axios 大小写问题
+- 修复按钮样式问题
+- 修复菜单分割模式问题
+
+## 2.0.0-rc.13 (2020-12-10)
+
 ## (破坏性更新) Breaking changes
 
 - 路由重构, 不再支持以前的格式。改为支持 vue-router 最初的默认结构，具体格式可以参考示例更改。实现多级路由缓存，不再将路由转化为 2 级。
@@ -11,6 +36,12 @@
 - i18n 支持 vscode `i18n-ally`插件
 - 新增多级路由缓存示例
 - 打包代码拆分(试验)
+- 提取上传地址到全局变量，打包可以动态配置
+
+### ✨ Refactor
+
+- tree 组件 ref 函数调用删除 `$`
+- 锁屏界面重构美化，删除不必要的背景图片
 
 ### ⚡ Performance Improvements
 
@@ -23,6 +54,7 @@
 - 升级`ant-design-vue`到`2.0.0-rc.3`
 - 重新引入`vueuse`
 - 移除 route meta 内的`afterCloseLoading`属性
+- 文档更新
 
 ### 🐛 Bug Fixes
 
@@ -31,6 +63,7 @@
 - 修复顶部菜单宽度计算问题
 - 修复表格 tabSetting 问题
 - 修复文件上传删除失效
+- 修复表格行编辑保存错误问题
 
 ## 2.0.0-rc.12 (2020-11-30)
 

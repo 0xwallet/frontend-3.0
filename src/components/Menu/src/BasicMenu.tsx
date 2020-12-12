@@ -100,11 +100,10 @@ export default defineComponent({
 
     const getWrapperStyle = computed(
       (): CSSProperties => {
-        const isHorizontal = unref(getIsHorizontal);
+        const isHorizontal = unref(getIsHorizontal) || getSplit.value;
+
         return {
-          height: isHorizontal
-            ? `calc(100% + 1px)`
-            : `calc(100%  - ${props.showLogo ? '48px' : '0'})`,
+          height: isHorizontal ? `calc(100%)` : `calc(100% - ${props.showLogo ? '48px' : '0px'})`,
           overflowY: isHorizontal ? 'hidden' : 'auto',
         };
       }
@@ -190,6 +189,7 @@ export default defineComponent({
       const { appendClass } = props;
       const isAppendActiveCls =
         appendClass && level === 1 && menu.path === unref(currentParentPath);
+
       const levelCls = [
         `${prefixCls}-item__level${level}`,
         ` ${menuState.theme} `,
