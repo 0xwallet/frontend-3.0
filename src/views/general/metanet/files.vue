@@ -280,7 +280,7 @@
       }
       // 打开分享窗口
       function openShareModal(record) {
-        openModal4(true, { record });
+        openModal4(true, { record }, true);
 
         nextTick(() => {
           setModal4({

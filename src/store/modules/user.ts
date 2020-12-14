@@ -1,5 +1,4 @@
 import type {
-  LoginParams,
   GetUserInfoByUserIdModel,
   GetUserInfoByUserIdParams,
 } from '/@/api/sys/model/userModel';
@@ -22,7 +21,7 @@ import { setLocal, getLocal, getSession, setSession } from '/@/utils/helper/pers
 import { useProjectSetting } from '/@/hooks/setting';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { session } from '/@/hooks/nkn/getNKN';
-import { ErrorMessageMode } from '/@/utils/http/axios/types';
+// import { ErrorMessageMode } from '/@/utils/http/axios/types';
 
 export type UserInfo = Omit<GetUserInfoByUserIdModel, 'roles'>;
 

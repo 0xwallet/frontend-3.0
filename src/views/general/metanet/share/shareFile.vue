@@ -41,7 +41,7 @@
   </div>
 </template>
 <script lang="ts">
-  import { computed, defineComponent, unref, ref, nextTick } from 'vue';
+  import { computed, defineComponent, unref, ref, nextTick, onMounted } from 'vue';
   import { useRouter } from 'vue-router';
   import { useApollo } from '/@/hooks/apollo/apollo';
   import { driveFindShare, drivePreviewToken } from '/@/hooks/apollo/gqlFile';
@@ -64,7 +64,7 @@
       });
       const tableData = ref([]);
       const { createMessage, createErrorModal } = useMessage();
-      const [registerModal, { openModal, setModalProps }] = useModal();
+      const [registerModal, { openModal }] = useModal();
       const [
         registerTable,
         { getSelectRowKeys, setSelectedRowKeys, clearSelectedRowKeys, getDataSource },
@@ -99,15 +99,12 @@
       function clearSelect() {
         clearSelectedRowKeys();
       }
-      nextTick(() => {
-        setModalProps({
-          maskClosable: false,
-          closable: false,
-          canFullscreen: false,
-          showCancelBtn: false,
+      onMounted(() => {
+        nextTick(() => {
+          setTimeout(() => {
+            openModal(true, {}, true);
+          }, 1000);
         });
-
-        openModal(true);
       });
 
       function pushCode(code) {

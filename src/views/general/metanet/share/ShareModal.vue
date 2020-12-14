@@ -76,11 +76,9 @@
       });
 
       const { createErrorModal } = useMessage();
-      const [register, { closeModal, setModalProps }] = useModalInner((data) => {
+      const [register, { setModalProps }] = useModalInner((data) => {
         shareUrl.value = false;
-
         file.value = unref(data.record);
-        console.log(file);
       });
 
       async function shareFile() {
@@ -89,9 +87,6 @@
         if (!(await file.value.share(params.code))) {
           createErrorModal({ title: t('failed'), content: t('share') + ' ' + t('failed') });
         }
-        setModalProps({
-          footer: null,
-        });
         shareUrl.value = true;
       }
       function copy(v) {
