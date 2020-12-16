@@ -62,8 +62,7 @@ const setting: ProjectConfig = {
     theme: ThemeEnum.LIGHT,
     // Whether to enable the lock screen function
     useLockPage: true,
-    // Whether to show the refresh button
-    showRedo: true,
+
     // Whether to show the full screen button
     showFullScreen: true,
     // Whether to show the document button
@@ -91,8 +90,6 @@ const setting: ProjectConfig = {
     show: true,
     // Whether to show dom
     hidden: true,
-    // Whether to show search box
-    showSearch: false,
     // Menu width
     menuWidth: 210,
     // Menu mode
@@ -119,6 +116,9 @@ const setting: ProjectConfig = {
     canDrag: true,
     // Turn on quick actions
     showQuick: true,
+
+    // Whether to show the refresh button
+    showRedo: true,
   },
 
   // Transition Setting

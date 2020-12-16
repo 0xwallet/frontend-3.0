@@ -1,9 +1,9 @@
 <template>
   <Layout :class="prefixCls">
     <LayoutFeatures />
-    <LayoutHeader fixed ref="headerRef" v-if="getShowFullHeaderRef" />
+    <LayoutHeader fixed v-if="getShowFullHeaderRef" />
     <Layout>
-      <LayoutSideBar v-if="getShowSidebar" />
+      <LayoutSideBar v-if="getShowSidebar || getIsMobile" />
       <Layout :class="`${prefixCls}__main`">
         <LayoutMultipleHeader />
         <LayoutContent />
@@ -14,23 +14,21 @@
 </template>
 
 <script lang="ts">
-  import { defineComponent, ref } from 'vue';
+  import { defineComponent } from 'vue';
   import { Layout } from 'ant-design-vue';
   import { createAsyncComponent } from '/@/utils/factory/createAsyncComponent';
 
-  import LayoutHeader from './header/LayoutHeader';
+  import LayoutHeader from './header/index.vue';
   import LayoutContent from './content/index.vue';
-  import LayoutSideBar from './sider';
-  import LayoutMultipleHeader from './header/LayoutMultipleHeader';
+  import LayoutSideBar from './sider/index.vue';
+  import LayoutMultipleHeader from './header/MultipleHeader.vue';
 
   import { useHeaderSetting } from '/@/hooks/setting/useHeaderSetting';
   import { useMenuSetting } from '/@/hooks/setting/useMenuSetting';
   import { useDesign } from '/@/hooks/web/useDesign';
-  import { createLayoutContext } from './useLayoutContext';
 
   import { registerGlobComp } from '/@/components/registerGlobComp';
-  import { createBreakpointListen } from '/@/hooks/event/useBreakpoint';
-  import { isMobile } from '/@/utils/is';
+  import { useAppInject } from '/@/hooks/web/useAppInject';
 
   export default defineComponent({
     name: 'DefaultLayout',
@@ -44,21 +42,14 @@
       Layout,
     },
     setup() {
-      const headerRef = ref<ComponentRef>(null);
-      const isMobileRef = ref(false);
-
-      const { prefixCls } = useDesign('default-layout');
-
-      createLayoutContext({ fullHeader: headerRef, isMobile: isMobileRef });
-
-      createBreakpointListen(() => {
-        isMobileRef.value = isMobile();
-      });
-
       // ! Only register global components here
       // ! Can reduce the size of the first screen code
       // default layout It is loaded after login. So it won’t be packaged to the first screen
       registerGlobComp();
+
+      const { prefixCls } = useDesign('default-layout');
+
+      const { getIsMobile } = useAppInject();
 
       const { getShowFullHeaderRef } = useHeaderSetting();
 
@@ -67,8 +58,8 @@
       return {
         getShowFullHeaderRef,
         getShowSidebar,
-        headerRef,
         prefixCls,
+        getIsMobile,
       };
     },
   });

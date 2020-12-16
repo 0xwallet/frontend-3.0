@@ -1,13 +1,11 @@
 <template>
-  <div :class="prefixCls" v-if="getShowSearch" @click="handleSearch">
+  <div :class="prefixCls" v-if="getShowSearch" @click.stop="handleSearch">
     <Tooltip>
       <template #title> {{ t('component.app.search') }} </template>
       <SearchOutlined />
     </Tooltip>
 
-    <transition name="zoom-fade" mode="out-in">
-      <AppSearchModal @close="handleClose" v-if="showModal" />
-    </transition>
+    <AppSearchModal @close="handleClose" :visible="showModal" />
   </div>
 </template>
 <script lang="ts">
@@ -50,6 +48,6 @@
   @prefix-cls: ~'@{namespace}-app-search';
 
   .@{prefix-cls} {
-    padding: 0 10px;
+    padding: 2px;
   }
 </style>

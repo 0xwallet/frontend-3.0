@@ -1,14 +1,15 @@
 import './index.less';
 
-import { PropType, toRef } from 'vue';
+import type { PropType, CSSProperties } from 'vue';
 
-import { computed, defineComponent, unref } from 'vue';
+import { computed, defineComponent, unref, toRef } from 'vue';
 import { BasicMenu } from '/@/components/Menu';
 import { AppLogo } from '/@/components/Application';
 
 import { MenuModeEnum, MenuSplitTyeEnum } from '/@/enums/menuEnum';
 
 import { useMenuSetting } from '/@/hooks/setting/useMenuSetting';
+import { ScrollContainer } from '/@/components/Container';
 
 import { useGo } from '/@/hooks/web/usePage';
 import { useSplitMenu } from './useLayoutMenu';
@@ -16,6 +17,8 @@ import { openWindow } from '/@/utils';
 import { propTypes } from '/@/utils/propTypes';
 import { isUrl } from '/@/utils/is';
 import { useRootSetting } from '/@/hooks/setting/useRootSetting';
+import { useAppInject } from '/@/hooks/web/useAppInject';
+import { useDesign } from '/@/hooks/web/useDesign';
 
 export default defineComponent({
   name: 'LayoutMenu',
@@ -48,17 +51,46 @@ export default defineComponent({
     } = useMenuSetting();
     const { getShowLogo } = useRootSetting();
 
+    const { prefixCls } = useDesign('layout-menu');
+
     const { menusRef } = useSplitMenu(toRef(props, 'splitType'));
 
-    const getComputedMenuMode = computed(() => props.menuMode || unref(getMenuMode));
+    const { getIsMobile } = useAppInject();
+
+    const getComputedMenuMode = computed(() =>
+      unref(getIsMobile) ? MenuModeEnum.INLINE : props.menuMode || unref(getMenuMode)
+    );
 
     const getComputedMenuTheme = computed(() => props.theme || unref(getMenuTheme));
-    const showLogo = computed(() => unref(getShowLogo) && unref(getIsSidebarType));
-    const appendClass = computed(() => props.splitType === MenuSplitTyeEnum.TOP);
+
+    const getIsShowLogo = computed(() => unref(getShowLogo) && unref(getIsSidebarType));
+
+    const getUseScroll = computed(() => {
+      return unref(getIsSidebarType) || props.splitType === MenuSplitTyeEnum.LEFT;
+    });
+
+    const getWrapperStyle = computed(
+      (): CSSProperties => {
+        return {
+          height: `calc(100% - ${unref(getIsShowLogo) ? '48px' : '0px'})`,
+        };
+      }
+    );
+
+    const getLogoClass = computed(() => {
+      return [
+        `${prefixCls}-logo`,
+        unref(getComputedMenuTheme),
+        {
+          [`${prefixCls}--mobile`]: unref(getIsMobile),
+        },
+      ];
+    });
     /**
      * click menu
      * @param menu
      */
+
     function handleMenuClick(path: string) {
       go(path);
     }
@@ -76,18 +108,18 @@ export default defineComponent({
     }
 
     function renderHeader() {
-      if (!unref(showLogo)) return null;
+      if (!unref(getIsShowLogo) && !unref(getIsMobile)) return null;
 
       return (
         <AppLogo
           showTitle={!unref(getCollapsed)}
-          class={[`layout-menu__logo`, unref(getComputedMenuTheme)]}
+          class={unref(getLogoClass)}
           theme={unref(getComputedMenuTheme)}
         />
       );
     }
 
-    return () => {
+    function renderMenu() {
       return (
         <BasicMenu
           beforeClickFn={beforeMenuClickFn}
@@ -99,13 +131,21 @@ export default defineComponent({
           items={unref(menusRef)}
           accordion={unref(getAccordion)}
           onMenuClick={handleMenuClick}
-          appendClass={unref(appendClass)}
-          showLogo={unref(showLogo)}
-        >
-          {{
-            header: () => renderHeader(),
-          }}
-        </BasicMenu>
+          showLogo={unref(getIsShowLogo)}
+        />
+      );
+    }
+
+    return () => {
+      return (
+        <>
+          {renderHeader()}
+          {unref(getUseScroll) ? (
+            <ScrollContainer style={unref(getWrapperStyle)}>{() => renderMenu()}</ScrollContainer>
+          ) : (
+            renderMenu()
+          )}
+        </>
       );
     };
   },
