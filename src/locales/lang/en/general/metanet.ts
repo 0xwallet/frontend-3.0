@@ -43,4 +43,9 @@ export default {
   markdown: 'Markdown',
   hash: 'Hash',
   txid: 'Txid',
+  release: 'Release',
+  send: 'Send',
+  copyButton: 'Copy',
+  rename: 'Rename',
+  desc: 'Description',
 };

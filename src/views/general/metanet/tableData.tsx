@@ -5,6 +5,8 @@ import { unref } from 'vue';
 import { useMessage } from '/@/hooks/web/useMessage';
 import { Tooltip } from 'ant-design-vue';
 import { useI18n } from '/@/hooks/web/useI18n';
+import moment from 'moment';
+import projectSetting from '/@/settings/projectSetting';
 const { clipboardRef, copiedRef } = useCopyToClipboard();
 const { createMessage } = useMessage();
 const { t } = useI18n('general.metanet');
@@ -17,7 +19,15 @@ export function getBasicColumns(): BasicColumn[] {
       align: 'left',
       slots: { customRender: 'name' },
     },
-
+    {
+      title: t('time'),
+      width: 200,
+      dataIndex: 'updatedAt',
+      customRender: ({ text }) => {
+        moment.locale(projectSetting.locale.lang);
+        return moment(text).format('MMM DD YYYY, hh:mm:ss A');
+      },
+    },
     // {
     //   title: '说明',
     //   dataIndex: 'desc',
@@ -60,26 +70,29 @@ export function getBasicColumns(): BasicColumn[] {
         );
       },
     },
+
+    {
+      title: t('size'),
+      dataIndex: 'size',
+      width: 100,
+      customRender: ({ record, text }) => {
+        return record.type === 'folder' ? '' : byteTransfer(text);
+      },
+    },
+    {
+      title: t('type'),
+      dataIndex: 'type',
+      width: 100,
+      customRender: ({ text }) => {
+        return text === 'folder' ? '' : text;
+      },
+    },
+
     {
       title: t('action'),
       fixed: 'right',
       width: 100,
       slots: { customRender: 'action' },
-    },
-    {
-      title: t('size'),
-      dataIndex: 'size',
-      fixed: 'right',
-      width: 100,
-      customRender: ({ text }) => {
-        return byteTransfer(text);
-      },
-    },
-    {
-      title: t('time'),
-      width: 150,
-      dataIndex: 'updatedAt',
-      fixed: 'right',
     },
   ];
 }
