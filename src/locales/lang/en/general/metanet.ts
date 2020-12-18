@@ -37,4 +37,10 @@ export default {
   status: 'Status',
   uploading: 'Uploading',
   reUpload: 'ReUpload Files',
+  create: 'Create',
+  folder: 'Folder',
+  text: 'Text',
+  markdown: 'Markdown',
+  hash: 'Hash',
+  txid: 'Txid',
 };

@@ -55,10 +55,7 @@
           res.parentId = dirId;
           console.log(res);
           useApollo()
-            .mutate({
-              mutation: dirId === 'root' ? driveMakeDir : driveMakeDirUnder,
-              variables: res,
-            })
+            .mutate({ mutation: dirId === '' ? driveMakeDir : driveMakeDirUnder, variables: res })
             .then((r) => {})
             .finally(() => {
               closeModal();

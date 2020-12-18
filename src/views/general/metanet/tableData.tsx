@@ -29,27 +29,33 @@ export function getBasicColumns(): BasicColumn[] {
         if (!text) {
           return '';
         }
-        let list = [];
+        let list: any[] = [];
         for (let i = 1; i < 11; i++) {
           list.push(text.slice(2 + 6 * (i - 1), 2 + 6 * i));
         }
 
         return (
           <Tooltip title={t('copy')}>
-            <span
-              onClick={() => {
-                clipboardRef.value = text;
-                if (unref(copiedRef)) {
-                  createMessage.warning(t('copySuccess'));
-                }
-              }}
-            >
-              {text.slice(0, 2)}
-              {list.map((value) => (
-                <span style={'background-color:#' + value}>&nbsp;&nbsp;&nbsp;</span>
-              ))}
-              {text.slice(text.length - 2, text.length)}
-            </span>
+            {{
+              default: () => {
+                return (
+                  <span
+                    onClick={() => {
+                      clipboardRef.value = text;
+                      if (unref(copiedRef)) {
+                        createMessage.warning(t('copySuccess'));
+                      }
+                    }}
+                  >
+                    {text.slice(0, 2)}
+                    {list.map((value) => (
+                      <span style={'background-color:#' + value}>&nbsp;&nbsp;&nbsp;</span>
+                    ))}
+                    {text.slice(text.length - 2, text.length)}
+                  </span>
+                );
+              },
+            }}
           </Tooltip>
         );
       },

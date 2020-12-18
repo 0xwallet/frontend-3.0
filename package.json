@@ -57,7 +57,7 @@
   "devDependencies": {
     "@commitlint/cli": "^11.0.0",
     "@commitlint/config-conventional": "^11.0.0",
-    "@iconify/json": "^1.1.272",
+    "@iconify/json": "^1.1.273",
     "@ls-lint/ls-lint": "^1.9.2",
     "@purge-icons/generated": "^0.4.1",
     "@types/echarts": "^4.9.3",

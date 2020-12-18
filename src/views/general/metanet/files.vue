@@ -2,6 +2,34 @@
   <div class="p-4">
     <BreadCrumb :path="path" @jump="goPath" />
     <BasicTable @register="registerTable">
+      <template #tableTitle>
+        <span>
+          <Dropdown :trigger="['click']">
+            <a-button type="primary"> {{ t('create') }}<DownOutlined /> </a-button>
+            <template #overlay>
+              <Menu>
+                <MenuItem @click="openCreateFolderModal">
+                  {{ t('file') }} , {{ t('folder') }}
+                </MenuItem>
+                <MenuItem> {{ t('text') }} , {{ t('markdown') }}</MenuItem>
+                <MenuItem>{{ t('hash') }} , {{ t('txid') }} </MenuItem>
+              </Menu>
+            </template>
+          </Dropdown>
+          <Divider type="vertical" />
+          <Dropdown :trigger="['click']">
+            <a-button type="primary"> {{ t('uploadButton') }}<DownOutlined /> </a-button>
+            <template #overlay>
+              <Menu>
+                <MenuItem @click="openUploadModal">
+                  {{ t('file') }}
+                </MenuItem>
+                <MenuItem> {{ t('folder') }}</MenuItem>
+              </Menu>
+            </template>
+          </Dropdown>
+        </span>
+      </template>
       <template #name="{ record }">
         <GIcon
           :icon="record.type === 'folder' ? 'bx-bx-folder' : 'bx-bxs-file-' + record.type"
@@ -47,9 +75,9 @@
         </Dropdown>
       </template>
       <template #toolbar>
-        <a-button type="primary" @click="setSelectedRowKeyList">
-          {{ !choose ? t('selectAll') : t('cancelAll') }}
-        </a-button>
+        <!--        <a-button type="primary" @click="setSelectedRowKeyList">-->
+        <!--          {{ !choose ? t('selectAll') : t('cancelAll') }}-->
+        <!--        </a-button>-->
         <a-button
           v-show="choose"
           type="primary"
@@ -63,10 +91,10 @@
           {{ t('moveButton') }}
         </a-button>
         <a-button type="primary" v-show="choose"> {{ t('share') }} </a-button>
-        <a-button type="primary" @click="openUploadModal"> {{ t('uploadButton') }} </a-button>
+        <!--        <a-button type="primary" @click="openUploadModal"> {{ t('uploadButton') }} </a-button>-->
 
-        <a-button type="primary" @click="openCreateFolderModal"> {{ t('createFolder') }} </a-button>
-        <a-button type="primary" @click="refresh"> {{ t('refresh') }} </a-button>
+        <!--        <a-button type="primary" @click="openCreateFolderModal"> {{ t('createFolder') }} </a-button>-->
+        <!--        <a-button type="primary" @click="refresh"> {{ t('refresh') }} </a-button>-->
       </template></BasicTable
     >
     <CreateFolderModal @register="registerCreateFolder" />
@@ -88,14 +116,14 @@
   import MoveModal from './component/MoveModal.vue';
   import MarkdownModal from './component/editor/Markdown.vue';
   import GIcon from '/@/components/Icon/index';
+  import { DownOutlined } from '@ant-design/icons-vue';
   import { useApollo } from '/@/hooks/apollo/apollo';
   import { driveListFiles, driveDeleteFiles } from '/@/hooks/apollo/gqlFile';
   import { useModal } from '/@/components/Modal';
   import { File } from './type/file';
   import { useI18n } from '/@/hooks/web/useI18n';
   const { t } = useI18n('general.metanet');
-  import { Dropdown, Menu } from 'ant-design-vue';
-
+  import { Dropdown, Menu, Divider } from 'ant-design-vue';
   export default defineComponent({
     components: {
       BasicTable,
@@ -109,6 +137,8 @@
       Menu,
       MenuItem: Menu.Item,
       MarkdownModal,
+      DownOutlined,
+      Divider,
     },
     setup() {
       // 信息框
@@ -204,7 +234,7 @@
         { getSelectRowKeys, setSelectedRowKeys, clearSelectedRowKeys, getDataSource, reload },
       ] = useTable({
         canResize: false,
-        title: t('files'),
+        title: 'title',
         dataSource: (tableData as unknown) as any[],
         columns: getBasicColumns(),
         rowKey: 'id',
@@ -216,7 +246,7 @@
             name: record.name,
           }),
         },
-
+        showTableSetting: true,
         scroll: { x: 1000, y: 800 },
       });
       // 新建文件夹Modal
@@ -418,6 +448,9 @@
         setSelectedRowKeyList,
         choose,
         path,
+        folder,
+        dirId,
+        fetchData,
         openFile,
         registerCreateFolder,
         openCreateFolderModal,
