@@ -18,6 +18,7 @@ const whitePathList: PageEnum[] = [LOGIN_PATH, REG_PATH, SHARE_PAGE];
 export function createPermissionGuard(router: Router) {
   router.beforeEach(async (to, from, next) => {
     // Jump to the 404 page after processing the login
+
     if (from.path === LOGIN_PATH && to.name === PAGE_NOT_FOUND_ROUTE.name) {
       next(PageEnum.BASE_HOME);
       return;
@@ -34,6 +35,7 @@ export function createPermissionGuard(router: Router) {
     // token does not exist
     if (!token) {
       // You can access without permission. You need to set the routing meta.ignoreAuth to true
+
       if (
         to.meta.ignoreAuth
         // || to.name === FULL_PAGE_NOT_FOUND_ROUTE.name

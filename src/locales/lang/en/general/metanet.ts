@@ -58,4 +58,9 @@ export default {
   close: 'Close',
   noChoose: 'No Select File',
   deleted: 'File Deleted',
+  delete: 'Delete ',
+  items: 'Items',
+  delContent1: 'Are you sure you want to delete',
+  delContent2: 'from your Driver',
+  deleting: 'Deleting',
 };

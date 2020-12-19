@@ -1,6 +1,6 @@
 <template>
   <div class="p-4">
-    <BreadCrumb :path="path" @jump="goPath" />
+    <BreadCrumb :path="path" @jump="goPath" /><a-button @click="test">111</a-button>
     <Row>
       <Col :span="24 - span">
         <BasicTable @register="registerTable">
@@ -72,7 +72,9 @@
                         <a-button type="link">{{ t('rename') }}</a-button></MenuItem
                       >
                       <MenuItem>
-                        <a-button type="link">{{ t('delButton') }}</a-button></MenuItem
+                        <a-button type="link" @click="delFiles">{{
+                          t('delButton')
+                        }}</a-button></MenuItem
                       >
                       <MenuItem>
                         <a-button type="link">{{ t('desc') }}</a-button></MenuItem
@@ -196,14 +198,20 @@
   import MoveModal from './component/MoveModal.vue';
   import MarkdownModal from './component/editor/Markdown.vue';
   import GIcon from '/@/components/Icon/index';
-  import { DownOutlined, EllipsisOutlined, InfoCircleOutlined } from '@ant-design/icons-vue';
+  import {
+    DownOutlined,
+    EllipsisOutlined,
+    InfoCircleOutlined,
+    ExclamationCircleOutlined,
+  } from '@ant-design/icons-vue';
   import { useApollo } from '/@/hooks/apollo/apollo';
   import { driveListFiles, driveDeleteFiles } from '/@/hooks/apollo/gqlFile';
   import { useModal } from '/@/components/Modal';
   import { File } from './type/file';
   import { useI18n } from '/@/hooks/web/useI18n';
   const { t } = useI18n('general.metanet');
-  import { Dropdown, Menu, Divider, Space, Row, Col } from 'ant-design-vue';
+  import { Dropdown, Menu, Divider, Space, Row, Col, Modal } from 'ant-design-vue';
+  import { createVNode } from 'vue';
   import FileInfo from './component/file/FileInfo.vue';
   export default defineComponent({
     components: {
@@ -465,18 +473,40 @@
           createErrorModal({ title: '错误', content: '未选择文件' });
           return;
         }
-        useApollo()
-          .mutate({
-            mutation: driveDeleteFiles,
-            variables: { ids: getSelectRowKeys(), space: 'PRIVATE' },
-          })
-          .then((res) => {
-            const count = res.data?.driveDeleteFiles;
-            createMessage.success(`成功删除${count}个文件`);
-          })
-          .finally(() => {
-            fetchData({ dirId });
-          });
+        t('delete');
+        Modal.confirm({
+          title: `${t('delete')} ${getSelectRowKeys().length} ${t('items')} ?`,
+          icon: createVNode(ExclamationCircleOutlined),
+          content: `${t('delContent1')} ${getSelectRowKeys().length} ${t('items')} ${t(
+            'delContent2'
+          )}?`,
+          width: '50%',
+          centered: true,
+          onOk() {
+            const top = `${document.documentElement.clientHeight - 300}px`;
+            createMessage.config({ top });
+            createMessage.loading({
+              content: `${t('deleting')} ${getSelectRowKeys().length} ${t('items')}...`,
+              key: 'deleteModal',
+            });
+            useApollo()
+              .mutate({
+                mutation: driveDeleteFiles,
+                variables: { ids: getSelectRowKeys(), space: 'PRIVATE' },
+              })
+              .then((res) => {
+                const count = res.data?.driveDeleteFiles;
+                createMessage.success({ content: t('deleted'), key: 'deleteModal', duration: 2 });
+              })
+              .catch((err) => {
+                createMessage.error({ content: err, key: 'deleteModal', duration: 2 });
+              })
+              .finally(() => {
+                fetchData({ dirId });
+              });
+          },
+          onCancel() {},
+        });
       }
 
       // 全选，反选
@@ -555,7 +585,7 @@
       function closeInfo() {
         info.value = false;
       }
-
+      function test() {}
       return {
         registerTable,
         setSelectedRowKeyList,
@@ -587,6 +617,7 @@
         openInfo,
         file,
         closeInfo,
+        test,
       };
     },
   });

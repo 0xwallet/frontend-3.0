@@ -58,4 +58,8 @@ export default {
   close: '关闭',
   noChoose: '未选择文件',
   deleted: '文件已删除',
+  delete: '删除',
+  items: '个文件',
+  delContent1: '是否从你的网盘中删除选择的',
+  delContent2: '',
 };
