@@ -48,4 +48,13 @@ export default {
   copyButton: 'Copy',
   rename: 'Rename',
   desc: 'Description',
+  detail: 'Details',
+  activity: 'Activity',
+  storage: 'Storage Used',
+  location: 'Location',
+  modified: 'Modified',
+  created: 'Created',
+  opened: 'Opened',
+  close: 'Close',
+  noChoose: 'No Select File',
 };

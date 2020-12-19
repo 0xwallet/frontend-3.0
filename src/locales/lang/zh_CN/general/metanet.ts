@@ -48,4 +48,13 @@ export default {
   copyButton: '复制',
   rename: '重命名',
   desc: '描述',
+  detail: '详情',
+  activity: '活动',
+  storage: '网盘占用',
+  location: '位置',
+  modified: '修改',
+  created: '创建',
+  opened: '打开',
+  close: '关闭',
+  noChoose: '未选择文件',
 };

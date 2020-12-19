@@ -1,60 +1,124 @@
 <template>
   <div class="p-4">
     <BreadCrumb :path="path" @jump="goPath" />
-    <BasicTable @register="registerTable">
-      <template #tableTitle>
-        <span>
-          <Dropdown :trigger="['click']">
-            <a-button type="primary"> {{ t('create') }}<DownOutlined /> </a-button>
-            <template #overlay>
-              <Menu>
-                <MenuItem @click="openCreateFolderModal">
-                  {{ t('file') }} , {{ t('folder') }}
-                </MenuItem>
-                <MenuItem> {{ t('text') }} , {{ t('markdown') }}</MenuItem>
-                <MenuItem>{{ t('hash') }} , {{ t('txid') }} </MenuItem>
-              </Menu>
-            </template>
-          </Dropdown>
-          <Divider type="vertical" />
+    <Row>
+      <Col :span="24 - span">
+        <BasicTable @register="registerTable">
+          <template #tableTitle>
+            <span>
+              <Dropdown :trigger="['click']">
+                <a-button type="primary"> {{ t('create') }}<DownOutlined /> </a-button>
+                <template #overlay>
+                  <Menu>
+                    <MenuItem @click="openCreateFolderModal">
+                      {{ t('file') }} , {{ t('folder') }}
+                    </MenuItem>
+                    <MenuItem> {{ t('text') }} , {{ t('markdown') }}</MenuItem>
+                    <MenuItem>{{ t('hash') }} , {{ t('txid') }} </MenuItem>
+                  </Menu>
+                </template>
+              </Dropdown>
+              <Divider type="vertical" />
 
-          <Dropdown :trigger="['click']">
-            <a-button type="primary"> {{ t('uploadButton') }}<DownOutlined /> </a-button>
-            <template #overlay>
-              <Menu>
-                <MenuItem @click="openUploadModal">
-                  {{ t('file') }}
-                </MenuItem>
-                <MenuItem> {{ t('folder') }}</MenuItem>
-              </Menu>
-            </template>
-          </Dropdown>
-          <!--          列表顶部下拉-->
-          <Space v-if="choose">
-            <Divider type="vertical" />
-            <a-button type="primary"> {{ t('previewButton') }} </a-button>
-            <a-button type="primary"> {{ t('shareButton') }} </a-button>
-            <a-button type="primary"> {{ t('release') }} </a-button>
-            <Dropdown :trigger="['click']">
-              <a-button type="primary"><EllipsisOutlined /></a-button>
+              <Dropdown :trigger="['click']">
+                <a-button type="primary"> {{ t('uploadButton') }}<DownOutlined /> </a-button>
+                <template #overlay>
+                  <Menu>
+                    <MenuItem @click="openUploadModal">
+                      {{ t('file') }}
+                    </MenuItem>
+                    <MenuItem> {{ t('folder') }}</MenuItem>
+                  </Menu>
+                </template>
+              </Dropdown>
+              <!--          列表顶部下拉-->
+              <Space v-if="choose">
+                <Divider type="vertical" />
+                <a-button type="primary"> {{ t('previewButton') }} </a-button>
+                <a-button type="primary"> {{ t('shareButton') }} </a-button>
+                <a-button type="primary"> {{ t('release') }} </a-button>
+                <Dropdown :trigger="['click']">
+                  <a-button type="primary"><EllipsisOutlined /></a-button>
+                  <template #overlay>
+                    <Menu>
+                      <MenuItem>
+                        <a-button type="link">{{ t('previewButton') }}</a-button>
+                      </MenuItem>
+
+                      <MenuItem>
+                        <a-button type="link">{{ t('shareButton') }}</a-button>
+                      </MenuItem>
+                      <MenuItem>
+                        <a-button type="link">{{ t('release') }}</a-button>
+                      </MenuItem>
+
+                      <MenuItem>
+                        <a-button type="link">{{ t('send') }}</a-button></MenuItem
+                      >
+                      <MenuItem>
+                        <a-button type="link" @click="openCreateFolderModal">{{
+                          t('downloadButton')
+                        }}</a-button>
+                      </MenuItem>
+                      <MenuItem>
+                        <a-button type="link" @click="openMoveModal">{{
+                          t('moveButton')
+                        }}</a-button></MenuItem
+                      >
+                      <MenuItem>
+                        <a-button type="link">{{ t('copyButton') }}</a-button></MenuItem
+                      >
+                      <MenuItem>
+                        <a-button type="link">{{ t('rename') }}</a-button></MenuItem
+                      >
+                      <MenuItem>
+                        <a-button type="link">{{ t('delButton') }}</a-button></MenuItem
+                      >
+                      <MenuItem>
+                        <a-button type="link">{{ t('desc') }}</a-button></MenuItem
+                      >
+                    </Menu>
+                  </template>
+                </Dropdown>
+              </Space>
+            </span>
+          </template>
+          <template #name="{ record }">
+            <GIcon
+              :icon="record.type === 'folder' ? 'bx-bx-folder' : 'bx-bxs-file-' + record.type"
+              size="30"
+            >
+            </GIcon>
+
+            <a-button type="link" @click="openFile(record)"
+              >{{ record.name }}{{ record.type === 'folder' ? '' : '.' + record.type }}</a-button
+            >
+          </template>
+          <template #action="{ record }">
+            <Dropdown>
+              <a class="ant-dropdown-link"> ... </a>
               <template #overlay>
                 <Menu>
                   <MenuItem>
-                    <a-button type="link">{{ t('previewButton') }}</a-button>
+                    <a-button type="link" @click="preview(record)">{{
+                      t('previewButton')
+                    }}</a-button>
                   </MenuItem>
 
                   <MenuItem>
-                    <a-button type="link">{{ t('shareButton') }}</a-button>
+                    <a-button type="link" @click="openShareModal(record)">{{
+                      t('shareButton')
+                    }}</a-button>
                   </MenuItem>
                   <MenuItem>
                     <a-button type="link">{{ t('release') }}</a-button>
                   </MenuItem>
 
                   <MenuItem>
-                    <a-button type="link">{{ t('send') }}</a-button></MenuItem
-                  >
+                    <a-button type="link">{{ t('send') }}</a-button>
+                  </MenuItem>
                   <MenuItem>
-                    <a-button type="link" @click="openCreateFolderModal">{{
+                    <a-button type="link" @click="download(record)">{{
                       t('downloadButton')
                     }}</a-button>
                   </MenuItem>
@@ -70,7 +134,13 @@
                     <a-button type="link">{{ t('rename') }}</a-button></MenuItem
                   >
                   <MenuItem>
-                    <a-button type="link">{{ t('delButton') }}</a-button></MenuItem
+                    <a-button
+                      type="link"
+                      color="error"
+                      :pop="{ title: t('delButton') + ' ' + record.fullName + '?' }"
+                      @click="delFile(record)"
+                      >{{ t('delButton') }}</a-button
+                    ></MenuItem
                   >
                   <MenuItem>
                     <a-button type="link">{{ t('desc') }}</a-button></MenuItem
@@ -78,94 +148,35 @@
                 </Menu>
               </template>
             </Dropdown>
-          </Space>
-        </span>
-      </template>
-      <template #name="{ record }">
-        <GIcon
-          :icon="record.type === 'folder' ? 'bx-bx-folder' : 'bx-bxs-file-' + record.type"
-          size="30"
-        >
-        </GIcon>
-
-        <a-button type="link" @click="openFile(record)"
-          >{{ record.name }}{{ record.type === 'folder' ? '' : '.' + record.type }}</a-button
-        >
-      </template>
-      <template #action="{ record }">
-        <Dropdown>
-          <a class="ant-dropdown-link"> ... </a>
-          <template #overlay>
-            <Menu>
-              <MenuItem>
-                <a-button type="link" @click="preview(record)">{{ t('previewButton') }}</a-button>
-              </MenuItem>
-
-              <MenuItem>
-                <a-button type="link" @click="openShareModal(record)">{{
-                  t('shareButton')
-                }}</a-button>
-              </MenuItem>
-              <MenuItem>
-                <a-button type="link">{{ t('release') }}</a-button>
-              </MenuItem>
-
-              <MenuItem>
-                <a-button type="link">{{ t('send') }}</a-button>
-              </MenuItem>
-              <MenuItem>
-                <a-button type="link" @click="download(record)">{{ t('downloadButton') }}</a-button>
-              </MenuItem>
-              <MenuItem>
-                <a-button type="link" @click="openMoveModal">{{
-                  t('moveButton')
-                }}</a-button></MenuItem
-              >
-              <MenuItem>
-                <a-button type="link">{{ t('copyButton') }}</a-button></MenuItem
-              >
-              <MenuItem>
-                <a-button type="link">{{ t('rename') }}</a-button></MenuItem
-              >
-              <MenuItem>
-                <a-button
-                  type="link"
-                  color="error"
-                  :pop="{ title: t('delButton') + ' ' + record.fullName + '?' }"
-                  @click="delFile(record)"
-                  >{{ t('delButton') }}</a-button
-                ></MenuItem
-              >
-              <MenuItem>
-                <a-button type="link">{{ t('desc') }}</a-button></MenuItem
-              >
-            </Menu>
           </template>
-        </Dropdown>
-      </template>
-      <template #toolbar>
-        <!--        <a-button type="primary" @click="setSelectedRowKeyList">-->
-        <!--          {{ !choose ? t('selectAll') : t('cancelAll') }}-->
-        <!--        </a-button>-->
-        <!--        <a-button-->
-        <!--          v-show="choose"-->
-        <!--          type="primary"-->
-        <!--          color="success"-->
-        <!--          :pop="{ title: `${t('delSelect')} ${getSelectRowKeys().length} ${t('file')}?` }"-->
-        <!--          @click="delFiles"-->
-        <!--          >{{ t('delButton') }}</a-button-->
-        <!--        >-->
-        <!--        <a-button type="primary" v-show="choose"> {{ t('downloadButton') }} </a-button>-->
-        <!--        <a-button type="primary" v-show="choose" @click="openMoveModal">-->
-        <!--          {{ t('moveButton') }}-->
-        <!--        </a-button>-->
-        <!--        <a-button type="primary" v-show="choose"> {{ t('share') }} </a-button>-->
-        <!--        <a-button type="primary" @click="openUploadModal"> {{ t('uploadButton') }} </a-button>-->
+          <template #toolbar>
+            <a-button type="link" @click="openInfo"><InfoCircleOutlined /></a-button>
+            <!--        <a-button type="primary" @click="setSelectedRowKeyList">-->
+            <!--          {{ !choose ? t('selectAll') : t('cancelAll') }}-->
+            <!--        </a-button>-->
+            <!--        <a-button-->
+            <!--          v-show="choose"-->
+            <!--          type="primary"-->
+            <!--          color="success"-->
+            <!--          :pop="{ title: `${t('delSelect')} ${getSelectRowKeys().length} ${t('file')}?` }"-->
+            <!--          @click="delFiles"-->
+            <!--          >{{ t('delButton') }}</a-button-->
+            <!--        >-->
+            <!--        <a-button type="primary" v-show="choose"> {{ t('downloadButton') }} </a-button>-->
+            <!--        <a-button type="primary" v-show="choose" @click="openMoveModal">-->
+            <!--          {{ t('moveButton') }}-->
+            <!--        </a-button>-->
+            <!--        <a-button type="primary" v-show="choose"> {{ t('share') }} </a-button>-->
+            <!--        <a-button type="primary" @click="openUploadModal"> {{ t('uploadButton') }} </a-button>-->
 
-        <!--        <a-button type="primary" @click="openCreateFolderModal"> {{ t('createFolder') }} </a-button>-->
-        <!--        <a-button type="primary" @click="refresh"> {{ t('refresh') }} </a-button>-->
-      </template></BasicTable
-    >
+            <!--        <a-button type="primary" @click="openCreateFolderModal"> {{ t('createFolder') }} </a-button>-->
+            <!--        <a-button type="primary" @click="refresh"> {{ t('refresh') }} </a-button>-->
+          </template></BasicTable
+        ></Col
+      >
+      <Col :span="span"><FileInfo :file="file" @close="closeInfo" /></Col>
+    </Row>
+
     <CreateFolderModal @register="registerCreateFolder" />
     <MoveModal @register="registerMoveModal" />
     <UploadModal @register="registerUploadModal" />
@@ -185,14 +196,15 @@
   import MoveModal from './component/MoveModal.vue';
   import MarkdownModal from './component/editor/Markdown.vue';
   import GIcon from '/@/components/Icon/index';
-  import { DownOutlined, EllipsisOutlined } from '@ant-design/icons-vue';
+  import { DownOutlined, EllipsisOutlined, InfoCircleOutlined } from '@ant-design/icons-vue';
   import { useApollo } from '/@/hooks/apollo/apollo';
   import { driveListFiles, driveDeleteFiles } from '/@/hooks/apollo/gqlFile';
   import { useModal } from '/@/components/Modal';
   import { File } from './type/file';
   import { useI18n } from '/@/hooks/web/useI18n';
   const { t } = useI18n('general.metanet');
-  import { Dropdown, Menu, Divider, Space } from 'ant-design-vue';
+  import { Dropdown, Menu, Divider, Space, Row, Col } from 'ant-design-vue';
+  import FileInfo from './component/file/FileInfo.vue';
   export default defineComponent({
     components: {
       BasicTable,
@@ -210,7 +222,11 @@
       DownOutlined,
       Divider,
       EllipsisOutlined,
+      InfoCircleOutlined,
       Space,
+      Row,
+      Col,
+      FileInfo,
     },
     setup() {
       // 信息框
@@ -218,6 +234,16 @@
       // 文件路径面包屑
       const path = ref([]);
       let dirId = 'root';
+      const info = ref(false);
+      const span = computed(() => {
+        if (file.value.fullName === undefined) {
+          return 0;
+        }
+        if (!info.value) {
+          return 0;
+        }
+        return 6;
+      });
       // 表格数据
       // 文件列表
       const tableData = computed(() => {
@@ -227,6 +253,7 @@
       const folder = ref([]);
       // 储存本级目录路所有文件
       const files = ref([]);
+      const file = ref({}) as File;
       //当前是否有选择文件
       const choose = computed(() => {
         return getSelectRowKeys().length !== 0;
@@ -317,6 +344,11 @@
             name: record.name,
           }),
         },
+        customRow: (record) => ({
+          onClick: () => {
+            file.value = record;
+          },
+        }),
         pagination: false,
         showTableSetting: true,
         scroll: { x: 1000, y: 1500 },
@@ -514,6 +546,15 @@
       function refresh() {
         fetchData({ dirId });
       }
+      function openInfo() {
+        if (file.value.fullName === undefined) {
+          createMessage.error(t('noChoose'));
+        }
+        info.value = !info.value;
+      }
+      function closeInfo() {
+        info.value = false;
+      }
 
       return {
         registerTable,
@@ -542,6 +583,10 @@
         getSelectRowKeys,
         t,
         refresh,
+        span,
+        openInfo,
+        file,
+        closeInfo,
       };
     },
   });

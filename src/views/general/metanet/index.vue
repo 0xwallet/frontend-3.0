@@ -5,9 +5,9 @@
     @tabChange="(key) => onTabChange(key)"
     class="tabs"
   >
-    <p v-if="tabKey === 'files'"><Files /></p>
-    <p v-else-if="tabKey === 'share'"> <Share /> </p>
-    <p v-else="tabKey === 'recycle'"> <Recycle /> </p>
+    <template v-if="tabKey === 'files'"><Files /></template>
+    <template v-else-if="tabKey === 'share'"> <Share /> </template>
+    <template v-else="tabKey === 'recycle'"> <Recycle /> </template>
   </Card>
 </template>
 
@@ -53,6 +53,6 @@
 </script>
 <style lang="less" scoped>
   .tabs {
-    margin: 10px;
+    margin: 5px;
   }
 </style>

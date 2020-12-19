@@ -25,7 +25,8 @@ export function getBasicColumns(): BasicColumn[] {
       dataIndex: 'updatedAt',
       customRender: ({ text }) => {
         moment.locale(projectSetting.locale.lang);
-        return moment(text).format('MMM DD YYYY, hh:mm:ss A');
+        // return moment(text).format('MMM DD YYYY, hh:mm:ss A');
+        return moment(text).format('lll');
       },
     },
     // {

@@ -11,7 +11,6 @@ import { createImgPreview } from '/@/components/Preview';
 import { unref } from 'vue';
 import { useCopyToClipboard } from '/@/hooks/web/useCopyToClipboard';
 import { useMessage } from '/@/hooks/web/useMessage';
-import moment from 'moment';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { getFile } from '/@/api/general/metanet/file';
 const { t } = useI18n();
@@ -36,6 +35,7 @@ interface userFile {
   isDir: boolean;
   space: string;
   updatedAt: string;
+  insertedAt: string;
 }
 
 export class File {
@@ -50,6 +50,7 @@ export class File {
   shareId?: string;
   code?: string;
   updatedAt: string;
+  createdAt: string;
   expiredAt?: string;
   uri: string;
   token?: string;
@@ -73,8 +74,8 @@ export class File {
     this.path = params.userFile.fullName.slice(0, params.userFile.fullName.length - 1);
     this.size = Number(params.userFile.info.size);
     this.desc = params.userFile.info.description;
-
-    this.updatedAt = moment(params.userFile.updatedAt).toString();
+    this.createdAt = params.userFile.insertedAt;
+    this.updatedAt = params.userFile.updatedAt;
     this.code = params.code;
     this.token = params.token;
     this.uri = params.uri || '';
