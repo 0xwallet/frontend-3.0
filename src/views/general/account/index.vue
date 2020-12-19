@@ -12,12 +12,14 @@
   import Profile from './profile.vue';
   import CreditCard from './creditCard.vue';
   import Apps from './apps.vue';
-
+  import { Row, Col } from 'ant-design-vue';
   export default defineComponent({
     components: {
       Profile,
       CreditCard,
       Apps,
+      Row,
+      Col,
     },
     setup() {
       return {};
