@@ -22,7 +22,7 @@ export function getBasicColumns(): BasicColumn[] {
           return (
             <span>
               <GIcon icon="bx-bx-question-mark" size="30" />
-              分享文件已删除
+              {t('deleted')}
             </span>
           );
         }

@@ -13,6 +13,7 @@
       /></a-button>
     </template>
     <template v-if="key === 'detail'">
+      {{ info }}
       <Descriptions :column="1">
         <DescriptionsItem :label="t('type')">{{ info.type }}</DescriptionsItem>
         <DescriptionsItem :label="t('size')"

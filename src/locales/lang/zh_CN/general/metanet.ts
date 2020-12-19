@@ -57,4 +57,5 @@ export default {
   opened: '打开',
   close: '关闭',
   noChoose: '未选择文件',
+  deleted: '文件已删除',
 };

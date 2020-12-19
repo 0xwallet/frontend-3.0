@@ -1,32 +1,37 @@
 <template>
   <div class="p-4">
-    <BasicTable @register="registerTable">
-      <template #urlTitle>
-        <span>
-          {{ t('url') }}
-          <BasicHelp class="ml-2" :text="t('copyShare')" />
-        </span>
-      </template>
-      <template #uri="{ record, text }">
-        <Tooltip :title="t('copy')"
-          ><a-button type="link" @click="copyUrl(record)"> {{ text }}</a-button></Tooltip
-        >
-      </template>
-      <template #action="{ record }">
-        <div v-if="record.name !== 'deleted'">
-          <a-button
-            type="link"
-            color="error"
-            :pop="{ title: t('delButton') + record.name + '.' + record.type + '?' }"
-            @click="del(record)"
-            >{{ t('delButton') }}</a-button
-          ></div
-        >
-      </template>
-      <template #toolbar>
-        <a-button type="primary" @click="fetchData">{{ t('refresh') }}</a-button>
-      </template>
-    </BasicTable>
+    <Row>
+      <Col :span="24 - span">
+        <BasicTable @register="registerTable">
+          <template #urlTitle>
+            <span>
+              {{ t('url') }}
+              <BasicHelp class="ml-2" :text="t('copyShare')" />
+            </span>
+          </template>
+          <template #uri="{ record, text }">
+            <Tooltip :title="t('copy')"
+              ><a-button type="link" @click="copyUrl(record)"> {{ text }}</a-button></Tooltip
+            >
+          </template>
+          <template #action="{ record }">
+            <div v-if="record.name !== 'deleted'">
+              <a-button
+                type="link"
+                color="error"
+                :pop="{ title: t('delButton') + record.name + '.' + record.type + '?' }"
+                @click="del(record)"
+                >{{ t('delButton') }}</a-button
+              ></div
+            >
+          </template>
+          <template #toolbar>
+            <a-button type="primary" @click="fetchData">{{ t('refresh') }}</a-button>
+            <a-button type="link" @click="openInfo"><InfoCircleOutlined /></a-button>
+          </template> </BasicTable
+      ></Col>
+      <Col :span="span"><FileInfo :file="file" @close="closeInfo" /></Col>
+    </Row>
   </div>
 </template>
 <script lang="ts">
@@ -39,27 +44,45 @@
   import { getBasicColumns } from './shareData';
   import { File } from '../type/file';
   import { BasicHelp } from '/@/components/Basic';
-
+  import FileInfo from './FileInfo.vue';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import { Tooltip } from 'ant-design-vue';
+  import { Tooltip, Row, Col } from 'ant-design-vue';
+  import { InfoCircleOutlined } from '@ant-design/icons-vue';
   const { t } = useI18n('general.metanet');
   export default defineComponent({
-    components: { BasicTable, GIcon, BasicHelp, Tooltip },
+    components: { BasicTable, GIcon, BasicHelp, Tooltip, Row, Col, FileInfo, InfoCircleOutlined },
     setup() {
       const { createMessage, createErrorModal } = useMessage();
       const path = ref([]);
       const tableData = ref([]);
+      const info = ref(false);
+      const file = ref({}) as File;
+      const span = computed(() => {
+        if (file.value.fullName === undefined) {
+          return 0;
+        }
+        if (!info.value) {
+          return 0;
+        }
+        return 6;
+      });
       const [
         registerTable,
         { getSelectRowKeys, setSelectedRowKeys, clearSelectedRowKeys, getDataSource },
       ] = useTable({
         canResize: false,
-
+        customRow: (record) => ({
+          onClick: () => {
+            file.value = record;
+          },
+        }),
+        pagination: false,
         title: t('share'),
         dataSource: tableData,
         columns: getBasicColumns(),
         rowKey: 'shareId',
         showIndexColumn: false,
+        scroll: { x: 1000, y: 1000 },
       });
       function fetchData() {
         useApollo()
@@ -124,6 +147,15 @@
         const f: File = record;
         f.copyShareUrl(1);
       }
+      function openInfo() {
+        if (file.value.fullName === undefined) {
+          createMessage.error(t('noChoose'));
+        }
+        info.value = !info.value;
+      }
+      function closeInfo() {
+        info.value = false;
+      }
 
       return {
         registerTable,
@@ -135,6 +167,10 @@
         copyUrl,
         fetchData,
         t,
+        span,
+        file,
+        openInfo,
+        closeInfo,
       };
     },
   });

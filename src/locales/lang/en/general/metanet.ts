@@ -24,7 +24,7 @@ export default {
   failed: 'Failed',
   shareUrl: 'Share Url',
   code: 'Share Code',
-  copyShare: 'Copy Url and Code',
+  copyShare: 'Click to Copy Url and Code',
   url: 'Url',
   moveFile: 'Move File',
   select: 'Select',
@@ -57,4 +57,5 @@ export default {
   opened: 'Opened',
   close: 'Close',
   noChoose: 'No Select File',
+  deleted: 'File Deleted',
 };
