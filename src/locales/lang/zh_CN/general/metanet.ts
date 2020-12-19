@@ -62,4 +62,5 @@ export default {
   items: '个文件',
   delContent1: '是否从你的网盘中删除选择的',
   delContent2: '',
+  deleting: '正在删除',
 };

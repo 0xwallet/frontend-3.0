@@ -5,6 +5,15 @@
     @tabChange="(key) => onTabChange(key)"
     class="tabs"
   >
+    <template #tabBarExtraContent>
+      <InputSearch
+        v-model:value="value"
+        placeholder="input search text"
+        enter-button
+        @search="onSearch"
+        style="margin: 10px"
+      />
+    </template>
     <template v-if="tabKey === 'files'"><Files /></template>
     <template v-else-if="tabKey === 'share'"> <Share /> </template>
     <template v-else="tabKey === 'recycle'"> <Recycle /> </template>
@@ -13,7 +22,7 @@
 
 <script lang="ts">
   import { defineComponent, ref } from 'vue';
-  import { Tabs, Card } from 'ant-design-vue';
+  import { Tabs, Card, Input } from 'ant-design-vue';
   import Files from './files.vue';
   import Share from './share/share.vue';
   import Recycle from './recycle.vue';
@@ -27,6 +36,7 @@
       Share,
       Recycle,
       Card,
+      InputSearch: Input.Search,
     },
     setup() {
       const tabList = [
