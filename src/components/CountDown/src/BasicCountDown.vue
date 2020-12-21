@@ -35,9 +35,9 @@
       unit: propTypes.string.def(t('seconds')),
     },
     setup(props, { emit }) {
-      let time = 0;
+      let time = ref(0);
       const title = computed(() => {
-        return time > 0 ? `${t('wait')} ${time} ${props.unit}` : `${props.title} `;
+        return time.value > 0 ? `${t('wait')} ${time.value} ${props.unit}` : `${props.title} `;
       });
       const placeholder = computed(() => {
         return String(props.placeholder);
@@ -50,8 +50,8 @@
       const getBindValue = ref(props.value);
       const { createMessage } = useMessage();
       function startCountdown(): Promise<any> {
-        if (time > 0) {
-          createMessage.warning(`${t('wait')} ${time} ${props.unit}`);
+        if (time.value > 0) {
+          createMessage.warning(`${t('wait')} ${time.value} ${props.unit}`);
           return;
         }
         if (!isFunction(props.onClick)) return;
@@ -61,10 +61,10 @@
         props
           .onClick()
           .then(() => {
-            time = props.time;
+            time.value = props.time;
             setInterval(() => {
-              if (time > 0) {
-                time -= 1;
+              if (time.value > 0) {
+                time.value -= 1;
               } else {
                 clearInterval();
               }
