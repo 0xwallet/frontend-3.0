@@ -57,10 +57,7 @@
   //Apollo
 
   import { useApollo } from '/@/hooks/apollo/apollo';
-
   import { driveUploadByHash } from '/@/hooks/apollo/gqlFile';
-  import { encode } from '@msgpack/msgpack';
-  import { useMClient } from '/@/hooks/nkn/getNKN';
   import CryptoES from 'crypto-es';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { fileStore } from '/@/store/modules/file';
@@ -79,10 +76,7 @@
         fileList: [],
       });
       let path: string[] = [];
-
       const [register, { closeModal }] = useModalInner((data) => {
-        // path.value = data.path;
-
         path = [...unref(data.path)];
       });
 
@@ -98,22 +92,22 @@
 
       const getIsSelectFile = computed(() => {
         return (
-          fileListRef.value.length > 0 &&
-          !fileListRef.value.every((item) => item.status === UploadResultStatus.SUCCESS)
+          fileStore.getUploadList.length > 0 &&
+          !fileStore.getUploadList.every((item) => item.status === UploadResultStatus.SUCCESS)
         );
       });
 
       const getOkButtonProps = computed(() => {
-        const someSuccess = fileListRef.value.some(
+        const someSuccess = fileStore.getUploadList.some(
           (item) => item.status === UploadResultStatus.SUCCESS
         );
         return {
-          disabled: isUploadingRef.value || fileListRef.value.length === 0 || !someSuccess,
+          disabled: isUploadingRef.value || fileStore.getUploadList.length === 0 || !someSuccess,
         };
       });
 
       const getUploadBtnText = computed(() => {
-        const someError = fileListRef.value.some(
+        const someError = fileStore.getUploadList.some(
           (item) => item.status === UploadResultStatus.ERROR
         );
         return isUploadingRef.value
@@ -144,7 +138,7 @@
           let wordArray = CryptoES.lib.WordArray.create(res);
           hash = CryptoES.SHA256(wordArray).toString();
           let status = '';
-
+          let percent = 0;
           useApollo()
             .mutate({
               mutation: driveUploadByHash,
@@ -154,17 +148,20 @@
               },
             })
             .then(() => {
-              status = 'success';
+              status = UploadResultStatus.SUCCESS;
+              percent = 100;
             })
-            .catch((err) => {})
+            .catch((err) => {
+              console.log(err);
+            })
             .finally(() => {
-              const commonItem = {
+              const commonItem: FileItem = {
                 uuid: buildUUID(),
                 file,
                 size,
                 name,
                 hash,
-                percent: 0,
+                percent,
                 type: name.split('.').pop(),
                 status,
                 thumbUrl: '',
@@ -174,17 +171,9 @@
                 // beforeUpload，如果异步会调用自带上传方法
                 // file.thumbUrl = await getBase64(file);
                 getBase64WithFile(file).then(({ result: thumbUrl }) => {
-                  // fileListRef.value = [
-                  //   ...unref(fileListRef),
-                  //   {
-                  //     thumbUrl,
-                  //     ...commonItem,
-                  //   },
-                  // ];
                   commonItem.thumbUrl = thumbUrl;
                 });
               }
-              fileListRef.value = [...unref(fileListRef), commonItem];
               fileStore.addItem(commonItem);
             });
         });
@@ -193,8 +182,8 @@
       }
       // 删除
       function handleRemove(record: FileItem) {
-        const index = fileListRef.value.findIndex((item) => item.uuid === record.uuid);
-        index !== -1 && fileListRef.value.splice(index, 1);
+        const index = fileStore.getUploadList.findIndex((item) => item.uuid === record.uuid);
+        index !== -1 && fileStore.getUploadList.splice(index, 1);
       }
 
       // 预览
@@ -206,122 +195,10 @@
         });
       }
 
-      const numBytes = 16 << 20;
-      const writeChunkSize = 1024;
-      async function uploadApiByItem(item: FileItem) {
-        try {
-          // 获取client session
-          const session = await useMClient();
-          console.log(session);
-          const object = {
-            File: new Uint8Array(await item.file.arrayBuffer()),
-            FullName: [...path, item.name],
-            FileSize: item.size,
-            UserId: localStorage.getItem('uid'),
-            Space: 'PRIVATE',
-            Description: '',
-          };
-          item.status = UploadResultStatus.UPLOADING;
-          let timeStart = Date.now();
-          const encoded: Uint8Array = encode(object);
-          let buffer = new ArrayBuffer(4);
-          let dv = new DataView(buffer);
-          dv.setUint32(0, encoded.length, true);
-          await session.write(new Uint8Array(buffer));
-          let buf!: Uint8Array;
-          for (let n = 0; n < encoded.length; n += buf.length) {
-            buf = new Uint8Array(Math.min(encoded.length - n, writeChunkSize));
-            for (let i = 0; i < buf.length; i++) {
-              buf[i] = encoded[i + n];
-            }
-            await session.write(buf);
-
-            if (
-              Math.floor(((n + buf.length) * 10) / encoded.length) !==
-              Math.floor((n * 10) / encoded.length)
-            ) {
-              item.percent = (((n + buf.length) / item.size) * 100) | 0;
-              let speed: number | string =
-                ((n + buf.length) / (1 << 20) / (Date.now() - timeStart)) * 1000;
-
-              if (speed > 0.9) {
-                speed = speed.toFixed(2) + ' MB/s';
-              } else if (speed * 1000 > 0.9) {
-                speed = (speed * 1000).toFixed(2) + 'KB/s';
-              } else {
-                speed = (speed * 1000 * 1000).toFixed(2) + 'B/s';
-              }
-              item.status = speed;
-
-              console.log(
-                session.localAddr,
-                'sent',
-                n + buf.length,
-                'bytes',
-                ((n + buf.length) / (1 << 20) / (Date.now() - timeStart)) * 1000000000,
-                'B/s'
-              );
-            }
-
-            // c
-          }
-          item.status = UploadResultStatus.SUCCESS;
-          return {
-            success: true,
-            error: null,
-          };
-        } catch (e) {
-          console.log(e);
-          item.status = UploadResultStatus.ERROR;
-          return {
-            success: false,
-            error: e,
-          };
-        }
-      }
-
-      async function write(session, numBytes) {
-        let timeStart = Date.now();
-        let buffer = new ArrayBuffer(4);
-        let dv = new DataView(buffer);
-        dv.setUint32(0, numBytes, true);
-        await session.write(new Uint8Array(buffer));
-        let buf;
-        for (let n = 0; n < numBytes; n += buf.length) {
-          buf = new Uint8Array(Math.min(numBytes - n, writeChunkSize));
-          for (let i = 0; i < buf.length; i++) {
-            buf[i] = byteAt(n + i);
-          }
-          await session.write(buf);
-          if (Math.floor(((n + buf.length) * 10) / numBytes) !== Math.floor((n * 10) / numBytes)) {
-            console.log(
-              session.localAddr,
-              'sent',
-              n + buf.length,
-              'bytes',
-              ((n + buf.length) / (1 << 20) / (Date.now() - timeStart)) * 1000,
-              'MB/s'
-            );
-          }
-        }
-        console.log(
-          session.localAddr,
-          'finished sending',
-          numBytes,
-          'bytes',
-          (numBytes / (1 << 20) / (Date.now() - timeStart)) * 1000,
-          'MB/s'
-        );
-      }
-
-      function byteAt(n) {
-        return n % 256;
-      }
-
       // 点击开始上传
       async function handleStartUpload() {
         const { maxNumber } = props;
-        if (fileListRef.value.length > maxNumber) {
+        if (fileStore.getUploadList.length > maxNumber) {
           return createMessage.warning(`最多只能上传${maxNumber}个文件`);
         }
         try {
@@ -332,7 +209,6 @@
             [];
           const data = await Promise.all(
             uploadFileList.map((item) => {
-              console.log(path);
               return fileStore.uploadApiByItem(item, path);
               // return uploadApiByItem(item);
             })
@@ -351,7 +227,7 @@
       function handleOk() {
         const { maxNumber } = props;
 
-        if (fileListRef.value.length > maxNumber) {
+        if (fileStore.getUploadList.length > maxNumber) {
           return createMessage.warning(`最多只能上传${maxNumber}个文件`);
         }
         if (isUploadingRef.value) {
@@ -359,7 +235,7 @@
         }
         const fileList: string[] = [];
 
-        for (const item of fileListRef.value) {
+        for (const item of fileStore.getUploadList) {
           const { status, responseData } = item;
           if (status === UploadResultStatus.SUCCESS && responseData) {
             fileList.push(responseData.url);
@@ -369,7 +245,7 @@
         if (fileList.length <= 0) {
           return createMessage.warning('没有上传成功的文件，无法保存');
         }
-        fileListRef.value = [];
+        // fileStore.getUploadList = [];
         closeModal();
         emit('change', fileList);
       }

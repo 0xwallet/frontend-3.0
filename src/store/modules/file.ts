@@ -22,6 +22,7 @@ class File extends VuexModule {
   appendItem(file: FileItem): void {
     this.uploadList.push(file);
   }
+
   @Mutation
   setItemValue(params: { uuid: string; key: string; value: any }): void {
     const { uuid, key, value } = params;
@@ -73,7 +74,6 @@ class File extends VuexModule {
           Math.floor(((n + buf.length) * 10) / encoded.length) !==
           Math.floor((n * 10) / encoded.length)
         ) {
-
           this.setItemValue({
             uuid: item.uuid,
             key: 'percent',

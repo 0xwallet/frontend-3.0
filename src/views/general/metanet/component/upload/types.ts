@@ -14,7 +14,8 @@ export interface FileItem {
   type?: string;
   percent: number;
   file: File;
-  status?: UploadResultStatus;
+  hash: string;
+  status?: UploadResultStatus | string;
   responseData?: UploadApiResult;
   uuid: string;
 }
