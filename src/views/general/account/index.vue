@@ -42,6 +42,7 @@
       background-color: #e6f7ff;
     }
   }
+
   .bg {
     margin: 10px;
   }

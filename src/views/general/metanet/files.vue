@@ -1,6 +1,6 @@
 <template>
   <div class="p-4">
-    <BreadCrumb :path="path" @jump="goPath" /><a-button @click="test">111</a-button>
+    <BreadCrumb :path="path" @jump="goPath" />
     <Row>
       <Col :span="24 - span">
         <BasicTable @register="registerTable">

@@ -33,7 +33,7 @@
         <a-button type="primary"> {{ t('select') }} {{ t('file') }}</a-button>
       </Upload>
     </div>
-    <FileList :dataSource="fileListRef" :columns="columns" :actionColumn="actionColumn" />
+    <FileList :dataSource="fileList" :columns="columns" :actionColumn="actionColumn" />
   </BasicModal>
 </template>
 <script lang="ts">
@@ -51,7 +51,7 @@
   // utils
   import { checkFileType, checkImgType, getBase64WithFile } from './utils';
   import { buildUUID } from '/@/utils/uuid';
-  import { createImgPreview } from '/@/components/Preview/index';
+  import { createImgPreview } from '/@/components/Preview';
 
   import FileList from './FileList';
   //Apollo
@@ -63,6 +63,7 @@
   import { useMClient } from '/@/hooks/nkn/getNKN';
   import CryptoES from 'crypto-es';
   import { useI18n } from '/@/hooks/web/useI18n';
+  import { fileStore } from '/@/store/modules/file';
   const { t } = useI18n('general.metanet');
   export default defineComponent({
     components: { BasicModal, Upload, Alert, FileList },
@@ -71,10 +72,13 @@
       //   是否正在上传
       const isUploadingRef = ref(false);
       const fileListRef = ref<FileItem[]>([]);
+      const fileList = computed(() => {
+        return fileStore.getUploadList;
+      });
       const state = reactive<{ fileList: FileItem[] }>({
         fileList: [],
       });
-      let path = [];
+      let path: string[] = [];
 
       const [register, { closeModal }] = useModalInner((data) => {
         // path.value = data.path;
@@ -163,23 +167,25 @@
                 percent: 0,
                 type: name.split('.').pop(),
                 status,
+                thumbUrl: '',
               };
               // 生成图片缩略图
               if (checkImgType(file)) {
                 // beforeUpload，如果异步会调用自带上传方法
                 // file.thumbUrl = await getBase64(file);
                 getBase64WithFile(file).then(({ result: thumbUrl }) => {
-                  fileListRef.value = [
-                    ...unref(fileListRef),
-                    {
-                      thumbUrl,
-                      ...commonItem,
-                    },
-                  ];
+                  // fileListRef.value = [
+                  //   ...unref(fileListRef),
+                  //   {
+                  //     thumbUrl,
+                  //     ...commonItem,
+                  //   },
+                  // ];
+                  commonItem.thumbUrl = thumbUrl;
                 });
-              } else {
-                fileListRef.value = [...unref(fileListRef), commonItem];
               }
+              fileListRef.value = [...unref(fileListRef), commonItem];
+              fileStore.addItem(commonItem);
             });
         });
 
@@ -206,7 +212,7 @@
         try {
           // 获取client session
           const session = await useMClient();
-
+          console.log(session);
           const object = {
             File: new Uint8Array(await item.file.arrayBuffer()),
             FullName: [...path, item.name],
@@ -322,10 +328,13 @@
           isUploadingRef.value = true;
           // 只上传不是成功状态的
           const uploadFileList =
-            fileListRef.value.filter((item) => item.status !== UploadResultStatus.SUCCESS) || [];
+            fileStore.getUploadList.filter((item) => item.status !== UploadResultStatus.SUCCESS) ||
+            [];
           const data = await Promise.all(
             uploadFileList.map((item) => {
-              return uploadApiByItem(item);
+              console.log(path);
+              return fileStore.uploadApiByItem(item, path);
+              // return uploadApiByItem(item);
             })
           );
           isUploadingRef.value = false;
@@ -367,13 +376,13 @@
 
       // 点击关闭：则所有操作不保存，包括上传的
       function handleCloseFunc() {
-        if (!isUploadingRef.value) {
-          fileListRef.value = [];
-          return true;
-        } else {
-          createMessage.warning('请等待文件上传结束后操作');
-          return false;
-        }
+        return true;
+        // if (!isUploadingRef.value) {
+        //   fileListRef.value = [];
+        // } else {
+        //   createMessage.warning('请等待文件上传结束后操作');
+        //   return false;
+        // }
       }
 
       //   const [registerTable] = useTable({
@@ -404,6 +413,7 @@
         getIsSelectFile,
         getUploadBtnText,
         t,
+        fileList,
       };
     },
   });

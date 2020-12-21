@@ -57,7 +57,9 @@
       function onTabChange(key) {
         tabKey.value = key;
       }
-      return { t, tabList, tabKey, onTabChange };
+      const value = ref('');
+      function onSearch() {}
+      return { t, tabList, tabKey, onTabChange, onSearch, value };
     },
   });
 </script>
