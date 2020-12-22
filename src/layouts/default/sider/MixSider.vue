@@ -110,7 +110,6 @@
         getCanDrag,
         getCloseMixSidebarOnChange,
         getMenuTheme,
-        getMixSidebarTheme,
       } = useMenuSetting();
       const { title } = useGlobSetting();
 
@@ -193,7 +192,6 @@
         title,
         openMenu,
         getMenuTheme,
-        getMixSidebarTheme,
       };
     },
   });
@@ -267,15 +265,16 @@
         }
       }
     }
+    @border-color: @sider-dark-lighten-1-bg-color;
 
     &.dark {
       &.open {
         .@{prefix-cls}-logo {
-          border-bottom: 1px solid rgb(114 114 114);
+          border-bottom: 1px solid @border-color;
         }
 
         > .scroll-container {
-          border-right: 1px solid rgb(114 114 114);
+          border-right: 1px solid @border-color;
         }
       }
       .@{prefix-cls}-menu-list {
@@ -284,14 +283,17 @@
         &__title {
           color: @white;
           border-bottom: none;
-          border-bottom: 1px solid rgb(114 114 114);
+          border-bottom: 1px solid @border-color;
         }
       }
     }
 
+    > .scrollbar {
+      height: calc(100% - @header-height) !important;
+    }
+
     &-module {
       position: relative;
-      height: calc(100% - @header-height) !important;
       padding-top: 1px;
 
       &__item {
