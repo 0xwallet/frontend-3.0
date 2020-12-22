@@ -4,7 +4,7 @@ import {
   updateGrayMode,
   updateHeaderBgColor,
   updateSidebarBgColor,
-} from '/@/setup/theme';
+} from '/@/logics/theme';
 import { appStore } from '/@/store/modules/app';
 import { ProjectConfig } from '/@/types/config';
 
@@ -48,9 +48,6 @@ export function handler(event: HandlerEnum, value: any): DeepPartial<ProjectConf
     case HandlerEnum.MENU_WIDTH:
       return { menuSetting: { menuWidth: value } };
 
-    case HandlerEnum.MENU_COLLAPSED_SHOW_TITLE:
-      return { menuSetting: { collapsedShowTitle: value } };
-
     case HandlerEnum.MENU_SHOW_SIDEBAR:
       return { menuSetting: { show: value } };
 
@@ -60,6 +57,8 @@ export function handler(event: HandlerEnum, value: any): DeepPartial<ProjectConf
 
     case HandlerEnum.MENU_SPLIT:
       return { menuSetting: { split: value } };
+    case HandlerEnum.MENU_CLOSE_MIX_SIDEBAR_ON_CHANGE:
+      return { menuSetting: { closeMixSidebarOnChange: value } };
 
     case HandlerEnum.MENU_FIXED:
       return { menuSetting: { fixed: value } };

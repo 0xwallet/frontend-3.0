@@ -82,7 +82,6 @@ const setting: ProjectConfig = {
     // Menu collapse
     collapsed: false,
     // Whether to display the menu name when folding the menu
-    collapsedShowTitle: false,
     // Whether it can be dragged
     // Only limited to the opening of the left menu, the mouse has a drag bar on the right side of the menu
     canDrag: false,
@@ -105,7 +104,9 @@ const setting: ProjectConfig = {
     // Fold trigger position
     trigger: TriggerEnum.HEADER,
     // Turn on accordion mode, only show a menu
-    accordion: false,
+    accordion: true,
+    // Switch page to close menu
+    closeMixSidebarOnChange: false,
   },
 
   // Multi-label

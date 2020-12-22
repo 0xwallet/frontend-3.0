@@ -1,6 +1,6 @@
 import type { AppRouteModule } from '/@/router/types';
 
-import { LAYOUT } from '/@/router/constant';
+import { getParentLayout, LAYOUT } from '/@/router/constant';
 import { t } from '/@/hooks/web/useI18n';
 
 const feat: AppRouteModule = {
@@ -87,6 +87,14 @@ const feat: AppRouteModule = {
       },
     },
     {
+      path: 'ripple',
+      name: 'RippleDemo',
+      component: () => import('/@/views/demo/feat/ripple/index.vue'),
+      meta: {
+        title: t('routes.demo.feat.ripple'),
+      },
+    },
+    {
       path: 'full-screen',
       name: 'FullScreenDemo',
       component: () => import('/@/views/demo/feat/full-screen/index.vue'),
@@ -101,6 +109,51 @@ const feat: AppRouteModule = {
       meta: {
         title: t('routes.demo.feat.errorLog'),
       },
+    },
+    {
+      path: 'excel',
+      name: 'Excel',
+      redirect: '/feat/excel/customExport',
+      component: getParentLayout('Excel'),
+      meta: {
+        // icon: 'mdi:microsoft-excel',
+        title: t('routes.demo.excel.excel'),
+      },
+
+      children: [
+        {
+          path: 'customExport',
+          name: 'CustomExport',
+          component: () => import('/@/views/demo/excel/CustomExport.vue'),
+          meta: {
+            title: t('routes.demo.excel.customExport'),
+          },
+        },
+        {
+          path: 'jsonExport',
+          name: 'JsonExport',
+          component: () => import('/@/views/demo/excel/JsonExport.vue'),
+          meta: {
+            title: t('routes.demo.excel.jsonExport'),
+          },
+        },
+        {
+          path: 'arrayExport',
+          name: 'ArrayExport',
+          component: () => import('/@/views/demo/excel/ArrayExport.vue'),
+          meta: {
+            title: t('routes.demo.excel.arrayExport'),
+          },
+        },
+        {
+          path: 'importExcel',
+          name: 'ImportExcel',
+          component: () => import('/@/views/demo/excel/ImportExcel.vue'),
+          meta: {
+            title: t('routes.demo.excel.importExcel'),
+          },
+        },
+      ],
     },
     {
       path: 'testTab/:id',
