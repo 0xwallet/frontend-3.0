@@ -13,6 +13,7 @@ import { useCopyToClipboard } from '/@/hooks/web/useCopyToClipboard';
 import { useMessage } from '/@/hooks/web/useMessage';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { getFile } from '/@/api/general/metanet/file';
+import { Tooltip } from 'ant-design-vue';
 const { t } = useI18n();
 const { clipboardRef, copiedRef } = useCopyToClipboard();
 const { createMessage } = useMessage();
@@ -118,7 +119,7 @@ export class File {
         let url = `https://drive-s.owaf.io/preview/${id}/${toLower(this.space)}/${this.id}/${
           this.fullName
         }?token=${token}`;
-        if (this.type === 'png') {
+        if (this.type === 'png' || this.type == 'jpg') {
           createImgPreview({
             imageList: [url],
           });
@@ -159,7 +160,7 @@ export class File {
     if (this.uri === '') {
       return '';
     }
-    const url = `${window.location.origin}/#/general/shareFile/${this.uri}`;
+    const url = `${window.location.origin}/#/general/s?uri=${this.uri}`;
     this.copyShareUrl(1);
     return url;
   }
@@ -170,7 +171,7 @@ export class File {
     }
     let temp = '';
     if (mode === 1 || mode === 3) {
-      temp += `${t('general.metanet.shareUrl')}:${window.location.origin}/#/general/shareFile/${
+      temp += `${t('general.metanet.shareUrl')}:${window.location.origin}/#/general/s?uri=${
         this.uri
       }   `;
     }
@@ -189,5 +190,59 @@ export class File {
       mutation: driveDeleteFile,
       variables: { id: this.id, space: this.space },
     });
+  }
+
+  byteTransfer() {
+    const k: number = 1024;
+
+    const sizes = ['B', 'K', 'M', 'G', 'T'];
+
+    let i: number = 0;
+
+    let str = '';
+    if (this.size === 0) {
+      return '';
+    } else {
+      i = Math.floor(Math.log(this.size) / Math.log(k));
+    }
+    str = (this.size / Math.pow(k, i)).toFixed(1) + sizes[i];
+
+    return str;
+  }
+
+  hashToStr() {
+    if (this.hash === '' || this.hash === undefined) {
+      return '';
+    }
+    const hash = this.hash;
+    let list: any[] = [];
+    for (let i = 1; i < 11; i++) {
+      list.push(hash.slice(2 + 6 * (i - 1), 2 + 6 * i));
+    }
+
+    return (
+      <Tooltip title={t('copy')}>
+        {{
+          default: () => {
+            return (
+              <span
+                onClick={() => {
+                  clipboardRef.value = hash;
+                  if (unref(copiedRef)) {
+                    createMessage.warning(t('copySuccess'));
+                  }
+                }}
+              >
+                {hash.slice(0, 2)}
+                {list.map((value) => (
+                  <span style={'background-color:#' + value}>&nbsp;&nbsp;&nbsp;</span>
+                ))}
+                {hash.slice(hash.length - 2, hash.length)}
+              </span>
+            );
+          },
+        }}
+      </Tooltip>
+    );
   }
 }

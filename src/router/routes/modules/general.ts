@@ -38,13 +38,13 @@ const general: AppRouteModule = {
       },
     },
     {
-      path: 'shareFile/:uri',
+      path: 's',
       name: 'ShareFile',
       component: () => import('/@/views/general/metanet/share/shareFile.vue'),
       meta: {
         hideBreadcrumb: true,
         title: 'routes.menu.shareFile',
-        ignoreAuth: true,
+        // ignoreAuth: true,
       },
     },
   ],

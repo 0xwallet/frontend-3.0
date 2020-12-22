@@ -8,7 +8,7 @@ export enum PageEnum {
   // error page path
   ERROR_PAGE = '/exception',
 
-  SHARE_PAGE = '/general/shareFile/:code',
+  SHARE_PAGE = '/general/s',
   // error log page path
   ERROR_LOG_PAGE = '/exception/error-log',
 }

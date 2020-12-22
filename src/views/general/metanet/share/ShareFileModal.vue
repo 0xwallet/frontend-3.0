@@ -40,7 +40,7 @@
         setModalProps({
           title: t('file'),
           maskClosable: false,
-          closable: false,
+          // closable: false,
           canFullscreen: false,
           showCancelBtn: false,
         });
