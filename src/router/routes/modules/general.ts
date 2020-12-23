@@ -37,16 +37,16 @@ const general: AppRouteModule = {
         title: 'routes.menu.metanet',
       },
     },
-    {
-      path: 's',
-      name: 'ShareFile',
-      component: () => import('/@/views/general/metanet/share/shareFile.vue'),
-      meta: {
-        hideBreadcrumb: true,
-        title: 'routes.menu.shareFile',
-        // ignoreAuth: true,
-      },
-    },
+    // {
+    //   path: 's',
+    //   name: 'ShareFile',
+    //   component: () => import('/@/views/general/metanet/share/shareFile.vue'),
+    //   meta: {
+    //     hideBreadcrumb: true,
+    //     title: 'routes.menu.shareFile',
+    //     ignoreAuth: true,
+    //   },
+    // },
   ],
 };
 

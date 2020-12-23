@@ -63,7 +63,7 @@
   </div>
 </template>
 <script lang="ts">
-  import { computed, defineComponent, unref, ref, nextTick, onMounted } from 'vue';
+  import { computed, defineComponent, unref, ref, nextTick, onMounted, UnwrapRef } from 'vue';
   import { Card } from 'ant-design-vue';
   import { useRouter } from 'vue-router';
   import { useApollo } from '/@/hooks/apollo/apollo';
@@ -132,14 +132,18 @@
       function clearSelect() {
         clearSelectedRowKeys();
       }
-      onMounted(() => {
-        nextTick(() => {
-          setTimeout(() => {
-            openModal(true, {}, true);
-          }, 1000);
-        });
+      // onMounted(() => {
+      //   // nextTick(() => {
+      //   //   setTimeout(() => {
+      //   //     openModal(true, {}, true);
+      //   //   }, 1000);
+      //   // });
+      // });
+      nextTick(() => {
+        setTimeout(() => {
+          openModal(true, {}, true);
+        }, 1000);
       });
-
       function pushCode(p: { code: string }) {
         params.value.code = p.code;
         fetchData();
@@ -165,7 +169,7 @@
           });
       }
 
-      function preview(file: File) {
+      function preview(file: UnwrapRef<File>) {
         file.preview();
       }
       function download(file: File) {

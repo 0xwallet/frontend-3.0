@@ -160,7 +160,7 @@ export class File {
     if (this.uri === '') {
       return '';
     }
-    const url = `${window.location.origin}/#/general/s?uri=${this.uri}`;
+    const url = `${window.location.origin}/#/s/file?uri=${this.uri}`;
     this.copyShareUrl(1);
     return url;
   }
@@ -171,7 +171,7 @@ export class File {
     }
     let temp = '';
     if (mode === 1 || mode === 3) {
-      temp += `${t('general.metanet.shareUrl')}:${window.location.origin}/#/general/s?uri=${
+      temp += `${t('general.metanet.shareUrl')}:${window.location.origin}/#/s/file?uri=${
         this.uri
       }   `;
     }

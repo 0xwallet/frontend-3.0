@@ -15,5 +15,6 @@ export default {
   account: '账户',
   security: '安全',
   metanet: '网盘',
-  shareFile: '文件分享',
+  share: '分享',
+  file: '文件',
 };

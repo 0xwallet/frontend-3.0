@@ -15,5 +15,6 @@ export default {
   account: 'Account',
   security: 'Security',
   metanet: 'Metanet',
-  shareFile: 'shareFile',
+  share: 'Share',
+  file: 'File',
 };

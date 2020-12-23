@@ -1,16 +1,30 @@
 import type { AppRouteModule } from '/@/router/types';
+import { LAYOUT } from '/@/router/constant';
 
 // test
 // http:ip:port/main-out
 export const mainOutRoutes: AppRouteModule[] = [
   {
-    path: '/main-out',
+    path: '/s',
     name: 'MainOut',
-    component: () => import('/@/views/demo/main-out/index.vue'),
+    component: LAYOUT,
+    redirect: '/s/file',
     meta: {
-      title: 'MainOut',
+      title: 'routes.menu.share',
       ignoreAuth: true,
     },
+    children: [
+      {
+        path: 'file',
+        name: 'ShareFile',
+        component: () => import('/@/views/general/metanet/share/shareFile.vue'),
+        meta: {
+          hideBreadcrumb: true,
+          title: 'routes.menu.file',
+          ignoreAuth: true,
+        },
+      },
+    ],
   },
 ];
 
