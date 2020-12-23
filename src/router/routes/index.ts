@@ -3,6 +3,7 @@ import type { AppRouteRecordRaw, AppRouteModule } from '/@/router/types';
 import { PAGE_NOT_FOUND_ROUTE, REDIRECT_ROUTE } from '../constant';
 
 import modules from 'globby!/@/router/routes/modules/**/*.@(ts)';
+import { mainOutRoutes } from './mainOut';
 import { PageEnum } from '/@/enums/pageEnum';
 
 import { t } from '/@/hooks/web/useI18n';
@@ -43,4 +44,4 @@ export const RegisterRoute: AppRouteRecordRaw = {
 };
 
 // 基础路由 不用权限
-export const basicRoutes = [LoginRoute, RootRoute, REDIRECT_ROUTE,RegisterRoute];
+export const basicRoutes = [LoginRoute, RootRoute, REDIRECT_ROUTE,RegisterRoute,...mainOutRoutes];
