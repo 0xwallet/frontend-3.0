@@ -1,4 +1,4 @@
-import type { MenuModule } from '/@/router/types.d';
+import type { MenuModule } from '/@/router/types';
 const menu: MenuModule = {
   orderNo: 4,
   menu: {
@@ -9,18 +9,18 @@ const menu: MenuModule = {
     // },
     children: [
       {
-        path: '/payment',
+        path: 'payment',
         name: 'routes.menu.payment',
         // tag: {
         //   content: 'new',
         // },
       },
       {
-        path: '/settlement',
+        path: 'settlement',
         name: 'routes.menu.settlement',
       },
       {
-        path: '/activity',
+        path: 'activity',
         name: 'routes.menu.activity',
       },
     ],
