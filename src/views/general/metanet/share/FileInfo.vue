@@ -13,8 +13,13 @@
       /></a-button>
     </template>
     <template v-if="key === 'detail'">
-      {{ info }}
       <Descriptions :column="1">
+        <DescriptionsItem :label="t('url')"
+          ><a-button type="link" @click="copyUrl">{{ info.uri }}</a-button>
+        </DescriptionsItem>
+        <DescriptionsItem label="Hash" v-if="info.hash"
+          ><Hash :hash="info.hash"
+        /></DescriptionsItem>
         <DescriptionsItem :label="t('type')">{{ info.type }}</DescriptionsItem>
         <DescriptionsItem :label="t('size')"
           >{{ byteTransfer(info.size) }}({{ info.size }} bytes)</DescriptionsItem
@@ -39,13 +44,15 @@
   import { computed, defineComponent, ref } from 'vue';
   import { Tabs, Card, Descriptions } from 'ant-design-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import { File } from '/@/views/general/metanet/type/file';
+  import { File } from '/@/components/File/file';
   const { t } = useI18n('general.metanet');
   import { byteTransfer } from '/@/utils/disk/file';
   import moment from 'moment';
   import { CloseSquareOutlined } from '@ant-design/icons-vue';
   import { useLocale } from '/@/hooks/web/useLocale';
   import { propTypes } from '/@/utils/propTypes';
+  import Hash from '/@/components/File/Hash.vue';
+
   useLocale();
   export default defineComponent({
     name: 'FileInfo',
@@ -56,12 +63,14 @@
       Descriptions,
       DescriptionsItem: Descriptions.Item,
       CloseSquareOutlined,
+      Hash,
     },
     props: {
       file: propTypes.any,
     },
     setup(props, { emit }) {
       const info: File = computed(() => {
+        console.log(props.file);
         return props.file;
       });
       const key = ref('detail');
@@ -93,7 +102,22 @@
       function close() {
         emit('close');
       }
-      return { t, info, tabList, key, onTabChange, desc, byteTransfer, moment, getLocation, close };
+      function copyUrl() {
+        info.value.copyShareUrl(1);
+      }
+      return {
+        t,
+        info,
+        tabList,
+        key,
+        onTabChange,
+        desc,
+        byteTransfer,
+        moment,
+        getLocation,
+        close,
+        copyUrl,
+      };
     },
   });
 </script>

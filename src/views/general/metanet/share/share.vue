@@ -15,19 +15,29 @@
             >
           </template>
           <template #action="{ record }">
-            <div v-if="record.name !== 'deleted'">
-              <a-button
-                type="link"
-                color="error"
-                :pop="{ title: t('delButton') + record.name + '.' + record.type + '?' }"
-                @click="del(record)"
-                >{{ t('delButton') }}</a-button
-              ></div
-            >
+            <Dropdown>
+              <a class="ant-dropdown-link"> ... </a>
+              <template #overlay>
+                <Menu>
+                  <MenuItem v-if="record.name !== 'deleted'">
+                    <a-button
+                      type="link"
+                      color="error"
+                      :pop="{ title: t('delButton') + ' ' + record.fullName + '?' }"
+                      @click="del(record)"
+                      >{{ t('delButton') }}</a-button
+                    ></MenuItem
+                  >
+                  <MenuItem> <a-button type="link">分享设置</a-button></MenuItem>
+                </Menu>
+              </template>
+            </Dropdown>
           </template>
           <template #toolbar>
             <a-button type="primary" @click="fetchData">{{ t('refresh') }}</a-button>
-            <a-button type="link" @click="openInfo"><InfoCircleOutlined /></a-button>
+            <a-button type="link" @click="openInfo"
+              ><InfoCircleOutlined :style="{ fontSize: '20px' }"
+            /></a-button>
           </template> </BasicTable
       ></Col>
       <Col :span="span"><FileInfo :file="file" @close="closeInfo" /></Col>
@@ -42,15 +52,28 @@
   import { useApollo } from '/@/hooks/apollo/apollo';
   import { driveListShares } from '/@/hooks/apollo/gqlFile';
   import { getBasicColumns } from './shareData';
-  import { File } from '../type/file';
+  import { File } from '../../../../components/File/file';
   import { BasicHelp } from '/@/components/Basic';
   import FileInfo from './FileInfo.vue';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import { Tooltip, Row, Col } from 'ant-design-vue';
+  import { Tooltip, Row, Col, Dropdown, Menu } from 'ant-design-vue';
   import { InfoCircleOutlined } from '@ant-design/icons-vue';
   const { t } = useI18n('general.metanet');
   export default defineComponent({
-    components: { BasicTable, GIcon, BasicHelp, Tooltip, Row, Col, FileInfo, InfoCircleOutlined },
+    components: {
+      BasicTable,
+      GIcon,
+      BasicHelp,
+      Tooltip,
+      Row,
+      Col,
+      Menu,
+      MenuItem: Menu.Item,
+      MenuGroup: Menu.ItemGroup,
+      FileInfo,
+      InfoCircleOutlined,
+      Dropdown,
+    },
     setup() {
       const { createMessage, createErrorModal } = useMessage();
       const path = ref([]);
@@ -64,7 +87,7 @@
         if (!info.value) {
           return 0;
         }
-        return 6;
+        return 8;
       });
       const [
         registerTable,
@@ -74,6 +97,7 @@
         customRow: (record) => ({
           onClick: () => {
             file.value = record;
+            info.value = true;
           },
         }),
         pagination: false,

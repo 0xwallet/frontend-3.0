@@ -94,7 +94,9 @@
 
             <a-button type="link" @click="openFile(record)"
               >{{ record.name }}{{ record.type === 'folder' ? '' : '.' + record.type }}</a-button
-            >
+            > </template
+          ><template #hash="{ text }">
+            <Hash :hash="text" v-if="text" />
           </template>
           <template #action="{ record }">
             <Dropdown>
@@ -152,7 +154,9 @@
             </Dropdown>
           </template>
           <template #toolbar>
-            <a-button type="link" @click="openInfo"><InfoCircleOutlined /></a-button>
+            <a-button type="link" @click="openInfo"
+              ><InfoCircleOutlined :style="{ fontSize: '20px' }"
+            /></a-button>
             <!--        <a-button type="primary" @click="setSelectedRowKeyList">-->
             <!--          {{ !choose ? t('selectAll') : t('cancelAll') }}-->
             <!--        </a-button>-->
@@ -207,14 +211,17 @@
   import { useApollo } from '/@/hooks/apollo/apollo';
   import { driveListFiles, driveDeleteFiles } from '/@/hooks/apollo/gqlFile';
   import { useModal } from '/@/components/Modal';
-  import { File } from './type/file';
+  import { File } from '../../../components/File/file';
   import { useI18n } from '/@/hooks/web/useI18n';
   const { t } = useI18n('general.metanet');
   import { Dropdown, Menu, Divider, Space, Row, Col, Modal } from 'ant-design-vue';
   import { createVNode } from 'vue';
+
   import FileInfo from './component/file/FileInfo.vue';
+  import Hash from '/@/components/File/Hash.vue';
   export default defineComponent({
     components: {
+      Hash,
       BasicTable,
       BreadCrumb,
       GIcon,
@@ -261,7 +268,7 @@
       const folder = ref([]);
       // 储存本级目录路所有文件
       const files = ref([]);
-      const file = ref({}) as File;
+      const file = (ref({}) as unknown) as File;
       //当前是否有选择文件
       const choose = computed(() => {
         return getSelectRowKeys().length !== 0;

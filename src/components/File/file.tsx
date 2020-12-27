@@ -16,7 +16,7 @@ import { getFile } from '/@/api/general/metanet/file';
 import { Tooltip } from 'ant-design-vue';
 const { t } = useI18n();
 const { clipboardRef, copiedRef } = useCopyToClipboard();
-const { createMessage } = useMessage();
+const { createMessage, createErrorModal } = useMessage();
 
 interface fileParams {
   userFile: userFile;
@@ -53,7 +53,7 @@ export class File {
   updatedAt: string;
   createdAt: string;
   expiredAt?: string;
-  uri: string;
+  public uri: string;
   token?: string;
   space: string;
   desc: string;
@@ -130,7 +130,7 @@ export class File {
       });
   }
   // 文件分享
-  share(code: string): Promise<boolean> {
+  share(code: string = ''): Promise<boolean> {
     return useApollo()
       .mutate({
         mutation: driveCreateShare,
@@ -143,6 +143,10 @@ export class File {
         return true;
       })
       .catch(() => {
+        createErrorModal({
+          title: t('general.metanet.failed'),
+          content: t('general.metanet.share') + ' ' + t('general.metanet.failed'),
+        });
         return false;
       });
   }

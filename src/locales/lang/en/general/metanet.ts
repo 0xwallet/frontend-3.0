@@ -63,4 +63,10 @@ export default {
   delContent1: 'Are you sure you want to delete',
   delContent2: 'from your Driver',
   deleting: 'Deleting',
+  public: 'Public',
+  private: 'Private',
+  valid: 'Valid for 7 days',
+  createAt: 'Created Time',
+  expiredAt: 'Expired Time',
+  expired: 'Expired',
 };

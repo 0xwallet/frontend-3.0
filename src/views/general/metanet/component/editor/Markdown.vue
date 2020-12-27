@@ -9,7 +9,7 @@
   import { MarkDown, MarkDownActionType } from '/@/components/Markdown';
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import { File } from '/@/views/general/metanet/type/file';
+  import { File } from '/@/components/File/file';
 
   const { t } = useI18n('general.metanet');
   export default defineComponent({

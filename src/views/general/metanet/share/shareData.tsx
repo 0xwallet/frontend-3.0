@@ -1,13 +1,8 @@
 import { BasicColumn } from '/@/components/Table';
-import { byteTransfer } from '/@/utils/disk/file';
 import GIcon from '/@/components/Icon';
-import { Tooltip } from 'ant-design-vue';
 import { useI18n } from '/@/hooks/web/useI18n';
-import { useCopyToClipboard } from '/@/hooks/web/useCopyToClipboard';
-import { unref } from 'vue';
-import { useMessage } from '/@/hooks/web/useMessage';
-const { clipboardRef, copiedRef } = useCopyToClipboard();
-const { createMessage } = useMessage();
+import moment from 'moment';
+import projectSetting from '/@/settings/projectSetting';
 const { t } = useI18n('general.metanet');
 export function getBasicColumns(): BasicColumn[] {
   return [
@@ -41,63 +36,77 @@ export function getBasicColumns(): BasicColumn[] {
       },
     },
     {
-      title: 'HASH',
-      dataIndex: 'hash',
+      title: t('createAt'),
+      width: 200,
+      dataIndex: 'createdAt',
       customRender: ({ text }) => {
-        if (!text) {
-          return '';
-        }
-        let list = [];
-        for (let i = 1; i < 11; i++) {
-          list.push(text.slice(2 + 6 * (i - 1), 2 + 6 * i));
-        }
-        return (
-          <Tooltip title={t('copy')}>
-            <span
-              onClick={() => {
-                clipboardRef.value = text;
-                if (unref(copiedRef)) {
-                  createMessage.success(t('copySuccess'));
-                }
-              }}
-            >
-              {text.slice(0, 2)}
-              {list.map((value) => (
-                <span style={'background-color:#' + value}>&nbsp;&nbsp;&nbsp;</span>
-              ))}
-              {text.slice(text.length - 2, text.length)}
-            </span>
-          </Tooltip>
-        );
+        moment.locale(projectSetting.locale.lang);
+
+        // return moment(text).format('MMM DD YYYY, hh:mm:ss A');
+        return moment(text).format('lll');
       },
     },
     {
-      // title: '网址',
-      dataIndex: 'uri',
-      width: 300,
-      slots: { customRender: 'uri', title: 'urlTitle' },
+      title: t('expiredAt'),
+      width: 200,
+      dataIndex: 'expiredAt',
+      customRender: ({ record }) => {
+        moment.locale(projectSetting.locale.lang);
+        if (record.name === 'deleted') {
+          return t('expired');
+        }
+        const m1 = moment(record.createAt);
+        const m2 = moment(record.expiredAt);
+        //@ts-ignore
+        const du = moment.duration(m2 - m1, 'ms');
+        return du.humanize();
+      },
     },
+    // {
+    //   title: 'HASH',
+    //   dataIndex: 'hash',
+    //   customRender: ({ text }) => {
+    //     if (!text) {
+    //       return '';
+    //     }
+    //     let list = [];
+    //     for (let i = 1; i < 11; i++) {
+    //       list.push(text.slice(2 + 6 * (i - 1), 2 + 6 * i));
+    //     }
+    //     return (
+    //       <Tooltip title={t('copy')}>
+    //         <span
+    //           onClick={() => {
+    //             clipboardRef.value = text;
+    //             if (unref(copiedRef)) {
+    //               createMessage.success(t('copySuccess'));
+    //             }
+    //           }}
+    //         >
+    //           {text.slice(0, 2)}
+    //           {list.map((value) => (
+    //             <span style={'background-color:#' + value}>&nbsp;&nbsp;&nbsp;</span>
+    //           ))}
+    //           {text.slice(text.length - 2, text.length)}
+    //         </span>
+    //       </Tooltip>
+    //     );
+    //   },
+    // },
+    // {
+    //   // title: '网址',
+    //   dataIndex: 'uri',
+    //   width: 300,
+    //   slots: { customRender: 'uri', title: 'urlTitle' },
+    // },
     {
       title: t('code'),
-      fixed: 'right',
       dataIndex: 'code',
-    },
-
-    {
-      title: t('size'),
-      dataIndex: 'size',
-      width: 80,
-      fixed: 'right',
-      customRender: ({ text }) => {
-        if (text == undefined) {
-          return '';
-        }
-        return byteTransfer(text);
-      },
     },
     {
       title: t('action'),
       fixed: 'right',
+      width: 100,
       slots: { customRender: 'action' },
     },
   ];

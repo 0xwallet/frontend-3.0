@@ -71,7 +71,7 @@
   import { useMessage } from '/@/hooks/web/useMessage';
   import ShareFileModal from './ShareFileModal.vue';
   import { useModal } from '/@/components/Modal';
-  import { File } from '../type/file';
+  import { File } from '../../../../components/File/file';
   import { useTable, BasicTable } from '/@/components/Table';
   import { getBasicColumns } from './tableData';
   export default defineComponent({

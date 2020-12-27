@@ -38,7 +38,7 @@
   import { computed, defineComponent, ref } from 'vue';
   import { Tabs, Card, Descriptions } from 'ant-design-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import { File } from '/@/views/general/metanet/type/file';
+  import { File } from '/@/components/File/file';
   const { t } = useI18n('general.metanet');
   import { byteTransfer } from '/@/utils/disk/file';
   import moment from 'moment';
