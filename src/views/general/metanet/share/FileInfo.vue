@@ -44,14 +44,14 @@
   import { computed, defineComponent, ref } from 'vue';
   import { Tabs, Card, Descriptions } from 'ant-design-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import { File } from '/@/components/File/file';
+  import { NetFile } from '/@/components/NetFile/netFile';
   const { t } = useI18n('general.metanet');
   import { byteTransfer } from '/@/utils/disk/file';
   import moment from 'moment';
   import { CloseSquareOutlined } from '@ant-design/icons-vue';
   import { useLocale } from '/@/hooks/web/useLocale';
   import { propTypes } from '/@/utils/propTypes';
-  import Hash from '/@/components/File/Hash.vue';
+  import Hash from '/@/components/NetFile/Hash.vue';
 
   useLocale();
   export default defineComponent({
@@ -69,7 +69,7 @@
       file: propTypes.any,
     },
     setup(props, { emit }) {
-      const info: File = computed(() => {
+      const info: NetFile = computed(() => {
         console.log(props.file);
         return props.file;
       });

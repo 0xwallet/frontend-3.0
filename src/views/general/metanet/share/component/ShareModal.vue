@@ -38,7 +38,7 @@
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { BasicForm, FormSchema, useForm } from '/@/components/Form';
   import { Card, Space, Radio } from 'ant-design-vue';
-  import { File } from '../../../../components/File/file';
+  import { NetFile } from '../../../../../components/NetFile/netFile';
   import { useI18n } from '/@/hooks/web/useI18n';
   const { t } = useI18n('general.metanet');
   function randomString(len) {
@@ -69,7 +69,7 @@
     components: { BasicModal, BasicForm, Card, Space, Radio, RadioGroup: Radio.Group },
     setup() {
       const modelRef = ref({});
-      const file = ref(File);
+      const file = ref(NetFile);
       const radio = ref(0);
       const shareUrl = computed(() => {
         if (file.value.uri == '') return '';

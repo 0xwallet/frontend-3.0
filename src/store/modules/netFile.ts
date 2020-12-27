@@ -4,23 +4,35 @@ import { hotModuleUnregisterModule } from '/@/utils/helper/vuexHelper';
 import { FileItem, UploadResultStatus } from '/@/views/general/metanet/component/upload/types';
 import { useMClient } from '/@/hooks/nkn/getNKN';
 import { encode } from '@msgpack/msgpack';
-// import { ErrorMessageMode } from '/@/utils/http/axios/types';
-
-const NAME = 'file';
+import { NetFile } from '/@/components/NetFile/netFile';
+import { useApollo } from '/@/hooks/apollo/apollo';
+import { driveFindShare } from '/@/hooks/apollo/gqlFile';
+import { useMessage } from '/@/hooks/web/useMessage';
+const { createErrorModal } = useMessage();
+const NAME = 'netFileStore';
 hotModuleUnregisterModule(NAME);
 
 @Module({ namespaced: true, name: NAME, dynamic: true, store })
-class File extends VuexModule {
+class netFileStore extends VuexModule {
   // user info
   private uploadList: FileItem[] = [];
+
+  private shareFiles: NetFile[] = [];
 
   get getUploadList(): FileItem[] {
     return this.uploadList || [];
   }
-
+  get getShareFile(): NetFile[] {
+    return this.shareFiles;
+  }
   @Mutation
   appendItem(file: FileItem): void {
     this.uploadList.push(file);
+  }
+
+  @Mutation
+  appendShareFile(file: NetFile): void {
+    this.shareFiles.push(file);
   }
 
   @Mutation
@@ -37,6 +49,29 @@ class File extends VuexModule {
   @Action
   addItem(file: FileItem): void {
     this.appendItem(file);
+  }
+
+  @Action
+  addShare(file: NetFile): void {
+    this.appendShareFile(file);
+  }
+
+  @Action
+  fetchShareFile(params: { code?: string; uri: string }) {
+    useApollo()
+      .query({
+        query: driveFindShare,
+        variables: params,
+        fetchPolicy: 'network-only',
+      })
+      .then((res) => {
+        const data = res.data?.driveFindShare;
+        if (!data) {
+          createErrorModal({ title: '错误', content: '分享文件信息错误' });
+          return;
+        }
+        this.addShare(new NetFile(data));
+      });
   }
 
   @Action
@@ -119,4 +154,4 @@ class File extends VuexModule {
     }
   }
 }
-export const fileStore = getModule<File>(File);
+export const fileStore = getModule<netFileStore>(netFileStore);

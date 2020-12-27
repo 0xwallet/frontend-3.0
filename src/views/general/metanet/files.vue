@@ -198,7 +198,7 @@
   import BreadCrumb from './component/BreadCrumb.vue';
   import UploadModal from './component/upload/UploadModal.vue';
   import CreateFolderModal from './component/CreateFolderModal.vue';
-  import ShareModal from './share/ShareModal.vue';
+  import ShareModal from './share/component/ShareModal.vue';
   import MoveModal from './component/MoveModal.vue';
   import MarkdownModal from './component/editor/Markdown.vue';
   import GIcon from '/@/components/Icon/index';
@@ -211,14 +211,14 @@
   import { useApollo } from '/@/hooks/apollo/apollo';
   import { driveListFiles, driveDeleteFiles } from '/@/hooks/apollo/gqlFile';
   import { useModal } from '/@/components/Modal';
-  import { File } from '../../../components/File/file';
+  import { NetFile } from '../../../components/NetFile/netFile';
   import { useI18n } from '/@/hooks/web/useI18n';
   const { t } = useI18n('general.metanet');
   import { Dropdown, Menu, Divider, Space, Row, Col, Modal } from 'ant-design-vue';
   import { createVNode } from 'vue';
 
   import FileInfo from './component/file/FileInfo.vue';
-  import Hash from '/@/components/File/Hash.vue';
+  import Hash from '/@/components/NetFile/Hash.vue';
   export default defineComponent({
     components: {
       Hash,
@@ -268,7 +268,7 @@
       const folder = ref([]);
       // 储存本级目录路所有文件
       const files = ref([]);
-      const file = (ref({}) as unknown) as File;
+      const file = (ref({}) as unknown) as NetFile;
       //当前是否有选择文件
       const choose = computed(() => {
         return getSelectRowKeys().length !== 0;
@@ -287,7 +287,7 @@
             const list = res.data?.driveListFiles;
             // 重置文件夹列表，文件列表
 
-            let temp: File[] = [];
+            let temp: NetFile[] = [];
             if (!list) {
               return;
             }
@@ -324,9 +324,9 @@
                 if (temp.length > 0 && temp[0].id == v.id) {
                   return;
                 }
-                p.push(new File({ userFile: v }));
+                p.push(new NetFile({ userFile: v }));
               } else {
-                f.push(new File({ userFile: v }));
+                f.push(new NetFile({ userFile: v }));
               }
             });
             folder.value = temp.concat(p);
@@ -362,6 +362,7 @@
         customRow: (record) => ({
           onClick: () => {
             file.value = record;
+            info.value = true;
           },
         }),
         pagination: false,
@@ -456,16 +457,16 @@
         });
       }
       // 文件预览
-      function preview(f: File) {
+      function preview(f: NetFile) {
         f.preview();
       }
       // 文件下载
-      function download(f: File) {
+      function download(f: NetFile) {
         f.download();
       }
       // 删除文件或文件夹
       function delFile(file) {
-        const f: File = file;
+        const f: NetFile = file;
         f.delFile()
           .then(() => {
             createMessage.success('删除成功');
@@ -545,7 +546,7 @@
         });
       }
       // 打开文件或者进入目录
-      function openFile(f: File) {
+      function openFile(f: NetFile) {
         if (f.isDir) {
           dirId = f.id;
           fetchData({ dirId: f.id });

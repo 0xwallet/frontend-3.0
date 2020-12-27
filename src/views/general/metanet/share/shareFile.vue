@@ -1,91 +1,121 @@
 <template>
   <div class="p-4">
-    <Card hoverable v-if="mobile && file.fullName !== undefined">
-      <template #cover>
-        <img src="/@/assets/images/logo.png" class="img" />
-        {{ file.type }}
-      </template>
-      <template class="ant-card-actions" #actions>
-        <a-button type="primary" @click="preview(file)">预览</a-button>
-        <a-button type="primary">保存</a-button>
-        <a-button type="primary">评论</a-button>
-      </template>
-      <CardMeta>
-        <template #title> {{ file.fullName[file.fullName.length - 1] }} </template>
-        <template #description>
-          <p>{{ file.byteTransfer() }}</p>
-        </template>
-      </CardMeta>
-    </Card>
-    <div class="footer">
-      <a-button>123 </a-button>
-      <a-button>123 </a-button>
-      <a-button>123 </a-button>
-    </div>
-    <BasicTable @register="registerTable" v-if="!mobile">
-      <template #name="{ record }">
-        <GIcon
-          :icon="record.type === 'folder' ? 'bx-bx-folder' : 'bx-bxs-file-' + record.type"
-          size="30"
-        >
-        </GIcon>
-
-        <a-button type="link" @click="openFile(record)"
-          >{{ record.name }}{{ record.type === 'folder' ? '' : '.' + record.type }}</a-button
-        >
-      </template>
-      <template #action="{ record }">
-        <div>
-          <!--          <a-button type="link" v-if="record.type !== 'folder'">详情</a-button>-->
-          <a-button type="link" v-if="record.type !== 'folder'" @click="preview(record)"
-            >预览</a-button
+    <a-row v-if="!form">
+      <a-col :xs="2" :sm="4" :md="6" :lg="8" :xl="9"></a-col>
+      <a-col :xs="20" :sm="16" :md="12" :lg="8" :xl="6">
+        <Card hoverable>
+          <Space direction="vertical">
+            <CardMeta>
+              <template #title
+                >{{ userPreview.username }} 给你{{ needCode ? '加密' : '' }}分享了文件</template
+              >
+              <template #description> {{ userPreview.bio }} </template>
+              <template #avatar>
+                <a-avatar :src="userPreview.avatar" />
+              </template>
+            </CardMeta>
+            <BasicForm
+              @register="registerForm"
+              layout="vertical"
+              style="margin: 5px"
+              v-if="needCode"
+            />
+          </Space>
+        </Card>
+      </a-col>
+      <a-col :xs="2" :sm="4" :md="6" :lg="8" :xl="9"></a-col>
+    </a-row>
+    <ShareFileMobile
+      :uri="params.uri"
+      :needCode="needCode"
+      :user="userPreview"
+      v-if="mobile && form"
+    />
+    <Card v-if="!mobile && form">
+      <template #title
+        ><Space
+          ><a-avatar :src="userPreview.avatar" /><span
+            >{{ userPreview.username }} 给你{{ needCode ? '加密' : '' }}分享了文件</span
+          ></Space
+        ></template
+      >
+      <BasicTable @register="registerTable">
+        <template #name="{ record }">
+          <GIcon
+            :icon="record.type === 'folder' ? 'bx-bx-folder' : 'bx-bxs-file-' + record.type"
+            size="30"
           >
-          <!--          <a-button type="link">复制路径</a-button>-->
-          <a-button type="link" @click="download(record)">下载</a-button>
-          <a-button
-            type="link"
-            color="error"
-            :pop="{ title: '删除' + record.fullName + '?' }"
-            @click="del(record)"
-            >删除</a-button
-          ></div
-        >
-      </template>
+          </GIcon>
 
-      <template #toolbar>
-        <a-button type="primary" @click="setSelectedRowKeyList">
-          {{ !choose ? '全选' : '取消' }}
-        </a-button>
-        <a-button type="primary" v-show="choose"> 下载 </a-button>
-      </template></BasicTable
-    >
-    <ShareFileModal @register="registerModal" @pushCode="pushCode" />
+          <a-button type="link" @click="openFile(record)"
+            >{{ record.name }}{{ record.type === 'folder' ? '' : '.' + record.type }}</a-button
+          >
+        </template>
+        <template #hash="{ text }">
+          <Hash :hash="text" v-if="text" />
+        </template>
+        <template #action="{ record }">
+          <div>
+            <!--          <a-button type="link" v-if="record.type !== 'folder'">详情</a-button>-->
+            <a-button type="link" v-if="record.type !== 'folder'" @click="preview(record)"
+              >预览</a-button
+            >
+            <!--          <a-button type="link">复制路径</a-button>-->
+            <a-button type="link" @click="download(record)">下载</a-button>
+            <a-button
+              type="link"
+              color="error"
+              :pop="{ title: '删除' + record.fullName + '?' }"
+              @click="del(record)"
+              >删除</a-button
+            ></div
+          >
+        </template>
+
+        <template #toolbar>
+          <a-button type="primary" @click="setSelectedRowKeyList">
+            {{ !choose ? '全选' : '取消' }}
+          </a-button>
+          <a-button type="primary" v-show="choose"> 下载 </a-button>
+        </template></BasicTable
+      >
+    </Card>
   </div>
 </template>
 <script lang="ts">
   import { computed, defineComponent, unref, ref, nextTick, onMounted, UnwrapRef } from 'vue';
-  import { Card } from 'ant-design-vue';
+  import { Card, Space } from 'ant-design-vue';
   import { useRouter } from 'vue-router';
   import { useApollo } from '/@/hooks/apollo/apollo';
-  import { driveFindShare } from '/@/hooks/apollo/gqlFile';
-  import { useMessage } from '/@/hooks/web/useMessage';
-  import ShareFileModal from './ShareFileModal.vue';
-  import { useModal } from '/@/components/Modal';
-  import { File } from '../../../../components/File/file';
+  import { drivePreviewShare } from '/@/hooks/apollo/gqlFile';
+  import { NetFile } from '/@/components/NetFile/netFile';
   import { useTable, BasicTable } from '/@/components/Table';
   import { getBasicColumns } from './tableData';
+  import { useI18n } from '/@/hooks/web/useI18n';
+  const { t } = useI18n('general.metanet');
+  import { BasicForm, useForm } from '/@/components/Form';
+  import Hash from '/@/components/NetFile/Hash.vue';
+  import { fileStore } from '/@/store/modules/netFile';
+  import ShareFileMobile from '/@/views/general/metanet/share/component/ShareFileMobile.vue';
+
   export default defineComponent({
     name: 'TestTab',
     components: {
-      ShareFileModal,
+      Hash,
       BasicTable,
       Card,
       CardMeta: Card.Meta,
+      Space,
+      BasicForm,
+      ShareFileMobile,
     },
     setup() {
       const { currentRoute } = useRouter();
       const params = computed(() => {
         return unref(currentRoute).query;
+      });
+      const form = computed(() => {
+        return tableData.length > 0 || file.value !== null;
       });
       const mobile = computed(() => {
         return (
@@ -94,10 +124,43 @@
           ) !== null
         );
       });
-      const file = (ref({}) as unknown) as File;
-      const tableData = ref([]);
-      const { createMessage, createErrorModal } = useMessage();
-      const [registerModal, { openModal }] = useModal();
+      const file = computed(() => {
+        return fileStore.getShareFile.find((f) => f.uri === params.value.uri) || null;
+      });
+      const tableData = computed(() => {
+        const temp: NetFile[] = [];
+        const f = fileStore.getShareFile.find((f) => f.uri === params.value.uri);
+        if (f) temp.push(f);
+        return temp;
+      });
+      // const tableData = ref([]);
+      const needCode = ref(false);
+      const userPreview = ref({});
+      const [registerForm, { validateFields }] = useForm({
+        schemas: [
+          {
+            field: 'code',
+            component: 'Input',
+            label: t('code'),
+            required: true,
+            colProps: {
+              span: 24,
+            },
+            defaultValue: '',
+          },
+        ],
+        showActionButtonGroup: true,
+        showResetButton: false,
+        submitButtonOptions: {
+          text: 'Submit',
+        },
+        actionColOptions: {
+          span: 24,
+        },
+        submitFunc: () => {
+          fetchData();
+        },
+      });
       const [
         registerTable,
         { getSelectRowKeys, setSelectedRowKeys, clearSelectedRowKeys, getDataSource },
@@ -139,44 +202,33 @@
       //   //   }, 1000);
       //   // });
       // });
-      nextTick(() => {
-        setTimeout(() => {
-          openModal(true, {}, true);
-        }, 1000);
-      });
-      function pushCode(p: { code: string }) {
-        params.value.code = p.code;
-        fetchData();
-      }
-      function fetchData() {
+      nextTick(() => {});
+      onMounted(() => {
         useApollo()
-          .query({
-            query: driveFindShare,
-            variables: params.value,
-            fetchPolicy: 'no-cache',
-          })
+          .query({ query: drivePreviewShare, variables: params.value, fetchPolicy: 'network-only' })
           .then((res) => {
-            const data = res.data?.driveFindShare;
-            if (!data) {
-              createErrorModal({ title: '错误', content: '分享文件信息错误' });
-              return;
+            needCode.value = res.data?.drivePreviewShare.needCode;
+            userPreview.value = res.data?.drivePreviewShare.UserPreview;
+            if (!res.data?.drivePreviewShare.needCode) {
+              fileStore.fetchShareFile(params.value);
             }
-            openModal(false);
-            const f = new File(data);
-            file.value = f;
-            console.log(f.hashToStr());
-            tableData.value = [f];
           });
+      });
+
+      async function fetchData() {
+        const { code } = await validateFields();
+        params.value.code = code;
+        await fileStore.fetchShareFile(params.value);
       }
 
-      function preview(file: UnwrapRef<File>) {
+      function preview(file: UnwrapRef<NetFile>) {
         file.preview();
       }
-      function download(file: File) {
+      function download(file: NetFile) {
         file.download();
       }
       // 打开文件或者进入目录
-      function openFile(f: File) {
+      function openFile(f: NetFile) {
         if (!f.isDir) {
           return;
         }
@@ -188,9 +240,7 @@
         return;
       }
       return {
-        registerModal,
         registerTable,
-        pushCode,
         choose,
         setSelectedRowKeyList,
         clearSelect,
@@ -199,6 +249,13 @@
         download,
         file,
         mobile,
+        needCode,
+        userPreview,
+        t,
+        registerForm,
+        tableData,
+        form,
+        params,
       };
     },
   });

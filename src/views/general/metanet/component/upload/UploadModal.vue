@@ -60,7 +60,7 @@
   import { driveUploadByHash } from '/@/hooks/apollo/gqlFile';
   import CryptoES from 'crypto-es';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import { fileStore } from '/@/store/modules/file';
+  import { fileStore } from '/@/store/modules/netFile';
   const { t } = useI18n('general.metanet');
   export default defineComponent({
     components: { BasicModal, Upload, Alert, FileList },

@@ -89,6 +89,20 @@ export const driveFindShare = gql`
     }
   }
 `;
+// 预览分享文件
+export const drivePreviewShare = gql`
+  query($uri: String!) {
+    drivePreviewShare(uri: $uri) {
+      needCode
+      UserPreview {
+        avatar
+        bio
+        email
+        username
+      }
+    }
+  }
+`;
 
 // mutations
 // 新建目录

@@ -39,7 +39,7 @@ interface userFile {
   insertedAt: string;
 }
 
-export class File {
+export class NetFile {
   id: string;
   name: string;
   path: string[];
@@ -53,7 +53,7 @@ export class File {
   updatedAt: string;
   createdAt: string;
   expiredAt?: string;
-  public uri: string;
+  uri: string;
   token?: string;
   space: string;
   desc: string;

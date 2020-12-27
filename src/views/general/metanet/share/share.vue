@@ -52,7 +52,7 @@
   import { useApollo } from '/@/hooks/apollo/apollo';
   import { driveListShares } from '/@/hooks/apollo/gqlFile';
   import { getBasicColumns } from './shareData';
-  import { File } from '../../../../components/File/file';
+  import { NetFile } from '../../../../components/NetFile/netFile';
   import { BasicHelp } from '/@/components/Basic';
   import FileInfo from './FileInfo.vue';
   import { useI18n } from '/@/hooks/web/useI18n';
@@ -79,7 +79,7 @@
       const path = ref([]);
       const tableData = ref([]);
       const info = ref(false);
-      const file = ref({}) as File;
+      const file = ref({}) as NetFile;
       const span = computed(() => {
         if (file.value.fullName === undefined) {
           return 0;
@@ -125,7 +125,7 @@
                 });
                 return;
               }
-              let f = new File(v);
+              let f = new NetFile(v);
               temp.push(f);
             });
             console.log(temp);
@@ -144,7 +144,7 @@
       fetchData();
       // 删除分享
       async function del(record) {
-        const f: File = record;
+        const f: NetFile = record;
         await f.delShare();
         fetchData();
       }
@@ -168,7 +168,7 @@
         clearSelectedRowKeys();
       }
       function copyUrl(record) {
-        const f: File = record;
+        const f: NetFile = record;
         f.copyShareUrl(1);
       }
       function openInfo() {

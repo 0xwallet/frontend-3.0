@@ -9,7 +9,7 @@
   import { MarkDown, MarkDownActionType } from '/@/components/Markdown';
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import { File } from '/@/components/File/file';
+  import { NetFile } from '/@/components/NetFile/netFile';
 
   const { t } = useI18n('general.metanet');
   export default defineComponent({
@@ -18,7 +18,7 @@
       const markDownRef = ref<Nullable<MarkDownActionType>>(null);
       const valueRef = ref('');
       const [register, { setModalProps }] = useModalInner((data) => {
-        const f: File = data.record;
+        const f: NetFile = data.record;
         setModalProps({ loading: true });
         f.preview().then((res) => {
           const markDown = unref(markDownRef);
