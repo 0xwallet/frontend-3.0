@@ -1,10 +1,5 @@
 <template>
-  <a-col
-    v-bind="actionColOpt"
-    class="mb-2"
-    :style="{ textAlign: 'right' }"
-    v-if="showActionButtonGroup"
-  >
+  <a-col v-bind="actionColOpt" :style="{ textAlign: 'right' }" v-if="showActionButtonGroup">
     <FormItem>
       <slot name="resetBefore" />
       <Button
@@ -60,7 +55,7 @@
   export default defineComponent({
     name: 'BasicFormAction',
     components: {
-      FormItem: Form,
+      FormItem: Form.Item,
       Button,
       BasicArrow,
     },

@@ -1,6 +1,6 @@
 <template>
-  <Form v-bind="{ ...$attrs, ...$props }" ref="formElRef" :model="formModel">
-    <Row :class="getProps.compact ? 'compact-form-row' : ''" :style="getRowWrapStyle">
+  <Form v-bind="{ ...$attrs, ...$props }" :class="getFormClass" ref="formElRef" :model="formModel">
+    <Row :style="getRowWrapStyle">
       <slot name="formHeader" />
       <template v-for="schema in getSchema" :key="schema.field">
         <FormItem
@@ -18,7 +18,6 @@
         </FormItem>
       </template>
 
-      <!--  -->
       <FormAction
         v-bind="{ ...getProps, ...advanceState }"
         @toggle-advanced="handleToggleAdvanced"
@@ -32,27 +31,38 @@
   import type { AdvanceState } from './types/hooks';
   import type { CSSProperties, Ref, WatchStopHandle } from 'vue';
 
-  import { defineComponent, reactive, ref, computed, unref, onMounted, watch, toRefs } from 'vue';
+  import {
+    defineComponent,
+    reactive,
+    ref,
+    computed,
+    unref,
+    onMounted,
+    watch,
+    toRefs,
+    toRaw,
+  } from 'vue';
   import { Form, Row } from 'ant-design-vue';
   import FormItem from './components/FormItem';
   import FormAction from './components/FormAction.vue';
 
   import { dateItemType } from './helper';
   import moment from 'moment';
-  import { cloneDeep } from 'lodash-es';
+  // import { cloneDeep } from 'lodash-es';
   import { deepMerge } from '/@/utils';
 
   import { useFormValues } from './hooks/useFormValues';
   import useAdvanced from './hooks/useAdvanced';
   import { useFormEvents } from './hooks/useFormEvents';
   import { createFormContext } from './hooks/useFormContext';
+  import { useAutoFocus } from './hooks/useAutoFocus';
 
   import { basicProps } from './props';
+  import { useDesign } from '/@/hooks/web/useDesign';
 
   export default defineComponent({
     name: 'BasicForm',
     components: { FormItem, Form, Row, FormAction },
-    inheritAttrs: false,
     props: basicProps,
     emits: ['advanced-change', 'reset', 'submit', 'register'],
     setup(props, { emit }) {
@@ -71,12 +81,23 @@
       const schemaRef = ref<Nullable<FormSchema[]>>(null);
       const formElRef = ref<Nullable<FormActionType>>(null);
 
+      const { prefixCls } = useDesign('basic-form');
+
       // Get the basic configuration of the form
       const getProps = computed(
         (): FormProps => {
-          return deepMerge(cloneDeep(props), unref(propsRef));
+          return { ...props, ...unref(propsRef) } as FormProps;
         }
       );
+
+      const getFormClass = computed(() => {
+        return [
+          prefixCls,
+          {
+            [`${prefixCls}--compact`]: unref(getProps).compact,
+          },
+        ];
+      });
 
       // Get uniform row style
       const getRowWrapStyle = computed(
@@ -115,7 +136,7 @@
         defaultValueRef,
       });
 
-      const { transformDateFunc, fieldMapToTime } = toRefs(props);
+      const { transformDateFunc, fieldMapToTime, autoFocusFirstItem } = toRefs(props);
 
       const { handleFormValues, initDefault } = useFormValues({
         transformDateFuncRef: transformDateFunc,
@@ -123,6 +144,13 @@
         defaultValueRef,
         getSchema,
         formModel,
+      });
+
+      useAutoFocus({
+        getSchema,
+        autoFocusFirstItem,
+        isInitedDefault: isInitedDefaultRef,
+        formElRef: formElRef as Ref<FormActionType>,
       });
 
       const {
@@ -217,8 +245,51 @@
         getSchema,
         formActionType,
         setFormModel,
+        prefixCls,
+        getFormClass,
         ...formActionType,
       };
     },
   });
 </script>
+<style lang="less">
+  @import (reference) '../../../design/index.less';
+  @prefix-cls: ~'@{namespace}-basic-form';
+
+  .@{prefix-cls} {
+    .ant-form-item {
+      &-label label::after {
+        margin: 0 6px 0 2px;
+      }
+
+      &-with-help {
+        margin-bottom: 0;
+      }
+
+      &:not(.ant-form-item-with-help) {
+        margin-bottom: 20px;
+      }
+
+      &.suffix-item {
+        .ant-form-item-children {
+          display: flex;
+        }
+
+        .suffix {
+          display: inline-block;
+          padding-left: 6px;
+        }
+      }
+    }
+
+    .ant-form-explain {
+      font-size: 14px;
+    }
+
+    &--compact {
+      .ant-form-item {
+        margin-bottom: 8px !important;
+      }
+    }
+  }
+</style>

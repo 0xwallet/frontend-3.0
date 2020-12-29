@@ -8,6 +8,21 @@
 - 新增主框架外页面示例
 - `route.meta` 新增`currentActiveMenu`,`hideTab`,`hideMenu`参数 用于控制详情页面包屑级菜单显示隐藏。
 - 新增面包屑导航示例
+- form: 新增`suffix`属性，用于配置后缀内容
+- form: 新增远程下拉`ApiSelect`及示例
+- form: 新增`autoFocusFirstItem`配置。用于配置是否聚焦表单第一个输入框
+- useForm: 支持动态改变参数。可以传入`Ref`类型与`Computed`类型进行动态更改
+- table: 新增`clickToRowSelect`属性。用于控制点击行是否选中勾选狂
+- table: 监听行点击事件
+
+### ⚡ Performance Improvements
+
+- 优化`modal`与`drawer`滚动条组件
+- table: 移除 `isTreeTable`属性
+
+### 🎫 Chores
+
+- 升级`ant-design-vue`到`2.0.0-rc.7`
 
 ### 🐛 Bug Fixes
 
@@ -17,6 +32,8 @@
 - 修复多语言配置 `Locale.show`导致配置不生效
 - 修复路由类型错误
 - 修复菜单分割时权限失效问题
+- 关闭多标签页时 iframe 提前加载
+- 修复`modal`与`drawer`已知问题
 
 ## 2.0.0-rc.14 (2020-12-15)
 
