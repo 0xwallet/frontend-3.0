@@ -1,9 +1,5 @@
 <template>
-  <ConfigProvider
-    v-bind="lockEvent"
-    :locale="antConfigLocale"
-    :transform-cell-text="transformCellText"
-  >
+  <ConfigProvider v-bind="lockEvent" :locale="antConfigLocale">
     <AppProvider>
       <router-view />
     </AppProvider>
@@ -14,7 +10,7 @@
   import { defineComponent } from 'vue';
   import { ConfigProvider } from 'ant-design-vue';
 
-  import { getConfigProvider, initAppConfigStore } from '/@/setup/App';
+  import { initAppConfigStore } from '/@/setup/App';
 
   import { useLockPage } from '/@/hooks/web/useLockPage';
   import apollo from '/src/lib/esm/apollo';
@@ -76,7 +72,6 @@
       const { antConfigLocale } = useLocale();
 
       return {
-        transformCellText,
         antConfigLocale,
         lockEvent,
       };

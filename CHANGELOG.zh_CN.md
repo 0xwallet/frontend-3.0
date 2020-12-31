@@ -14,11 +14,18 @@
 - useForm: 支持动态改变参数。可以传入`Ref`类型与`Computed`类型进行动态更改
 - table: 新增`clickToRowSelect`属性。用于控制点击行是否选中勾选狂
 - table: 监听行点击事件
+- table: 表格列配置按钮增加 列拖拽，列固定功能。
+- table:表格列配置新增`defaultHidden` 属性。用于默认隐藏。可在表格列配置勾选显示
+
+### ✨ Refactor
+
+- 重构表单，解决已知 bug
 
 ### ⚡ Performance Improvements
 
 - 优化`modal`与`drawer`滚动条组件
 - table: 移除 `isTreeTable`属性
+- 全局引入`less`文件。无需手动在组件再次引入
 
 ### 🎫 Chores
 
@@ -34,6 +41,7 @@
 - 修复菜单分割时权限失效问题
 - 关闭多标签页时 iframe 提前加载
 - 修复`modal`与`drawer`已知问题
+- 修复左侧菜单混合模式适配问题
 
 ## 2.0.0-rc.14 (2020-12-15)
 
