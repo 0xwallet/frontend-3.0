@@ -1,11 +1,6 @@
 <template>
-  <BasicModal
-    v-bind="$attrs"
-    @register="register"
-    :title="t('changePassword')"
-    @ok="changePassword"
-  >
-    <Divider />
+  <BasicModal v-bind="$attrs" @register="register" :title="t('forget')" @ok="changePassword">
+    <!--    <Divider />-->
     <BasicForm @register="registerForm" :model="model" layout="vertical">
       <template #code="{ model, field }">
         <CountDown

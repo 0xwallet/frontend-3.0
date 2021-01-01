@@ -5,12 +5,12 @@
     :title="t('changePassword')"
     @ok="changePassword"
   >
-    <Row :gutter="20" type="flex" justify="center">
-      <Col :span="8" class="center"
-        ><a-button type="link" @click="forgetPassword">{{ t('forget') }}</a-button></Col
-      ></Row
-    >
-    <Divider />
+    <!--    <Row :gutter="20" type="flex" justify="center">-->
+    <!--      <Col :span="8" class="center"-->
+    <!--        ><a-button type="link" @click="forgetPassword">{{ t('forget') }}</a-button></Col-->
+    <!--      ></Row-->
+    <!--    >-->
+    <!--    <Divider />-->
     <BasicForm @register="registerForm" :model="model">
       <template #code="{ model, field }">
         <CountDown
