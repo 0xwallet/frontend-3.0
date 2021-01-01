@@ -156,30 +156,8 @@
           <template #toolbar>
             <a-button type="link" @click="openInfo"
               ><InfoCircleOutlined :style="{ fontSize: '20px' }"
-            /></a-button>
-            <!--        <a-button type="primary" @click="setSelectedRowKeyList">-->
-            <!--          {{ !choose ? t('selectAll') : t('cancelAll') }}-->
-            <!--        </a-button>-->
-            <!--        <a-button-->
-            <!--          v-show="choose"-->
-            <!--          type="primary"-->
-            <!--          color="success"-->
-            <!--          :pop="{ title: `${t('delSelect')} ${getSelectRowKeys().length} ${t('file')}?` }"-->
-            <!--          @click="delFiles"-->
-            <!--          >{{ t('delButton') }}</a-button-->
-            <!--        >-->
-            <!--        <a-button type="primary" v-show="choose"> {{ t('downloadButton') }} </a-button>-->
-            <!--        <a-button type="primary" v-show="choose" @click="openMoveModal">-->
-            <!--          {{ t('moveButton') }}-->
-            <!--        </a-button>-->
-            <!--        <a-button type="primary" v-show="choose"> {{ t('share') }} </a-button>-->
-            <!--        <a-button type="primary" @click="openUploadModal"> {{ t('uploadButton') }} </a-button>-->
-
-            <!--        <a-button type="primary" @click="openCreateFolderModal"> {{ t('createFolder') }} </a-button>-->
-            <!--        <a-button type="primary" @click="refresh"> {{ t('refresh') }} </a-button>-->
-          </template></BasicTable
-        ></Col
-      >
+            /></a-button> </template></BasicTable
+      ></Col>
       <Col :span="span"><FileInfo :file="file" @close="closeInfo" /></Col>
     </Row>
 
@@ -208,10 +186,10 @@
     InfoCircleOutlined,
     ExclamationCircleOutlined,
   } from '@ant-design/icons-vue';
-  import { useApollo } from '/@/hooks/apollo/apollo';
+  import { useApollo, handleApolloError } from '/@/hooks/apollo/apollo';
   import { driveListFiles, driveDeleteFiles } from '/@/hooks/apollo/gqlFile';
   import { useModal } from '/@/components/Modal';
-  import { NetFile } from '../../../components/NetFile/netFile';
+  import { NetFile } from '/@/components/NetFile/netFile';
   import { useI18n } from '/@/hooks/web/useI18n';
   const { t } = useI18n('general.metanet');
   import { Dropdown, Menu, Divider, Space, Row, Col, Modal } from 'ant-design-vue';
@@ -247,6 +225,7 @@
       // 信息框
       const { createMessage, createErrorModal } = useMessage();
       // 文件路径面包屑
+      const file = (ref({}) as unknown) as NetFile;
       const path = ref([]);
       let dirId = 'root';
       const info = ref(false);
@@ -268,7 +247,7 @@
       const folder = ref([]);
       // 储存本级目录路所有文件
       const files = ref([]);
-      const file = (ref({}) as unknown) as NetFile;
+
       //当前是否有选择文件
       const choose = computed(() => {
         return getSelectRowKeys().length !== 0;
@@ -307,8 +286,8 @@
               });
             }
             // 遍历返回信息，组成表格信息
-            let p = [];
-            let f = [];
+            let p: NetFile[] = [];
+            let f: NetFile[] = [];
             list.forEach((v) => {
               if (!v) {
                 return;
@@ -333,11 +312,7 @@
             files.value = f;
           })
           .catch((err) => {
-            console.log(err);
-            createErrorModal({
-              title: '错误',
-              content: err.message,
-            });
+            handleApolloError(err);
           });
       }
       // 获取数据

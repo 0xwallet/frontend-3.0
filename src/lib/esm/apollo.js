@@ -2,7 +2,6 @@
 
 import { ApolloClient, HttpLink, ApolloLink, split } from '@apollo/client/core';
 import { InMemoryCache } from '@apollo/client/cache';
-import { getMainDefinition } from '@apollo/client/utilities';
 import * as AbsintheSocket from '@absinthe/socket';
 import { createAbsintheSocketLink } from '@absinthe/socket-apollo-link';
 import { Socket as PhoenixSocket } from 'phoenix/assets/js/phoenix';

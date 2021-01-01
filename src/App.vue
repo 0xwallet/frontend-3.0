@@ -33,8 +33,6 @@
       // Initialize vuex internal system configuration
       initAppConfigStore();
 
-      // Get ConfigProvider configuration
-      const { transformCellText } = getConfigProvider();
       //加载外部JS
       initJS();
       //检测apolloWS链接

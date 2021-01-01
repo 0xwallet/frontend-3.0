@@ -89,7 +89,6 @@
         try {
           const data = await validateFields();
           const oldWallet = await useWallet();
-          console.log(oldWallet);
           const user = await getMe();
           const secret = CryptoES.enc.Base64.stringify(
             CryptoES.HmacSHA512(user.email, data.newPassword)

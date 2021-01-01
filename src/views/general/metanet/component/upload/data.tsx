@@ -4,7 +4,7 @@ import { FileItem, PreviewFileItem, UploadResultStatus } from './types';
 import { checkImgType, isImgTypeByName } from './utils';
 import { Progress, Tag } from 'ant-design-vue';
 
-import TableAction from '/@/components/Table/src/components/TableAction';
+import TableAction from '/@/components/Table/src/components/TableAction.vue';
 import { useI18n } from '/@/hooks/web/useI18n';
 const { t } = useI18n('general.metanet');
 // 文件上传列表

@@ -63,4 +63,10 @@ export default {
   delContent1: '是否从你的网盘中删除选择的',
   delContent2: '',
   deleting: '正在删除',
+  public: '公开',
+  private: '私密',
+  valid: '7天有效期',
+  createAt: '创建时间',
+  expiredAt: '过期时间',
+  expired: '已过期',
 };

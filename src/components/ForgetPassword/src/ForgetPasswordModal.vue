@@ -22,7 +22,7 @@
   import { computed, defineComponent, ref } from 'vue';
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { BasicForm, FormSchema, useForm } from '/@/components/Form';
-  import { getMe, useApollo } from '/@/hooks/apollo/apollo';
+  import { getMe, handleApolloError, useApollo } from '/@/hooks/apollo/apollo';
   import { resetPassword, sendVerifyCode } from '/@/hooks/apollo/gqlUser';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
@@ -112,7 +112,7 @@
           localStorage.setItem('token', res.data?.resetPassword?.token || '');
           createMessage.success(t('changeSuccess'));
         } catch (err) {
-          createErrorModal({ content: err.message });
+          handleApolloError(err);
         } finally {
           closeModal();
         }
