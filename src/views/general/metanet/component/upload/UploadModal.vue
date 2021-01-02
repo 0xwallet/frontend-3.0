@@ -139,14 +139,14 @@
           hash = CryptoES.SHA256(wordArray).toString();
           let status = '';
           let percent = 0;
-          useApollo()
-            .mutate({
-              mutation: driveUploadByHash,
-              variables: {
-                fullName: [...path, name],
-                hash: hash,
-              },
-            })
+          useApollo({
+            mode: 'mutate',
+            gql: driveUploadByHash,
+            variables: {
+              fullName: [...path, name],
+              hash: hash,
+            },
+          })
             .then(() => {
               status = UploadResultStatus.SUCCESS;
               percent = 100;

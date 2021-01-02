@@ -54,15 +54,13 @@
           }
           res.parentId = dirId;
           console.log(res);
-          useApollo()
-            .mutate({
-              mutation: dirId === 'root' ? driveMakeDir : driveMakeDirUnder,
-              variables: res,
-            })
-            .then((r) => {})
-            .finally(() => {
-              closeModal();
-            });
+          useApollo({
+            mode: 'mutate',
+            gql: dirId === 'root' ? driveMakeDir : driveMakeDirUnder,
+            variables: res,
+          }).finally(() => {
+            closeModal();
+          });
         });
       }
       return { register, schemas, registerForm, model: modelRef, createFolder };

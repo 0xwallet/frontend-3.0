@@ -109,11 +109,7 @@
         scroll: { x: 1000, y: 1000 },
       });
       function fetchData() {
-        useApollo()
-          .query({
-            query: driveListShares,
-            fetchPolicy: 'network-only',
-          })
+        useApollo({ mode: 'query', gql: driveListShares })
           .then((res) => {
             const list = res?.data?.driveListShares;
             let temp = [];

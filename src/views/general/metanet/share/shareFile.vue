@@ -204,15 +204,15 @@
       // });
       nextTick(() => {});
       onMounted(() => {
-        useApollo()
-          .query({ query: drivePreviewShare, variables: params.value, fetchPolicy: 'network-only' })
-          .then((res) => {
+        useApollo({ mode: 'query', gql: drivePreviewShare, variables: params.value }).then(
+          (res) => {
             needCode.value = res.data?.drivePreviewShare.needCode;
             userPreview.value = res.data?.drivePreviewShare.UserPreview;
             if (!res.data?.drivePreviewShare.needCode) {
               fileStore.fetchShareFile(params.value);
             }
-          });
+          }
+        );
       });
 
       async function fetchData() {

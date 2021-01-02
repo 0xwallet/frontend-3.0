@@ -97,8 +97,9 @@
           let w = new NKN.Wallet({ seed: oldWallet.getSeed(), password: secret });
           const walletJson = JSON.stringify(w.toJSON());
 
-          const res = await useApollo().mutate({
-            mutation: resetPassword,
+          const res = await useApollo({
+            mode: 'mutate',
+            gql: resetPassword,
             variables: {
               email: user.email,
               encryptedWallet: walletJson,
@@ -122,14 +123,14 @@
           return;
         }
         const user = await getMe();
-        useApollo()
-          .mutate({
-            mutation: sendVerifyCode,
-            variables: {
-              email: user.email,
-              type: 'RESET_PASSWORD',
-            },
-          })
+        useApollo({
+          mode: 'mutate',
+          gql: sendVerifyCode,
+          variables: {
+            email: user.email,
+            type: 'RESET_PASSWORD',
+          },
+        })
           .then(() => {
             createMessage.success(t('verificationSend'));
             emailButton.value = 60;

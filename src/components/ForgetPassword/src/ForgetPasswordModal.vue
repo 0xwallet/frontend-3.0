@@ -17,7 +17,7 @@
   import { computed, defineComponent, ref } from 'vue';
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { BasicForm, FormSchema, useForm } from '/@/components/Form';
-  import { getMe, handleApolloError, useApollo } from '/@/hooks/apollo/apollo';
+  import { getMe, useApollo } from '/@/hooks/apollo/apollo';
   import { resetPassword, sendVerifyCode } from '/@/hooks/apollo/gqlUser';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
@@ -92,8 +92,9 @@
           // let w = new NKN.Wallet({ seed: oldWallet.getSeed(), password: secret });
           // const walletJson = JSON.stringify(w.toJSON());
           const wallet = await newWallet({ email: data.email, password: data.newPassword });
-          const res = await useApollo().mutate({
-            mutation: resetPassword,
+          const res = await useApollo({
+            mode: 'mutate',
+            gql: resetPassword,
             variables: {
               email: data.email,
               code: data.code,
@@ -107,7 +108,7 @@
           localStorage.setItem('token', res.data?.resetPassword?.token || '');
           createMessage.success(t('changeSuccess'));
         } catch (err) {
-          handleApolloError(err);
+          console.log(err);
         } finally {
           closeModal();
         }

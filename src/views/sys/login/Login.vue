@@ -185,11 +185,7 @@
           } else {
             variables.code = data.password;
           }
-          useApollo()
-            .mutate({
-              mutation: signIn,
-              variables,
-            })
+          useApollo({ mode: 'mutate', gql: signIn, variables })
             .then((res) => {
               // 取得token，存入缓存
 

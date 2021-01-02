@@ -77,14 +77,14 @@
           return;
         }
         const params = await validateFields(['publicKey']);
-        useApollo()
-          .mutate({
-            mutation: sendVerifyCode,
-            variables: {
-              nkn: params.publicKey,
-              type: 'ACTIVE_NKN',
-            },
-          })
+        useApollo({
+          mode: 'mutate',
+          gql: sendVerifyCode,
+          variables: {
+            nkn: params.publicKey,
+            type: 'ACTIVE_NKN',
+          },
+        })
           .then(() => {
             createMessage.success(t('verificationSend'));
             emailButton.value = 60;

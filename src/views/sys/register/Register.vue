@@ -129,14 +129,14 @@
           return;
         }
 
-        useApollo()
-          .mutate({
-            mutation: sendVerifyCode,
-            variables: {
-              email: formData.email,
-              type: 'ACTIVE_EMAIL',
-            },
-          })
+        useApollo({
+          mode: 'mutate',
+          gql: sendVerifyCode,
+          variables: {
+            email: formData.email,
+            type: 'ACTIVE_EMAIL',
+          },
+        })
           .then(() => {
             emailButton.value = 60;
             //TODO 先用定时器，之后换缓存
@@ -163,27 +163,26 @@
 
           const wallet = await newWallet({ email: data.mail, password: data.password });
           // 注册账号
-          useApollo()
-            .mutate({
-              mutation: signUp,
-              variables: {
-                email: data.email,
-                password: data.password,
-                code: data.code,
-                username: data.email.split('@')[0],
-                nknEncryptedWallet: wallet.json,
-                nknPublicKey: wallet.publicKey,
-              },
-            })
-            .then(() => {
-              // 注册成功保存wallet在本地
-              saveWallet({ email: data.email, password: data.password, walletJson });
-              notification.success({
-                message: t('registerSuccess'),
-                duration: 3,
-              });
-              go('/login');
+          useApollo({
+            mode: 'mutate',
+            gql: signUp,
+            variables: {
+              email: data.email,
+              password: data.password,
+              code: data.code,
+              username: data.email.split('@')[0],
+              nknEncryptedWallet: wallet.json,
+              nknPublicKey: wallet.publicKey,
+            },
+          }).then(() => {
+            // 注册成功保存wallet在本地
+            saveWallet({ email: data.email, password: data.password, walletJson: wallet.json });
+            notification.success({
+              message: t('registerSuccess'),
+              duration: 3,
             });
+            go('/login');
+          });
         } catch (error) {
           createErrorModal({ content: error });
         } finally {

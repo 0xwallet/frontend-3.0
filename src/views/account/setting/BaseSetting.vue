@@ -12,10 +12,8 @@
 
   import { useMessage } from '/@/hooks/web/useMessage';
 
-  import { accountInfoApi } from '/@/api/demo/account';
   import { baseSetschemas } from './data';
-  import { useApollo } from '/@/hooks/apollo/apollo';
-  import { me } from '/@/hooks/apollo/gqlUser';
+  import { getMe } from '/@/hooks/apollo/apollo';
 
   export default defineComponent({
     components: { BasicForm, CollapseContainer, Button },
@@ -29,15 +27,13 @@
       });
 
       onMounted(async () => {
-        useApollo()
-          .query({ query: me })
-          .then((res) => {
-            const user = res.data?.me;
-            setFieldsValue({
-              id: user.id,
-              email: user.email,
-            });
+        getMe().then((res) => {
+          const user = res.data?.me;
+          setFieldsValue({
+            id: user.id,
+            email: user.email,
           });
+        });
       });
 
       return {

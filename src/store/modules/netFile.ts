@@ -58,20 +58,14 @@ class netFileStore extends VuexModule {
 
   @Action
   fetchShareFile(params: { code?: string; uri: string }) {
-    useApollo()
-      .query({
-        query: driveFindShare,
-        variables: params,
-        fetchPolicy: 'network-only',
-      })
-      .then((res) => {
-        const data = res.data?.driveFindShare;
-        if (!data) {
-          createErrorModal({ title: '错误', content: '分享文件信息错误' });
-          return;
-        }
-        this.addShare(new NetFile(data));
-      });
+    useApollo({ mode: 'query', gql: driveFindShare, variables: params }).then((res) => {
+      const data = res.data?.driveFindShare;
+      if (!data) {
+        createErrorModal({ title: '错误', content: '分享文件信息错误' });
+        return;
+      }
+      this.addShare(new NetFile(data));
+    });
   }
 
   @Action

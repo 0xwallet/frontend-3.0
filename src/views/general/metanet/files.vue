@@ -255,12 +255,7 @@
       // 根据ID获取数据 默认root目录
       function fetchData(params = { dirId: 'root' }) {
         console.log(params);
-        useApollo()
-          .query({
-            query: driveListFiles,
-            variables: params,
-            fetchPolicy: 'network-only',
-          })
+        useApollo({ mode: 'query', gql: driveListFiles, variables: params })
           .then((res) => {
             // 取得返回值
             const list = res.data?.driveListFiles;
@@ -472,11 +467,11 @@
               content: `${t('deleting')} ${getSelectRowKeys().length} ${t('items')}...`,
               key: 'deleteModal',
             });
-            useApollo()
-              .mutate({
-                mutation: driveDeleteFiles,
-                variables: { ids: getSelectRowKeys(), space: 'PRIVATE' },
-              })
+            useApollo({
+              mode: 'mutate',
+              gql: driveDeleteFiles,
+              variables: { ids: getSelectRowKeys(), space: 'PRIVATE' },
+            })
               .then((res) => {
                 const count = res.data?.driveDeleteFiles;
                 createMessage.success({ content: t('deleted'), key: 'deleteModal', duration: 2 });

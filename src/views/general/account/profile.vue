@@ -222,19 +222,19 @@
         if (!checked) {
           console.log(userInfo);
           spinning.value = true;
-          useApollo()
-            .mutate({
-              mutation: editCurrentUser,
-              variables: {
-                avatar: userInfo.avatar,
-                bio: userInfo.bio,
-                username: userInfo.username,
-                personalInfo: {
-                  country: userInfo.country,
-                  passport: userInfo.country,
-                },
+          useApollo({
+            mode: 'mutate',
+            gql: editCurrentUser,
+            variables: {
+              avatar: userInfo.avatar,
+              bio: userInfo.bio,
+              username: userInfo.username,
+              personalInfo: {
+                country: userInfo.country,
+                passport: userInfo.country,
               },
-            })
+            },
+          })
             .catch((err) => {
               createErrorModal({ content: err });
             })

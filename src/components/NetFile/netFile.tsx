@@ -91,19 +91,17 @@ export class NetFile {
     }
     const id = localStorage.getItem('uid');
     let token = '';
-    useApollo()
-      .mutate({ mutation: drivePreviewToken })
-      .then((res) => {
-        token = res?.data?.drivePreviewToken;
-        let url = `https://drive-s.owaf.io/download/${id}/${toLower(this.space)}/${this.id}/${
-          this.fullName
-        }?token=${token}`;
-        // /preview/:user_id/:space/:user_file_id/:filename?token=:token
-        downloadByUrl({
-          url: url,
-          target: '_self',
-        });
+    useApollo({ mode: 'mutate', gql: drivePreviewToken }).then((res) => {
+      token = res?.data?.drivePreviewToken;
+      let url = `https://drive-s.owaf.io/download/${id}/${toLower(this.space)}/${this.id}/${
+        this.fullName
+      }?token=${token}`;
+      // /preview/:user_id/:space/:user_file_id/:filename?token=:token
+      downloadByUrl({
+        url: url,
+        target: '_self',
       });
+    });
   }
   // 文件预览
   preview(): Promise<any> {
@@ -112,30 +110,28 @@ export class NetFile {
     }
     const id = localStorage.getItem('uid');
     let token = '';
-    return useApollo()
-      .mutate({ mutation: drivePreviewToken })
-      .then((res) => {
-        token = res?.data?.drivePreviewToken;
-        let url = `https://drive-s.owaf.io/preview/${id}/${toLower(this.space)}/${this.id}/${
-          this.fullName
-        }?token=${token}`;
-        if (this.type === 'png' || this.type == 'jpg') {
-          createImgPreview({
-            imageList: [url],
-          });
-          return;
-        } else if (this.type === 'md') {
-          return getFile(url);
-        }
-      });
+    return useApollo({ mode: 'mutate', gql: drivePreviewToken }).then((res) => {
+      token = res?.data?.drivePreviewToken;
+      let url = `https://drive-s.owaf.io/preview/${id}/${toLower(this.space)}/${this.id}/${
+        this.fullName
+      }?token=${token}`;
+      if (this.type === 'png' || this.type == 'jpg') {
+        createImgPreview({
+          imageList: [url],
+        });
+        return;
+      } else if (this.type === 'md') {
+        return getFile(url);
+      }
+    });
   }
   // 文件分享
   share(code: string = ''): Promise<boolean> {
-    return useApollo()
-      .mutate({
-        mutation: driveCreateShare,
-        variables: { code, userFileId: this.id },
-      })
+    return useApollo({
+      mode: 'mutate',
+      gql: driveCreateShare,
+      variables: { code, userFileId: this.id },
+    })
       .then((res) => {
         this.uri = res.data?.driveCreateShare.uri;
         this.code = res.data?.driveCreateShare.code;
@@ -152,11 +148,10 @@ export class NetFile {
   }
   // 删除分享
   delShare(): Promise<any> {
-    return useApollo().mutate({
-      mutation: driveDeleteShare,
-      variables: {
-        id: this.shareId,
-      },
+    return useApollo({
+      mode: 'mutate',
+      gql: driveDeleteShare,
+      variables: { id: this.shareId },
     });
   }
   // 拼接分享链接
@@ -190,8 +185,9 @@ export class NetFile {
   }
   // 删除文件
   delFile(): Promise<any> {
-    return useApollo().mutate({
-      mutation: driveDeleteFile,
+    return useApollo({
+      mode: 'mutate',
+      gql: driveDeleteFile,
       variables: { id: this.id, space: this.space },
     });
   }

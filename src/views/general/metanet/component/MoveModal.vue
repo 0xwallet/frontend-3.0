@@ -36,35 +36,34 @@
         if (treeNode.dataRef.children) {
           return;
         }
-        return useApollo()
-          .query({
-            query: driveListFiles,
-            variables: { dirId: treeNode.value },
-            fetchPolicy: 'no-cache',
-          })
-          .then((res) => {
-            let temp: TreeItem[] = [];
-            if (!res.data.driveListFiles) {
+        return useApollo({
+          mode: 'query',
+          sql: driveListFiles,
+          variables: { dirId: treeNode.value },
+        }).then((res) => {
+          let temp: TreeItem[] = [];
+          if (!res.data.driveListFiles) {
+            return;
+          }
+          res.data.driveListFiles.forEach((v, index) => {
+            if (index < 2) {
               return;
             }
-            res.data.driveListFiles.forEach((v, index) => {
-              if (index < 2) {
-                return;
-              }
-              if (v && v.isDir && v.id !== 'root' && v.id != treeNode.value) {
-                temp.push({ title: v.fullName[v.fullName.length - 1], key: v.id, value: v.id });
-              }
-            });
-            treeNode.dataRef.children = temp;
+            if (v && v.isDir && v.id !== 'root' && v.id != treeNode.value) {
+              temp.push({ title: v.fullName[v.fullName.length - 1], key: v.id, value: v.id });
+            }
           });
+          treeNode.dataRef.children = temp;
+        });
       }
       async function moveFile() {
         try {
           now.value = 0;
           for (let i = 0; i < folder.length; i++) {
             if (folder[i] != path.value[0]) {
-              await useApollo().mutate({
-                mutation: driveMoveFile,
+              await useApollo({
+                mode: 'mutate',
+                gql: driveMoveFile,
                 variables: {
                   fromId: folder[i],
                   toId: path.value[0],
