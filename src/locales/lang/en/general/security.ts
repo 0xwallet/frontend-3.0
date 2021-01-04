@@ -11,4 +11,11 @@ export default {
   publicKey: 'NKN Public Key',
   dataTitle: 'Data',
   password: 'Password',
+  appPassword: 'App Password',
+  appName: 'App Name',
+  addApp: 'Add App',
+  example: 'Example',
+  addr: 'Address',
+  account: 'Account',
+  authorityTime: 'Authority Time',
 };

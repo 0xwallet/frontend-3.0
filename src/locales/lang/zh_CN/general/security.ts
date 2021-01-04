@@ -1,5 +1,5 @@
 export default {
-  authorityTitle: 'Authority',
+  authorityTitle: '权限',
   deviceTitle: '安全设备',
   deviceModalTitle: '添加新设备',
   sendVerifyCode: '发送验证码',
@@ -11,4 +11,11 @@ export default {
   publicKey: 'NKN Public Key',
   dataTitle: 'Data',
   password: '密码',
+  appPassword: '应用密码',
+  appName: '应用名称',
+  addApp: '新增应用',
+  example: '示例',
+  addr: '服务器地址',
+  account: '账户',
+  authorityTime: '授权时间',
 };

@@ -3,7 +3,7 @@
     <BreadCrumb :path="path" @jump="goPath" />
     <Row>
       <Col :span="24 - span">
-        <BasicTable @register="registerTable">
+        <BasicTable @register="registerTable" :dataSource="tableData">
           <template #tableTitle>
             <span>
               <Dropdown :trigger="['click']">
@@ -186,7 +186,7 @@
     InfoCircleOutlined,
     ExclamationCircleOutlined,
   } from '@ant-design/icons-vue';
-  import { useApollo, handleApolloError } from '/@/hooks/apollo/apollo';
+  import { useApollo } from '/@/hooks/apollo/apollo';
   import { driveListFiles, driveDeleteFiles } from '/@/hooks/apollo/gqlFile';
   import { useModal } from '/@/components/Modal';
   import { NetFile } from '/@/components/NetFile/netFile';
@@ -225,6 +225,10 @@
       // 信息框
       const { createMessage, createErrorModal } = useMessage();
       // 文件路径面包屑
+      // 储存本级目录所有文件夹名
+      const folder = ref([]);
+      // 储存本级目录路所有文件
+      const files = ref([]);
       const file = (ref({}) as unknown) as NetFile;
       const path = ref([]);
       let dirId = 'root';
@@ -243,10 +247,6 @@
       const tableData = computed(() => {
         return folder.value.concat(files.value);
       });
-      // 储存本级目录所有文件夹名
-      const folder = ref([]);
-      // 储存本级目录路所有文件
-      const files = ref([]);
 
       //当前是否有选择文件
       const choose = computed(() => {
@@ -254,13 +254,11 @@
       });
       // 根据ID获取数据 默认root目录
       function fetchData(params = { dirId: 'root' }) {
-        console.log(params);
         useApollo({ mode: 'query', gql: driveListFiles, variables: params })
           .then((res) => {
             // 取得返回值
             const list = res.data?.driveListFiles;
             // 重置文件夹列表，文件列表
-
             let temp: NetFile[] = [];
             if (!list) {
               return;
@@ -306,8 +304,8 @@
             folder.value = temp.concat(p);
             files.value = f;
           })
-          .catch((err) => {
-            handleApolloError(err);
+          .finally(() => {
+            console.log(tableData);
           });
       }
       // 获取数据
@@ -318,7 +316,7 @@
         { getSelectRowKeys, setSelectedRowKeys, clearSelectedRowKeys, getDataSource, reload },
       ] = useTable({
         canResize: false,
-        dataSource: (tableData as unknown) as any[],
+        // dataSource: tableData,
         columns: getBasicColumns(),
         rowKey: 'id',
         showIndexColumn: false,
@@ -573,6 +571,7 @@
         dirId,
         fetchData,
         openFile,
+        tableData,
         registerCreateFolder,
         openCreateFolderModal,
         registerMoveModal,
