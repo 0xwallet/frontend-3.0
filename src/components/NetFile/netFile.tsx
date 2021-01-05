@@ -12,7 +12,7 @@ import { unref } from 'vue';
 import { useCopyToClipboard } from '/@/hooks/web/useCopyToClipboard';
 import { useMessage } from '/@/hooks/web/useMessage';
 import { useI18n } from '/@/hooks/web/useI18n';
-import { getFile } from '/@/api/general/metanet/file';
+
 import { Tooltip } from 'ant-design-vue';
 const { t } = useI18n();
 const { clipboardRef, copiedRef } = useCopyToClipboard();
@@ -105,24 +105,24 @@ export class NetFile {
   }
   // 文件预览
   preview(): Promise<any> {
-    if (this.type === 'folder') {
-      return new Promise<any>((_, reject) => reject);
-    }
-    const id = localStorage.getItem('uid');
-    let token = '';
-    return useApollo({ mode: 'mutate', gql: drivePreviewToken }).then((res) => {
-      token = res?.data?.drivePreviewToken;
-      let url = `https://drive-s.owaf.io/preview/${id}/${toLower(this.space)}/${this.id}/${
-        this.fullName
-      }?token=${token}`;
-      if (this.type === 'png' || this.type == 'jpg') {
-        createImgPreview({
-          imageList: [url],
-        });
-        return;
-      } else if (this.type === 'md') {
-        return getFile(url);
+    return new Promise<any>((resolve, reject) => {
+      if (this.type === 'folder') {
+        reject();
       }
+      const id = localStorage.getItem('uid');
+      let token = '';
+      useApollo({ mode: 'mutate', gql: drivePreviewToken }).then((res) => {
+        token = res?.data?.drivePreviewToken;
+        let url = `https://drive-s.owaf.io/preview/${id}/${toLower(this.space)}/${this.id}/${
+          this.fullName
+        }?token=${token}`;
+        if (this.type === 'png' || this.type == 'jpg') {
+          createImgPreview({
+            imageList: [url],
+          });
+        }
+        resolve(url);
+      });
     });
   }
   // 文件分享

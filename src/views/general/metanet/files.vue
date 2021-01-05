@@ -3,7 +3,7 @@
     <BreadCrumb :path="path" @jump="goPath" />
     <Row>
       <Col :span="24 - span">
-        <BasicTable @register="registerTable" :dataSource="tableData">
+        <BasicTable @register="registerTable">
           <template #tableTitle>
             <span>
               <Dropdown :trigger="['click']">
@@ -316,7 +316,7 @@
         { getSelectRowKeys, setSelectedRowKeys, clearSelectedRowKeys, getDataSource, reload },
       ] = useTable({
         canResize: false,
-        // dataSource: tableData,
+        dataSource: tableData,
         columns: getBasicColumns(),
         rowKey: 'id',
         showIndexColumn: false,
@@ -417,10 +417,11 @@
         nextTick(() => {
           setModal5({
             width: '80%',
+            minHeight: document.body.clientHeight - 300,
             destroyOnClose: true,
-            afterClose: () => {
-              fetchData({ dirId });
-            },
+            // afterClose: () => {
+            //   fetchData({ dirId });
+            // },
           });
         });
       }
@@ -571,7 +572,6 @@
         dirId,
         fetchData,
         openFile,
-        tableData,
         registerCreateFolder,
         openCreateFolderModal,
         registerMoveModal,
@@ -581,7 +581,6 @@
         registerShareModal,
         openShareModal,
         registerMDModal,
-        openMDModal,
         delFile,
         preview,
         download,
