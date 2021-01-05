@@ -42,6 +42,7 @@ export function useTable(
       },
       {
         immediate: true,
+        deep: true,
       }
     );
   }
@@ -119,6 +120,12 @@ export function useTable(
     },
     getForm: () => {
       return unref(formRef) as FormActionType;
+    },
+    setShowPagination: async (show: boolean) => {
+      getTableInstance().setShowPagination(show);
+    },
+    getShowPagination: () => {
+      return getTableInstance().getShowPagination();
     },
   };
 

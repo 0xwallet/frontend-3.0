@@ -117,7 +117,8 @@ export function useColumns(
     }
     const { ellipsis } = unref(propsRef);
 
-    columns.forEach((item) => {
+    const cloneColumns = cloneDeep(columns);
+    cloneColumns.forEach((item) => {
       const { customRender, slots } = item;
 
       handleItem(
@@ -125,13 +126,14 @@ export function useColumns(
         Reflect.has(item, 'ellipsis') ? !!item.ellipsis : !!ellipsis && !customRender && !slots
       );
     });
-    return columns;
+    return cloneColumns;
   });
 
   const getViewColumns = computed(() => {
     const viewColumns = sortFixedColumn(unref(getColumnsRef));
 
-    viewColumns.forEach((column) => {
+    const columns = cloneDeep(viewColumns);
+    columns.forEach((column) => {
       const { slots, dataIndex, customRender, format, edit, editRow, flag } = column;
 
       if (!slots || !slots?.title) {
@@ -151,7 +153,7 @@ export function useColumns(
         column.customRender = renderEditCell(column);
       }
     });
-    return viewColumns;
+    return columns;
   });
 
   watch(
