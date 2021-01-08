@@ -26,6 +26,15 @@ export const mainOutRoutes: AppRouteModule[] = [
       },
     ],
   },
+  {
+    path: '/h',
+    name: 'Hash',
+    component: () => import('/@/views/general/metanet/release/releaseFile.vue'),
+    meta: {
+      title: 'routes.menu.release',
+      ignoreAuth: true,
+    },
+  },
 ];
 
 export const mainOutRouteNames = mainOutRoutes.map((item) => item.name);

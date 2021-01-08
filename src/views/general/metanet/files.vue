@@ -115,7 +115,9 @@
                     }}</a-button>
                   </MenuItem>
                   <MenuItem>
-                    <a-button type="link">{{ t('release') }}</a-button>
+                    <a-button type="link" @click="openReleaseModal(record)">{{
+                      t('release')
+                    }}</a-button>
                   </MenuItem>
 
                   <MenuItem>
@@ -166,6 +168,7 @@
     <UploadModal @register="registerUploadModal" />
     <ShareModal @register="registerShareModal" />
     <MarkdownModal @register="registerMDModal" />
+    <ReleaseModal @register="registerReleaseModal" />
   </div>
 </template>
 <script lang="ts">
@@ -179,6 +182,7 @@
   import ShareModal from './share/component/ShareModal.vue';
   import MoveModal from './component/MoveModal.vue';
   import MarkdownModal from './component/editor/Markdown.vue';
+  import ReleaseModal from './component/ReleaseModal.vue';
   import GIcon from '/@/components/Icon/index';
   import {
     DownOutlined,
@@ -220,6 +224,7 @@
       Row,
       Col,
       FileInfo,
+      ReleaseModal,
     },
     setup() {
       // 信息框
@@ -350,6 +355,10 @@
       const [registerShareModal, { openModal: openModal4, setModalProps: setModal4 }] = useModal();
       // MarkdownModal
       const [registerMDModal, { openModal: openModal5, setModalProps: setModal5 }] = useModal();
+      const [
+        registerReleaseModal,
+        { openModal: openModal6, setModalProps: setModal6 },
+      ] = useModal();
 
       // 打开新建文件夹modal
       // 传入上级文件夹ID dirId
@@ -402,6 +411,21 @@
 
         nextTick(() => {
           setModal4({
+            canFullscreen: false,
+            width: '50%',
+            destroyOnClose: true,
+            afterClose: () => {
+              fetchData({ dirId });
+            },
+          });
+        });
+      }
+      // 打开分享窗口
+      function openReleaseModal(record) {
+        openModal6(true, { record }, true);
+
+        nextTick(() => {
+          setModal6({
             canFullscreen: false,
             width: '50%',
             destroyOnClose: true,
@@ -594,6 +618,8 @@
         file,
         closeInfo,
         test,
+        registerReleaseModal,
+        openReleaseModal,
       };
     },
   });

@@ -17,4 +17,5 @@ export default {
   metanet: '网盘',
   share: '分享',
   file: '文件',
+  release: '发布',
 };

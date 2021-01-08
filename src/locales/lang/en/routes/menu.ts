@@ -16,5 +16,6 @@ export default {
   security: 'Security',
   metanet: 'Metanet',
   share: 'Share',
+  release: 'Release',
   file: 'File',
 };
