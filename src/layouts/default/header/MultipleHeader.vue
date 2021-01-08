@@ -17,6 +17,7 @@
   import { useMultipleTabSetting } from '/@/hooks/setting/useMultipleTabSetting';
   import { useAppInject } from '/@/hooks/web/useAppInject';
   import { useDesign } from '/@/hooks/web/useDesign';
+  import { headerHeightRef } from '../content/useContentViewHeight';
 
   const HEADER_HEIGHT = 48;
 
@@ -69,12 +70,17 @@
       const getPlaceholderDomStyle = computed(
         (): CSSProperties => {
           let height = 0;
-          if ((unref(getShowFullHeaderRef) || !unref(getSplit)) && unref(getShowHeader)) {
+          if (
+            (unref(getShowFullHeaderRef) || !unref(getSplit)) &&
+            unref(getShowHeader) &&
+            !unref(getFullContent)
+          ) {
             height += HEADER_HEIGHT;
           }
-          if (unref(getShowMultipleTab)) {
+          if (unref(getShowMultipleTab) && !unref(getFullContent)) {
             height += TABS_HEIGHT;
           }
+          headerHeightRef.value = height;
           return {
             height: `${height}px`,
           };
@@ -107,7 +113,7 @@
   @prefix-cls: ~'@{namespace}-layout-multiple-header';
 
   .@{prefix-cls} {
-    margin-left: 1px;
+    // margin-left: 1px;
     transition: width 0.2s;
     flex: 0 0 auto;
 

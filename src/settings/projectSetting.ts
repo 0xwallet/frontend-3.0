@@ -76,7 +76,7 @@ const setting: ProjectConfig = {
   // Menu configuration
   menuSetting: {
     // sidebar menu bg color
-    bgColor: '#273352',
+    bgColor: '#001529',
     //  Whether to fix the left menu
     fixed: true,
     // Menu collapse
@@ -125,6 +125,8 @@ const setting: ProjectConfig = {
 
     // Whether to show the refresh button
     showRedo: true,
+    // Whether to show the collapse button
+    showFold: true,
   },
 
   // Transition Setting

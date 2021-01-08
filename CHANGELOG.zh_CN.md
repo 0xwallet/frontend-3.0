@@ -5,6 +5,8 @@
 - 新增`mixSideTrigger`配置。用于配置左侧混合模式菜单打开方式。可选`hover`,默认`click`
 - 新增`mixSideFixed`配置。用于固定左侧混合模式菜单
 - modal 组件新增`height`和`min-height`属性
+- 新增`PageWrapper`组件。并应用于示例页面
+- 新增标签页折叠功能
 
 ### 🐛 Bug Fixes
 
@@ -12,6 +14,7 @@
 - 恢复 table 的`isTreeTable`属性
 - 修复表格内存溢出问题
 - 修复`layout` 收缩展开功能在分割模式下失效
+- 修复 modal 高度计算错误
 
 ## 2.0.0-rc.15 (2020-12-31)
 
