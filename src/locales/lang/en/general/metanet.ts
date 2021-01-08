@@ -69,4 +69,9 @@ export default {
   createAt: 'Created Time',
   expiredAt: 'Expired Time',
   expired: 'Expired',
+  releaseTitle: 'My Release',
+  releaseAt: 'Release Time',
+  releaseVersion: 'Release Version',
+  releaseLink: 'Release Link',
+  setting: 'Setting',
 };

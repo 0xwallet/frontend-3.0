@@ -69,4 +69,9 @@ export default {
   createAt: '创建时间',
   expiredAt: '过期时间',
   expired: '已过期',
+  releaseTitle: '我的发布',
+  releaseAt: '发布时间',
+  releaseVersion: '发布版本',
+  releaseLink: '发布链接',
+  setting: '设置',
 };

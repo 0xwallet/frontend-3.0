@@ -1,7 +1,7 @@
 <template>
   <BasicModal v-bind="$attrs" @register="register" :title="t('markdownTitle')" :minHeight="height">
     <a-button @click="toggleTheme" class="mb-2" type="primary">黑暗主题</a-button>
-    <MarkDown v-model:value="valueRef" ref="markDownRef" :height="height - 100" />
+    <MarkDown v-model:value="valueRef" ref="markDownRef" :height="height * 0.9" />
   </BasicModal>
 </template>
 <script lang="ts">
@@ -30,7 +30,7 @@
           if (!markDown) return;
           const vditor = markDown.getVditor();
           vditor.setValue(d, true);
-          valueRef.value = d;
+          // valueRef.value = d;
         } catch {
         } finally {
           setModalProps({ loading: false });
