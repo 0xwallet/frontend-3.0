@@ -102,7 +102,7 @@
   <ForgetPassword @register="registerFPModal" />
 </template>
 <script lang="ts">
-  import { computed, defineComponent, reactive, ref, unref } from 'vue';
+  import { defineComponent, reactive, ref, unref } from 'vue';
   import { Checkbox, Divider, Row, Col, Input } from 'ant-design-vue';
   import { MailOutlined, LockOutlined } from '@ant-design/icons-vue';
   import { Button } from '/@/components/Button';
@@ -142,10 +142,7 @@
       const loginMode = ref('basic');
       const formRef = ref<any>(null);
       const autoLoginRef = ref(false);
-      const emailButton = ref(0);
-      const button = computed(() => {
-        return emailButton.value < 1 ? t('send') : `wait ${emailButton.value} ${t('seconds')}`;
-      });
+
       // const verifyRef = ref<RefInstanceType<DragVerifyActionType>>(null);
       const go = useGo();
       const { notification, createErrorModal, createMessage } = useMessage();
@@ -172,6 +169,7 @@
         // verify: unref(openLoginVerifyRef) ? [{ required: true, message: '请通过验证码校验' }] : [],
       });
       const { mutate: SignIn, onError, onDone } = useMutation(signIn);
+      const { mutate: sendCode } = useMutation(sendLoginCode);
       onError((err) => {
         createErrorModal({
           content: err.message,
@@ -232,17 +230,13 @@
           loginMode.value = 'basic';
         }
       }
+
       async function getVerifyCode() {
         const form = unref(formRef);
         if (!form) return;
         const data = await form.validateField(['email']);
         try {
-          await useApollo().mutate({
-            mutation: sendLoginCode,
-            variables: {
-              email: data.email,
-            },
-          });
+          await sendCode({ email: data.email });
           createMessage.success(t('verificationSend'));
         } catch (err) {
           createErrorModal({
@@ -272,7 +266,6 @@
         changeLoginMode,
         loginMode,
         getVerifyCode,
-        button,
         registerFPModal,
         openFPModal,
       };
