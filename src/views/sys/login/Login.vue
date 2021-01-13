@@ -119,7 +119,7 @@
   import { CountDown } from '/@/components/CountDown';
   import { ForgetPassword } from '/@/components/ForgetPassword';
   import { useModal } from '/@/components/Modal';
-
+  import { useMutation } from '@vue/apollo-composable';
   export default defineComponent({
     components: {
       AButton: Button,
@@ -171,7 +171,36 @@
         password: [{ required: true, message: t('passwordPlaceholder'), trigger: 'blur' }],
         // verify: unref(openLoginVerifyRef) ? [{ required: true, message: '请通过验证码校验' }] : [],
       });
+      const { mutate: SignIn, onError, onDone } = useMutation(signIn);
+      onError((err) => {
+        createErrorModal({
+          content: err.message,
+        });
+      });
+      onDone((res) => {
+        console.log(res);
+        useWallet();
+        // 保存wallet信息
+        saveWallet({
+          email: variables.email,
+          password: variables.password,
+          walletJson: res.data.signin.User.wallets.filter((v) => v.tags[0] === 'MESSAGE')[0].info
+            .encryptedWallet,
+        });
 
+        localStorage.setItem('token', res.data?.signin?.token || '');
+        localStorage.setItem('uid', res.data?.signin?.User?.id || 0);
+
+        // websocket调试;
+
+        notification.success({
+          message: t('loginSuccessTitle'),
+          description: `${t('loginSuccessDesc')}: ${res.data?.signin?.User?.email}`,
+          duration: 3,
+        });
+        userStore.login();
+      });
+      let variables = { email: '', password: '', code: '' };
       async function handleLogin() {
         const form = unref(formRef);
         if (!form) return;
@@ -179,43 +208,15 @@
         try {
           const data = await form.validate();
           // 登录
-          let variables = { email: data.email, password: '', code: '' };
+          variables.email = data.email;
           if (loginMode.value === 'basic') {
             variables.password = data.password;
           } else {
             variables.code = data.password;
           }
-          useApollo({ mode: 'mutate', gql: signIn, variables })
-            .then((res) => {
-              // 取得token，存入缓存
-
-              useWallet();
-              // 保存wallet信息
-              saveWallet({
-                email: variables.email,
-                password: variables.password,
-                walletJson: res.data.signin.User.wallets.filter((v) => v.tags[0] === 'MESSAGE')[0]
-                  .info.encryptedWallet,
-              });
-
-              localStorage.setItem('token', res.data?.signin?.token || '');
-              localStorage.setItem('uid', res.data?.signin?.User?.id || 0);
-
-              // websocket调试;
-
-              notification.success({
-                message: t('loginSuccessTitle'),
-                description: `${t('loginSuccessDesc')}: ${res.data?.signin?.User?.email}`,
-                duration: 3,
-              });
-              userStore.login();
-            })
-            .catch((err) => {
-              createErrorModal({
-                content: err.message,
-              });
-            });
-        } catch {
+          await SignIn(variables);
+        } catch (err) {
+          console.log(err);
         } finally {
           formState.loading = false;
           useWallet().then(() => {
