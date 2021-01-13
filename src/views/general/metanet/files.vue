@@ -115,9 +115,7 @@
                     }}</a-button>
                   </MenuItem>
                   <MenuItem>
-                    <a-button type="link" @click="openReleaseModal(record)">{{
-                      t('release')
-                    }}</a-button>
+                    <a-button type="link" @click="publishFile(record)">{{ t('publish') }}</a-button>
                   </MenuItem>
 
                   <MenuItem>
@@ -168,7 +166,6 @@
     <UploadModal @register="registerUploadModal" />
     <ShareModal @register="registerShareModal" />
     <MarkdownModal @register="registerMDModal" />
-    <ReleaseModal @register="registerReleaseModal" />
   </div>
 </template>
 <script lang="ts">
@@ -182,7 +179,6 @@
   import ShareModal from './share/component/ShareModal.vue';
   import MoveModal from './component/MoveModal.vue';
   import MarkdownModal from './component/editor/Markdown.vue';
-  import ReleaseModal from './component/ReleaseModal.vue';
   import GIcon from '/@/components/Icon/index';
   import {
     DownOutlined,
@@ -201,6 +197,7 @@
 
   import FileInfo from './component/file/FileInfo.vue';
   import Hash from '/@/components/NetFile/Hash.vue';
+  import { useQuery, useResult } from '@vue/apollo-composable';
   export default defineComponent({
     components: {
       Hash,
@@ -224,7 +221,6 @@
       Row,
       Col,
       FileInfo,
-      ReleaseModal,
     },
     setup() {
       // 信息框
@@ -258,63 +254,68 @@
         return getSelectRowKeys().length !== 0;
       });
       // 根据ID获取数据 默认root目录
-      function fetchData(params = { dirId: 'root' }) {
-        useApollo({ mode: 'query', gql: driveListFiles, variables: params })
-          .then((res) => {
-            // 取得返回值
-            const list = res.data?.driveListFiles;
-            // 重置文件夹列表，文件列表
-            let temp: NetFile[] = [];
-            if (!list) {
+
+      const variables = ref({
+        dirId: 'root',
+      });
+      const { onError, onResult, refetch } = useQuery(driveListFiles, variables, () => ({
+        fetchPolicy: 'network-only',
+      }));
+
+      onResult((res) => {
+        // 取得返回值
+        let list = res.data?.driveListFiles;
+        // 重置文件夹列表，文件列表
+        let temp: NetFile[] = [];
+        if (!list) {
+          return;
+        }
+        // 列表[1]存在为存在上级目录，存入dirId，fullName设置为...
+        if (list[1]) {
+          temp.push({
+            id: list[1].id,
+            fullName: list[1].fullName,
+            type: 'folder',
+            name: '...',
+            size: 0,
+            updatedAt: '',
+            hash: '',
+            space: list[1].space,
+            desc: '',
+            isDir: true,
+          });
+        }
+        // 遍历返回信息，组成表格信息
+        let p: NetFile[] = [];
+        let f: NetFile[] = [];
+        list.forEach((v) => {
+          if (!v) {
+            return;
+          }
+          // 是目录
+          if (v.isDir) {
+            if (variables.value.dirId === v.id) {
               return;
             }
-            // 列表[1]存在为存在上级目录，存入dirId，fullName设置为...
-            if (list[1]) {
-              temp.push({
-                id: list[1].id,
-                fullName: list[1].fullName,
-                type: 'folder',
-                name: '...',
-                size: 0,
-                updatedAt: '',
-                hash: '',
-                space: list[1].space,
-                desc: '',
-                isDir: true,
-              });
+            if (dirId === '' && v.id === 'root') {
+              return;
             }
-            // 遍历返回信息，组成表格信息
-            let p: NetFile[] = [];
-            let f: NetFile[] = [];
-            list.forEach((v) => {
-              if (!v) {
-                return;
-              }
-              // 是目录
-              if (v.isDir) {
-                if (params.dirId === v.id) {
-                  return;
-                }
-                if (dirId === '' && v.id === 'root') {
-                  return;
-                }
-                if (temp.length > 0 && temp[0].id == v.id) {
-                  return;
-                }
-                p.push(new NetFile({ userFile: v }));
-              } else {
-                f.push(new NetFile({ userFile: v }));
-              }
-            });
-            folder.value = temp.concat(p);
-            files.value = f;
-          })
-          .finally(() => {
-            console.log(tableData);
-          });
-      }
-      // 获取数据
-      fetchData();
+            if (temp.length > 0 && temp[0].id == v.id) {
+              return;
+            }
+            p.push(new NetFile({ userFile: v }));
+          } else {
+            f.push(new NetFile({ userFile: v }));
+          }
+        });
+        folder.value = temp.concat(p);
+        files.value = f;
+      });
+
+      onError((err) => {
+        console.log(err);
+      });
+
       // 文件列表表格
       const [
         registerTable,
@@ -355,10 +356,6 @@
       const [registerShareModal, { openModal: openModal4, setModalProps: setModal4 }] = useModal();
       // MarkdownModal
       const [registerMDModal, { openModal: openModal5, setModalProps: setModal5 }] = useModal();
-      const [
-        registerReleaseModal,
-        { openModal: openModal6, setModalProps: setModal6 },
-      ] = useModal();
 
       // 打开新建文件夹modal
       // 传入上级文件夹ID dirId
@@ -370,7 +367,7 @@
             canFullscreen: false,
             destroyOnClose: true,
             afterClose: () => {
-              fetchData({ dirId });
+              refetch();
             },
           });
         });
@@ -385,7 +382,7 @@
             destroyOnClose: true,
             afterClose: () => {
               clearSelectedRowKeys();
-              fetchData({ dirId });
+              refetch();
             },
           });
         });
@@ -400,7 +397,7 @@
             width: '70%',
             destroyOnClose: true,
             afterClose: () => {
-              fetchData({ dirId });
+              refetch();
             },
           });
         });
@@ -415,25 +412,15 @@
             width: '50%',
             destroyOnClose: true,
             afterClose: () => {
-              fetchData({ dirId });
+              refetch();
             },
           });
         });
       }
-      // 打开分享窗口
-      function openReleaseModal(record) {
-        openModal6(true, { record }, true);
-
-        nextTick(() => {
-          setModal6({
-            canFullscreen: false,
-            width: '50%',
-            destroyOnClose: true,
-            afterClose: () => {
-              fetchData({ dirId });
-            },
-          });
-        });
+      // 文件发布
+      async function publishFile(f: NetFile) {
+        console.log(f);
+        await f.publish();
       }
       function openMDModal(record) {
         openModal5(true, { record }, true);
@@ -465,7 +452,7 @@
             createMessage.success('删除成功');
           })
           .finally(() => {
-            fetchData({ dirId });
+            refetch();
           });
       }
       //批量删除文件
@@ -503,7 +490,7 @@
                 createMessage.error({ content: err, key: 'deleteModal', duration: 2 });
               })
               .finally(() => {
-                fetchData({ dirId });
+                refetch();
               });
           },
           onCancel() {},
@@ -525,7 +512,7 @@
 
       // 路径面包屑跳转
       function goPath(p) {
-        fetchData({ dirId: p.dirId });
+        variables.value.dirId = p.dirId;
         if (p.dirId === 'root') {
           path.value = [];
           return;
@@ -541,8 +528,7 @@
       // 打开文件或者进入目录
       function openFile(f: NetFile) {
         if (f.isDir) {
-          dirId = f.id;
-          fetchData({ dirId: f.id });
+          variables.value.dirId = f.id;
           if (f.id === 'root') {
             path.value = [];
             return;
@@ -574,9 +560,7 @@
 
         // 根据ID获取最新进入目录文件
       }
-      function refresh() {
-        fetchData({ dirId });
-      }
+
       function openInfo() {
         if (file.value.fullName === undefined) {
           createMessage.error(t('noChoose'));
@@ -594,7 +578,6 @@
         path,
         folder,
         dirId,
-        fetchData,
         openFile,
         registerCreateFolder,
         openCreateFolderModal,
@@ -612,14 +595,13 @@
         delFiles,
         getSelectRowKeys,
         t,
-        refresh,
+        refetch,
         span,
         openInfo,
         file,
         closeInfo,
         test,
-        registerReleaseModal,
-        openReleaseModal,
+        publishFile,
       };
     },
   });
