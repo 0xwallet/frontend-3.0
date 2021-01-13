@@ -187,7 +187,7 @@
     ExclamationCircleOutlined,
   } from '@ant-design/icons-vue';
   import { useApollo } from '/@/hooks/apollo/apollo';
-  import { driveListFiles, driveDeleteFiles } from '/@/hooks/apollo/gqlFile';
+  import { driveListFiles, driveDeleteFiles, driveFileUploaded } from '/@/hooks/apollo/gqlFile';
   import { useModal } from '/@/components/Modal';
   import { NetFile } from '/@/components/NetFile/netFile';
   import { useI18n } from '/@/hooks/web/useI18n';
@@ -197,7 +197,8 @@
 
   import FileInfo from './component/file/FileInfo.vue';
   import Hash from '/@/components/NetFile/Hash.vue';
-  import { useQuery, useResult } from '@vue/apollo-composable';
+  import { useQuery, useSubscription } from '@vue/apollo-composable';
+
   export default defineComponent({
     components: {
       Hash,
@@ -223,6 +224,12 @@
       FileInfo,
     },
     setup() {
+      const { onResult: onWSResult } = useSubscription(driveFileUploaded, () => ({
+        userId: localStorage.getItem('uid'),
+      }));
+      onWSResult((res) => {
+        console.log(res);
+      });
       // 信息框
       const { createMessage, createErrorModal } = useMessage();
       // 文件路径面包屑

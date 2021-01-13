@@ -4,6 +4,7 @@ import {
   driveDeleteFile,
   driveDeleteShare,
   drivePreviewToken,
+  driveCreatePublish,
 } from '/@/hooks/apollo/gqlFile';
 import { toLower } from 'lodash-es';
 import { downloadByUrl } from '/@/utils/file/download';
@@ -14,10 +15,10 @@ import { useMessage } from '/@/hooks/web/useMessage';
 import { useI18n } from '/@/hooks/web/useI18n';
 
 import { Tooltip } from 'ant-design-vue';
+
 const { t } = useI18n();
 const { clipboardRef, copiedRef } = useCopyToClipboard();
-const { createMessage, createErrorModal } = useMessage();
-
+const { createMessage, createErrorModal, createConfirm } = useMessage();
 interface fileParams {
   userFile: userFile;
   id?: string;
@@ -125,6 +126,25 @@ export class NetFile {
       });
     });
   }
+
+  publish() {
+    console.log(this.id);
+    createConfirm({
+      iconType: 'warning',
+      title: t('general.metanet.publishConfirm'),
+      content: this.id,
+      okText: t('general.metanet.yes'),
+      onOk: () => {
+        useApollo({ mode: 'mutate', gql: driveCreatePublish, variables: { id: this.id } }).then(
+          (res) => {
+            console.log(res);
+          }
+        );
+      },
+    });
+    return;
+  }
+
   // 文件分享
   share(code: string = ''): Promise<boolean> {
     return useApollo({

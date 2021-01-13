@@ -34,7 +34,7 @@
             </Dropdown>
           </template>
           <template #toolbar>
-            <a-button type="primary" @click="fetchData">{{ t('refresh') }}</a-button>
+            <a-button type="primary" @click="refetch">{{ t('refresh') }}</a-button>
             <a-button type="link" @click="openInfo"
               ><InfoCircleOutlined :style="{ fontSize: '20px' }"
             /></a-button>
@@ -50,9 +50,10 @@
   import { useMessage } from '/@/hooks/web/useMessage';
   import GIcon from '/@/components/Icon';
   import { useApollo } from '/@/hooks/apollo/apollo';
-  import { driveListShares } from '/@/hooks/apollo/gqlFile';
+  import { driveListFiles, driveListShares } from '/@/hooks/apollo/gqlFile';
   import { getBasicColumns } from './shareData';
-  import { NetFile } from '../../../../components/NetFile/netFile';
+  import { NetFile } from '/@/components/NetFile/netFile';
+  import { useQuery } from '@vue/apollo-composable';
   import { BasicHelp } from '/@/components/Basic';
   import FileInfo from './FileInfo.vue';
   import { useI18n } from '/@/hooks/web/useI18n';
@@ -108,36 +109,28 @@
         showIndexColumn: false,
         scroll: { x: 1000, y: 1000 },
       });
-      function fetchData() {
-        useApollo({ mode: 'query', gql: driveListShares })
-          .then((res) => {
-            const list = res?.data?.driveListShares;
-            let temp = [];
-            list.forEach((v) => {
-              if (v.userFile === null) {
-                temp.push({
-                  name: 'deleted',
-                  shareId: v.id,
-                });
-                return;
-              }
-              let f = new NetFile(v);
-              temp.push(f);
-            });
-            console.log(temp);
-            tableData.value = temp;
-            // console.log(data.driveListFiles);
-          })
-          .catch((err) => {
-            console.log(err);
-            createErrorModal({
-              title: '错误',
-              content: err.message,
-            });
-          });
-      }
 
-      fetchData();
+      const { onError, onResult, refetch } = useQuery(driveListShares, null, () => ({
+        fetchPolicy: 'network-only',
+      }));
+      onResult((res) => {
+        const list = res?.data?.driveListShares;
+        let temp: NetFile[] = [];
+        list.forEach((v) => {
+          if (v.userFile === null) {
+            temp.push({
+              name: 'deleted',
+              shareId: v.id,
+            });
+            return;
+          }
+          let f = new NetFile(v);
+          temp.push(f);
+        });
+        tableData.value = temp;
+      });
+
+      // fetchData();
       // 删除分享
       async function del(record) {
         const f: NetFile = record;
@@ -185,7 +178,7 @@
         path,
         del,
         copyUrl,
-        fetchData,
+        refetch,
         t,
         span,
         file,

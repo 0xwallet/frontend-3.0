@@ -65,6 +65,20 @@ export const driveListShares = gql`
     }
   }
 `;
+//发布文件列表
+export const driveListPublishs = gql`
+  query {
+    driveListPublishs {
+      currentVersion
+      history {
+        id
+        txid
+        version
+      }
+      id
+    }
+  }
+`;
 
 //分享文件
 export const driveFindShare = gql`
@@ -170,6 +184,14 @@ export const driveCreateShare = gql`
 export const driveDeleteShare = gql`
   mutation($id: ID!) {
     driveDeleteShare(id: $id) {
+      id
+    }
+  }
+`;
+// 发布文件
+export const driveCreatePublish = gql`
+  mutation($id: String!) {
+    driveCreatePublish(userFileId: $id) {
       id
     }
   }

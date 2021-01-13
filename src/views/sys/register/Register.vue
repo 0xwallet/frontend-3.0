@@ -115,7 +115,7 @@
         password2: [{ required: true, message: t('passwordPlaceholder'), trigger: 'blur' }],
         code: [{ required: true, message: t('verificationPlaceholder'), trigger: 'blur' }],
       });
-      const { mutate: sendCode, onDone } = useMutation(sendVerifyCode);
+      const { mutate: SendCode, onDone } = useMutation(sendVerifyCode);
       const { mutate: SignUp } = useMutation(signUp);
       onDone(() => {
         emailButton.value = 60;
@@ -142,7 +142,7 @@
           info.value = '邮箱格式不正确';
           return;
         }
-        sendCode({
+        SendCode({
           email: formData.email,
           type: 'ACTIVE_EMAIL',
         });

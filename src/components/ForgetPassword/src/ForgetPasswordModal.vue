@@ -17,14 +17,13 @@
   import { computed, defineComponent, ref } from 'vue';
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { BasicForm, FormSchema, useForm } from '/@/components/Form';
-  import { getMe, useApollo } from '/@/hooks/apollo/apollo';
   import { resetPassword, sendVerifyCode } from '/@/hooks/apollo/gqlUser';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { useWallet, useNKN, saveWallet, newWallet } from '/@/hooks/nkn/getNKN';
-  import CryptoES from 'crypto-es';
+  import { saveWallet, newWallet } from '/@/hooks/nkn/getNKN';
   import { Divider, Row, Col, Button } from 'ant-design-vue';
   import { CountDown } from '/@/components/CountDown';
+  import { useMutation } from '@vue/apollo-composable';
 
   const { t } = useI18n('general.account');
   const schemas: FormSchema[] = [
@@ -76,36 +75,27 @@
           span: 24,
         },
       });
-      const { createErrorModal, createMessage } = useMessage();
+      const { createMessage } = useMessage();
       const [register, { closeModal }] = useModalInner();
+      const { mutate: ResetPassword, onDone } = useMutation(resetPassword);
+      const { mutate: SendCode } = useMutation(sendVerifyCode);
 
+      onDone((res) => {
+        localStorage.setItem('token', res.data?.resetPassword?.token || '');
+      });
       async function changePassword() {
         try {
           const data = await validateFields();
-          // const oldWallet = await useWallet();
-          // console.log(oldWallet);
-          // const user = await getMe();
-          // const secret = CryptoES.enc.Base64.stringify(
-          //   CryptoES.HmacSHA512(user.email, data.newPassword)
-          // );
-          // const NKN = await useNKN();
-          // let w = new NKN.Wallet({ seed: oldWallet.getSeed(), password: secret });
-          // const walletJson = JSON.stringify(w.toJSON());
           const wallet = await newWallet({ email: data.email, password: data.newPassword });
-          const res = await useApollo({
-            mode: 'mutate',
-            gql: resetPassword,
-            variables: {
-              email: data.email,
-              code: data.code,
-              encryptedWallet: wallet.json,
-              newPassword: data.newPassword,
-              oldPassword: data.oldPassword,
-              nknPublicKey: wallet.publicKey,
-            },
+          await ResetPassword({
+            email: data.email,
+            code: data.code,
+            encryptedWallet: wallet.json,
+            newPassword: data.newPassword,
+            oldPassword: data.oldPassword,
+            nknPublicKey: wallet.publicKey,
           });
           saveWallet({ email: data.email, password: data.newPassword, walletJson: wallet.json });
-          localStorage.setItem('token', res.data?.resetPassword?.token || '');
           createMessage.success(t('changeSuccess'));
         } catch (err) {
           console.log(err);
@@ -113,42 +103,20 @@
           closeModal();
         }
       }
-      function getVerifyCode(): Promise<any> {
+      async function getVerifyCode(): Promise<any> {
         return new Promise<any>((resolve, reject) => {
           validateFields(['email'])
             .then((params) => {
-              useApollo()
-                .mutate({
-                  mutation: sendVerifyCode,
-                  variables: {
-                    email: params.email,
-                    type: 'RESET_PASSWORD',
-                  },
-                })
-                .then(() => {
-                  createMessage.success(t('verificationSend'));
-                  time = 60;
-                  setInterval(() => {
-                    if (time < 1) {
-                      time = 0;
-                      clearInterval();
-                      return;
-                    }
-                    time -= 1;
-                  }, 1000);
-                })
-                .catch((err) => {
-                  createErrorModal({ content: err });
-                });
+              SendCode({
+                email: params.email,
+                type: 'RESET_PASSWORD',
+              });
               resolve();
             })
             .catch((err) => {
               reject(err);
             });
         });
-        // validateFields('email').then((email) => {
-        //   console.log(email);
-        // });
       }
       function forgetPassword() {
         updateSchema({

@@ -7,20 +7,15 @@
 </template>
 
 <script lang="ts">
-  import { defineComponent } from 'vue';
+  import { defineComponent, provide } from 'vue';
   import { ConfigProvider } from 'ant-design-vue';
 
   import { initAppConfigStore } from '/@/setup/App';
 
   import { useLockPage } from '/@/hooks/web/useLockPage';
-  import apollo from '/src/lib/esm/apollo';
-  import { useApolloWS } from '/@/hooks/apollo/apollo';
-  import { driveFileUploaded } from '/@/hooks/apollo/gqlFile';
-  import Observable from 'zen-observable';
+  import { initApollo } from '/@/hooks/apollo/apollo';
   import { initJS, useMClient, useWallet } from '/@/hooks/nkn/getNKN';
-  apollo.init({
-    apiUrl: 'https://owaf.io/api',
-  });
+
   import { useLocale } from '/@/hooks/web/useLocale';
   import { userStore } from '/@/store/modules/user';
 
@@ -32,36 +27,15 @@
     setup() {
       // Initialize vuex internal system configuration
       initAppConfigStore();
-
+      initApollo();
       //加载外部JS
       initJS();
-      //检测apolloWS链接
 
       useWallet().then(() => {
         console.log('wallet ready');
         useMClient();
       });
       userStore.checkNKN();
-      const time = setInterval(() => {
-        if (localStorage.getItem('token') !== '' && !useApolloWS()) {
-          // 启动ws
-          apollo.initWS({ url: 'wss://owaf.io/socket' });
-          const ob = useApolloWS().subscribe({
-            query: driveFileUploaded,
-            variables: { userId: localStorage.getItem('uid') },
-          }) as Observable<any>;
-          ob.subscribe(
-            (data) => {
-              console.log('Data', data);
-            },
-            (e) => {
-              console.log(e);
-            }
-          );
-          console.log('ws ready');
-          clearInterval(time);
-        }
-      }, 500);
 
       // Create a lock screen monitor
       const lockEvent = useLockPage();

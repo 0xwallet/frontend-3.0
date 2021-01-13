@@ -52,7 +52,7 @@
   import { useMessage } from '/@/hooks/web/useMessage';
   import GIcon from '/@/components/Icon';
   import { useApollo } from '/@/hooks/apollo/apollo';
-  import { driveListShares } from '/@/hooks/apollo/gqlFile';
+  import { driveListPublishs } from '/@/hooks/apollo/gqlFile';
   import { getBasicColumns } from './Data';
   import { NetFile } from '/@/components/NetFile/netFile';
   import { BasicHelp } from '/@/components/Basic';
@@ -103,7 +103,7 @@
           },
         }),
         pagination: false,
-        title: t('releaseTitle'),
+        title: t('publishTitle'),
         dataSource: tableData,
         columns: getBasicColumns(),
         rowKey: 'shareId',
@@ -111,7 +111,7 @@
         scroll: { x: 1000, y: 1000 },
       });
       function fetchData() {
-        useApollo({ mode: 'query', gql: driveListShares })
+        useApollo({ mode: 'query', gql: driveListPublishs })
           .then((res) => {
             const list = res?.data?.driveListShares;
             let temp = [];

@@ -36,7 +36,7 @@ export function getBasicColumns(): BasicColumn[] {
       },
     },
     {
-      title: t('releaseAt'),
+      title: t('publishAt'),
       width: 200,
       dataIndex: 'createdAt',
       customRender: ({ text }) => {
@@ -47,12 +47,12 @@ export function getBasicColumns(): BasicColumn[] {
       },
     },
     {
-      title: t('releaseVersion'),
+      title: t('publishVersion'),
       width: 200,
       dataIndex: 'version',
     },
     {
-      title: t('releaseLink'),
+      title: t('publishLink'),
       dataIndex: 'link',
     },
     {

@@ -17,7 +17,7 @@
     <template v-if="tabKey === 'files'"><Files /></template>
     <template v-if="tabKey === 'share'"> <Share /> </template>
     <template v-if="tabKey === 'recycle'"> <Recycle /> </template>
-    <template v-if="tabKey === 'release'"> <Release /> </template>
+    <template v-if="tabKey === 'publish'"> <Publish /> </template>
   </Card>
 </template>
 
@@ -27,7 +27,7 @@
   import Files from './files.vue';
   import Share from './share/share.vue';
   import Recycle from './recycle.vue';
-  import Release from './release/index.vue';
+  import Publish from './publish/index.vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   const { t } = useI18n('general.metanet');
   export default defineComponent({
@@ -39,7 +39,7 @@
       Recycle,
       Card,
       InputSearch: Input.Search,
-      Release,
+      Publish,
     },
     setup() {
       const tabList = [
@@ -52,8 +52,8 @@
           tab: t('share'),
         },
         {
-          key: 'release',
-          tab: t('releaseTitle'),
+          key: 'publish',
+          tab: t('publishTitle'),
         },
         {
           key: 'recycle',

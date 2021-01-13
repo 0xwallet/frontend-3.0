@@ -1,24 +1,43 @@
 import apollo from '/@/lib/esm/apollo';
-// import { ApolloClient } from '@apollo/client/core';
 import { me } from '/@/hooks/apollo/gqlUser';
 import { useMessage } from '/@/hooks/web/useMessage';
 import { userStore } from '/@/store/modules/user';
 import { provide } from 'vue';
-const { createErrorModal } = useMessage();
-const Client = (): ApolloClient<any> => {
-  return apollo.get();
-};
+
 // const apolloWSClient = apollo.getWS();
-import { ApolloClient, InMemoryCache } from '@apollo/client';
+import { ApolloClient, InMemoryCache, split } from '@apollo/client';
 import { DefaultApolloClient } from '@vue/apollo-composable';
 import { ApolloLink, HttpLink } from '@apollo/client/core';
+import { Socket as PhoenixSocket } from 'phoenix/assets/js/phoenix';
+import { createAbsintheSocketLink } from '@absinthe/socket-apollo-link';
+import * as AbsintheSocket from '@absinthe/socket';
+import { getMainDefinition } from '@apollo/client/utilities';
 // 与 API 的 HTTP 连接
-import { useQuery } from '@vue/apollo-composable';
+const { createErrorModal } = useMessage();
+let Client: ApolloClient<any>;
+
 export function initApollo(): ApolloClient<any> | null {
-  const link = new HttpLink({
+  const httpLink = new HttpLink({
     uri: 'https://owaf.io/api',
   });
-
+  const wsLink = createAbsintheSocketLink(
+    AbsintheSocket.create(
+      new PhoenixSocket('wss://owaf.io/socket', {
+        params: () => {
+          return { Authorization: 'Bearer ' + localStorage.getItem('token') };
+        },
+      })
+    )
+  );
+  const link = split(
+    // 根据操作类型拆分
+    ({ query }) => {
+      const definition = getMainDefinition(query);
+      return definition.kind === 'OperationDefinition' && definition.operation === 'subscription';
+    },
+    wsLink,
+    httpLink
+  );
   // split based on operation type
   // REMOVE authLink FOR HTTPONLY_TOKEN
   const middlewareLink = new ApolloLink((operation, forward) => {
@@ -43,50 +62,37 @@ export function initApollo(): ApolloClient<any> | null {
     connectToDevTools: true,
   });
   provide(DefaultApolloClient, apolloClient);
+  Client = apolloClient;
   return apolloClient;
 }
 
 export function useApollo(params: { mode: string; gql: any; variables?: any }): Promise<any> {
   return new Promise((resolve, reject) => {
     const { mode, gql, variables } = params;
-    const c = Client();
     let r: Promise<any>;
     switch (mode) {
       case 'query':
-        const { result, onError } = useQuery(
-          gql,
-          () => variables,
-          () => ({
-            fetchPolicy: 'network-only',
-          })
-        );
-        onError((err) => {
-          console.log(err);
-          reject(err);
-        });
-        resolve(result);
-        // r = c.query({ query: gql, variables, fetchPolicy: 'network-only' });
+        r = Client.query({ query: gql, variables, fetchPolicy: 'network-only' });
         break;
       case 'mutate':
-        r = c.mutate({ mutation: gql, variables });
+        r = Client.mutate({ mutation: gql, variables });
         break;
       default:
         reject('wrong params');
     }
-
     // @ts-ignore
-    // r.then((res) => {
-    //   resolve(res);
-    // }).catch((err) => {
-    //   if (err.message === 'Please sign in first!') {
-    //     userStore.loginOut(true);
-    //   }
-    //   createErrorModal({
-    //     title: '错误',
-    //     content: err.message,
-    //   });
-    //   reject(err);
-    // });
+    r.then((res) => {
+      resolve(res);
+    }).catch((err) => {
+      if (err.message === 'Please sign in first!') {
+        userStore.loginOut(true);
+      }
+      createErrorModal({
+        title: '错误',
+        content: err.message,
+      });
+      reject(err);
+    });
   });
 }
 
