@@ -81,10 +81,10 @@
   import logo from '/@/assets/images/logo.png';
   import { useGo } from '/@/hooks/web/usePage';
   import { sendVerifyCode, signUp } from '/@/hooks/apollo/gqlUser';
-  import { useApollo } from '/@/hooks/apollo/apollo';
   import { newWallet, saveWallet } from '/@/hooks/nkn/getNKN';
   import { useGlobSetting } from '/@/hooks/setting';
   import { useI18n } from '/@/hooks/web/useI18n';
+  import { useMutation } from '@vue/apollo-composable';
   export default defineComponent({
     components: {
       AButton: Button,
@@ -115,7 +115,21 @@
         password2: [{ required: true, message: t('passwordPlaceholder'), trigger: 'blur' }],
         code: [{ required: true, message: t('verificationPlaceholder'), trigger: 'blur' }],
       });
-
+      const { mutate: sendCode, onDone } = useMutation(sendVerifyCode);
+      const { mutate: SignUp } = useMutation(signUp);
+      onDone(() => {
+        emailButton.value = 60;
+        //TODO 先用定时器，之后换缓存
+        setInterval(() => {
+          if (emailButton.value > 0) {
+            emailButton.value -= 1;
+          }
+          if (emailButton.value === 0) {
+            clearInterval();
+          }
+        }, 1000);
+        info.value = t('verificationSend');
+      });
       function getVerifyCode() {
         if (formData.email === '') {
           info.value = '未输入邮箱';
@@ -128,30 +142,10 @@
           info.value = '邮箱格式不正确';
           return;
         }
-
-        useApollo({
-          mode: 'mutate',
-          gql: sendVerifyCode,
-          variables: {
-            email: formData.email,
-            type: 'ACTIVE_EMAIL',
-          },
-        })
-          .then(() => {
-            emailButton.value = 60;
-            //TODO 先用定时器，之后换缓存
-            setInterval(() => {
-              if (emailButton.value > 0) {
-                emailButton.value -= 1;
-              }
-              if (emailButton.value === 0) {
-                clearInterval();
-              }
-            }, 1000);
-          })
-          .finally(() => {
-            info.value = t('verificationSend');
-          });
+        sendCode({
+          email: formData.email,
+          type: 'ACTIVE_EMAIL',
+        });
       }
       async function register() {
         const form = unref(formRef);
@@ -163,30 +157,23 @@
 
           const wallet = await newWallet({ email: data.mail, password: data.password });
           // 注册账号
-          useApollo({
-            mode: 'mutate',
-            gql: signUp,
-            variables: {
-              email: data.email,
-              password: data.password,
-              code: data.code,
-              username: data.email.split('@')[0],
-              nknEncryptedWallet: wallet.json,
-              nknPublicKey: wallet.publicKey,
-            },
-          }).then(() => {
-            // 注册成功保存wallet在本地
-            saveWallet({ email: data.email, password: data.password, walletJson: wallet.json });
-            notification.success({
-              message: t('registerSuccess'),
-              duration: 3,
-            });
-            go('/login');
+          await SignUp({
+            email: data.email,
+            password: data.password,
+            code: data.code,
+            username: data.email.split('@')[0],
+            nknEncryptedWallet: wallet.json,
+            nknPublicKey: wallet.publicKey,
           });
+          saveWallet({ email: data.email, password: data.password, walletJson: wallet.json });
+          notification.success({
+            message: t('registerSuccess'),
+            duration: 3,
+          });
+          go('/login');
         } catch (error) {
           createErrorModal({ content: error });
         } finally {
-          // resetVerify();
           formState.loading = false;
         }
       }
@@ -225,8 +212,7 @@
     &-mask {
       display: none;
       height: 100%;
-      background: url(../../../assets/images/login/login-in.png) no-repeat;
-      background-position: 30% 30%;
+      background: url(../../../assets/images/login/login-in.png) no-repeat 30% 30%;
       background-size: 80% 80%;
 
       .respond-to(xlarge, { display: block;});
