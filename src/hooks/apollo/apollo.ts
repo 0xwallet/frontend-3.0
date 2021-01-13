@@ -1,4 +1,4 @@
-import apollo from '/@/lib/esm/apollo';
+// import apollo from '/@/lib/esm/apollo';
 import { me } from '/@/hooks/apollo/gqlUser';
 import { useMessage } from '/@/hooks/web/useMessage';
 import { userStore } from '/@/store/modules/user';
