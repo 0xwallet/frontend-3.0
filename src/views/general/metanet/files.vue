@@ -86,14 +86,12 @@
             </span>
           </template>
           <template #name="{ record }">
-            <GIcon
-              :icon="record.type === 'folder' ? 'bx-bx-folder' : 'bx-bxs-file-' + record.type"
-              size="30"
-            >
-            </GIcon>
-
-            <a-button type="link" @click="openFile(record)"
-              >{{ record.name }}{{ record.type === 'folder' ? '' : '.' + record.type }}</a-button
+            <a-button type="link" @click="openFile(record)">
+              <GIcon
+                :icon="record.type === 'folder' ? 'bx-bx-folder' : 'bx-bxs-file-' + record.type"
+                size="30"
+              />
+              {{ record.name }}{{ record.type === 'folder' ? '' : '.' + record.type }}</a-button
             > </template
           ><template #hash="{ text }">
             <Hash :hash="text" v-if="text" />
