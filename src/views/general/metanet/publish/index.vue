@@ -36,7 +36,7 @@
             </Dropdown>
           </template>
           <template #toolbar>
-            <a-button type="primary" @click="fetchData">{{ t('refresh') }}</a-button>
+            <a-button type="primary" @click="refetch">{{ t('refresh') }}</a-button>
             <a-button type="link" @click="openInfo"
               ><InfoCircleOutlined :style="{ fontSize: '20px' }"
             /></a-button>
@@ -51,7 +51,6 @@
   import { BasicTable, useTable } from '/@/components/Table';
   import { useMessage } from '/@/hooks/web/useMessage';
   import GIcon from '/@/components/Icon';
-  import { useApollo } from '/@/hooks/apollo/apollo';
   import { driveListPublishs } from '/@/hooks/apollo/gqlFile';
   import { getBasicColumns } from './Data';
   import { NetFile } from '/@/components/NetFile/netFile';
@@ -60,6 +59,7 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import { Tooltip, Row, Col, Dropdown, Menu } from 'ant-design-vue';
   import { InfoCircleOutlined } from '@ant-design/icons-vue';
+  import { useQuery } from '@vue/apollo-composable';
   const { t } = useI18n('general.metanet');
   export default defineComponent({
     components: {
@@ -110,36 +110,25 @@
         showIndexColumn: false,
         scroll: { x: 1000, y: 1000 },
       });
-      function fetchData() {
-        useApollo({ mode: 'query', gql: driveListPublishs })
-          .then((res) => {
-            const list = res?.data?.driveListShares;
-            let temp = [];
-            list.forEach((v) => {
-              if (v.userFile === null) {
-                temp.push({
-                  name: 'deleted',
-                  shareId: v.id,
-                });
-                return;
-              }
-              let f = new NetFile(v);
-              temp.push(f);
-            });
-            console.log(temp);
-            tableData.value = temp;
-            // console.log(data.driveListFiles);
-          })
-          .catch((err) => {
-            console.log(err);
-            createErrorModal({
-              title: '错误',
-              content: err.message,
-            });
-          });
-      }
 
-      fetchData();
+      const { onResult: Publishs, refetch } = useQuery(driveListPublishs);
+      Publishs((res) => {
+        const list = res?.data?.driveListShares;
+        let temp = [];
+        list.forEach((v) => {
+          if (v.userFile === null) {
+            temp.push({
+              name: 'deleted',
+              shareId: v.id,
+            });
+            return;
+          }
+          let f = new NetFile(v);
+          temp.push(f);
+        });
+        tableData.value = temp;
+      });
+
       // 删除分享
       async function del(record) {
         const f: NetFile = record;
@@ -187,7 +176,7 @@
         path,
         del,
         copyUrl,
-        fetchData,
+        refetch,
         t,
         span,
         file,
