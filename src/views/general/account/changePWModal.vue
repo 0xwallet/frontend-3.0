@@ -27,7 +27,6 @@
   import { defineComponent, ref } from 'vue';
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { BasicForm, FormSchema, useForm } from '/@/components/Form';
-  import { useApollo } from '/@/hooks/apollo/apollo';
   import { me, resetPassword, sendVerifyCode } from '/@/hooks/apollo/gqlUser';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
@@ -116,14 +115,11 @@
           closeModal();
         }
       }
+      const { mutate: SendCode } = useMutation(sendVerifyCode);
       async function getVerifyCode() {
-        await useApollo({
-          mode: 'mutate',
-          gql: sendVerifyCode,
-          variables: {
-            email: user.email,
-            type: 'RESET_PASSWORD',
-          },
+        await SendCode({
+          email: user.email,
+          type: 'RESET_PASSWORD',
         });
       }
       function forgetPassword() {

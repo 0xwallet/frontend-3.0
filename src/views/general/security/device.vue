@@ -25,7 +25,8 @@
   import { useMessage } from '/@/hooks/web/useMessage';
   import DeviceModal from './deviceModal.vue';
   import { useModal } from '/@/components/Modal';
-  import { getMe } from '/@/hooks/apollo/apollo';
+  import { useQuery } from '@vue/apollo-composable';
+  import { me } from '/@/hooks/apollo/gqlUser';
 
   export default defineComponent({
     components: {
@@ -43,29 +44,27 @@
       const { createMessage } = useMessage();
       const [register, { openModal, setModalProps }] = useModal();
       const deviceList = ref([]);
-      function fetchData() {
-        getMe().then((res) => {
-          deviceList.value = [];
-          deviceList.value.push({ publicKey: '', type: '新设备' });
-          res.wallets.forEach((v) => {
-            if (v.tags[0] !== 'MESSAGE' && v.info.publicKey !== null) {
-              deviceList.value.push({ publicKey: v.info.publicKey, type: 'NKN-nMobile' });
-            }
-          });
-          deviceList.value.push({ publicKey: '', type: 'Fido-USB' });
-          deviceList.value.push({ publicKey: '', type: 'Fido-Fingerprint' });
-          deviceList.value.push({ publicKey: '', type: 'Fido-Bluetooth' });
-        });
-      }
-      fetchData();
 
+      const { onResult: getMe, refetch } = useQuery(me);
+      getMe((res) => {
+        deviceList.value = [];
+        deviceList.value.push({ publicKey: '', type: '新设备' });
+        res.wallets.forEach((v) => {
+          if (v.tags[0] !== 'MESSAGE' && v.info.publicKey !== null) {
+            deviceList.value.push({ publicKey: v.info.publicKey, type: 'NKN-nMobile' });
+          }
+        });
+        deviceList.value.push({ publicKey: '', type: 'Fido-USB' });
+        deviceList.value.push({ publicKey: '', type: 'Fido-Fingerprint' });
+        deviceList.value.push({ publicKey: '', type: 'Fido-Bluetooth' });
+      });
       function openDeviceModal() {
         openModal(true);
         setModalProps({
           title: t('deviceModalTitle'),
           canFullscreen: false,
           afterClose: () => {
-            fetchData();
+            refetch();
           },
         });
       }

@@ -1,4 +1,3 @@
-import { me } from '/@/hooks/apollo/gqlUser';
 import { useMessage } from '/@/hooks/web/useMessage';
 import { userStore } from '/@/store/modules/user';
 import { provide } from 'vue';
@@ -107,17 +106,5 @@ export function handleApolloError(err: any) {
   createErrorModal({
     title: '错误',
     content: err.message,
-  });
-}
-
-export function getMe(): Promise<any> {
-  return new Promise((resolve) => {
-    useApollo({ mode: 'query', gql: me })
-      .then((res) => {
-        resolve(res.data.me);
-      })
-      .catch((err) => {
-        handleApolloError(err);
-      });
   });
 }

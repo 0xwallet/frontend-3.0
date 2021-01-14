@@ -7,7 +7,6 @@
   import { defineComponent, ref } from 'vue';
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { BasicForm, FormSchema, useForm } from '/@/components/Form';
-  import { useApollo } from '/@/hooks/apollo/apollo';
   import { resetPassword } from '/@/hooks/apollo/gqlUser';
 
   const schemas: FormSchema[] = [

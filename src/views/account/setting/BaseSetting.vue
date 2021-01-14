@@ -6,14 +6,15 @@
 </template>
 <script lang="ts">
   import { Button } from 'ant-design-vue';
-  import { defineComponent, onMounted } from 'vue';
+  import { defineComponent } from 'vue';
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { CollapseContainer } from '/@/components/Container/index';
 
   import { useMessage } from '/@/hooks/web/useMessage';
 
   import { baseSetschemas } from './data';
-  import { getMe } from '/@/hooks/apollo/apollo';
+  import { useQuery } from '@vue/apollo-composable';
+  import { me } from '/@/hooks/apollo/gqlUser';
 
   export default defineComponent({
     components: { BasicForm, CollapseContainer, Button },
@@ -25,14 +26,12 @@
         schemas: baseSetschemas,
         showActionButtonGroup: false,
       });
-
-      onMounted(async () => {
-        getMe().then((res) => {
-          const user = res.data?.me;
-          setFieldsValue({
-            id: user.id,
-            email: user.email,
-          });
+      const { onResult: getMe } = useQuery(me);
+      getMe((res) => {
+        const user = res.data?.me;
+        setFieldsValue({
+          id: user.id,
+          email: user.email,
         });
       });
 
