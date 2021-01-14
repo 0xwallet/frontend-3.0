@@ -6,8 +6,12 @@ import { provide } from 'vue';
 import { ApolloClient, InMemoryCache, split } from '@apollo/client';
 import { DefaultApolloClient } from '@vue/apollo-composable';
 import { ApolloLink, HttpLink } from '@apollo/client/core';
+
+// @ts-ignore
 import { Socket as PhoenixSocket } from 'phoenix/assets/js/phoenix';
+// @ts-ignore
 import { createAbsintheSocketLink } from '@absinthe/socket-apollo-link';
+// @ts-ignore
 import * as AbsintheSocket from '@absinthe/socket';
 import { getMainDefinition } from '@apollo/client/utilities';
 // 与 API 的 HTTP 连接

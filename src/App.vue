@@ -7,7 +7,7 @@
 </template>
 
 <script lang="ts">
-  import { defineComponent, provide } from 'vue';
+  import { defineComponent } from 'vue';
   import { ConfigProvider } from 'ant-design-vue';
 
   import { initAppConfigStore } from '/@/setup/App';
