@@ -49,8 +49,7 @@
   import { BasicTable, useTable } from '/@/components/Table';
   import { useMessage } from '/@/hooks/web/useMessage';
   import GIcon from '/@/components/Icon';
-  import { useApollo } from '/@/hooks/apollo/apollo';
-  import { driveListFiles, driveListShares } from '/@/hooks/apollo/gqlFile';
+  import { driveListShares } from '/@/hooks/apollo/gqlFile';
   import { getBasicColumns } from './shareData';
   import { NetFile } from '/@/components/NetFile/netFile';
   import { useQuery } from '@vue/apollo-composable';
@@ -110,7 +109,7 @@
         scroll: { x: 1000, y: 1000 },
       });
 
-      const { onError, onResult, refetch } = useQuery(driveListShares, null, () => ({
+      const { onResult, refetch } = useQuery(driveListShares, null, () => ({
         fetchPolicy: 'network-only',
       }));
       onResult((res) => {

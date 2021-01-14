@@ -83,10 +83,9 @@
   </div>
 </template>
 <script lang="ts">
-  import { computed, defineComponent, unref, ref, nextTick, onMounted, UnwrapRef } from 'vue';
+  import { computed, defineComponent, unref, ref, onMounted, UnwrapRef } from 'vue';
   import { Card, Space } from 'ant-design-vue';
   import { useRouter } from 'vue-router';
-  import { useApollo } from '/@/hooks/apollo/apollo';
   import { drivePreviewShare } from '/@/hooks/apollo/gqlFile';
   import { NetFile } from '/@/components/NetFile/netFile';
   import { useTable, BasicTable } from '/@/components/Table';
@@ -97,6 +96,7 @@
   import Hash from '/@/components/NetFile/Hash.vue';
   import { fileStore } from '/@/store/modules/netFile';
   import ShareFileMobile from '/@/views/general/metanet/share/component/ShareFileMobile.vue';
+  import { useQuery } from '@vue/apollo-composable';
 
   export default defineComponent({
     name: 'TestTab',
@@ -202,18 +202,15 @@
       //   //   }, 1000);
       //   // });
       // });
-      nextTick(() => {});
-      onMounted(() => {
-        useApollo({ mode: 'query', gql: drivePreviewShare, variables: params.value }).then(
-          (res) => {
-            needCode.value = res.data?.drivePreviewShare.needCode;
-            userPreview.value = res.data?.drivePreviewShare.UserPreview;
-            if (!res.data?.drivePreviewShare.needCode) {
-              fileStore.fetchShareFile(params.value);
-            }
-          }
-        );
+      const { onResult: PreviewShare } = useQuery(drivePreviewShare, params.value);
+      PreviewShare((res) => {
+        needCode.value = res.data?.drivePreviewShare.needCode;
+        userPreview.value = res.data?.drivePreviewShare.UserPreview;
+        if (!res.data?.drivePreviewShare.needCode) {
+          fileStore.fetchShareFile(params.value);
+        }
       });
+      onMounted(() => {});
 
       async function fetchData() {
         const { code } = await validateFields();

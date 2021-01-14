@@ -184,8 +184,7 @@
     InfoCircleOutlined,
     ExclamationCircleOutlined,
   } from '@ant-design/icons-vue';
-  import { useApollo } from '/@/hooks/apollo/apollo';
-  import { driveListFiles, driveDeleteFiles, driveFileUploaded } from '/@/hooks/apollo/gqlFile';
+  import { driveListFiles, driveDeleteFiles } from '/@/hooks/apollo/gqlFile';
   import { useModal } from '/@/components/Modal';
   import { NetFile } from '/@/components/NetFile/netFile';
   import { useI18n } from '/@/hooks/web/useI18n';
