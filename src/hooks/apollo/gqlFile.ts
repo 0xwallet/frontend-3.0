@@ -139,8 +139,8 @@ export const driveMakeDirUnder = gql`
 `;
 // 移动文件到指定ID
 export const driveMoveFile = gql`
-  mutation($fromId: String!, $toId: String!) {
-    driveMoveFile(fromId: $fromId, toId: $toId)
+  mutation($fromId: String!, $fromSpace: DriveSpace!, $toId: String!, $toSpace: DriveSpace!) {
+    driveMoveFile(fromId: $fromId, fromSpace: $fromSpace, toId: $toId, toSpace: $toSpace)
   }
 `;
 

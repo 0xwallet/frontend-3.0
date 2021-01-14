@@ -36,7 +36,7 @@
                 <Divider type="vertical" />
                 <a-button type="primary"> {{ t('previewButton') }} </a-button>
                 <a-button type="primary"> {{ t('shareButton') }} </a-button>
-                <a-button type="primary"> {{ t('release') }} </a-button>
+                <a-button type="primary"> {{ t('publish') }} </a-button>
                 <Dropdown :trigger="['click']">
                   <a-button type="primary"><EllipsisOutlined /></a-button>
                   <template #overlay>
@@ -49,7 +49,7 @@
                         <a-button type="link">{{ t('shareButton') }}</a-button>
                       </MenuItem>
                       <MenuItem>
-                        <a-button type="link">{{ t('release') }}</a-button>
+                        <a-button type="link">{{ t('publish') }}</a-button>
                       </MenuItem>
 
                       <MenuItem>

@@ -11,11 +11,11 @@
   import { defineComponent, ref } from 'vue';
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { Tree, Progress, Row, Col } from 'ant-design-vue';
-  import { useApollo } from '/@/hooks/apollo/apollo';
   import { driveListFiles, driveMoveFile } from '/@/hooks/apollo/gqlFile';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { TreeItem } from '/@/components/Tree';
   import { useI18n } from '/@/hooks/web/useI18n';
+  import { useMutation, useQuery } from '@vue/apollo-composable';
   const { t } = useI18n('general.metanet');
   export default defineComponent({
     components: { BasicModal, Tree, Progress, Row, Col },
@@ -31,43 +31,45 @@
         total.value = data.folder.length;
         path.value = [data.path[data.path.length - 1]];
       });
+      const variables = ref({});
+      const { onResult } = useQuery(driveListFiles, variables);
+      const { mutate: MoveFile } = useMutation(driveMoveFile);
+      let tree = null;
 
-      function onLoadData(treeNode) {
+      onResult((res) => {
+        if (!tree) return;
+        const list = res.data.driveListFiles;
+        let temp: TreeItem[] = [];
+        if (!list) {
+          return;
+        }
+        list.forEach((v, index) => {
+          if (index < 2) {
+            return;
+          }
+          if (v && v.isDir && v.id !== 'root' && v.id != tree.value) {
+            temp.push({ title: v.fullName[v.fullName.length - 1], key: v.id, value: v.id });
+          }
+        });
+        tree.dataRef.children = temp;
+      });
+      async function onLoadData(treeNode) {
         if (treeNode.dataRef.children) {
           return;
         }
-        return useApollo({
-          mode: 'query',
-          sql: driveListFiles,
-          variables: { dirId: treeNode.value },
-        }).then((res) => {
-          let temp: TreeItem[] = [];
-          if (!res.data.driveListFiles) {
-            return;
-          }
-          res.data.driveListFiles.forEach((v, index) => {
-            if (index < 2) {
-              return;
-            }
-            if (v && v.isDir && v.id !== 'root' && v.id != treeNode.value) {
-              temp.push({ title: v.fullName[v.fullName.length - 1], key: v.id, value: v.id });
-            }
-          });
-          treeNode.dataRef.children = temp;
-        });
+        tree = treeNode;
+        variables.value = { dirId: treeNode.value };
       }
       async function moveFile() {
         try {
           now.value = 0;
           for (let i = 0; i < folder.length; i++) {
             if (folder[i] != path.value[0]) {
-              await useApollo({
-                mode: 'mutate',
-                gql: driveMoveFile,
-                variables: {
-                  fromId: folder[i],
-                  toId: path.value[0],
-                },
+              await MoveFile({
+                fromId: folder[i],
+                toId: path.value[0],
+                fromSpace: 'PRIVATE',
+                toSpace: 'PRIVATE',
               });
               now.value += 1;
             }

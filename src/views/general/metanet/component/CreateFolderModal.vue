@@ -4,12 +4,12 @@
   </BasicModal>
 </template>
 <script lang="ts">
-  import { defineComponent, ref, nextTick } from 'vue';
+  import { defineComponent, ref } from 'vue';
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { BasicForm, FormSchema, useForm } from '/@/components/Form/index';
-  import { useApollo } from '/@/hooks/apollo/apollo';
   import { driveMakeDir, driveMakeDirUnder } from '/@/hooks/apollo/gqlFile';
   import { useMessage } from '/@/hooks/web/useMessage';
+  import { useMutation } from '@vue/apollo-composable';
   const schemas: FormSchema[] = [
     {
       field: 'fullName',
@@ -43,6 +43,12 @@
         folder.value = data.folder;
       });
 
+      const { mutate: MakeDir, onDone } = useMutation(
+        dirId === 'root' ? driveMakeDir : driveMakeDirUnder
+      );
+      onDone(() => {
+        closeModal();
+      });
       function createFolder() {
         validateFields().then((res) => {
           if (folder.value.find((v) => v.fullName == res.fullName)) {
@@ -53,14 +59,8 @@
             return;
           }
           res.parentId = dirId;
-          console.log(res);
-          useApollo({
-            mode: 'mutate',
-            gql: dirId === 'root' ? driveMakeDir : driveMakeDirUnder,
-            variables: res,
-          }).finally(() => {
-            closeModal();
-          });
+
+          MakeDir(res);
         });
       }
       return { register, schemas, registerForm, model: modelRef, createFolder };

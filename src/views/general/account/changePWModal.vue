@@ -24,10 +24,10 @@
   </BasicModal>
 </template>
 <script lang="ts">
-  import { computed, defineComponent, ref } from 'vue';
+  import { defineComponent, ref } from 'vue';
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { BasicForm, FormSchema, useForm } from '/@/components/Form';
-  import { getMe, useApollo } from '/@/hooks/apollo/apollo';
+  import { useApollo } from '/@/hooks/apollo/apollo';
   import { me, resetPassword, sendVerifyCode } from '/@/hooks/apollo/gqlUser';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
@@ -35,7 +35,7 @@
   import CryptoES from 'crypto-es';
   import { Divider, Row, Col } from 'ant-design-vue';
   import { CountDown } from '/@/components/CountDown';
-  import { useQuery, useResult } from '@vue/apollo-composable';
+  import { useMutation, useQuery } from '@vue/apollo-composable';
 
   const { t } = useI18n('general.account');
   const schemas: FormSchema[] = [
@@ -71,10 +71,6 @@
     components: { BasicModal, BasicForm, Divider, Row, Col, CountDown },
     setup() {
       const modelRef = ref({});
-      const emailButton = ref(0);
-      const button = computed(() => {
-        return emailButton.value < 1 ? t('send') : `wait ${emailButton.value} ${t('seconds')}`;
-      });
       const [registerForm, { validateFields, appendSchemaByField, updateSchema }] = useForm({
         labelWidth: 180,
         schemas,
@@ -84,8 +80,13 @@
         },
       });
 
-      const { onResult: getMe } = useQuery(me);
+      const { onResult: GetMe } = useQuery(me);
+      GetMe((res) => {
+        user.value = res.data.me;
+      });
+      const user = ref({});
 
+      const { mutate: ResetPassword, onDone } = useMutation(resetPassword);
       const { createErrorModal, createMessage } = useMessage();
       const [register, { closeModal }] = useModalInner();
 
@@ -93,27 +94,20 @@
         try {
           const data = await validateFields();
           const oldWallet = await useWallet();
-          const { result } = useQuery(me);
-          // const user = await getMe();
           const secret = CryptoES.enc.Base64.stringify(
-            CryptoES.HmacSHA512(user.email, data.newPassword)
+            CryptoES.HmacSHA512(user.value.email, data.newPassword)
           );
           const NKN = await useNKN();
           let w = new NKN.Wallet({ seed: oldWallet.getSeed(), password: secret });
           const walletJson = JSON.stringify(w.toJSON());
-
-          const res = await useApollo({
-            mode: 'mutate',
-            gql: resetPassword,
-            variables: {
-              email: user.email,
-              encryptedWallet: walletJson,
-              newPassword: data.newPassword,
-              oldPassword: data.oldPassword,
-              nknPublicKey: w.getPublicKey(),
-            },
+          const res = await ResetPassword({
+            email: user.value.email,
+            encryptedWallet: walletJson,
+            newPassword: data.newPassword,
+            oldPassword: data.oldPassword,
+            nknPublicKey: w.getPublicKey(),
           });
-          saveWallet({ email: user.email, password: data.newPassword, walletJson });
+          saveWallet({ email: user.value.email, password: data.newPassword, walletJson });
           localStorage.setItem('token', res.data?.resetPassword?.token || '');
           createMessage.success(t('changeSuccess'));
         } catch (err) {
@@ -123,34 +117,14 @@
         }
       }
       async function getVerifyCode() {
-        if (emailButton.value > 0) {
-          createMessage.error(`wait ${emailButton.value} ${t('seconds')}`);
-          return;
-        }
-        const user = await getMe();
-        useApollo({
+        await useApollo({
           mode: 'mutate',
           gql: sendVerifyCode,
           variables: {
             email: user.email,
             type: 'RESET_PASSWORD',
           },
-        })
-          .then(() => {
-            createMessage.success(t('verificationSend'));
-            emailButton.value = 60;
-            setInterval(() => {
-              if (emailButton.value < 1) {
-                emailButton.value = 0;
-                clearInterval();
-                return;
-              }
-              emailButton.value -= 1;
-            }, 1000);
-          })
-          .catch((err) => {
-            createErrorModal({ content: err });
-          });
+        });
       }
       function forgetPassword() {
         updateSchema({
@@ -162,6 +136,11 @@
           field: 'code',
           slot: 'code',
           component: 'Input',
+          componentProps: {
+            options: async () => {
+              return await getTree();
+            },
+          },
           rules: [{ required: true }],
         });
       }
@@ -172,7 +151,6 @@
         changePassword,
         t,
         getVerifyCode,
-        button,
         forgetPassword,
       };
     },
