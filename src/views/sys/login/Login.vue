@@ -272,7 +272,7 @@
   });
 </script>
 <style lang="less">
-  @import (reference) '../../../design/index.less';
+
 
   .center {
     text-align: center;
