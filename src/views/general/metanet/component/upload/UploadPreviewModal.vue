@@ -19,7 +19,7 @@
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { previewProps } from './props';
   import { PreviewFileItem } from './types';
-  import { createImgPreview } from '/@/components/Preview/index';
+  // import { createImgPreview } from '/@/components/Preview/index';
   import { downloadByUrl } from '/@/utils/file/download';
 
   import { createPreviewColumns, createPreviewActionColumn } from './data';
@@ -59,13 +59,13 @@
         }
       }
 
-      // 预览
-      function handlePreview(record: PreviewFileItem) {
-        const { url = '' } = record;
-        createImgPreview({
-          imageList: [url],
-        });
-      }
+      // // 预览
+      // function handlePreview(record: PreviewFileItem) {
+      //   const { url = '' } = record;
+      //   createImgPreview({
+      //     imageList: [url],
+      //   });
+      // }
 
       // 下载
       function handleDownload(record: PreviewFileItem) {

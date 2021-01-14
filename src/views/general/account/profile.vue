@@ -55,11 +55,11 @@
           <Input v-model:value="userInfo.email" v-if="edit"></Input>
         </Col>
         <Col :span="8">
-          <span v-if="!edit">{{ userInfo.country || 'UnKnow' }}</span>
+          <span v-if="!edit">{{ userInfo.country }}</span>
           <Input v-model:value="userInfo.country" v-if="edit"></Input>
         </Col>
         <Col :span="8">
-          <span v-if="!edit">{{ userInfo.passport || 'UnKnow' }}</span>
+          <span v-if="!edit">{{ userInfo.passport }}</span>
           <Input v-model:value="userInfo.passport" v-if="edit"></Input
         ></Col>
       </Row>
@@ -111,7 +111,6 @@
   import { BasicTitle, BasicHelp } from '/@/components/Basic';
   import { Card, Avatar, Divider, Modal, Tag, Row, Col, Switch, Input, Spin } from 'ant-design-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import { useApollo, getMe } from '/@/hooks/apollo/apollo';
   import { useWallet } from '/@/hooks/nkn/getNKN';
   import {
     QrcodeOutlined,
@@ -121,13 +120,14 @@
     CheckOutlined,
     CloseOutlined,
   } from '@ant-design/icons-vue';
-  import { QrCode } from '/@/components/Qrcode/index';
+  import { QrCode } from '/@/components/Qrcode';
   import { useCopyToClipboard } from '/@/hooks/web/useCopyToClipboard';
   import { useMessage } from '/@/hooks/web/useMessage';
   import PWModal from './changePWModal.vue';
   import { useModal } from '/@/components/Modal';
   import { userStore } from '/@/store/modules/user';
-  import { editCurrentUser } from '/@/hooks/apollo/gqlUser';
+  import { editCurrentUser, me } from '/@/hooks/apollo/gqlUser';
+  import { useMutation, useQuery } from '@vue/apollo-composable';
 
   export default defineComponent({
     components: {
@@ -177,35 +177,31 @@
       const { clipboardRef, copiedRef } = useCopyToClipboard();
       const { createMessage, createErrorModal } = useMessage();
       const [registerPWModal, { openModal: openPwModal }] = useModal();
-      function fetchData() {
-        getMe()
-          .then((res) => {
-            userInfo.username = res.username;
-            userInfo.avatar = res.avatar;
-            userInfo.email = res.email;
-            userInfo.bio = res.bio;
-            userInfo.country = res.personalInfo.country;
-            userInfo.passport = res.personalInfo?.passport;
-            res.wallets.forEach((v) => {
-              if (v.tags.length > 0) {
-                v.tags.forEach((v1) => {
-                  if (v1 === 'MESSAGE') {
-                    wallet.value = v;
-                  }
-                });
+
+      const { onResult: getMe, refetch } = useQuery(me);
+      getMe((res) => {
+        const { me } = res.data;
+        userInfo.username = me.username;
+        userInfo.avatar = me.avatar;
+        userInfo.email = me.email;
+        userInfo.bio = me.bio;
+        userInfo.country = me.personalInfo?.country || 'UnKnow';
+        userInfo.passport = me.personalInfo?.passport || 'UnKnow';
+        me.wallets.forEach((v) => {
+          if (v.tags.length > 0) {
+            v.tags.forEach((v1) => {
+              if (v1 === 'MESSAGE') {
+                wallet.value = v;
               }
             });
-          })
-          .finally(() => {
-            spinning.value = false;
-          });
-
+          }
+        });
+        spinning.value = false;
         useWallet().then((w) => {
           publicKey.value = w.getPublicKey();
         });
-      }
+      });
 
-      fetchData();
       function openQr() {
         visible.value = true;
       }
@@ -218,29 +214,25 @@
           createMessage.success('copy success！');
         }
       }
+      const { mutate: EditUser, onError, onDone } = useMutation(editCurrentUser);
+      onError((err) => {
+        createErrorModal({ content: err });
+      });
+      onDone(() => {
+        refetch();
+      });
       function editInfo(checked: Boolean) {
         if (!checked) {
-          console.log(userInfo);
           spinning.value = true;
-          useApollo({
-            mode: 'mutate',
-            gql: editCurrentUser,
-            variables: {
-              avatar: userInfo.avatar,
-              bio: userInfo.bio,
-              username: userInfo.username,
-              personalInfo: {
-                country: userInfo.country,
-                passport: userInfo.country,
-              },
+          EditUser({
+            avatar: userInfo.avatar,
+            bio: userInfo.bio,
+            username: userInfo.username,
+            personalInfo: {
+              country: userInfo.country,
+              passport: userInfo.country,
             },
-          })
-            .catch((err) => {
-              createErrorModal({ content: err });
-            })
-            .finally(() => {
-              fetchData();
-            });
+          });
         }
       }
 

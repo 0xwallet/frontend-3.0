@@ -28,13 +28,14 @@
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { BasicForm, FormSchema, useForm } from '/@/components/Form';
   import { getMe, useApollo } from '/@/hooks/apollo/apollo';
-  import { resetPassword, sendVerifyCode } from '/@/hooks/apollo/gqlUser';
+  import { me, resetPassword, sendVerifyCode } from '/@/hooks/apollo/gqlUser';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { useWallet, useNKN, saveWallet } from '/@/hooks/nkn/getNKN';
   import CryptoES from 'crypto-es';
   import { Divider, Row, Col } from 'ant-design-vue';
   import { CountDown } from '/@/components/CountDown';
+  import { useQuery, useResult } from '@vue/apollo-composable';
 
   const { t } = useI18n('general.account');
   const schemas: FormSchema[] = [
@@ -82,6 +83,9 @@
           span: 24,
         },
       });
+
+      const { onResult: getMe } = useQuery(me);
+
       const { createErrorModal, createMessage } = useMessage();
       const [register, { closeModal }] = useModalInner();
 
@@ -89,7 +93,8 @@
         try {
           const data = await validateFields();
           const oldWallet = await useWallet();
-          const user = await getMe();
+          const { result } = useQuery(me);
+          // const user = await getMe();
           const secret = CryptoES.enc.Base64.stringify(
             CryptoES.HmacSHA512(user.email, data.newPassword)
           );

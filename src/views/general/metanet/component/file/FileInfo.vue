@@ -43,9 +43,7 @@
   import { byteTransfer } from '/@/utils/disk/file';
   import moment from 'moment';
   import { CloseSquareOutlined } from '@ant-design/icons-vue';
-  import { useLocale } from '/@/hooks/web/useLocale';
   import { propTypes } from '/@/utils/propTypes';
-  useLocale();
   export default defineComponent({
     name: 'FileInfo',
     components: {

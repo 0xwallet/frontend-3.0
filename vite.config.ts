@@ -92,7 +92,11 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
         'ant-design-vue/es/locale/zh_CN',
         'moment/dist/locale/zh-cn',
         'ant-design-vue/es/locale/en_US',
+        '@apollo/client/core',
+        '@apollo/client/cache',
+        '@apollo/client/utilities',
+        'phoenix/assets/js/phoenix',
       ],
     },
-  }
+  };
 };

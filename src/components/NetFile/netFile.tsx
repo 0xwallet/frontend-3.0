@@ -8,7 +8,6 @@ import {
 } from '/@/hooks/apollo/gqlFile';
 import { toLower } from 'lodash-es';
 import { downloadByUrl } from '/@/utils/file/download';
-import { createImgPreview } from '/@/components/Preview';
 import { unref } from 'vue';
 import { useCopyToClipboard } from '/@/hooks/web/useCopyToClipboard';
 import { useMessage } from '/@/hooks/web/useMessage';
@@ -118,9 +117,9 @@ export class NetFile {
           this.fullName
         }?token=${token}`;
         if (this.type === 'png' || this.type == 'jpg') {
-          createImgPreview({
-            imageList: [url],
-          });
+          // createImgPreview({
+          //   imageList: [url],
+          // });
         }
         resolve(url);
       });

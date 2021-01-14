@@ -51,7 +51,6 @@
   // utils
   import { checkFileType, checkImgType, getBase64WithFile } from './utils';
   import { buildUUID } from '/@/utils/uuid';
-  import { createImgPreview } from '/@/components/Preview';
 
   import FileList from './FileList';
   //Apollo
@@ -186,15 +185,6 @@
         index !== -1 && fileStore.getUploadList.splice(index, 1);
       }
 
-      // 预览
-      function handlePreview(record: FileItem) {
-        const { thumbUrl = '' } = record;
-        console.log(thumbUrl);
-        createImgPreview({
-          imageList: [thumbUrl],
-        });
-      }
-
       // 点击开始上传
       async function handleStartUpload() {
         const { maxNumber } = props;
@@ -272,7 +262,7 @@
       //   });
       return {
         columns: createTableColumns(),
-        actionColumn: createActionColumn(handleRemove, handlePreview),
+        actionColumn: createActionColumn(handleRemove),
         register,
         closeModal,
         getHelpText,

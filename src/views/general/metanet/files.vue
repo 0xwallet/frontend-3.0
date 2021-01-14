@@ -224,12 +224,6 @@
       FileInfo,
     },
     setup() {
-      const { onResult: onWSResult } = useSubscription(driveFileUploaded, () => ({
-        userId: localStorage.getItem('uid'),
-      }));
-      onWSResult((res) => {
-        console.log(res);
-      });
       // 信息框
       const { createMessage, createErrorModal } = useMessage();
       // 文件路径面包屑
