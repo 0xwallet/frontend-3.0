@@ -97,8 +97,6 @@ export default (mode: 'development' | 'production'): UserConfig => {
         '@ant-design/icons-vue',
         '@apollo/client/core',
         '@apollo/client/cache',
-        '@apollo/client/link/ws',
-        '@apollo/client/link/context',
         '@apollo/client/utilities',
         'phoenix/assets/js/phoenix',
       ],
@@ -120,7 +118,7 @@ export default (mode: 'development' | 'production'): UserConfig => {
 
     rollupInputOptions: {
       external: ['react'],
-     plugins: createRollupPlugin(),
+      plugins: createRollupPlugin(),
     },
 
     rollupOutputOptions: {
