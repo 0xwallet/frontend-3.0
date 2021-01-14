@@ -12,7 +12,7 @@
     :okButtonProps="getOkButtonProps"
     :cancelButtonProps="{ disabled: isUploadingRef }"
   >
-    <template #centerdFooter>
+    <template #centerFooter>
       <a-button
         @click="handleStartUpload"
         color="success"
@@ -55,11 +55,11 @@
   import FileList from './FileList';
   //Apollo
 
-  import { useApollo } from '/@/hooks/apollo/apollo';
   import { driveUploadByHash } from '/@/hooks/apollo/gqlFile';
   import CryptoES from 'crypto-es';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { fileStore } from '/@/store/modules/netFile';
+  import { useMutation } from '@vue/apollo-composable';
   const { t } = useI18n('general.metanet');
   export default defineComponent({
     components: { BasicModal, Upload, Alert, FileList },
@@ -115,6 +115,7 @@
           ? t('reUpload')
           : t('uploadButton');
       });
+      const { mutate: UploadByHash } = useMutation(driveUploadByHash);
 
       // 上传前校验
       function beforeUpload(file: File) {
@@ -138,13 +139,10 @@
           hash = CryptoES.SHA256(wordArray).toString();
           let status = '';
           let percent = 0;
-          useApollo({
-            mode: 'mutate',
-            gql: driveUploadByHash,
-            variables: {
-              fullName: [...path, name],
-              hash: hash,
-            },
+          console.log(hash);
+          UploadByHash({
+            fullName: [...path, name],
+            hash: hash,
           })
             .then(() => {
               status = UploadResultStatus.SUCCESS;
