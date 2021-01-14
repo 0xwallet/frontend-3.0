@@ -1,10 +1,8 @@
-// import apollo from '/@/lib/esm/apollo';
 import { me } from '/@/hooks/apollo/gqlUser';
 import { useMessage } from '/@/hooks/web/useMessage';
 import { userStore } from '/@/store/modules/user';
 import { provide } from 'vue';
 
-// const apolloWSClient = apollo.getWS();
 import { ApolloClient, InMemoryCache, split } from '@apollo/client';
 import { DefaultApolloClient } from '@vue/apollo-composable';
 import { ApolloLink, HttpLink } from '@apollo/client/core';
@@ -94,10 +92,6 @@ export function useApollo(params: { mode: string; gql: any; variables?: any }): 
       reject(err);
     });
   });
-}
-
-export function useApolloWS(): ApolloClient<any> {
-  return apollo.getWS();
 }
 
 export function handleApolloError(err: any) {
