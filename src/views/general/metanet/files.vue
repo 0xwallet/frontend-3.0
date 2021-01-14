@@ -195,7 +195,8 @@
 
   import FileInfo from './component/file/FileInfo.vue';
   import Hash from '/@/components/NetFile/Hash.vue';
-  import { useQuery, useSubscription } from '@vue/apollo-composable';
+  import { useMutation, useQuery, useSubscription } from '@vue/apollo-composable';
+  import { editCurrentUser } from '/@/hooks/apollo/gqlUser';
 
   export default defineComponent({
     components: {
@@ -454,6 +455,7 @@
             refetch();
           });
       }
+      const { mutate: DeleteFiles } = useMutation(driveDeleteFiles);
       //批量删除文件
       function delFiles() {
         if (getSelectRowKeys().length === 0) {
@@ -476,11 +478,7 @@
               content: `${t('deleting')} ${getSelectRowKeys().length} ${t('items')}...`,
               key: 'deleteModal',
             });
-            useApollo({
-              mode: 'mutate',
-              gql: driveDeleteFiles,
-              variables: { ids: getSelectRowKeys(), space: 'PRIVATE' },
-            })
+            DeleteFiles({ ids: getSelectRowKeys(), space: 'PRIVATE' })
               .then((res) => {
                 const count = res.data?.driveDeleteFiles;
                 createMessage.success({ content: t('deleted'), key: 'deleteModal', duration: 2 });
