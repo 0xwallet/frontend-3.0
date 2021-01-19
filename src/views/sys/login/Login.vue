@@ -20,6 +20,9 @@
               <a-input size="large" v-model:value="formData.email" placeholder="email">
                 <template #addonBefore><MailOutlined /></template
               ></a-input>
+          <a-form class="login-form__main" :model="formData" :rules="formRules" ref="formRef">
+            <a-form-item name="account">
+              <a-input size="large" v-model:value="formData.account" placeholder="username: vben" />
             </a-form-item>
             <a-form-item
               name="password"
@@ -43,9 +46,6 @@
               />
             </a-form-item>
 
-            <!-- <a-form-item name="verify" v-if="openLoginVerify">
-              <BasicDragVerify v-model:value="formData.verify" ref="verifyRef" />
-            </a-form-item> -->
             <a-row>
               <a-col :span="12">
                 <a-form-item>
@@ -102,12 +102,15 @@
   <ForgetPassword @register="registerFPModal" />
 </template>
 <script lang="ts">
-  import { defineComponent, reactive, ref, unref } from 'vue';
-  import { Checkbox, Divider, Row, Col, Input } from 'ant-design-vue';
+  import { defineComponent, reactive, ref, unref,toRaw } from 'vue';
+  import { Checkbox, Divider, Row, Col, Input,Form } from 'ant-design-vue';
   import { MailOutlined, LockOutlined } from '@ant-design/icons-vue';
+
   import { Button } from '/@/components/Button';
   import { AppLocalePicker } from '/@/components/Application';
+
   import { userStore } from '/@/store/modules/user';
+
   import { useMessage } from '/@/hooks/web/useMessage';
   import { useGlobSetting, useProjectSetting } from '/@/hooks/setting';
   import logo from '/@/assets/images/logo.png';
@@ -121,17 +124,20 @@
   import { useMutation } from '@vue/apollo-composable';
   export default defineComponent({
     components: {
+      [Checkbox.name]: Checkbox,
+      [Form.name]: Form,
+      [Form.Item.name]: Form.Item,
+      [Input.name]: Input,
+      [Input.Password.name]: Input.Password,
       AButton: Button,
-      ACheckbox: Checkbox,
       AppLocalePicker,
       MailOutlined,
       LockOutlined,
-      Divider,
-      Row,
-      Col,
       InputSearch: Input.Search,
       CountDown,
       ForgetPassword,
+      [Row.name]: Row,
+      [Col.name]: Col,
     },
     setup() {
       localStorage.setItem('walletJson', '');
@@ -150,8 +156,6 @@
       const { locale } = useProjectSetting();
       const { t } = useI18n('sys.login');
       const [registerFPModal, { openModal }] = useModal();
-
-      // const openLoginVerifyRef = computed(() => appStore.getProjectConfig.openLoginVerify);
 
       const formData = reactive({
         email: 'jinmao88@qq.com',
@@ -250,13 +254,11 @@
 
       return {
         formRef,
-        // verifyRef,
         formData,
         formState,
         formRules,
         login: handleLogin,
         autoLogin: autoLoginRef,
-        // openLoginVerify: openLoginVerifyRef,
         title: globSetting && globSetting.title,
         logo,
         go,
@@ -311,6 +313,10 @@
       border-radius: 4px;
       background-clip: padding-box;
       .respond-to(xlarge, { margin: 0 50px 0 50px});
+
+      &__main {
+        margin: 30px auto 0 auto !important;
+      }
 
       &-wrap {
         position: absolute;
