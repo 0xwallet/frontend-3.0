@@ -27,9 +27,9 @@ export const mainOutRoutes: AppRouteModule[] = [
     ],
   },
   {
-    path: '/h',
-    name: 'Hash',
-    component: () => import('/@/views/general/metanet/publish/releaseFile.vue'),
+    path: '/p',
+    name: 'Publish',
+    component: () => import('/@/views/general/metanet/publish/publishFile.vue'),
     meta: {
       title: 'routes.menu.release',
       ignoreAuth: true,

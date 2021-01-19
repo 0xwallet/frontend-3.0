@@ -68,6 +68,19 @@ export const driveListPublishs = gql`
   }
 `;
 
+//发布文件txid
+export const driveFindPublish = gql`
+  query ($txid:String!){
+    driveFindPublish(txid:$txid) {
+      current {
+        id
+        txid
+        ${userFile}
+        version
+      }}
+  }
+`;
+
 //分享文件
 export const driveFindShare = gql`
   query($uri: String!, $code: String) {

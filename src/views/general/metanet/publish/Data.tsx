@@ -54,6 +54,10 @@ export function getBasicColumns(): BasicColumn[] {
     {
       title: t('publishLink'),
       dataIndex: 'txid',
+      customRender: ({ text }) => {
+        console.log(text);
+        return text;
+      },
     },
     {
       title: t('status'),
