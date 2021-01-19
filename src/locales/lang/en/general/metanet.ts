@@ -74,6 +74,12 @@ export default {
   publishVersion: 'Publish Version',
   publishLink: 'Publish Link',
   publishConfirm: 'Confirm Publish ?',
+  publishFile: 'Publish File',
+  publishSuccess: 'Publish Success',
   setting: 'Setting',
   yes: 'Yes',
+  version: 'Version',
+  changeVersion: 'Change Version',
+  publishDeleted: 'Publish Deleted',
+  publishUpdate: 'Update',
 };

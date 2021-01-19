@@ -1,30 +1,21 @@
 import gql from 'graphql-tag';
-// import { User } from './gqlUser';
-// type
-// const DriveUserFileInfo = `DriveUserFileInfo {
-//   description: String
-//   size: String
-//   }
-// `;
-// const DriveSpace = `
-//   enum DriveSpace {
-//     PRIVATE
-//     PUBLIC
-//   }
-// `;
-// const DriveUserFile = `DriveUserFile {
-//   fullName: String
-//   hash: String
-//   id: ID
-//   info: ${DriveUserFileInfo}
-//   insertedAt: NaiveDateTime
-//   isDir: Boolean
-//   space: ${DriveSpace}
-//   updatedAt: NaiveDateTime
-//   user: ${User}
-// }`;
+
+const userFile = `
+  userFile {
+    fullName
+    hash
+    id
+    isDir
+    space
+    info {
+      size
+      description
+    }
+  }
+`;
+
 // query
-// 文件查询
+// 文件列表
 export const driveListFiles = gql`
   query($dirId: String) {
     driveListFiles(dirId: $dirId) {
@@ -51,17 +42,7 @@ export const driveListShares = gql`
       token
       uri
       expiredAt
-      userFile {
-        fullName
-        hash
-        id
-        isDir
-        space
-        info {
-          size
-          description
-        }
-      }
+      ${userFile}
     }
   }
 `;
@@ -69,12 +50,19 @@ export const driveListShares = gql`
 export const driveListPublishs = gql`
   query {
     driveListPublishs {
-      currentVersion
-      history {
+      current {
         id
         txid
+        ${userFile}
         version
       }
+       history {
+          id
+          txid
+          version
+          ${userFile}
+        }
+
       id
     }
   }
@@ -89,17 +77,7 @@ export const driveFindShare = gql`
       token
       uri
       expiredAt
-      userFile {
-        fullName
-        hash
-        id
-        isDir
-        space
-        info {
-          size
-          description
-        }
-      }
+      ${userFile}
     }
   }
 `;
@@ -190,8 +168,33 @@ export const driveDeleteShare = gql`
 `;
 // 发布文件
 export const driveCreatePublish = gql`
-  mutation($id: String!) {
-    driveCreatePublish(userFileId: $id) {
+  mutation($userFileId: String!) {
+    driveCreatePublish(userFileId: $userFileId) {
+      id
+    }
+  }
+`;
+
+export const driveDeletePublish = gql`
+  mutation($id: ID!) {
+    driveDeletePublish(id: $id) {
+      id
+    }
+  }
+`;
+// 发布文件改变版本
+export const driveChangePublishVersion = gql`
+  mutation($id: ID!, $publishHistoryId: ID!) {
+    driveChangePublishVersion(id: $id, publishHistoryId: $publishHistoryId) {
+      id
+    }
+  }
+`;
+
+// 发布文件
+export const driveUpdatePublish = gql`
+  mutation($userFileId: String!, $id: Sting!) {
+    driveUpdatePublish(userFileId: $userFileId, id: $id) {
       id
     }
   }

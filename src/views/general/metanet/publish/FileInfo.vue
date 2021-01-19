@@ -37,12 +37,28 @@
         }}</DescriptionsItem>
       </Descriptions>
     </template>
+    <template v-if="key === 'version'">
+      <List item-layout="horizontal" :data-source="info.history">
+        <template #renderItem="{ item, index }">
+          <ListItem>
+            <template #actions>
+              <a-button @click="changeVersion(item.id)">{{ t('changeVersion') }}</a-button>
+            </template>
+            <ListItemMeta>
+              <template #title>
+                <a href="https://www.antdv.com/">{{ item.id }}</a>
+              </template>
+            </ListItemMeta>
+          </ListItem>
+        </template>
+      </List>
+    </template>
   </Card>
 </template>
 
 <script lang="ts">
   import { computed, defineComponent, ref } from 'vue';
-  import { Tabs, Card, Descriptions } from 'ant-design-vue';
+  import { Tabs, Card, Descriptions, List } from 'ant-design-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { NetFile } from '/@/components/NetFile/netFile';
   const { t } = useI18n('general.metanet');
@@ -51,6 +67,8 @@
   import { CloseSquareOutlined } from '@ant-design/icons-vue';
   import { propTypes } from '/@/utils/propTypes';
   import Hash from '/@/components/NetFile/Hash.vue';
+  import { useMutation } from '@vue/apollo-composable';
+  import { driveChangePublishVersion } from '/@/hooks/apollo/gqlFile';
 
   export default defineComponent({
     name: 'FileInfo',
@@ -62,21 +80,24 @@
       DescriptionsItem: Descriptions.Item,
       CloseSquareOutlined,
       Hash,
+      List,
+      ListItem: List.Item,
+      ListItemMeta: List.Item.Meta,
     },
     props: {
       file: propTypes.any,
     },
     setup(props, { emit }) {
       const info: NetFile = computed(() => {
-        console.log(props.file);
         return props.file;
       });
-      const key = ref('detail');
+      const key = ref('version');
       const tabList = [
         {
-          key: 'detail',
-          tab: t('detail'),
+          key: 'version',
+          tab: t('version'),
         },
+
         {
           key: 'activity',
           tab: t('activity'),
@@ -103,6 +124,15 @@
       function copyUrl() {
         info.value.copyShareUrl(1);
       }
+
+      const { mutate: PublishChangeVerison } = useMutation(driveChangePublishVersion);
+      async function changeVersion(publishHistoryId) {
+        await PublishChangeVerison({
+          id: info.value.publishId,
+          publishHistoryId,
+        });
+        emit('refetch');
+      }
       return {
         t,
         info,
@@ -115,6 +145,7 @@
         getLocation,
         close,
         copyUrl,
+        changeVersion,
       };
     },
   });

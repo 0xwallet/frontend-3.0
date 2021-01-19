@@ -57,6 +57,7 @@ export class NetFile {
   token?: string;
   space: string;
   desc: string;
+  public publishId?: number;
 
   constructor(params: fileParams) {
     this.id = params.userFile.id;

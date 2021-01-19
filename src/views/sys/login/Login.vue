@@ -3,26 +3,17 @@
     <div class="login-mask" />
     <div class="login-form-wrap">
       <div class="login-form mx-6">
+        <AppLocalePicker v-if="showLocale" class="login-form__locale" />
         <div class="login-form__content px-2 py-10">
-          <AppLocalePicker v-if="showLocale" class="login-form__locale" />
           <header>
             <img :src="logo" />
           </header>
 
-          <a-form
-            class="mx-auto mt-10"
-            :model="formData"
-            :rules="formRules"
-            ref="formRef"
-            layout="vertical"
-          >
+          <a-form class="login-form__main" :model="formData" :rules="formRules" ref="formRef">
             <a-form-item name="email" :label="t('emailLabel')">
               <a-input size="large" v-model:value="formData.email" placeholder="email">
                 <template #addonBefore><MailOutlined /></template
               ></a-input>
-          <a-form class="login-form__main" :model="formData" :rules="formRules" ref="formRef">
-            <a-form-item name="account">
-              <a-input size="large" v-model:value="formData.account" placeholder="username: vben" />
             </a-form-item>
             <a-form-item
               name="password"
@@ -102,8 +93,8 @@
   <ForgetPassword @register="registerFPModal" />
 </template>
 <script lang="ts">
-  import { defineComponent, reactive, ref, unref,toRaw } from 'vue';
-  import { Checkbox, Divider, Row, Col, Input,Form } from 'ant-design-vue';
+  import { defineComponent, reactive, ref, unref } from 'vue';
+  import { Checkbox, Divider, Row, Col, Input, Form } from 'ant-design-vue';
   import { MailOutlined, LockOutlined } from '@ant-design/icons-vue';
 
   import { Button } from '/@/components/Button';
@@ -136,8 +127,9 @@
       InputSearch: Input.Search,
       CountDown,
       ForgetPassword,
-      [Row.name]: Row,
-      [Col.name]: Col,
+      Row,
+      Col,
+      Divider,
     },
     setup() {
       localStorage.setItem('walletJson', '');
@@ -148,7 +140,6 @@
       const formRef = ref<any>(null);
       const autoLoginRef = ref(false);
 
-      // const verifyRef = ref<RefInstanceType<DragVerifyActionType>>(null);
       const go = useGo();
       const { notification, createErrorModal, createMessage } = useMessage();
 
@@ -274,8 +265,6 @@
   });
 </script>
 <style lang="less">
-
-
   .center {
     text-align: center;
   }
@@ -312,7 +301,7 @@
       border-width: 8px;
       border-radius: 4px;
       background-clip: padding-box;
-      .respond-to(xlarge, { margin: 0 50px 0 50px});
+      .respond-to(xlarge, { margin: 0 120px 0 50px});
 
       &__main {
         margin: 30px auto 0 auto !important;

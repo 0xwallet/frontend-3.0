@@ -113,7 +113,9 @@
                     }}</a-button>
                   </MenuItem>
                   <MenuItem>
-                    <a-button type="link" @click="publishFile(record)">{{ t('publish') }}</a-button>
+                    <a-button type="link" @click="openPublishModal(record)">{{
+                      t('publish')
+                    }}</a-button>
                   </MenuItem>
 
                   <MenuItem>
@@ -164,6 +166,7 @@
     <UploadModal @register="registerUploadModal" />
     <ShareModal @register="registerShareModal" />
     <MarkdownModal @register="registerMDModal" />
+    <PublishModal @register="registerPublishModal" />
   </div>
 </template>
 <script lang="ts">
@@ -177,6 +180,7 @@
   import ShareModal from './share/component/ShareModal.vue';
   import MoveModal from './component/MoveModal.vue';
   import MarkdownModal from './component/editor/Markdown.vue';
+  import PublishModal from './component/PublishModal.vue';
   import GIcon from '/@/components/Icon/index';
   import {
     DownOutlined,
@@ -194,8 +198,7 @@
 
   import FileInfo from './component/file/FileInfo.vue';
   import Hash from '/@/components/NetFile/Hash.vue';
-  import { useMutation, useQuery, useSubscription } from '@vue/apollo-composable';
-  import { editCurrentUser } from '/@/hooks/apollo/gqlUser';
+  import { useMutation, useQuery } from '@vue/apollo-composable';
 
   export default defineComponent({
     components: {
@@ -220,6 +223,7 @@
       Row,
       Col,
       FileInfo,
+      PublishModal,
     },
     setup() {
       // 信息框
@@ -355,6 +359,10 @@
       const [registerShareModal, { openModal: openModal4, setModalProps: setModal4 }] = useModal();
       // MarkdownModal
       const [registerMDModal, { openModal: openModal5, setModalProps: setModal5 }] = useModal();
+      const [
+        registerPublishModal,
+        { openModal: openModal6, setModalProps: setModal6 },
+      ] = useModal();
 
       // 打开新建文件夹modal
       // 传入上级文件夹ID dirId
@@ -386,10 +394,23 @@
           });
         });
       }
+      // 打开发布Modal
+      function openPublishModal(file) {
+        openModal6(true, file);
+        nextTick(() => {
+          setModal6({
+            canFullscreen: false,
+            destroyOnClose: true,
+            width: '50%',
+            afterClose: () => {
+              refetch();
+            },
+          });
+        });
+      }
       // 打开上传窗口
       function openUploadModal() {
         openModal3(true, { path });
-
         nextTick(() => {
           setModal3({
             canFullscreen: false,
@@ -404,7 +425,6 @@
       // 打开分享窗口
       function openShareModal(record) {
         openModal4(true, { record }, true);
-
         nextTick(() => {
           setModal4({
             canFullscreen: false,
@@ -416,14 +436,9 @@
           });
         });
       }
-      // 文件发布
-      async function publishFile(f: NetFile) {
-        console.log(f);
-        await f.publish();
-      }
+
       function openMDModal(record) {
         openModal5(true, { record }, true);
-
         nextTick(() => {
           setModal5({
             width: '80%',
@@ -597,7 +612,8 @@
         file,
         closeInfo,
         test,
-        publishFile,
+        registerPublishModal,
+        openPublishModal,
       };
     },
   });

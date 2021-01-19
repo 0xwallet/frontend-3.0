@@ -53,7 +53,7 @@ export function getBasicColumns(): BasicColumn[] {
     },
     {
       title: t('publishLink'),
-      dataIndex: 'link',
+      dataIndex: 'txid',
     },
     {
       title: t('status'),

@@ -74,6 +74,12 @@ export default {
   publishVersion: '发布版本',
   publishLink: '发布链接',
   publishConfirm: '确认发布文件?',
+  publishFile: '发布文件',
+  publishSuccess: '发布成功',
   setting: '设置',
   yes: '是',
+  version: '版本',
+  changeVersion: '切换版本',
+  publishDeleted: '发布已删除',
+  publishUpdate: '更新',
 };

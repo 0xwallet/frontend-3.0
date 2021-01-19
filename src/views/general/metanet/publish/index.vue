@@ -19,12 +19,17 @@
               <a class="ant-dropdown-link"> ... </a>
               <template #overlay>
                 <Menu>
+                  <MenuItem>
+                    <a-button type="link" @click="openUpdateModal(record.publishId)">{{
+                      t('publishUpdate')
+                    }}</a-button></MenuItem
+                  >
                   <MenuItem v-if="record.name !== 'deleted'">
                     <a-button
                       type="link"
                       color="error"
                       :pop="{ title: t('delButton') + ' ' + record.fullName + '?' }"
-                      @click="del(record)"
+                      @click="del(record.publishId)"
                       >{{ t('delButton') }}</a-button
                     ></MenuItem
                   >
@@ -42,8 +47,9 @@
             /></a-button>
           </template> </BasicTable
       ></Col>
-      <Col :span="span"><FileInfo :file="file" @close="closeInfo" /></Col>
+      <Col :span="span"><FileInfo :file="file" @close="closeInfo" @refetch="refetch" /></Col>
     </Row>
+    <UpdatePublishModal @register="registerUpdatePublishModal" />
   </div>
 </template>
 <script lang="ts">
@@ -51,7 +57,7 @@
   import { BasicTable, useTable } from '/@/components/Table';
   import { useMessage } from '/@/hooks/web/useMessage';
   import GIcon from '/@/components/Icon';
-  import { driveListPublishs } from '/@/hooks/apollo/gqlFile';
+  import { driveListPublishs, driveDeletePublish } from '/@/hooks/apollo/gqlFile';
   import { getBasicColumns } from './Data';
   import { NetFile } from '/@/components/NetFile/netFile';
   import { BasicHelp } from '/@/components/Basic';
@@ -59,7 +65,10 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import { Tooltip, Row, Col, Dropdown, Menu } from 'ant-design-vue';
   import { InfoCircleOutlined } from '@ant-design/icons-vue';
-  import { useQuery } from '@vue/apollo-composable';
+  import { useMutation, useQuery } from '@vue/apollo-composable';
+  import { useModal } from '/@/components/Modal';
+  import UpdatePublishModal from './UpdatePublishModal.vue';
+
   const { t } = useI18n('general.metanet');
   export default defineComponent({
     components: {
@@ -75,6 +84,7 @@
       FileInfo,
       InfoCircleOutlined,
       Dropdown,
+      UpdatePublishModal,
     },
     setup() {
       const { createMessage, createErrorModal } = useMessage();
@@ -110,30 +120,36 @@
         showIndexColumn: false,
         scroll: { x: 1000, y: 1000 },
       });
+      const [registerUpdatePublishModal, { openModal, setModalProps }] = useModal();
 
-      const { onResult: Publishs, refetch } = useQuery(driveListPublishs);
+      const { onResult: Publishs, refetch } = useQuery(driveListPublishs, null, () => ({
+        fetchPolicy: 'network-only',
+      }));
+
       Publishs((res) => {
-        const list = res?.data?.driveListShares;
-        let temp = [];
-        list.forEach((v) => {
-          if (v.userFile === null) {
-            temp.push({
-              name: 'deleted',
-              shareId: v.id,
-            });
-            return;
-          }
-          let f = new NetFile(v);
-          temp.push(f);
+        const list = res.data?.driveListPublishs;
+        let temp: any[] = [];
+        list.forEach((v: any) => {
+          let f = new NetFile(v.current);
+          f.publishId = v.id;
+          temp.push({
+            txid: v.current.txid,
+            version: v.current.id,
+            history: v.history,
+            publishId: v.id,
+            ...f,
+          });
         });
         tableData.value = temp;
       });
-
-      // 删除分享
-      async function del(record) {
-        const f: NetFile = record;
-        await f.delShare();
-        fetchData();
+      const { mutate: DeletePublish, onDone } = useMutation(driveDeletePublish);
+      onDone(() => {
+        createMessage.success(t('publishDeleted'));
+        refetch();
+      });
+      // 删除发布
+      async function del(id: any) {
+        await DeletePublish({ id });
       }
 
       const choose = computed(() => {
@@ -154,7 +170,7 @@
       function clearSelect() {
         clearSelectedRowKeys();
       }
-      function copyUrl(record) {
+      function copyUrl(publishId) {
         const f: NetFile = record;
         f.copyShareUrl(1);
       }
@@ -166,6 +182,18 @@
       }
       function closeInfo() {
         info.value = false;
+      }
+      function openUpdateModal(publishId) {
+        openModal(true, { publishId }, true);
+        setModalProps({
+          destroyOnClose: true,
+          canFullscreen: false,
+          minHeight: 500,
+
+          afterClose: () => {
+            refetch();
+          },
+        });
       }
 
       return {
@@ -182,6 +210,8 @@
         file,
         openInfo,
         closeInfo,
+        openUpdateModal,
+        registerUpdatePublishModal,
       };
     },
   });
