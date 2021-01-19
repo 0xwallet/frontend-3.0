@@ -9,8 +9,8 @@
       </template>
       <template v-if="shareUrl === ''">
         <RadioGroup v-model:value="radio">
-          <a-radio :style="radioStyle" :value="0"> {{ t('public') }}</a-radio>
-          <a-radio :style="radioStyle" :value="1"> {{ t('private') }} </a-radio>
+          <Radio :style="radioStyle" :value="0"> {{ t('public') }}</Radio>
+          <Radio :style="radioStyle" :value="1"> {{ t('private') }} </Radio>
         </RadioGroup>
         <BasicForm @register="registerForm" :model="model" v-if="radio === 1" />
       </template>
@@ -38,7 +38,7 @@
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { BasicForm, FormSchema, useForm } from '/@/components/Form';
   import { Card, Space, Radio } from 'ant-design-vue';
-  import { NetFile } from '../../../../../components/NetFile/netFile';
+  import { NetFile } from '/@/components/NetFile/netFile';
   import { useI18n } from '/@/hooks/web/useI18n';
   const { t } = useI18n('general.metanet');
   function randomString(len) {
