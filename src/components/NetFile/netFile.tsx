@@ -26,6 +26,7 @@ interface fileParams {
   token?: string;
   expiredAt?: string;
   updatedAt: string;
+  user: { id: string } | null;
 }
 
 interface userFile {
@@ -57,6 +58,7 @@ export class NetFile {
   token?: string;
   space: string;
   desc: string;
+  userId?: string;
   public publishId?: number;
 
   constructor(params: fileParams) {
@@ -84,23 +86,22 @@ export class NetFile {
     this.expiredAt = params.expiredAt;
     this.hash = params.userFile.hash;
     this.shareId = params.id;
+    this.userId = params.user?.id || '';
   }
   // 文件下载
   download() {
     if (this.type === 'folder') {
       return;
     }
-    const id = localStorage.getItem('uid');
     let token = '';
     useApollo({ mode: 'mutate', gql: drivePreviewToken }).then((res) => {
       token = res?.data?.drivePreviewToken;
-      let url = `https://drive-s.owaf.io/download/${id}/${toLower(this.space)}/${this.id}/${
-        this.fullName
-      }?token=${token}`;
-      // /preview/:user_id/:space/:user_file_id/:filename?token=:token
+      let url = `https://drive-s.owaf.io/download/${this.userId}/${toLower(this.space)}/${
+        this.id
+      }/${this.fullName.slice(-1)[0]}?token=${token}`;
       downloadByUrl({
         url: url,
-        target: '_self',
+        target: '_blank',
       });
     });
   }
@@ -110,13 +111,12 @@ export class NetFile {
       if (this.type === 'folder') {
         reject();
       }
-      const id = localStorage.getItem('uid');
       let token = '';
       useApollo({ mode: 'mutate', gql: drivePreviewToken }).then((res) => {
         token = res?.data?.drivePreviewToken;
-        let url = `https://drive-s.owaf.io/preview/${id}/${toLower(this.space)}/${this.id}/${
-          this.fullName
-        }?token=${token}`;
+        let url = `https://drive-s.owaf.io/preview/${this.userId}/${toLower(this.space)}/${
+          this.id
+        }/${this.fullName.slice(-1)[0]}?token=${token}`;
         if (this.type === 'png' || this.type == 'jpg') {
           // createImgPreview({
           //   imageList: [url],
@@ -128,7 +128,6 @@ export class NetFile {
   }
 
   publish() {
-    console.log(this.id);
     createConfirm({
       iconType: 'warning',
       title: t('general.metanet.publishConfirm'),

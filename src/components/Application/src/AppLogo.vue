@@ -8,7 +8,7 @@
     :class="[prefixCls, theme, { 'collapsed-show-title': getCollapsedShowTitle }]"
     @click="handleGoHome"
   >
-    <img src="../../../assets/images/logo.png" />
+    <Svg :width="40" :height="40" />
     <div class="ml-2 ellipsis" :class="[`${prefixCls}__title`]" v-show="showTitle">
       {{ title }}
     </div>
@@ -26,9 +26,10 @@
   import { propTypes } from '/@/utils/propTypes';
 
   import { useDesign } from '/@/hooks/web/useDesign';
-
+  import { Svg } from '/@/components/Svg';
   export default defineComponent({
     name: 'AppLogo',
+    components: { Svg },
     props: {
       /**
        * The theme of the current parent component

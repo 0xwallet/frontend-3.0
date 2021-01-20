@@ -9,7 +9,7 @@
     >
     <template #extra>...</template>
     <template #cover>
-      <img src="/@/assets/images/logo.png" class="img" />
+      <Svg />
       {{ file.type }}
     </template>
     <template class="ant-card-actions" #actions>
@@ -33,9 +33,9 @@
   import { propTypes } from '/@/utils/propTypes';
   import { fileStore } from '/@/store/modules/netFile';
   const { t } = useI18n('general.metanet');
-
+  import { Svg } from '/@/components/Svg';
   export default defineComponent({
-    components: { Card, CardMeta: Card.Meta, Space },
+    components: { Card, CardMeta: Card.Meta, Space, Svg },
     props: {
       uri: propTypes.string,
       user: propTypes.string,

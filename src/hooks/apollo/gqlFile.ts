@@ -43,6 +43,7 @@ export const driveListShares = gql`
       uri
       expiredAt
       ${userFile}
+      
     }
   }
 `;
@@ -77,7 +78,8 @@ export const driveFindPublish = gql`
         txid
         ${userFile}
         version
-      }}
+      }
+      }
   }
 `;
 
@@ -91,6 +93,9 @@ export const driveFindShare = gql`
       uri
       expiredAt
       ${userFile}
+      user{
+      id
+      }
     }
   }
 `;

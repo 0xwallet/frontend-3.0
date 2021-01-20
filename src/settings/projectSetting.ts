@@ -37,7 +37,7 @@ const setting: ProjectConfig = {
   showLogo: true,
 
   // Whether to show footer
-  showFooter: false,
+  showFooter: true,
 
   // locale setting
   locale: {
@@ -95,11 +95,11 @@ const setting: ProjectConfig = {
     // Menu mode
     mode: MenuModeEnum.INLINE,
     // Menu type
-    type: MenuTypeEnum.SIDEBAR,
+    type: MenuTypeEnum.MIX,
     // Menu theme
     theme: ThemeEnum.DARK,
     // Split menu
-    split: false,
+    split: true,
     // Top menu layout
     topMenuAlign: 'center',
     // Fold trigger position

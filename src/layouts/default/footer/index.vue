@@ -1,11 +1,11 @@
 <template>
   <Footer :class="prefixCls" v-if="getShowLayoutFooter">
-    <div :class="`${prefixCls}__links`">
-      <a @click="openWindow(SITE_URL)">{{ t('layout.footer.onlinePreview') }}</a>
-      <GithubFilled @click="openWindow(GITHUB_URL)" :class="`${prefixCls}__github`" />
-      <a @click="openWindow(DOC_URL)">{{ t('layout.footer.onlineDocument') }}</a>
-    </div>
-    <div>Copyright &copy;2020 Vben Admin</div>
+    <!--    <div :class="`${prefixCls}__links`">-->
+    <a @click="openWindow(SITE_URL)"><Svg :type="'footer'" /></a>
+    <!--      <GithubFilled @click="openWindow(GITHUB_URL)" :class="`${prefixCls}__github`" />-->
+    <!--      <a @click="openWindow(DOC_URL)">{{ t('layout.footer.onlineDocument') }}</a>-->
+    <!--    </div>-->
+    <!--    <div>Copyright &copy;2020 Vben Admin</div>-->
   </Footer>
 </template>
 
@@ -22,10 +22,10 @@
   import { useRootSetting } from '/@/hooks/setting/useRootSetting';
   import { useRouter } from 'vue-router';
   import { useDesign } from '/@/hooks/web/useDesign';
-
+  import { Svg } from '/@/components/Svg';
   export default defineComponent({
     name: 'LayoutFooter',
-    components: { Footer: Layout.Footer, GithubFilled },
+    components: { Footer: Layout.Footer, GithubFilled, Svg },
     setup() {
       const { t } = useI18n();
       const { getShowFooter } = useRootSetting();

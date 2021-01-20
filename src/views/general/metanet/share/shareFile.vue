@@ -1,8 +1,8 @@
 <template>
   <div class="p-4">
-    <a-row v-if="!form">
-      <a-col :xs="2" :sm="4" :md="6" :lg="8" :xl="9"></a-col>
-      <a-col :xs="20" :sm="16" :md="12" :lg="8" :xl="6">
+    <Row v-if="!form">
+      <Col :xs="2" :sm="4" :md="6" :lg="8" :xl="9"></Col>
+      <Col :xs="20" :sm="16" :md="12" :lg="8" :xl="6">
         <Card hoverable>
           <Space direction="vertical">
             <CardMeta>
@@ -11,7 +11,7 @@
               >
               <template #description> {{ userPreview.bio }} </template>
               <template #avatar>
-                <a-avatar :src="userPreview.avatar" />
+                <Avatar :src="userPreview.avatar" />
               </template>
             </CardMeta>
             <BasicForm
@@ -22,9 +22,9 @@
             />
           </Space>
         </Card>
-      </a-col>
-      <a-col :xs="2" :sm="4" :md="6" :lg="8" :xl="9"></a-col>
-    </a-row>
+      </Col>
+      <Col :xs="2" :sm="4" :md="6" :lg="8" :xl="9"></Col>
+    </Row>
     <ShareFileMobile
       :uri="params.uri"
       :needCode="needCode"
@@ -34,21 +34,18 @@
     <Card v-if="!mobile && form">
       <template #title
         ><Space
-          ><a-avatar :src="userPreview.avatar" /><span
+          ><Avatar :src="userPreview.avatar" /><span
             >{{ userPreview.username }} 给你{{ needCode ? '加密' : '' }}分享了文件</span
           ></Space
         ></template
       >
       <BasicTable @register="registerTable">
         <template #name="{ record }">
-          <GIcon
-            :icon="record.type === 'folder' ? 'bx-bx-folder' : 'bx-bxs-file-' + record.type"
-            size="30"
-          >
-          </GIcon>
-
           <a-button type="link" @click="openFile(record)"
-            >{{ record.name }}{{ record.type === 'folder' ? '' : '.' + record.type }}</a-button
+            ><GIcon
+              :icon="record.type === 'folder' ? 'bx-bx-folder' : 'bx-bxs-file-' + record.type"
+              size="30"
+            />{{ record.name }}{{ record.type === 'folder' ? '' : '.' + record.type }}</a-button
           >
         </template>
         <template #hash="{ text }">
@@ -84,7 +81,7 @@
 </template>
 <script lang="ts">
   import { computed, defineComponent, unref, ref, onMounted, UnwrapRef } from 'vue';
-  import { Card, Space } from 'ant-design-vue';
+  import { Card, Space, Row, Col, Avatar } from 'ant-design-vue';
   import { useRouter } from 'vue-router';
   import { drivePreviewShare } from '/@/hooks/apollo/gqlFile';
   import { NetFile } from '/@/components/NetFile/netFile';
@@ -108,6 +105,9 @@
       Space,
       BasicForm,
       ShareFileMobile,
+      Row,
+      Col,
+      Avatar,
     },
     setup() {
       const { currentRoute } = useRouter();
@@ -157,9 +157,7 @@
         actionColOptions: {
           span: 24,
         },
-        submitFunc: () => {
-          fetchData();
-        },
+        submitFunc: fetchData,
       });
       const [
         registerTable,
@@ -210,8 +208,7 @@
           fileStore.fetchShareFile(params.value);
         }
       });
-      onMounted(() => {});
-
+      const svg = ref();
       async function fetchData() {
         const { code } = await validateFields();
         params.value.code = code;
@@ -253,6 +250,7 @@
         tableData,
         form,
         params,
+        svg,
       };
     },
   });
