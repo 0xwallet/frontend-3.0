@@ -37,23 +37,23 @@
               />
             </a-form-item>
 
-            <a-row>
-              <a-col :span="12">
+            <Row>
+              <Col :span="12">
                 <a-form-item>
                   <a-checkbox v-model:checked="autoLogin" size="small">{{
                     t('sys.login.autoLogin')
                   }}</a-checkbox>
                 </a-form-item>
-              </a-col>
-              <a-col :span="12">
+              </Col>
+              <Col :span="12">
                 <a-form-item :style="{ 'text-align': 'right' }">
                   <!-- No logic, you need to deal with it yourself -->
                   <a-button type="link" size="small" @click="openFPModal">{{
                     t('forgetPassword')
                   }}</a-button>
                 </a-form-item>
-              </a-col>
-            </a-row>
+              </Col>
+            </Row>
             <a-form-item>
               <a-button
                 type="primary"

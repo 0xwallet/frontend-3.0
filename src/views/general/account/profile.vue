@@ -178,7 +178,9 @@
       const { createMessage, createErrorModal } = useMessage();
       const [registerPWModal, { openModal: openPwModal }] = useModal();
 
-      const { onResult: getMe, refetch } = useQuery(me);
+      const { onResult: getMe, refetch } = useQuery(me, null, () => ({
+        fetchPolicy: 'network-only',
+      }));
       getMe((res) => {
         const { me } = res.data;
         userInfo.username = me.username;

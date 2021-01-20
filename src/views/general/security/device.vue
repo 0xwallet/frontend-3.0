@@ -9,7 +9,7 @@
     <List :grid="{ gutter: 2, column: 4 }" :data-source="deviceList">
       <template #renderItem="{ item, index }">
         <ListItem>
-          <a-card :title="item.type" class="ellipsis">{{ item.publicKey }} </a-card>
+          <Card :title="item.type" class="ellipsis">{{ item.publicKey }} </Card>
         </ListItem>
       </template>
     </List>
