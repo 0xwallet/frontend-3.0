@@ -102,6 +102,7 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
         '@apollo/client/core',
         '@apollo/client/cache',
         '@apollo/client/utilities',
+        '@apollo/client/link/error',
         'phoenix/assets/js/phoenix',
       ],
     },

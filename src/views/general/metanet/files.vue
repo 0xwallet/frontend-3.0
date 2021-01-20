@@ -261,7 +261,7 @@
       const variables = ref({
         dirId: 'root',
       });
-      const { onError, onResult, refetch } = useQuery(driveListFiles, variables, () => ({
+      const { onResult, refetch } = useQuery(driveListFiles, variables, () => ({
         fetchPolicy: 'network-only',
       }));
 
@@ -313,10 +313,6 @@
         });
         folder.value = temp.concat(p);
         files.value = f;
-      });
-
-      onError((err) => {
-        console.log(err);
       });
 
       // 文件列表表格

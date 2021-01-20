@@ -5,6 +5,7 @@ import { provide } from 'vue';
 import { ApolloClient, InMemoryCache } from '@apollo/client';
 import { ApolloClients } from '@vue/apollo-composable';
 import { ApolloLink, HttpLink } from '@apollo/client/core';
+import { onError } from '@apollo/client/link/error';
 
 // @ts-ignore
 // import { Socket as PhoenixSocket } from 'phoenix/assets/js/phoenix';
@@ -53,12 +54,25 @@ export function initApollo(): ApolloClient<any> | null {
     });
     return forward(operation);
   });
+  const error = onError(({ graphQLErrors, networkError }) => {
+    if (graphQLErrors)
+      graphQLErrors.map(({ message, locations, path }) => {
+        if (message === 'Please sign in first!') {
+          userStore.loginOut(true);
+          return;
+        }
+        console.log(`[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`);
+      });
+
+    if (networkError) console.log(`[Network error]: ${networkError}`);
+  });
+
   // 缓存实现
   const cache = new InMemoryCache();
 
   // 创建 apollo 客户端
   const apolloClient = new ApolloClient({
-    link: middlewareLink.concat(httpLink),
+    link: ApolloLink.from([middlewareLink, error, httpLink]),
     cache,
     connectToDevTools: true,
   });
