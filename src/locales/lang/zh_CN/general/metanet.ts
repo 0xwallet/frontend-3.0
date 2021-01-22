@@ -82,4 +82,9 @@ export default {
   changeVersion: '切换版本',
   publishDeleted: '发布已删除',
   publishUpdate: '更新',
+  saveShareConfirm: '确认保存文件？',
+  saveTo: '保存到 我的网盘',
+  showComment: '显示评论',
+  comment: '评论',
+  login: '登录',
 };

@@ -1,10 +1,23 @@
 import type { AppRouteModule } from '/@/router/types';
 import { LAYOUT } from '/@/router/constant';
 
-// test
-// http:ip:port/main-out
-export const mainOutRoutes: AppRouteModule[] = [
-  {
+function getRoute(): AppRouteModule {
+  if (
+    navigator.userAgent.match(
+      /(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i
+    ) !== null
+  ) {
+    return {
+      path: '/s/file',
+      name: 'MobileShareFile',
+      component: () => import('/@/views/general/metanet/share/MobileShareFile.vue'),
+      meta: {
+        title: 'routes.menu.file',
+        ignoreAuth: true,
+      },
+    };
+  }
+  return {
     path: '/s',
     name: 'MainOut',
     component: LAYOUT,
@@ -25,7 +38,13 @@ export const mainOutRoutes: AppRouteModule[] = [
         },
       },
     ],
-  },
+  };
+}
+
+// test
+// http:ip:port/main-out
+export const mainOutRoutes: AppRouteModule[] = [
+  getRoute(),
   {
     path: '/p',
     name: 'Publish',

@@ -3,8 +3,8 @@ import {
   driveCreateShare,
   driveDeleteFile,
   driveDeleteShare,
-  drivePreviewToken,
   driveCreatePublish,
+  driveUploadByHash,
 } from '/@/hooks/apollo/gqlFile';
 import { toLower } from 'lodash-es';
 import { downloadByUrl } from '/@/utils/file/download';
@@ -93,16 +93,12 @@ export class NetFile {
     if (this.type === 'folder') {
       return;
     }
-    let token = '';
-    useApollo({ mode: 'mutate', gql: drivePreviewToken }).then((res) => {
-      token = res?.data?.drivePreviewToken;
-      let url = `https://drive-s.owaf.io/download/${this.userId}/${toLower(this.space)}/${
-        this.id
-      }/${this.fullName.slice(-1)[0]}?token=${token}`;
-      downloadByUrl({
-        url: url,
-        target: '_blank',
-      });
+    let url = `https://drive-s.owaf.io/download/${this.userId}/${toLower(this.space)}/${this.id}/${
+      this.fullName.slice(-1)[0]
+    }?token=${this.token}`;
+    downloadByUrl({
+      url: url,
+      target: '_blank',
     });
   }
   // 文件预览
@@ -111,18 +107,37 @@ export class NetFile {
       if (this.type === 'folder') {
         reject();
       }
-      let token = '';
-      useApollo({ mode: 'mutate', gql: drivePreviewToken }).then((res) => {
-        token = res?.data?.drivePreviewToken;
-        let url = `https://drive-s.owaf.io/preview/${this.userId}/${toLower(this.space)}/${
-          this.id
-        }/${this.fullName.slice(-1)[0]}?token=${token}`;
-        if (this.type === 'png' || this.type == 'jpg') {
-          // createImgPreview({
-          //   imageList: [url],
-          // });
-        }
-        resolve(url);
+      let url = `https://drive-s.owaf.io/preview/${this.userId}/${toLower(this.space)}/${this.id}/${
+        this.fullName.slice(-1)[0]
+      }?token=${this.token}`;
+      console.log(url);
+      createMessage.warning('浏览组件有问题');
+      resolve(url);
+    });
+  }
+
+  // 保存分享
+  save(): Promise<any> {
+    return new Promise<any>((resolve, reject) => {
+      createConfirm({
+        iconType: 'warning',
+        title: t('general.metanet.saveShareConfirm'),
+        content: this.fullName.slice(-1)[0],
+        okText: t('general.metanet.yes'),
+        onOk: () => {
+          useApollo({
+            mode: 'mutate',
+            gql: driveUploadByHash,
+            variables: { fullName: this.fullName, hash: this.hash },
+          })
+            .then((res) => {
+              createMessage.success(t('general.metanet.success'));
+              resolve(res);
+            })
+            .catch(() => {
+              reject();
+            });
+        },
       });
     });
   }

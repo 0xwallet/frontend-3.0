@@ -4,6 +4,7 @@
     :title="t('uploadButton')"
     v-bind="$attrs"
     @register="register"
+    @ok="handleOk"
     :closeFunc="handleCloseFunc"
     :maskClosable="false"
     :keyboard="false"
@@ -100,6 +101,7 @@
         const someSuccess = fileStore.getUploadList.some(
           (item) => item.status === UploadResultStatus.SUCCESS
         );
+
         return {
           disabled: isUploadingRef.value || fileStore.getUploadList.length === 0 || !someSuccess,
         };

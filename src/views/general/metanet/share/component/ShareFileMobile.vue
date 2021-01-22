@@ -2,7 +2,7 @@
   <Card hoverable>
     <template #title
       ><Space
-        ><a-avatar :src="userPreview.avatar" /><span
+        ><Avatar :src="userPreview.avatar" /><span
           >{{ userPreview.username }} 给你{{ needCode ? '加密' : '' }}分享了文件</span
         ></Space
       ></template
@@ -27,7 +27,7 @@
 </template>
 <script lang="ts">
   import { computed, defineComponent, ref } from 'vue';
-  import { Card, Space } from 'ant-design-vue';
+  import { Card, Space, Avatar } from 'ant-design-vue';
   import { NetFile } from '/@/components/NetFile/netFile';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { propTypes } from '/@/utils/propTypes';
@@ -35,16 +35,16 @@
   const { t } = useI18n('general.metanet');
   import { Svg } from '/@/components/Svg';
   export default defineComponent({
-    components: { Card, CardMeta: Card.Meta, Space, Svg },
+    components: { Card, CardMeta: Card.Meta, Space, Svg, Avatar },
     props: {
       uri: propTypes.string,
-      user: propTypes.string,
+      user: propTypes.object,
       needCode: propTypes.bool,
     },
     setup(props) {
       const file = computed(() => {
         return fileStore.getShareFile.find((f) => f.uri === props.uri) || null;
-      }) as NetFile;
+      });
       const userPreview = computed(() => props.user);
       const needCode = computed(() => props.needCode);
       function preview(f: NetFile) {

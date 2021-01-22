@@ -80,7 +80,7 @@
   </div>
 </template>
 <script lang="ts">
-  import { computed, defineComponent, unref, ref, onMounted, UnwrapRef } from 'vue';
+  import { computed, defineComponent, unref, ref, UnwrapRef } from 'vue';
   import { Card, Space, Row, Col, Avatar } from 'ant-design-vue';
   import { useRouter } from 'vue-router';
   import { drivePreviewShare } from '/@/hooks/apollo/gqlFile';
@@ -94,7 +94,7 @@
   import { fileStore } from '/@/store/modules/netFile';
   import ShareFileMobile from '/@/views/general/metanet/share/component/ShareFileMobile.vue';
   import { useQuery } from '@vue/apollo-composable';
-
+  import router from '/@/router';
   export default defineComponent({
     name: 'TestTab',
     components: {
@@ -111,11 +111,18 @@
     },
     setup() {
       const { currentRoute } = useRouter();
+      if (
+        navigator.userAgent.match(
+          /(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i
+        ) !== null
+      ) {
+        router.replace(unref(currentRoute).fullPath.replace(`/s/`, `/m/`));
+      }
       const params = computed(() => {
         return unref(currentRoute).query;
       });
       const form = computed(() => {
-        return tableData.length > 0 || file.value !== null;
+        return tableData.value.length > 0 || file.value !== null;
       });
       const mobile = computed(() => {
         return (
@@ -208,7 +215,6 @@
           fileStore.fetchShareFile(params.value);
         }
       });
-      const svg = ref();
       async function fetchData() {
         const { code } = await validateFields();
         params.value.code = code;
@@ -250,7 +256,6 @@
         tableData,
         form,
         params,
-        svg,
       };
     },
   });

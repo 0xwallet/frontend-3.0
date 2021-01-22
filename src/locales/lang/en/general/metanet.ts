@@ -82,4 +82,9 @@ export default {
   changeVersion: 'Change Version',
   publishDeleted: 'Publish Deleted',
   publishUpdate: 'Update',
+  saveShareConfirm: 'Confirm Save Share ？',
+  saveTo: 'Save to My Driver',
+  showComment: 'Show Comment',
+  comment: 'Comment',
+  login: 'Login',
 };

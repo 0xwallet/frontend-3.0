@@ -1,7 +1,7 @@
 import type { BasicColumn, ActionItem } from '/@/components/Table';
 
 import { FileItem, PreviewFileItem, UploadResultStatus } from './types';
-import { checkImgType, isImgTypeByName } from './utils';
+import { isImgTypeByName } from './utils';
 import { Progress, Tag } from 'ant-design-vue';
 
 import TableAction from '/@/components/Table/src/components/TableAction.vue';
@@ -94,7 +94,7 @@ export function createTableColumns() {
     },
   ];
 }
-export function createActionColumn(handleRemove: Function, handlePreview: Function): BasicColumn {
+export function createActionColumn(handleRemove: Function): BasicColumn {
   return {
     width: 120,
     title: t('action'),
@@ -108,13 +108,13 @@ export function createActionColumn(handleRemove: Function, handlePreview: Functi
           onClick: handleRemove.bind(null, record),
         },
       ];
-      if (checkImgType(record)) {
-        actions.unshift({
-          label: t('previewButton'),
-          onClick: handlePreview.bind(null, record),
-        });
-      }
-      return <TableAction actions={actions} />;
+      // if (checkImgType(record)) {
+      //   actions.unshift({
+      //     label: t('previewButton'),
+      //     onClick: handlePreview.bind(null, record),
+      //   });
+      // }
+      return <TableAction actions={actions} outside={true} />;
     },
   };
 }
