@@ -42,6 +42,7 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
     },
     build: {
       base: VITE_PUBLIC_PATH,
+      polyfillDynamicImport: VITE_LEGACY,
       terserOptions: {
         compress: {
           keep_infinity: true,
@@ -104,6 +105,7 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
         '@apollo/client/utilities',
         '@apollo/client/link/error',
         'phoenix/assets/js/phoenix',
+        'resize-observer-polyfill',
       ],
     },
   };
