@@ -4,6 +4,7 @@ export function getFileRaw(url: string) {
   return defHttp.request<any>({
     url,
     method: 'GET',
+    responseType: 'arraybuffer',
     headers: {
       ignoreCancelToken: true,
     },

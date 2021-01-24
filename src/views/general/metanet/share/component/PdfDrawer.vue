@@ -31,7 +31,7 @@
   import { useScript } from '/@/hooks/web/useScript';
   import { usePdf } from '/@/hooks/nkn/getNKN';
   import { Loading } from '/@/components/Loading';
-  import { number } from 'vue-types';
+  import { getFileRaw } from '/@/api/NetFile/file';
 
   export default defineComponent({
     components: { BasicDrawer, Space, Button, PdfPage, Loading },
@@ -92,9 +92,9 @@
       function getBinaryData(url) {
         // body...
 
-        // getFileRaw(url).then((data) => {
-        //   console.log(data);
-        // });
+        getFileRaw(url).then((data) => {
+          console.log(data);
+        });
         var xhr = new XMLHttpRequest();
         // xhr.setRequestHeader("Origin", window.location.hostname);
         xhr.open('GET', url, true);
@@ -103,6 +103,7 @@
           //binary form of ajax response,
 
           usePdf().then((pdfjs) => {
+            console.log(e);
             var loadingTask = pdfjs.getDocument(e.currentTarget.response);
             loadingTask.promise.then((pdfDoc_) => {
               pdfDoc.value = pdfDoc_;
