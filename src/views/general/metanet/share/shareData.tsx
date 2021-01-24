@@ -2,7 +2,6 @@ import { BasicColumn } from '/@/components/Table';
 import GIcon from '/@/components/Icon';
 import { useI18n } from '/@/hooks/web/useI18n';
 import moment from 'moment';
-import projectSetting from '/@/settings/projectSetting';
 const { t } = useI18n('general.metanet');
 export function getBasicColumns(): BasicColumn[] {
   return [
@@ -40,8 +39,6 @@ export function getBasicColumns(): BasicColumn[] {
       width: 200,
       dataIndex: 'createdAt',
       customRender: ({ text }) => {
-        moment.locale(projectSetting.locale.lang);
-
         // return moment(text).format('MMM DD YYYY, hh:mm:ss A');
         return moment(text).format('lll');
       },
@@ -51,7 +48,6 @@ export function getBasicColumns(): BasicColumn[] {
       width: 200,
       dataIndex: 'expiredAt',
       customRender: ({ record }) => {
-        moment.locale(projectSetting.locale.lang);
         if (record.name === 'deleted') {
           return t('expired');
         }

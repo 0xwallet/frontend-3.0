@@ -22,13 +22,9 @@
           >{{ byteTransfer(info.size) }}({{ info.size }} bytes)</DescriptionsItem
         >
         <DescriptionsItem :label="t('location')">{{ getLocation(info.fullName) }}</DescriptionsItem>
-        <DescriptionsItem :label="t('modified')">{{
-          moment(info.updatedAt).format('lll')
-        }}</DescriptionsItem>
+        <DescriptionsItem :label="t('modified')">{{ time(info.updatedAt) }}</DescriptionsItem>
         <DescriptionsItem :label="t('opened')"></DescriptionsItem>
-        <DescriptionsItem :label="t('created')">{{
-          moment(info.createdAt).format('lll')
-        }}</DescriptionsItem>
+        <DescriptionsItem :label="t('created')">{{ time(info.createdAt) }}</DescriptionsItem>
       </Descriptions>
     </template>
   </Card>
@@ -41,9 +37,10 @@
   import { NetFile } from '/@/components/NetFile/netFile';
   const { t } = useI18n('general.metanet');
   import { byteTransfer } from '/@/utils/disk/file';
-  import moment from 'moment';
   import { CloseSquareOutlined } from '@ant-design/icons-vue';
   import { propTypes } from '/@/utils/propTypes';
+  import { formatToDate } from '/@/utils/dateUtil';
+
   export default defineComponent({
     name: 'FileInfo',
     components: {
@@ -90,7 +87,11 @@
       function close() {
         emit('close');
       }
-      return { t, info, tabList, key, onTabChange, desc, byteTransfer, moment, getLocation, close };
+      function time(t: string): string {
+        return formatToDate(t);
+      }
+
+      return { t, info, tabList, key, onTabChange, desc, byteTransfer, getLocation, close, time };
     },
   });
 </script>

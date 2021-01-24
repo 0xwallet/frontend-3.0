@@ -1,8 +1,7 @@
 import { BasicColumn } from '/@/components/Table/src/types/table';
 import { byteTransfer } from '/@/utils/disk/file';
 import { useI18n } from '/@/hooks/web/useI18n';
-import moment from 'moment';
-import projectSetting from '/@/settings/projectSetting';
+import { formatToDate } from '/@/utils/dateUtil';
 const { t } = useI18n('general.metanet');
 export function getBasicColumns(): BasicColumn[] {
   return [
@@ -18,9 +17,8 @@ export function getBasicColumns(): BasicColumn[] {
       width: 200,
       dataIndex: 'updatedAt',
       customRender: ({ text }) => {
-        moment.locale(projectSetting.locale.lang);
         // return moment(text).format('MMM DD YYYY, hh:mm:ss A');
-        return moment(text).format('lll');
+        return formatToDate(text);
       },
     },
     // {
