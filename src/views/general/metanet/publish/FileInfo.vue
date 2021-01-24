@@ -29,11 +29,11 @@
         >
         <DescriptionsItem :label="t('location')">{{ getLocation(info.fullName) }}</DescriptionsItem>
         <DescriptionsItem :label="t('modified')">{{
-          moment(info.updatedAt).format('lll')
+          formatToDate(info.updatedAt)
         }}</DescriptionsItem>
         <DescriptionsItem :label="t('opened')"></DescriptionsItem>
         <DescriptionsItem :label="t('created')">{{
-          moment(info.createdAt).format('lll')
+          formatToDate(info.createdAt)
         }}</DescriptionsItem>
       </Descriptions>
     </template>
@@ -63,12 +63,12 @@
   import { NetFile } from '/@/components/NetFile/netFile';
   const { t } = useI18n('general.metanet');
   import { byteTransfer } from '/@/utils/disk/file';
-  import moment from 'moment';
   import { CloseSquareOutlined } from '@ant-design/icons-vue';
   import { propTypes } from '/@/utils/propTypes';
   import Hash from '/@/components/NetFile/Hash.vue';
   import { useMutation } from '@vue/apollo-composable';
   import { driveChangePublishVersion } from '/@/hooks/apollo/gqlFile';
+  import { formatToDate } from '/@/utils/dateUtil';
 
   export default defineComponent({
     name: 'FileInfo',
@@ -141,11 +141,11 @@
         onTabChange,
         desc,
         byteTransfer,
-        moment,
         getLocation,
         close,
         copyUrl,
         changeVersion,
+        formatToDate,
       };
     },
   });

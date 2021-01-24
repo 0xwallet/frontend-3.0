@@ -1,6 +1,7 @@
 import { useScript } from '/@/hooks/web/useScript';
-import moment from 'moment';
+
 import CryptoES from 'crypto-es';
+import dayjs from 'dayjs';
 export const getGlobal = (): any => (typeof window !== 'undefined' ? window : global);
 export let wallet: any = null;
 export let session: any = null;
@@ -14,7 +15,7 @@ export async function useMClient(): Promise<any> {
     let disk = new NKN.MultiClient({
       seed,
       numSubClients,
-      identifier: moment.now(),
+      identifier: dayjs(),
     });
     await new Promise((resolve) => disk.onConnect(resolve));
     session = await disk.dial(

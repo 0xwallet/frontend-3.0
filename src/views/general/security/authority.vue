@@ -26,9 +26,9 @@
   import { Description, useDescription } from '/@/components/Description';
   import { userStore } from '/@/store/modules/user';
   import { useTable, BasicTable } from '/@/components/Table';
-  import moment from 'moment';
   import WebdavModal from './component/WebdavModal.vue';
   import { useModal } from '/@/components/Modal';
+  import dayjs from 'dayjs';
 
   console.log(userStore.getUserInfoState);
   export default defineComponent({
@@ -55,8 +55,8 @@
       });
       const [registerTable] = useTable({
         dataSource: [
-          { name: '11', time: moment().format('YYYY-MM-DD'), password: '123456' },
-          { name: '22', time: moment().format('YYYY-MM-DD'), password: '123456' },
+          { name: '11', time: dayjs().format('YYYY-MM-DD'), password: '123456' },
+          { name: '22', time: dayjs().format('YYYY-MM-DD'), password: '123456' },
         ],
         pagination: false,
         bordered: true,

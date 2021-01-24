@@ -1,7 +1,12 @@
 import { BasicColumn } from '/@/components/Table';
 import GIcon from '/@/components/Icon';
 import { useI18n } from '/@/hooks/web/useI18n';
-import moment from 'moment';
+import { formatToDate } from '/@/utils/dateUtil';
+import dayjs from 'dayjs';
+import duration from 'dayjs/plugin/duration';
+import relativeTime from 'dayjs/plugin/relativeTime';
+dayjs.extend(duration);
+dayjs.extend(relativeTime);
 const { t } = useI18n('general.metanet');
 export function getBasicColumns(): BasicColumn[] {
   return [
@@ -40,7 +45,7 @@ export function getBasicColumns(): BasicColumn[] {
       dataIndex: 'createdAt',
       customRender: ({ text }) => {
         // return moment(text).format('MMM DD YYYY, hh:mm:ss A');
-        return moment(text).format('lll');
+        return formatToDate(text);
       },
     },
     {
@@ -51,11 +56,11 @@ export function getBasicColumns(): BasicColumn[] {
         if (record.name === 'deleted') {
           return t('expired');
         }
-        const m1 = moment(record.createAt);
-        const m2 = moment(record.expiredAt);
+        const m1 = dayjs(record.createAt);
+        const m2 = dayjs(record.expiredAt);
         //@ts-ignore
-        const du = moment.duration(m2 - m1, 'ms');
-        return du.humanize();
+        const du = dayjs.duration(m2 - m1, 'ms');
+        return du.humanize(true);
       },
     },
     // {

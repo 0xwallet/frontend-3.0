@@ -1,8 +1,8 @@
 import { BasicColumn } from '/@/components/Table';
 import GIcon from '/@/components/Icon';
 import { useI18n } from '/@/hooks/web/useI18n';
-import moment from 'moment';
 const { t } = useI18n('general.metanet');
+import { formatToDate } from '/@/utils/dateUtil';
 export function getBasicColumns(): BasicColumn[] {
   return [
     {
@@ -40,7 +40,7 @@ export function getBasicColumns(): BasicColumn[] {
       dataIndex: 'createdAt',
       customRender: ({ text }) => {
         // return moment(text).format('MMM DD YYYY, hh:mm:ss A');
-        return moment(text).format('lll');
+        return formatToDate(text);
       },
     },
     {

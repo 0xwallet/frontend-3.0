@@ -106,6 +106,8 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
         '@apollo/client/link/error',
         'phoenix/assets/js/phoenix',
         'resize-observer-polyfill',
+        'dayjs/plugin/duration',
+        'dayjs/plugin/relativeTime',
       ],
     },
   };
