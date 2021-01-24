@@ -1,6 +1,5 @@
 <template>
   <Card>
-    <MobilePdf />
     <template #title>
       <Space
         ><Svg :width="30" :height="30" />
@@ -24,8 +23,8 @@
         ></Space
       >
     </div>
-
     <ShareDrawer @register="registerDrawer" :file="file" />
+    <PdfDrawer @register="registerPdfDrawer" :file="file" :scale="0.5" />
   </Card>
 </template>
 <script lang="ts">
@@ -43,8 +42,8 @@
   const { t } = useI18n('general.metanet');
   import { useDrawer } from '/@/components/Drawer';
   import ShareDrawer from './component/ShareDrawer.vue';
+  import PdfDrawer from './component/PdfDrawer.vue';
   import { MoreOutlined } from '@ant-design/icons-vue';
-  import MobilePdf from './component/MobilePdf.vue';
   export default defineComponent({
     name: 'ReleaseFile',
     components: {
@@ -58,7 +57,7 @@
       Button,
       ShareDrawer,
       MoreOutlined,
-      MobilePdf,
+      PdfDrawer,
     },
     setup() {
       const { currentRoute } = useRouter();
@@ -96,6 +95,7 @@
         submitFunc: fetchData,
       });
       const [registerDrawer, { openDrawer }] = useDrawer();
+      const [registerPdfDrawer, { openDrawer: openPdfDrawer }] = useDrawer();
       const { onResult: PreviewShare } = useQuery(drivePreviewShare, params.value);
       PreviewShare((res) => {
         needCode.value = res.data?.drivePreviewShare.needCode;
@@ -110,7 +110,11 @@
         await fileStore.fetchShareFile(params.value);
       }
       async function preview(f: NetFile) {
-        await f.preview();
+        switch (f.type) {
+          case 'pdf':
+            openPdfDrawer(true, {}, true);
+            break;
+        }
       }
       function openShareDrawer() {
         openDrawer(true);
@@ -125,6 +129,7 @@
         registerDrawer,
         openShareDrawer,
         t,
+        registerPdfDrawer,
       };
     },
   });
@@ -136,14 +141,5 @@
     display: flex;
     display: -webkit-flex; /* Safari */
     justify-content: center;
-  }
-  .pdf-container {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
   }
 </style>

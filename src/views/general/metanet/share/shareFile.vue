@@ -77,6 +77,7 @@
         </template></BasicTable
       >
     </Card>
+    <PdfDrawer @register="registerPdfDrawer" :file="file" />
   </div>
 </template>
 <script lang="ts">
@@ -95,6 +96,8 @@
   import ShareFileMobile from '/@/views/general/metanet/share/component/ShareFileMobile.vue';
   import { useQuery } from '@vue/apollo-composable';
   import router from '/@/router';
+  import PdfDrawer from './component/PdfDrawer.vue';
+  import { useDrawer } from '/@/components/Drawer';
   export default defineComponent({
     name: 'TestTab',
     components: {
@@ -108,6 +111,7 @@
       Row,
       Col,
       Avatar,
+      PdfDrawer,
     },
     setup() {
       const { currentRoute } = useRouter();
@@ -181,7 +185,7 @@
         },
         scroll: { x: 1000, y: 800 },
       });
-
+      const [registerPdfDrawer, { openDrawer: openPdfDrawer }] = useDrawer();
       const choose = computed(() => {
         return getSelectRowKeys().length !== 0;
       });
@@ -221,8 +225,12 @@
         await fileStore.fetchShareFile(params.value);
       }
 
-      function preview(file: UnwrapRef<NetFile>) {
-        file.preview();
+      function preview(file: NetFile) {
+        switch (file.type) {
+          case 'pdf':
+            openPdfDrawer(true, {}, true);
+            break;
+        }
       }
       function download(file: NetFile) {
         file.download();
@@ -256,6 +264,7 @@
         tableData,
         form,
         params,
+        registerPdfDrawer,
       };
     },
   });

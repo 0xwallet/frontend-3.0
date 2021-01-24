@@ -41,11 +41,10 @@
         destroyPage(prevCount);
       });
       async function renderPage() {
-        // const ctx = myCanvas.value.getContext('2d', { alpha: false });
-        // const renderTask = props.page.render(getRenderContext());
+        const ctx = myCanvas.value.getContext('2d', { alpha: false });
+        const renderTask = props.page.render(getRenderContext());
         props.page.getTextContent({ normalizeWhitespace: true }).then((textContent) => {
           textLayer.value.setAttribute('class', 'textLayer');
-          console.log(textContent);
           usePdf().then((pdfjs) => {
             return pdfjs.renderTextLayer({
               textContent: textContent,

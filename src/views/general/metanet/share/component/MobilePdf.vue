@@ -1,21 +1,30 @@
 <template>
-  <div>
-    <div class="pdf-document" v-if="pages.length > 0">
-      <PdfPage
-        v-for="page_single in pages"
-        v-bind="{ scale }"
-        :key="page_single.pageNumber"
-        :page="page_single"
-      >
-      </PdfPage>
+  <BasicDrawer
+    @register="register"
+    v-bind="$attrs"
+    title="test"
+    placement="bottom"
+    :closable="true"
+    :height="'100%'"
+    destroyOnClose
+  >
+    <div>
+      <div class="pdf-document" v-if="pages.length > 0">
+        <PdfPage
+          v-for="page_single in pages"
+          v-bind="{ scale }"
+          :key="page_single.pageNumber"
+          :page="page_single"
+        >
+        </PdfPage>
+      </div>
     </div>
-  </div>
+  </BasicDrawer>
 </template>
 <script lang="ts">
   import { defineComponent, ref, unref, watch, onMounted } from 'vue';
   import { useScript } from '/@/hooks/web/useScript';
   import PdfPage from './MobilePdfPage.vue';
-  import { getFileRaw } from '/@/api/NetFile/file';
   import { usePdf } from '/@/hooks/nkn/getNKN';
 
   export default defineComponent({
@@ -30,7 +39,8 @@
           res.GlobalWorkerOptions.workerSrc = `./resource/pdf/pdf.worker.js`;
         });
       });
-      const scale = ref(1.0);
+
+      const scale = ref(0.5);
       let pdfDoc = ref(null);
       let pages = ref([]);
       function initPDF() {
@@ -99,6 +109,6 @@
     },
   });
 </script>
-<style scoped lang="scss">
-  @import './pdf_viewer.css';
+<style scoped>
+  @import './web/viewer.css';
 </style>
