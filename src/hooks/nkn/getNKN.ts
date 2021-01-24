@@ -96,3 +96,15 @@ export function useNKN(): Promise<any> {
     }, 100);
   });
 }
+
+export function usePdf(): Promise<any> {
+  return new Promise((resolve) => {
+    setInterval(() => {
+      const global = getGlobal();
+      if (global && global.pdfjsLib) {
+        clearInterval();
+        resolve(global.pdfjsLib);
+      }
+    }, 100);
+  });
+}

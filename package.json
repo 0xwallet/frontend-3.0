@@ -116,7 +116,8 @@
     "vite-plugin-pwa": "^0.3.9",
     "vite-plugin-style-import": "^0.4.6",
     "vue-eslint-parser": "^7.4.1",
-    "yargs": "^16.2.0"
+    "yargs": "^16.2.0",
+    "sass": "^1.32.5"
   },
   "repository": {
     "type": "git",
@@ -127,7 +128,6 @@
     "url": "https://github.com/anncwb/vue-vben-admin/issues"
   },
   "homepage": "https://github.com/anncwb/vue-vben-admin",
-
   "engines": {
     "node": ">=10.16.1"
   }

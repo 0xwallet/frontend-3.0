@@ -14,6 +14,7 @@ export function createTableColumns() {
       dataIndex: 'thumbUrl',
       title: t('legend'),
       width: 100,
+      // @ts-ignore
       customRender: ({ record }) => {
         const { thumbUrl, type } = (record as FileItem) || {};
         return <span>{thumbUrl ? <img style={{ maxWidth: '100%' }} src={thumbUrl} /> : type}</span>;
@@ -23,6 +24,7 @@ export function createTableColumns() {
       dataIndex: 'name',
       title: t('fileName'),
       align: 'left',
+      // @ts-ignore
       customRender: ({ text, record }) => {
         const { percent, status: uploadStatus } = (record as FileItem) || {};
         let status: 'normal' | 'exception' | 'active' | 'success' = 'normal';
@@ -47,6 +49,7 @@ export function createTableColumns() {
       dataIndex: 'hash',
       title: 'HASH',
       width: 100,
+      // @ts-ignore
       customRender: ({ text }) => {
         let list = [];
         for (let i = 1; i < 11; i++) {
@@ -80,6 +83,7 @@ export function createTableColumns() {
       dataIndex: 'status',
       title: t('status'),
       width: 100,
+      // @ts-ignore
       customRender: ({ text }) => {
         if (text === UploadResultStatus.SUCCESS) {
           return <Tag color="green">{() => '上传成功'}</Tag>;

@@ -14,6 +14,8 @@ import { useMessage } from '/@/hooks/web/useMessage';
 import { useI18n } from '/@/hooks/web/useI18n';
 
 import { Tooltip } from 'ant-design-vue';
+export const getGlobal = (): any => (typeof window !== 'undefined' ? window : global);
+// 循环获取NKN.JS
 
 const { t } = useI18n();
 const { clipboardRef, copiedRef } = useCopyToClipboard();
@@ -104,15 +106,36 @@ export class NetFile {
   // 文件预览
   preview(): Promise<any> {
     return new Promise<any>((resolve, reject) => {
-      if (this.type === 'folder') {
-        reject();
-      }
       let url = `https://drive-s.owaf.io/preview/${this.userId}/${toLower(this.space)}/${this.id}/${
         this.fullName.slice(-1)[0]
       }?token=${this.token}`;
-      console.log(url);
-      createMessage.warning('浏览组件有问题');
-      resolve(url);
+
+      switch (this.type) {
+        case 'folder':
+          reject();
+          break;
+        case 'pdf':
+          // console.log(pdf);
+          // PDFJS.GlobalWorkerOptions.workerSrc = `./resource/pdf/pdf.worker.js`;
+          // PDFJS.getDocument(url).promise.then((pdf) => {
+          //   // you can now use *pdf* here
+          //   console.log(pdf);
+          // });
+          // usePDF().then((PDFJS) => {
+          //   PDFJS.GlobalWorkerOptions.workerSrc = `./resource/pdf/pdf.worker.js`;
+          //   PDFJS.getDocument(url).promise.then((pdf) => {
+          //     // you can now use *pdf* here
+          //     console.log(pdf);
+          //   });
+          // });
+          console.log(url);
+          resolve(url);
+          break;
+        default:
+          console.log(url);
+          createMessage.warning('浏览组件有问题');
+          resolve(url);
+      }
     });
   }
 

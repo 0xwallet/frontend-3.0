@@ -1,5 +1,6 @@
 <template>
   <Card>
+    <MobilePdf />
     <template #title>
       <Space
         ><Svg :width="30" :height="30" />
@@ -23,11 +24,12 @@
         ></Space
       >
     </div>
+
     <ShareDrawer @register="registerDrawer" :file="file" />
   </Card>
 </template>
 <script lang="ts">
-  import { computed, defineComponent, ref, unref } from 'vue';
+  import { computed, defineComponent, ref, unref, nextTick } from 'vue';
   import { useRouter } from 'vue-router';
   import { drivePreviewShare } from '/@/hooks/apollo/gqlFile';
   import { useQuery } from '@vue/apollo-composable';
@@ -42,6 +44,7 @@
   import { useDrawer } from '/@/components/Drawer';
   import ShareDrawer from './component/ShareDrawer.vue';
   import { MoreOutlined } from '@ant-design/icons-vue';
+  import MobilePdf from './component/MobilePdf.vue';
   export default defineComponent({
     name: 'ReleaseFile',
     components: {
@@ -55,6 +58,7 @@
       Button,
       ShareDrawer,
       MoreOutlined,
+      MobilePdf,
     },
     setup() {
       const { currentRoute } = useRouter();
@@ -111,6 +115,7 @@
       function openShareDrawer() {
         openDrawer(true);
       }
+
       return {
         file,
         registerForm,
@@ -124,12 +129,21 @@
     },
   });
 </script>
-<style scoped>
+<style scoped lang="less">
   .row {
     width: 100%;
     margin: 5px;
     display: flex;
     display: -webkit-flex; /* Safari */
     justify-content: center;
+  }
+  .pdf-container {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
   }
 </style>
