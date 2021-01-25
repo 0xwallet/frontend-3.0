@@ -26,7 +26,7 @@
   </BasicDrawer>
 </template>
 <script lang="ts">
-  import { computed, defineComponent,  ref,  } from 'vue';
+  import { computed, defineComponent, ref } from 'vue';
   import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
   import { Space, Button } from 'ant-design-vue';
   import { NetFile } from '/@/components/NetFile/netFile';
