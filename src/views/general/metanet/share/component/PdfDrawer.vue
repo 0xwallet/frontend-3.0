@@ -92,7 +92,6 @@
         // body...
 
         getFileRaw(url).then((data) => {
-          console.log(data);
           usePdf().then((pdfjs) => {
             var loadingTask = pdfjs.getDocument(data);
             loadingTask.promise.then((pdfDoc_) => {
