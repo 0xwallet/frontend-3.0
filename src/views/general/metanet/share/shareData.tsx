@@ -44,7 +44,6 @@ export function getBasicColumns(): BasicColumn[] {
       width: 200,
       dataIndex: 'createdAt',
       customRender: ({ text }) => {
-        // return moment(text).format('MMM DD YYYY, hh:mm:ss A');
         return formatToDate(text);
       },
     },

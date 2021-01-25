@@ -31,7 +31,7 @@
   import { useScript } from '/@/hooks/web/useScript';
   import { usePdf } from '/@/hooks/nkn/getNKN';
   import { Loading } from '/@/components/Loading';
-  import { number } from 'vue-types';
+  import { getFileRaw } from '/@/api/NetFile/file';
 
   export default defineComponent({
     components: { BasicDrawer, Space, Button, PdfPage, Loading },
@@ -62,7 +62,6 @@
         usePdf().then((res) => {
           res.GlobalWorkerOptions.workerSrc = `./resource/pdf/pdf.worker.js`;
         });
-        console.log(file);
         initPDF();
       });
 
@@ -92,29 +91,30 @@
       function getBinaryData(url) {
         // body...
 
-        // getFileRaw(url).then((data) => {
-        //   console.log(data);
-        // });
-        var xhr = new XMLHttpRequest();
-        // xhr.setRequestHeader("Origin", window.location.hostname);
-        xhr.open('GET', url, true);
-        xhr.responseType = 'arraybuffer';
-        xhr.onload = function (e) {
-          //binary form of ajax response,
-
+        getFileRaw(url).then((data) => {
+          console.log(data);
           usePdf().then((pdfjs) => {
-            var loadingTask = pdfjs.getDocument(e.currentTarget.response);
+            var loadingTask = pdfjs.getDocument(data);
             loadingTask.promise.then((pdfDoc_) => {
               pdfDoc.value = pdfDoc_;
               compState.loading = false;
             });
           });
-        };
-        xhr.onerror = function () {
-          // body...
-          alert('xhr error');
-        };
-        xhr.send();
+        });
+        // var xhr = new XMLHttpRequest();
+        // // xhr.setRequestHeader("Origin", window.location.hostname);
+        // xhr.open('GET', url, true);
+        // xhr.responseType = 'arraybuffer';
+        // xhr.onload = function (e) {
+        //   //binary form of ajax response,
+        //
+        //
+        // };
+        // xhr.onerror = function () {
+        //   // body...
+        //   alert('xhr error');
+        // };
+        // xhr.send();
       }
       watch(pdfDoc, (new_value) => {
         if (new_value === null) return;
