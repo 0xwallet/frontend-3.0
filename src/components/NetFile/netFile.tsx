@@ -115,19 +115,6 @@ export class NetFile {
           reject();
           break;
         case 'pdf':
-          // console.log(pdf);
-          // PDFJS.GlobalWorkerOptions.workerSrc = `./resource/pdf/pdf.worker.js`;
-          // PDFJS.getDocument(url).promise.then((pdf) => {
-          //   // you can now use *pdf* here
-          //   console.log(pdf);
-          // });
-          // usePDF().then((PDFJS) => {
-          //   PDFJS.GlobalWorkerOptions.workerSrc = `./resource/pdf/pdf.worker.js`;
-          //   PDFJS.getDocument(url).promise.then((pdf) => {
-          //     // you can now use *pdf* here
-          //     console.log(pdf);
-          //   });
-          // });
           console.log(url);
           resolve(url);
           break;

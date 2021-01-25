@@ -77,11 +77,12 @@
         </template></BasicTable
       >
     </Card>
+
     <PdfDrawer @register="registerPdfDrawer" :file="file" />
   </div>
 </template>
 <script lang="ts">
-  import { computed, defineComponent, unref, ref, UnwrapRef } from 'vue';
+  import { computed, defineComponent, unref, ref } from 'vue';
   import { Card, Space, Row, Col, Avatar } from 'ant-design-vue';
   import { useRouter } from 'vue-router';
   import { drivePreviewShare } from '/@/hooks/apollo/gqlFile';
@@ -98,6 +99,7 @@
   import router from '/@/router';
   import PdfDrawer from './component/PdfDrawer.vue';
   import { useDrawer } from '/@/components/Drawer';
+
   export default defineComponent({
     name: 'TestTab',
     components: {

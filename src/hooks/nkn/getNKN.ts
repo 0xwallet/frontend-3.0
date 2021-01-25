@@ -79,7 +79,9 @@ export async function initJS() {
   const { toPromise: loadNKN } = useScript({
     src: `./resource/nkn/nkn.min.js`,
   });
-
+  await useScript({
+    src: `./resource/build/pdf.js`,
+  }).toPromise();
   loadNKN().then(() => {
     console.log('NKN加载成功');
   });

@@ -178,7 +178,7 @@ function createAxios(opt?: Partial<CreateAxiosOptions>) {
   return new VAxios(
     deepMerge(
       {
-        timeout: 10 * 1000,
+        timeout: 60 * 1000,
         // 基础接口地址
         // baseURL: globSetting.apiUrl,
         // 接口可能会有通用的地址部分，可以统一抽取出来
