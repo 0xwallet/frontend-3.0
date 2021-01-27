@@ -14,6 +14,7 @@ export default {
   selectAll: '全选',
   cancelAll: '取消',
   delSelect: '删除选中的',
+  createFile: '新建文件',
   createFolder: '新建文件夹',
   refresh: '刷新',
   root: '全部',
@@ -87,4 +88,5 @@ export default {
   showComment: '显示评论',
   comment: '评论',
   login: '登录',
+  import: '导入',
 };

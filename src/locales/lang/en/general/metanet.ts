@@ -14,6 +14,7 @@ export default {
   selectAll: 'Select All',
   cancelAll: 'Cancel All',
   delSelect: 'Delete Select',
+  createFile: 'New File',
   createFolder: 'New Folder',
   refresh: 'Refresh',
   root: 'Root',
@@ -87,4 +88,5 @@ export default {
   showComment: 'Show Comment',
   comment: 'Comment',
   login: 'Login',
+  import: 'Import',
 };

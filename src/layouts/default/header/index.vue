@@ -1,6 +1,7 @@
 <template>
   <Header :class="getHeaderClass">
     <!-- left start -->
+
     <div :class="`${prefixCls}-left`">
       <!-- logo -->
       <AppLogo
@@ -16,7 +17,8 @@
         :theme="getHeaderTheme"
         :sider="false"
       />
-      <LayoutBreadcrumb v-if="getShowContent && getShowBread" :theme="getHeaderTheme" />
+
+      <!--      <LayoutBreadcrumb v-if="getShowContent && getShowBread" :theme="getHeaderTheme" />-->
     </div>
     <!-- left end -->
 
@@ -59,7 +61,7 @@
 
   import { propTypes } from '/@/utils/propTypes';
 
-  import { Layout } from 'ant-design-vue';
+  import { Layout, Space } from 'ant-design-vue';
   import { AppLogo } from '/@/components/Application';
   import LayoutMenu from '../menu';
   import LayoutTrigger from '../trigger/index.vue';
@@ -100,6 +102,7 @@
       LockItem,
       AppSearch,
       ErrorAction,
+      Space,
     },
     props: {
       fixed: propTypes.bool,

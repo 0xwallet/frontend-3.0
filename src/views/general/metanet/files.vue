@@ -6,18 +6,19 @@
         <BasicTable @register="registerTable">
           <template #tableTitle>
             <span>
-              <Dropdown :trigger="['click']">
-                <a-button type="primary"> {{ t('create') }}<DownOutlined /> </a-button>
-                <template #overlay>
-                  <Menu>
-                    <MenuItem @click="openCreateFolderModal">
-                      {{ t('file') }} , {{ t('folder') }}
-                    </MenuItem>
-                    <MenuItem> {{ t('text') }} , {{ t('markdown') }}</MenuItem>
-                    <MenuItem>{{ t('hash') }} , {{ t('txid') }} </MenuItem>
-                  </Menu>
-                </template>
-              </Dropdown>
+              <!--              <Dropdown :trigger="['click']">-->
+              <!--                <a-button type="primary"> {{ t('create') }}<DownOutlined /> </a-button>-->
+              <!--                <template #overlay>-->
+              <!--                  <Menu>-->
+              <!--                    <MenuItem @click="openCreateFolderModal">-->
+              <!--                      {{ t('file') }} , {{ t('folder') }}-->
+              <!--                    </MenuItem>-->
+              <!--                    <MenuItem> {{ t('text') }} , {{ t('markdown') }}</MenuItem>-->
+              <!--                    <MenuItem>{{ t('hash') }} , {{ t('txid') }} </MenuItem>-->
+              <!--                  </Menu>-->
+              <!--                </template>-->
+              <!--              </Dropdown>-->
+              <TableTitle />
               <Divider type="vertical" />
 
               <Dropdown :trigger="['click']">
@@ -182,6 +183,7 @@
   import MarkdownModal from './component/editor/Markdown.vue';
   import PublishModal from './component/PublishModal.vue';
   import GIcon from '/@/components/Icon/index';
+  import TableTitle from './component/Files/TableTitle.vue';
   import {
     DownOutlined,
     EllipsisOutlined,
@@ -224,6 +226,7 @@
       Col,
       FileInfo,
       PublishModal,
+      TableTitle,
     },
     setup() {
       // 信息框

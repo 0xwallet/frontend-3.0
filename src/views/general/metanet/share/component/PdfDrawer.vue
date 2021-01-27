@@ -7,22 +7,9 @@
     :closable="true"
     :height="'100%'"
     destroyOnClose
-    :bodyStyle="{
-      padding: '0px',
-    }"
+    wrapClassName="scroll"
   >
     <FramePage :frameSrc="`./resource/web/viewer.html?file=${src}`" />
-    <!--    <Loading :loading="loading" :absolute="absolute" :tip="tip" />-->
-    <!--    <div class="pdf-document" v-if="pages.length > 0">-->
-    <!--      <PdfPage-->
-    <!--        v-for="page_single in pages"-->
-    <!--        v-bind="{ scale }"-->
-    <!--        :key="page_single.pageNumber"-->
-    <!--        :page="page_single"-->
-    <!--      >-->
-    <!--      </PdfPage>-->
-    <!--    </div>-->
-    <!--    `./resource/web/viewer.html?file=${url}`-->
   </BasicDrawer>
 </template>
 <script lang="ts">
@@ -32,11 +19,10 @@
   import { NetFile } from '/@/components/NetFile/netFile';
   import { useI18n } from '/@/hooks/web/useI18n';
   const { t } = useI18n('general.metanet');
-  import PdfPage from './PdfPage.vue';
-  import { Loading } from '/@/components/Loading';
   import FramePage from '/@/views/sys/iframe/index.vue';
+
   export default defineComponent({
-    components: { BasicDrawer, Space, Button, PdfPage, Loading, FramePage },
+    components: { BasicDrawer, Space, Button, FramePage },
     props: {
       file: {
         type: Object,
@@ -75,4 +61,14 @@
     },
   });
 </script>
-<style scoped></style>
+<style lang="less">
+  .scroll {
+    .vben-basic-drawer {
+      .ant-drawer-body {
+        .scrollbar__wrap {
+          padding: 0 !important;
+        }
+      }
+    }
+  }
+</style>

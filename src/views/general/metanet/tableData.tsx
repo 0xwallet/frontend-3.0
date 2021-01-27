@@ -28,6 +28,7 @@ export function getBasicColumns(): BasicColumn[] {
     {
       title: 'Hash',
       dataIndex: 'hash',
+      width: 150,
       slots: { customRender: 'hash' },
     },
 
