@@ -1,7 +1,10 @@
 import store from '/@/store/index';
 import { VuexModule, Module, getModule, Mutation, Action } from 'vuex-module-decorators';
 import { hotModuleUnregisterModule } from '/@/utils/helper/vuexHelper';
-import { FileItem, UploadResultStatus } from '/@/views/general/metanet/component/upload/types';
+import {
+  FileItem,
+  UploadResultStatus,
+} from '/@/views/general/metanet/component/Files/upload/types';
 import { useMClient } from '/@/hooks/nkn/getNKN';
 import { encode } from '@msgpack/msgpack';
 import { NetFile } from '/@/components/NetFile/netFile';

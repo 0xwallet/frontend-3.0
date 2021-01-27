@@ -1,23 +1,16 @@
 <template>
-  <BasicModal v-bind="$attrs" @register="register" :title="t('createFile')" @ok="createFolder">
-    <BasicForm @register="registerForm" :model="model">
-      <template #path="{ model, field }">
-        <Space
-          ><Input v-model:value="model[field]" /><a-button @click="addSchema">+</a-button></Space
-        >
-      </template>
-    </BasicForm>
+  <BasicModal v-bind="$attrs" @register="register" :title="t('import')" @ok="createFolder">
+    <BasicForm @register="registerForm" :model="model" />
   </BasicModal>
 </template>
 <script lang="ts">
   import { defineComponent, ref, nextTick } from 'vue';
-  import { BasicModal, useModalContext, useModalInner } from '/@/components/Modal';
+  import { BasicModal, useModalInner } from '/@/components/Modal';
   import { BasicForm, FormSchema, useForm } from '/@/components/Form/index';
   import { driveMakeDir, driveMakeDirUnder } from '/@/hooks/apollo/gqlFile';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { useMutation } from '@vue/apollo-composable';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import { Input, Space } from 'ant-design-vue';
 
   const { t } = useI18n('general.metanet');
   const schemas: FormSchema[] = [
@@ -28,8 +21,8 @@
       required: true,
       componentProps: {
         options: [
-          { label: 'Basic', value: 'basic', key: 'basic' },
-          { label: 'Advance', value: 'advance', key: 'advance' },
+          { label: 'Hash', value: 'hash', key: 'hash' },
+          { label: 'Txid', value: 'txid', key: 'txid' },
         ],
       },
       colProps: {
@@ -38,12 +31,12 @@
       defaultValue: 'basic',
     },
     {
-      field: 'fullName',
+      field: 'hash',
       component: 'Input',
-      label: t('folderName'),
+      label: 'Hash',
       required: true,
       ifShow: ({ values }) => {
-        return values.mode === 'basic';
+        return values.mode === 'hash';
       },
       colProps: {
         span: 24,
@@ -51,37 +44,23 @@
       defaultValue: '',
     },
     {
-      field: 'desc',
+      field: 'txid',
       component: 'Input',
-      label: t('desc'),
-      colProps: {
-        span: 24,
-      },
-      defaultValue: '',
-      ifShow: ({ values }) => {
-        return values.mode === 'basic';
-      },
-    },
-    {
-      field: 'path',
-      component: 'Input',
-      label: t('path'),
-      colProps: {
-        span: 24,
-      },
-      helpMessage: ['根目录 ~/', `当前路径 */`],
-      defaultValue: '',
-      slot: 'path',
+      label: 'Txid',
       required: true,
       ifShow: ({ values }) => {
-        return values.mode === 'advance';
+        return values.mode === 'txid';
       },
+      colProps: {
+        span: 24,
+      },
+      defaultValue: '',
     },
   ];
   export default defineComponent({
-    components: { BasicModal, BasicForm, Input, Space },
+    components: { BasicModal, BasicForm },
     setup() {
-      const [registerForm, { validateFields, appendSchemaByField }] = useForm({
+      const [registerForm, { validateFields }] = useForm({
         labelWidth: 120,
         schemas,
         showActionButtonGroup: false,
@@ -89,30 +68,7 @@
           span: 24,
         },
       });
-      const [register, { closeModal, setModalProps }] = useModalInner((data) => {
-        dirId = data.dirId;
-        folder.value = data.folder;
-      });
-
-      let pathId = 0;
-
-      function addSchema() {
-        appendSchemaByField({
-          field: `path${pathId}`,
-          component: 'Input',
-          label: t('path'),
-          colProps: {
-            span: 24,
-          },
-          helpMessage: ['根目录 ~/', `当前路径 */`],
-          defaultValue: '',
-          required: true,
-          ifShow: ({ values }) => {
-            return values.mode === 'advance';
-          },
-        });
-        pathId++;
-      }
+      const [register, { closeModal, setModalProps }] = useModalInner();
 
       const modelRef = ref({});
       const folder = ref({});
@@ -140,7 +96,7 @@
           MakeDir(res);
         });
       }
-      return { register, addSchema, registerForm, model: modelRef, createFolder, t };
+      return { register, registerForm, model: modelRef, createFolder, t };
     },
   });
 </script>

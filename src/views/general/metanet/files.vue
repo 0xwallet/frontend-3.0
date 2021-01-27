@@ -6,32 +6,10 @@
         <BasicTable @register="registerTable">
           <template #tableTitle>
             <span>
-              <!--              <Dropdown :trigger="['click']">-->
-              <!--                <a-button type="primary"> {{ t('create') }}<DownOutlined /> </a-button>-->
-              <!--                <template #overlay>-->
-              <!--                  <Menu>-->
-              <!--                    <MenuItem @click="openCreateFolderModal">-->
-              <!--                      {{ t('file') }} , {{ t('folder') }}-->
-              <!--                    </MenuItem>-->
-              <!--                    <MenuItem> {{ t('text') }} , {{ t('markdown') }}</MenuItem>-->
-              <!--                    <MenuItem>{{ t('hash') }} , {{ t('txid') }} </MenuItem>-->
-              <!--                  </Menu>-->
-              <!--                </template>-->
-              <!--              </Dropdown>-->
-              <TableTitle />
+              <CreateButton />
               <Divider type="vertical" />
+              <UploadButton />
 
-              <Dropdown :trigger="['click']">
-                <a-button type="primary"> {{ t('uploadButton') }}<DownOutlined /> </a-button>
-                <template #overlay>
-                  <Menu>
-                    <MenuItem @click="openUploadModal">
-                      {{ t('file') }}
-                    </MenuItem>
-                    <MenuItem> {{ t('folder') }}</MenuItem>
-                  </Menu>
-                </template>
-              </Dropdown>
               <!--          列表顶部下拉-->
               <Space v-if="choose">
                 <Divider type="vertical" />
@@ -162,9 +140,7 @@
       <Col :span="span"><FileInfo :file="file" @close="closeInfo" /></Col>
     </Row>
 
-    <CreateFolderModal @register="registerCreateFolder" />
     <MoveModal @register="registerMoveModal" />
-    <UploadModal @register="registerUploadModal" />
     <ShareModal @register="registerShareModal" />
     <MarkdownModal @register="registerMDModal" />
     <PublishModal @register="registerPublishModal" />
@@ -176,14 +152,13 @@
   import { getBasicColumns } from './tableData';
   import { useMessage } from '/@/hooks/web/useMessage';
   import BreadCrumb from './component/BreadCrumb.vue';
-  import UploadModal from './component/upload/UploadModal.vue';
-  import CreateFolderModal from './component/CreateFolderModal.vue';
   import ShareModal from './share/component/ShareModal.vue';
   import MoveModal from './component/MoveModal.vue';
   import MarkdownModal from './component/editor/Markdown.vue';
   import PublishModal from './component/PublishModal.vue';
   import GIcon from '/@/components/Icon/index';
-  import TableTitle from './component/Files/TableTitle.vue';
+  import CreateButton from './component/Files/CreateButton.vue';
+  import UploadButton from './component/Files/UploadButton.vue';
   import {
     DownOutlined,
     EllipsisOutlined,
@@ -194,22 +169,18 @@
   import { useModal } from '/@/components/Modal';
   import { NetFile } from '/@/components/NetFile/netFile';
   import { useI18n } from '/@/hooks/web/useI18n';
-  const { t } = useI18n('general.metanet');
   import { Dropdown, Menu, Divider, Space, Row, Col, Modal } from 'ant-design-vue';
   import { createVNode } from 'vue';
-
   import FileInfo from './component/file/FileInfo.vue';
   import Hash from '/@/components/NetFile/Hash.vue';
   import { useMutation, useQuery } from '@vue/apollo-composable';
-
+  const { t } = useI18n('general.metanet');
   export default defineComponent({
     components: {
       Hash,
       BasicTable,
       BreadCrumb,
       GIcon,
-      UploadModal,
-      CreateFolderModal,
       MoveModal,
       ShareModal,
       Dropdown,
@@ -226,7 +197,8 @@
       Col,
       FileInfo,
       PublishModal,
-      TableTitle,
+      CreateButton,
+      UploadButton,
     },
     setup() {
       // 信息框
@@ -345,15 +317,10 @@
         showTableSetting: true,
         scroll: { x: 1000, y: 1500 },
       });
-      // 新建文件夹Modal
-      const [
-        registerCreateFolder,
-        { openModal: openModal1, setModalProps: setModal1 },
-      ] = useModal();
+
       // 移动文件Modal
       const [registerMoveModal, { openModal: openModal2, setModalProps: setModal2 }] = useModal();
-      //上传Modal
-      const [registerUploadModal, { openModal: openModal3, setModalProps: setModal3 }] = useModal();
+
       //分享Modal
       const [registerShareModal, { openModal: openModal4, setModalProps: setModal4 }] = useModal();
       // MarkdownModal
@@ -364,20 +331,7 @@
       ] = useModal();
 
       // 打开新建文件夹modal
-      // 传入上级文件夹ID dirId
-      // 传入本级文件夹名，防止重名 folder
-      function openCreateFolderModal() {
-        openModal1(true, { folder, dirId });
-        nextTick(() => {
-          setModal1({
-            canFullscreen: false,
-            destroyOnClose: true,
-            afterClose: () => {
-              refetch();
-            },
-          });
-        });
-      }
+
       // 打开移动窗口
       function openMoveModal() {
         openModal2(true, { folder: getSelectRowKeys(), path });
@@ -589,12 +543,8 @@
         folder,
         dirId,
         openFile,
-        registerCreateFolder,
-        openCreateFolderModal,
         registerMoveModal,
         openMoveModal,
-        registerUploadModal,
-        openUploadModal,
         registerShareModal,
         openShareModal,
         registerMDModal,
