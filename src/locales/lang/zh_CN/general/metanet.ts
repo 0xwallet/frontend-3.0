@@ -89,4 +89,7 @@ export default {
   comment: '评论',
   login: '登录',
   import: '导入',
+  mode: '模式',
+  path: '路径',
+  folderName: '文件夹名',
 };

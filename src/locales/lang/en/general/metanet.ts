@@ -19,6 +19,7 @@ export default {
   refresh: 'Refresh',
   root: 'Root',
   fileName: 'File Name',
+  folderName: 'Folder Name',
   action: 'Actions',
   size: 'Size',
   time: 'Time',
@@ -89,4 +90,6 @@ export default {
   comment: 'Comment',
   login: 'Login',
   import: 'Import',
+  mode: 'Mode',
+  path: 'Path',
 };

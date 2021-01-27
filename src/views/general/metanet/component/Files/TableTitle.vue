@@ -4,13 +4,14 @@
       <a-button type="primary"> {{ t('create') }}<DownOutlined /> </a-button>
       <template #overlay>
         <Menu>
-          <MenuItem @click="openCreateFolderModal"> {{ t('file') }} </MenuItem>
+          <MenuItem @click="openCreateFileModal"> {{ t('file') }} </MenuItem>
           <MenuItem @click="openCreateFolderModal"> {{ t('folder') }} </MenuItem>
           <MenuItem @click="openCreateFolderModal"> {{ t('import') }} </MenuItem>
         </Menu>
       </template>
     </Dropdown>
     <CreateFileModal @register="registerCreateFileModal" />
+    <CreateFolderModal @register="registerCreateFolderModal" />
   </span>
 </template>
 <script lang="ts">
@@ -20,17 +21,35 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useModal } from '/@/components/Modal';
   import CreateFileModal from './Modal/CreateFileModal.vue';
+  import CreateFolderModal from './Modal/CreateFolderModal.vue';
 
   const { t } = useI18n('general.metanet');
   export default defineComponent({
-    components: { DownOutlined, Dropdown, Menu, MenuItem: Menu.Item, CreateFileModal },
+    components: {
+      DownOutlined,
+      Dropdown,
+      Menu,
+      MenuItem: Menu.Item,
+      CreateFileModal,
+      CreateFolderModal,
+    },
     setup() {
-      const [registerCreateFileModal, { openModal }] = useModal();
+      const [registerCreateFileModal, { openModal: openFileModal }] = useModal();
+      const [registerCreateFolderModal, { openModal: openFolderModal }] = useModal();
 
-      function openCreateFolderModal() {
-        openModal(true);
+      function openCreateFileModal() {
+        openFileModal(true);
       }
-      return { openCreateFolderModal, t, registerCreateFileModal };
+      function openCreateFolderModal() {
+        openFolderModal(true);
+      }
+      return {
+        openCreateFileModal,
+        openCreateFolderModal,
+        t,
+        registerCreateFileModal,
+        registerCreateFolderModal,
+      };
     },
   });
 </script>
