@@ -49,12 +49,6 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
           drop_console: VITE_DROP_CONSOLE,
         },
       },
-      rollupOptions: {
-        output: {
-          compact: true,
-          manualChunks: undefined,
-        },
-      },
     },
     define: {
       __VERSION__: pkg.version,
@@ -90,7 +84,7 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
         '@ant-design/icons-vue',
         'echarts/map/js/china',
         'ant-design-vue/es/locale/zh_CN',
-        'moment/locale/zh-cn',
+        'moment/dist/locale/zh-cn',
         'ant-design-vue/es/locale/en_US',
         '@apollo/client/core',
         '@apollo/client/cache',
