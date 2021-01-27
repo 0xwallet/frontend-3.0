@@ -92,4 +92,5 @@ export default {
   import: 'Import',
   mode: 'Mode',
   path: 'Path',
+  drag: `Click or drag file to this area to upload`,
 };

@@ -1,6 +1,7 @@
 <template>
   <BasicModal
-    width="800px"
+    width="80%"
+    :height="700"
     :title="t('uploadButton')"
     v-bind="$attrs"
     @register="register"
@@ -31,7 +32,11 @@
         :before-upload="beforeUpload"
         class="upload-modal-toolbar__btn"
       >
-        <a-button type="primary"> {{ t('select') }} {{ t('file') }}</a-button>
+        <Space>
+          <InboxOutlined :style="{ fontSize: '32px' }" /><a-button type="primary">
+            {{ t('drag') }}</a-button
+          ></Space
+        >
       </Upload>
     </div>
     <FileList :dataSource="fileList" :columns="columns" :actionColumn="actionColumn" />
@@ -39,7 +44,7 @@
 </template>
 <script lang="ts">
   import { defineComponent, reactive, ref, toRefs, unref, computed } from 'vue';
-  import { Upload, Alert } from 'ant-design-vue';
+  import { Upload, Alert, Space } from 'ant-design-vue';
   import { BasicModal, useModalInner } from '/@/components/Modal';
   //   import { BasicTable, useTable } from '/@/components/Table';
   // hooks
@@ -55,7 +60,7 @@
 
   import FileList from './FileList';
   //Apollo
-
+  import { InboxOutlined } from '@ant-design/icons-vue';
   import { driveUploadByHash } from '/@/hooks/apollo/gqlFile';
   import CryptoES from 'crypto-es';
   import { useI18n } from '/@/hooks/web/useI18n';
@@ -63,7 +68,7 @@
   import { useMutation } from '@vue/apollo-composable';
   const { t } = useI18n('general.metanet');
   export default defineComponent({
-    components: { BasicModal, Upload, Alert, FileList },
+    components: { BasicModal, Upload: Upload.Dragger, Alert, FileList, InboxOutlined, Space },
     props: basicProps,
     setup(props, { emit }) {
       //   是否正在上传
@@ -294,9 +299,13 @@
       padding: 0;
     }
 
+    .upload {
+      vertical-align: top;
+    }
+
     &-toolbar {
       display: flex;
-      align-items: center;
+      align-items: start;
       margin-bottom: 8px;
 
       &__btn {

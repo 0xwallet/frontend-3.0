@@ -133,10 +133,11 @@
             </Dropdown>
           </template>
           <template #toolbar>
-            <a-button type="link" @click="openInfo"
+            <a-button type="link" @click="changeInfo" :disabled="info"
               ><InfoCircleOutlined :style="{ fontSize: '20px' }"
             /></a-button> </template></BasicTable
       ></Col>
+
       <Col :span="span"><FileInfo :file="file" @close="closeInfo" /></Col>
     </Row>
 
@@ -171,7 +172,7 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import { Dropdown, Menu, Divider, Space, Row, Col, Modal } from 'ant-design-vue';
   import { createVNode } from 'vue';
-  import FileInfo from './component/file/FileInfo.vue';
+  import FileInfo from './component/Files/FileInfo.vue';
   import Hash from '/@/components/NetFile/Hash.vue';
   import { useMutation, useQuery } from '@vue/apollo-composable';
   const { t } = useI18n('general.metanet');
@@ -203,6 +204,7 @@
     setup() {
       // 信息框
       const { createMessage, createErrorModal } = useMessage();
+
       // 文件路径面包屑
       // 储存本级目录所有文件夹名
       const folder = ref([]);
@@ -534,7 +536,9 @@
       function closeInfo() {
         info.value = false;
       }
-      function test() {}
+      function changeInfo() {
+        info.value = !info.value;
+      }
       return {
         registerTable,
         setSelectedRowKeyList,
@@ -560,9 +564,9 @@
         openInfo,
         file,
         closeInfo,
-        test,
         registerPublishModal,
         openPublishModal,
+        changeInfo,
       };
     },
   });
