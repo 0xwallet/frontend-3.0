@@ -16,7 +16,7 @@
   </span>
 </template>
 <script lang="ts">
-  import { defineComponent, ref } from 'vue';
+  import { computed, defineComponent, ref } from 'vue';
   import { Dropdown, Menu } from 'ant-design-vue';
   import { DownOutlined } from '@ant-design/icons-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
@@ -36,16 +36,31 @@
       CreateFolderModal,
       ImportFileModal,
     },
-    setup() {
+    props: {
+      path: {
+        type: Array,
+        default: [],
+      },
+    },
+    emits: ['refetch'],
+    setup(props, { emit }) {
       const [registerCreateFileModal, { openModal: openFileModal }] = useModal();
-      const [registerCreateFolderModal, { openModal: openFolderModal }] = useModal();
+      const [
+        registerCreateFolderModal,
+        { openModal: openFolderModal, setModalProps: setFolderModal },
+      ] = useModal();
       const [registerImportFileModal, { openModal: openImportModal }] = useModal();
 
       function openCreateFileModal() {
         openFileModal(true);
       }
       function openCreateFolderModal() {
-        openFolderModal(true);
+        openFolderModal(true, props.path, true);
+        setFolderModal({
+          afterClose: () => {
+            emit('refetch');
+          },
+        });
       }
       function openImportFileModal() {
         openImportModal(true);

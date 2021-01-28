@@ -21,7 +21,6 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useModal } from '/@/components/Modal';
   import UploadModal from './upload/UploadModal.vue';
-
   const { t } = useI18n('general.metanet');
   export default defineComponent({
     components: {
@@ -31,6 +30,7 @@
       MenuItem: Menu.Item,
       UploadModal,
     },
+
     setup() {
       const [registerUploadModal, { openModal }] = useModal();
 

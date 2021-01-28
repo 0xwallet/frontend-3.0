@@ -6,9 +6,9 @@
         <BasicTable @register="registerTable">
           <template #tableTitle>
             <span>
-              <CreateButton />
+              <CreateButton :path="path" @refetch="refetch" />
               <Divider type="vertical" />
-              <UploadButton />
+              <UploadButton />{{ path }}
 
               <!--          列表顶部下拉-->
               <Space v-if="choose">
