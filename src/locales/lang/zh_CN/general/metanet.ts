@@ -93,4 +93,6 @@ export default {
   path: '路径',
   folderName: '文件夹名',
   drag: `单击或拖动文件到该区域以上传`,
+  basic: '基本',
+  dynamic: '动态',
 };

@@ -93,4 +93,6 @@ export default {
   mode: 'Mode',
   path: 'Path',
   drag: `Click or drag file to this area to upload`,
+  basic: 'Basic',
+  dynamic: 'Dynamic',
 };

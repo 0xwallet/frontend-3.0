@@ -1,18 +1,10 @@
 <template>
   <Card :tab-list="tabList" :active-tab-key="key" @tabChange="(key) => onTabChange(key, 'key')">
-    <template #title>
-      <span>{{ info.fullName !== undefined ? info.fullName[info.fullName.length - 1] : '' }} </span>
-    </template>
     <template #customRender="item">
       <span> {{ item.key }} </span>
     </template>
 
-    <template #extra>
-      <a-button type="link" @click="close"
-        ><CloseSquareOutlined :style="{ fontSize: '20px' }"
-      /></a-button>
-    </template>
-    <template v-if="key === 'detail'">
+    <template v-if="key === 'basic'">
       <Descriptions :column="1">
         <DescriptionsItem :label="t('type')">{{ info.type }}</DescriptionsItem>
         <DescriptionsItem :label="t('size')"
@@ -27,6 +19,23 @@
         <DescriptionsItem :label="t('created')">{{ time(info.createdAt) }}</DescriptionsItem>
       </Descriptions>
     </template>
+    <template v-if="key === 'dynamic'">
+      <List item-layout="horizontal" :data-source="data">
+        <template #renderItem="{ item, index }">
+          <ListItem>
+            <ListItemMeta>
+              <template #title>
+                {{ item.title }}
+              </template>
+              <template #description>
+                {{ item.content }}
+              </template>
+            </ListItemMeta>
+            <div>{{ item.time }}</div>
+          </ListItem>
+        </template>
+      </List>
+    </template>
   </Card>
 </template>
 
@@ -37,9 +46,9 @@
   import { NetFile } from '/@/components/NetFile/netFile';
   const { t } = useI18n('general.metanet');
   import { byteTransfer } from '/@/utils/disk/file';
-  import { CloseSquareOutlined } from '@ant-design/icons-vue';
   import { propTypes } from '/@/utils/propTypes';
-  import { formatToDate } from '/@/utils/dateUtil';
+  import { formatToDateTime } from '/@/utils/dateUtil';
+  import { List } from 'ant-design-vue';
 
   export default defineComponent({
     name: 'FileInfo',
@@ -49,24 +58,26 @@
       Card,
       Descriptions,
       DescriptionsItem: Descriptions.Item,
-      CloseSquareOutlined,
+      List,
+      ListItem: List.Item,
+      ListItemMeta: List.Item.Meta,
     },
     props: {
       file: propTypes.any,
     },
-    setup(props, { emit }) {
+    setup(props) {
       const info: NetFile = computed(() => {
         return props.file;
       });
-      const key = ref('detail');
+      const key = ref('basic');
       const tabList = [
         {
-          key: 'detail',
-          tab: t('detail'),
+          key: 'basic',
+          tab: t('basic'),
         },
         {
-          key: 'activity',
-          tab: t('activity'),
+          key: 'dynamic',
+          tab: t('dynamic'),
         },
       ];
       const desc = [
@@ -84,14 +95,34 @@
         }
         return dir;
       }
-      function close() {
-        emit('close');
-      }
+
       function time(t: string): string {
-        return formatToDate(t);
+        return formatToDateTime(t, 'YYYY-MM-DD HH:mm:ss');
       }
 
-      return { t, info, tabList, key, onTabChange, desc, byteTransfer, getLocation, close, time };
+      return {
+        t,
+        info,
+        tabList,
+        key,
+        onTabChange,
+        desc,
+        byteTransfer,
+        getLocation,
+        time,
+        data: [
+          {
+            title: '111',
+            content: '操作',
+            time: '2021-01-29',
+          },
+          {
+            title: '222',
+            content: '评论',
+            time: '2021-01-29',
+          },
+        ],
+      };
     },
   });
 </script>

@@ -48,10 +48,6 @@
       ] = useDrawer();
       const [register5, { openDrawer: openDrawer5 }] = useDrawer();
       function send() {
-        // transferDrawerData({
-        //   data: 'content',
-        //   info: 'Info',
-        // });
         openDrawer4(true, {
           data: 'content',
           info: 'Info',
