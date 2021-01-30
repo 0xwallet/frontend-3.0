@@ -187,7 +187,7 @@
       // 删除
       function handleRemove(record: FileItem) {
         const index = fileStore.getUploadList.findIndex((item) => item.uuid === record.uuid);
-        index !== -1 && fileStore.getUploadList.splice(index, 1);
+        index !== -1 && fileStore.delItem(index);
       }
 
       // 点击开始上传
