@@ -34,7 +34,6 @@
           valueRef.value = '';
           const url = await f.preview();
           const d = await getFile(url);
-          console.log(d);
           const markDown = unref(markDownRef);
           if (!markDown) return;
           const vditor = markDown.getVditor();

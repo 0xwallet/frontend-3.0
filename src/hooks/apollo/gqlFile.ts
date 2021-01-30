@@ -45,6 +45,7 @@ export const driveListShares = gql`
       token
       uri
       expiredAt
+      ${userFile}
     }
   }
 `;

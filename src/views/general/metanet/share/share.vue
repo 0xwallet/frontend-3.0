@@ -116,15 +116,16 @@
         const list = res?.data?.driveListShares;
         let temp: NetFile[] = [];
         list.forEach((v) => {
-          if (v.userFile === null) {
-            temp.push({
-              name: 'deleted',
-              shareId: v.id,
-            });
-            return;
+          if (v.userFile) {
+            temp.push(new NetFile(v));
           }
-          let f = new NetFile(v);
-          temp.push(f);
+          // if (v.userFile === null) {
+          //   temp.push({
+          //     name: 'deleted',
+          //     shareId: v.id,
+          //   });
+          //   return;
+          // }
         });
         tableData.value = temp;
       });
