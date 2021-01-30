@@ -198,7 +198,7 @@
           if (pathList.value.find((v) => v.value.replace('/', '') === data.fullName)) {
             createErrorModal({
               title: '错误',
-              content: res.fullName + '已存在',
+              content: data.fullName + '已存在',
             });
             return;
           }

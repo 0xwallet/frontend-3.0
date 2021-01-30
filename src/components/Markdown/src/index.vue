@@ -25,6 +25,7 @@
     props: {
       height: propTypes.number.def(360),
       value: propTypes.string.def(''),
+      mode: propTypes.oneOf(['ir', 'sv', 'wysiwyg']).def('ir'),
     },
     emits: ['change', 'get'],
     setup(props, { attrs, emit }) {
@@ -59,9 +60,10 @@
         const wrapEl = unref(wrapRef);
         if (!wrapEl) return;
         const bindValue = { ...attrs, ...props };
+        console.log(bindValue);
         vditorRef.value = new Vditor(wrapEl, {
           lang: unref(getCurrentLang),
-          mode: 'sv',
+          mode: props.mode,
           preview: {
             actions: [],
           },

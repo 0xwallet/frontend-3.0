@@ -5,6 +5,7 @@ import {
   driveDeleteShare,
   driveCreatePublish,
   driveUploadByHash,
+  drivePreviewToken,
 } from '/@/hooks/apollo/gqlFile';
 import { toLower } from 'lodash-es';
 import { downloadByUrl } from '/@/utils/file/download';
@@ -12,7 +13,6 @@ import { unref } from 'vue';
 import { useCopyToClipboard } from '/@/hooks/web/useCopyToClipboard';
 import { useMessage } from '/@/hooks/web/useMessage';
 import { useI18n } from '/@/hooks/web/useI18n';
-
 import { Tooltip } from 'ant-design-vue';
 export const getGlobal = (): any => (typeof window !== 'undefined' ? window : global);
 // 循环获取NKN.JS
@@ -40,6 +40,7 @@ interface userFile {
   space: string;
   updatedAt: string;
   insertedAt: string;
+  user?: { id: string } | null;
 }
 
 export class NetFile {
@@ -83,13 +84,14 @@ export class NetFile {
     this.createdAt = params.userFile.insertedAt;
     this.updatedAt = params.userFile.updatedAt;
     this.code = params.code;
-    this.token = params.token;
+    this.token = params.token || '';
     this.uri = params.uri || '';
     this.expiredAt = params.expiredAt;
     this.hash = params.userFile.hash;
     this.shareId = params.id;
-    this.userId = params.user?.id || '';
+    this.userId = params.user?.id || params.userFile?.user?.id || '';
   }
+
   // 文件下载
   download() {
     if (this.type === 'folder') {
@@ -104,25 +106,36 @@ export class NetFile {
     });
   }
   // 文件预览
-  preview(): Promise<any> {
-    return new Promise<any>((resolve, reject) => {
+  async preview(): Promise<any> {
+    let token = this.token;
+    if (token === '') {
+      const res = await useApollo({
+        mode: 'mutate',
+        gql: drivePreviewToken,
+      });
+      token = res.data.drivePreviewToken;
+    }
+    return new Promise<any>((resolve) => {
       let url = `https://drive-s.owaf.io/preview/${this.userId}/${toLower(this.space)}/${this.id}/${
         this.fullName.slice(-1)[0]
-      }?token=${this.token}`;
-
-      switch (this.type) {
-        case 'folder':
-          reject();
-          break;
-        case 'pdf':
-          console.log(url);
-          resolve(url);
-          break;
-        default:
-          console.log(url);
-          createMessage.warning('浏览组件有问题');
-          resolve(url);
-      }
+      }?token=${token}`;
+      resolve(url);
+      // switch (this.type) {
+      //   case 'folder':
+      //     reject();
+      //     break;
+      //   case 'pdf':
+      //     console.log(url);
+      //     resolve(url);
+      //     break;
+      //   case 'md':
+      //     resolve(url);
+      //     break;
+      //   default:
+      //     console.log(url);
+      //     createMessage.warning('浏览组件有问题');
+      //     resolve(url);
+      // }
     });
   }
 

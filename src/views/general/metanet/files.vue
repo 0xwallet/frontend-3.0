@@ -1,6 +1,13 @@
 <template>
   <div class="p-4">
-    <BreadCrumb :path="path" @jump="goPath" />
+    <div class="fileHead"
+      ><BreadCrumb :path="path" @jump="goPath" />
+      <InputSearch
+        v-model:value="searchValue"
+        placeholder="input search text"
+        enter-button
+        class="search"
+    /></div>
 
     <BasicTable @register="registerTable">
       <template #tableTitle>
@@ -148,7 +155,7 @@
     /></Drawer>
     <MoveModal @register="registerMoveModal" />
     <ShareModal @register="registerShareModal" />
-    <MarkdownModal @register="registerMDModal" />
+    <MarkdownModal @register="registerMarkdownModal" />
     <PublishModal @register="registerPublishModal" />
   </div>
 </template>
@@ -176,7 +183,7 @@
   import { useModal } from '/@/components/Modal';
   import { NetFile } from '/@/components/NetFile/netFile';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import { Dropdown, Menu, Divider, Space, Row, Col, Modal, Drawer } from 'ant-design-vue';
+  import { Dropdown, Menu, Divider, Space, Row, Col, Modal, Drawer, Input } from 'ant-design-vue';
   import { createVNode } from 'vue';
   import FileInfo from './component/Files/FileInfo.vue';
   import Hash from '/@/components/NetFile/Hash.vue';
@@ -209,6 +216,7 @@
       UploadButton,
       Button,
       Drawer,
+      InputSearch: Input.Search,
     },
     setup() {
       // 信息框
@@ -216,17 +224,19 @@
 
       // 文件路径面包屑
       // 储存本级目录所有文件夹名
-      const folder = ref([]);
+      let folder = ref([]);
       // 储存本级目录路所有文件
-      const files = ref([]);
+      let files = ref([]);
+      // 当前选择的文件
       const file = (ref({}) as unknown) as NetFile;
+      //当前路径
       const path = ref([]);
-      let dirId = 'root';
-      const info = ref(false);
+      // info相关
       const infoButton = ref(false);
       const infoVisible = computed(() => {
         return infoButton.value && file.value.fullName !== undefined;
       });
+      const searchValue = ref('');
 
       // 表格数据
       // 文件列表
@@ -274,18 +284,14 @@
         let p: NetFile[] = [];
         let f: NetFile[] = [];
         list.forEach((v) => {
-          if (!v) {
-            return;
-          }
+          if (!v) return;
           // 是目录
           if (v.isDir) {
-            if (variables.value.dirId === v.id) {
-              return;
-            }
-            if (dirId === '' && v.id === 'root') {
-              return;
-            }
-            if (temp.length > 0 && temp[0].id == v.id) {
+            if (
+              variables.value.dirId === v.id ||
+              v.id === 'root' ||
+              (temp.length > 0 && temp[0].id == v.id)
+            ) {
               return;
             }
             p.push(new NetFile({ userFile: v }));
@@ -294,6 +300,7 @@
           }
         });
         folder.value = temp.concat(p);
+
         files.value = f;
       });
 
@@ -331,11 +338,10 @@
 
       // 移动文件Modal
       const [registerMoveModal, { openModal: openModal2, setModalProps: setModal2 }] = useModal();
-
       //分享Modal
       const [registerShareModal, { openModal: openModal4, setModalProps: setModal4 }] = useModal();
       // MarkdownModal
-      const [registerMDModal, { openModal: openModal5, setModalProps: setModal5 }] = useModal();
+      const [registerMarkdownModal, { openModal: openMarkdownModal }] = useModal();
       const [
         registerPublishModal,
         { openModal: openModal6, setModalProps: setModal6 },
@@ -372,20 +378,7 @@
           });
         });
       }
-      // 打开上传窗口
-      function openUploadModal() {
-        openModal3(true, { path });
-        nextTick(() => {
-          setModal3({
-            canFullscreen: false,
-            width: '70%',
-            destroyOnClose: true,
-            afterClose: () => {
-              refetch();
-            },
-          });
-        });
-      }
+
       // 打开分享窗口
       function openShareModal(record) {
         openModal4(true, { record }, true);
@@ -402,17 +395,7 @@
       }
 
       function openMDModal(record) {
-        openModal5(true, { record }, true);
-        nextTick(() => {
-          setModal5({
-            width: '80%',
-            minHeight: document.body.clientHeight - 300,
-            destroyOnClose: true,
-            // afterClose: () => {
-            //   fetchData({ dirId });
-            // },
-          });
-        });
+        openMarkdownModal(true, record, true);
       }
       // 文件预览
       function preview(f: NetFile) {
@@ -536,12 +519,6 @@
         // 根据ID获取最新进入目录文件
       }
 
-      function openInfo() {
-        if (file.value.fullName === undefined) {
-          createMessage.error(t('noChoose'));
-        }
-        info.value = !info.value;
-      }
       function closeInfo() {
         infoButton.value = false;
       }
@@ -554,14 +531,12 @@
         setSelectedRowKeyList,
         choose,
         path,
-        folder,
-        dirId,
         openFile,
         registerMoveModal,
         openMoveModal,
         registerShareModal,
         openShareModal,
-        registerMDModal,
+        registerMarkdownModal,
         delFile,
         preview,
         download,
@@ -570,7 +545,6 @@
         getSelectRowKeys,
         t,
         refetch,
-        openInfo,
         file,
         closeInfo,
         registerPublishModal,
@@ -578,7 +552,18 @@
         changeInfo,
         infoButton,
         infoVisible,
+        searchValue,
       };
     },
   });
 </script>
+<style lang="less" scoped>
+  .fileHead {
+    display: flex;
+    justify-content: space-between;
+
+    .search {
+      width: 300px;
+    }
+  }
+</style>

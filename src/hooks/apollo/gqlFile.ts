@@ -30,6 +30,9 @@ export const driveListFiles = gql`
         size
         description
       }
+      user {
+        id
+      }
     }
   }
 `;
@@ -42,8 +45,6 @@ export const driveListShares = gql`
       token
       uri
       expiredAt
-      ${userFile}
-      
     }
   }
 `;

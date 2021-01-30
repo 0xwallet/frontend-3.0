@@ -1,5 +1,12 @@
 <template>
-  <BasicModal v-bind="$attrs" @register="register" :title="t('markdownTitle')" :minHeight="height">
+  <BasicModal
+    v-bind="$attrs"
+    @register="register"
+    :title="t('markdownTitle')"
+    :minHeight="height"
+    width="80%"
+    destroyOnClose
+  >
     <a-button @click="toggleTheme" class="mb-2" type="primary">黑暗主题</a-button>
     <MarkDown v-model:value="valueRef" ref="markDownRef" :height="height * 0.9" />
   </BasicModal>
@@ -21,15 +28,17 @@
         return document.body.clientHeight - 300;
       });
       const [register, { setModalProps }] = useModalInner(async (data) => {
-        const f: NetFile = data.record;
+        const f: NetFile = data;
         setModalProps({ loading: true });
         try {
+          valueRef.value = '';
           const url = await f.preview();
           const d = await getFile(url);
+          console.log(d);
           const markDown = unref(markDownRef);
           if (!markDown) return;
           const vditor = markDown.getVditor();
-          vditor.setValue(d, true);
+          vditor.setValue(d);
           // valueRef.value = d;
         } catch {
         } finally {

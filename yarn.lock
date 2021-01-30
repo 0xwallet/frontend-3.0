@@ -1168,10 +1168,10 @@
   dependencies:
     cross-fetch "^3.0.6"
 
-"@iconify/json@^1.1.291":
-  version "1.1.292"
-  resolved "https://registry.npmjs.org/@iconify/json/-/json-1.1.292.tgz#e8bb92b192653cacc14bd47f8cdb5068210dac21"
-  integrity sha512-OJjtA6q2G/BaQaiyFlb6/tzr4cBlBNYdXJeV7hEx3U8Xqb6hwRMWn5NbujkotVQbxslefwTS4fEHN28cha0ajA==
+"@iconify/json@^1.1.293":
+  version "1.1.293"
+  resolved "https://registry.npmjs.org/@iconify/json/-/json-1.1.293.tgz#f61583bb9de76fbdb3495aa7f6883a49d85c73fd"
+  integrity sha512-0xRreoBhdMSwVP3UhPX7x5+NqpN6vrS5/UJgH4uvvLd/QlEnrfkxUy3Ld33LUXMdu1rDZwTPt6MPbbfgWkQusw==
 
 "@intlify/core-base@9.0.0-beta.16":
   version "9.0.0-beta.16"
@@ -1852,10 +1852,10 @@
   resolved "https://registry.npm.taobao.org/@ungap/global-this/download/@ungap/global-this-0.4.4.tgz#8a1b2cfcd3e26e079a847daba879308c924dd695"
   integrity sha1-ihss/NPibgeahH2rqHkwjJJN1pU=
 
-"@vitejs/plugin-legacy@^1.2.1":
-  version "1.2.1"
-  resolved "https://registry.npm.taobao.org/@vitejs/plugin-legacy/download/@vitejs/plugin-legacy-1.2.1.tgz#783a72c56ce987f00caf334acc33195a0bbf6f24"
-  integrity sha1-eDpyxWzph/AMrzNKzDMZWgu/byQ=
+"@vitejs/plugin-legacy@^1.2.2":
+  version "1.2.2"
+  resolved "https://registry.npmjs.org/@vitejs/plugin-legacy/-/plugin-legacy-1.2.2.tgz#65039ca35be1542b5ad612b54641da5a89d7687f"
+  integrity sha512-ec3hvD4OrQusH42ERrTtjOmeBoGmVWtwg7mVMvvlWkR7wUwZSnr8J6HYYynmGUaBcC95+3xm6bRks7sh2DKq+w==
   dependencies:
     "@babel/standalone" "^7.12.12"
     core-js "^3.8.2"
@@ -8059,7 +8059,7 @@ vite-plugin-purge-icons@^0.6.0:
     "@purge-icons/generated" "^0.6.0"
     rollup-plugin-purge-icons "^0.6.0"
 
-vite-plugin-pwa@^0.4.0:
+vite-plugin-pwa@^0.4.1:
   version "0.4.1"
   resolved "https://registry.npmjs.org/vite-plugin-pwa/-/vite-plugin-pwa-0.4.1.tgz#eae03c4dd10cd51600c08fd1aaa179a92577c456"
   integrity sha512-UvcdW93FT0+2dRSLasQtvJepBwXj+UTcvzBekca6YuVdn/MTdEX01J/QqPL+v3KUZBnNM2MAOFpLIkZ3wi9t8g==
@@ -8080,10 +8080,10 @@ vite-plugin-style-import@^0.4.6:
     "@rollup/pluginutils" "^4.1.0"
     change-case "^4.1.2"
 
-vite@2.0.0-beta.50:
-  version "2.0.0-beta.50"
-  resolved "https://registry.npmjs.org/vite/-/vite-2.0.0-beta.50.tgz#04e66d009470ca90ab8a4a43687e899b670a0f25"
-  integrity sha512-zzMgrWJK92/aQ1rxvc+0QKeOCdOP4m2EPGwK2HKhlifQVnSdpYQzQkWLzaGh1GQAp61W+Su8cu6cWINpFgNrfQ==
+vite@2.0.0-beta.55:
+  version "2.0.0-beta.55"
+  resolved "https://registry.npmjs.org/vite/-/vite-2.0.0-beta.55.tgz#db0da6ec8f0a18cef3348881b95967d71cf3eccb"
+  integrity sha512-IlLTGIWgOiXh9TG6UQo2UttQmymfOzkTviTQJM1Os/XDAkD/xm22vjnbix3OpbmQ0/kjE33dVmSf8aNklVOuVg==
   dependencies:
     esbuild "^0.8.34"
     postcss "^8.2.1"

@@ -79,6 +79,7 @@
     </Card>
 
     <PdfDrawer @register="registerPdfDrawer" :file="file" />
+    <MarkdownModal @register="registerMarkdownModal" />
   </div>
 </template>
 <script lang="ts">
@@ -90,7 +91,7 @@
   import { useTable, BasicTable } from '/@/components/Table';
   import { getBasicColumns } from './tableData';
   import { useI18n } from '/@/hooks/web/useI18n';
-  const { t } = useI18n('general.metanet');
+
   import { BasicForm, useForm } from '/@/components/Form';
   import Hash from '/@/components/NetFile/Hash.vue';
   import { fileStore } from '/@/store/modules/netFile';
@@ -98,8 +99,10 @@
   import { useQuery } from '@vue/apollo-composable';
   import router from '/@/router';
   import PdfDrawer from './component/PdfDrawer.vue';
+  import MarkdownModal from '../component/editor/Markdown.vue';
   import { useDrawer } from '/@/components/Drawer';
-
+  import { useModal } from '/@/components/Modal';
+  const { t } = useI18n('general.metanet');
   export default defineComponent({
     name: 'TestTab',
     components: {
@@ -114,6 +117,7 @@
       Col,
       Avatar,
       PdfDrawer,
+      MarkdownModal,
     },
     setup() {
       const { currentRoute } = useRouter();
@@ -188,6 +192,7 @@
         scroll: { x: 1000, y: 800 },
       });
       const [registerPdfDrawer, { openDrawer: openPdfDrawer }] = useDrawer();
+      const [registerMarkdownModal, { openModal: openMarkdownModal }] = useModal();
       const choose = computed(() => {
         return getSelectRowKeys().length !== 0;
       });
@@ -232,6 +237,9 @@
           case 'pdf':
             openPdfDrawer(true, {}, true);
             break;
+          case 'md':
+            openMarkdownModal(true, file, true);
+            break;
         }
       }
       function download(file: NetFile) {
@@ -267,6 +275,7 @@
         form,
         params,
         registerPdfDrawer,
+        registerMarkdownModal,
       };
     },
   });

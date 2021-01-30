@@ -80,6 +80,7 @@ export function initApollo(): ApolloClient<any> | null {
     default: apolloClient,
   });
   Client = apolloClient;
+
   return apolloClient;
 }
 
@@ -87,6 +88,7 @@ export function useApollo(params: { mode: string; gql: any; variables?: any }): 
   return new Promise((resolve, reject) => {
     const { mode, gql, variables } = params;
     let r: Promise<any>;
+
     switch (mode) {
       case 'query':
         r = Client.query({ query: gql, variables, fetchPolicy: 'network-only' });

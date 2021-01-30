@@ -16,7 +16,7 @@
   </span>
 </template>
 <script lang="ts">
-  import { computed, defineComponent, ref } from 'vue';
+  import { defineComponent } from 'vue';
   import { Dropdown, Menu } from 'ant-design-vue';
   import { DownOutlined } from '@ant-design/icons-vue';
   import { useI18n } from '/@/hooks/web/useI18n';

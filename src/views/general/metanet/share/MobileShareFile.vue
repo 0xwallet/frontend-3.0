@@ -10,6 +10,7 @@
       ><Button type="link" @click="openShareDrawer"
         ><MoreOutlined :style="{ fontSize: '26px' }" /></Button
     ></template>
+
     <BasicForm @register="registerForm" layout="vertical" v-if="needCode && file == null" />
     <div v-if="file" class="row">
       <Space direction="vertical" align="center">
@@ -23,12 +24,14 @@
         ></Space
       >
     </div>
+
     <ShareDrawer @register="registerDrawer" :file="file" />
     <PdfDrawer @register="registerPdfDrawer" :file="file" :scale="0.5" />
+    <MarkdownDrawer @register="registerMarkdownDrawer" :file="file" />
   </Card>
 </template>
 <script lang="ts">
-  import { computed, defineComponent, ref, unref, nextTick } from 'vue';
+  import { computed, defineComponent, ref, unref } from 'vue';
   import { useRouter } from 'vue-router';
   import { drivePreviewShare } from '/@/hooks/apollo/gqlFile';
   import { useQuery } from '@vue/apollo-composable';
@@ -43,7 +46,9 @@
   import { useDrawer } from '/@/components/Drawer';
   import ShareDrawer from './component/ShareDrawer.vue';
   import PdfDrawer from './component/PdfDrawer.vue';
+  import MarkdownDrawer from './component/MarkdownDrawer.vue';
   import { MoreOutlined } from '@ant-design/icons-vue';
+
   export default defineComponent({
     name: 'ReleaseFile',
     components: {
@@ -58,6 +63,7 @@
       ShareDrawer,
       MoreOutlined,
       PdfDrawer,
+      MarkdownDrawer,
     },
     setup() {
       const { currentRoute } = useRouter();
@@ -96,6 +102,7 @@
       });
       const [registerDrawer, { openDrawer }] = useDrawer();
       const [registerPdfDrawer, { openDrawer: openPdfDrawer }] = useDrawer();
+      const [registerMarkdownDrawer, { openDrawer: openMarkdownDrawer }] = useDrawer();
       const { onResult: PreviewShare } = useQuery(drivePreviewShare, params.value);
       PreviewShare((res) => {
         needCode.value = res.data?.drivePreviewShare.needCode;
@@ -114,6 +121,9 @@
           case 'pdf':
             openPdfDrawer(true, {}, true);
             break;
+          case 'md':
+            openMarkdownDrawer(true, {}, true);
+            break;
         }
       }
       function openShareDrawer() {
@@ -130,6 +140,7 @@
         openShareDrawer,
         t,
         registerPdfDrawer,
+        registerMarkdownDrawer,
       };
     },
   });
