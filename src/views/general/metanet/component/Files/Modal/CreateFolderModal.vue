@@ -20,7 +20,7 @@
     setup() {
       const pathList = ref([
         { value: '~', id: 'root' },
-        { value: '*', id: '123' },
+        { value: '*', id: '' },
       ]);
       const variables = ref({
         dirId: '',
@@ -221,7 +221,7 @@
           p = p.slice(1);
         }
         if (p[0] === '*') {
-          p = currentPath.concat(p.slice(-1));
+          p = currentPath.concat(p.filter((v) => v && v.trim()).slice(1));
         }
         await MakeDir({ fullName: p });
         console.log(p);

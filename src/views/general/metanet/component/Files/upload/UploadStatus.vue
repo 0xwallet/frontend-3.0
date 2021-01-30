@@ -1,5 +1,10 @@
 <template
-  ><Affix :offset-bottom="bottom" v-if="status" @click="openUploadModal" class="upload_status">
+  ><Affix
+    :offset-bottom="bottom"
+    v-if="show && status"
+    @click="openUploadModal"
+    class="upload_status"
+  >
     {{ status.name }}
     <Progress :percent="per" :status="per === 100 ? 'success' : 'active'" size="small" />
   </Affix>
@@ -9,7 +14,8 @@
   import { Affix, Progress } from 'ant-design-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { fileStore } from '/@/store/modules/netFile';
-  import mitt from 'mitt';
+  import Mitt from '/@/utils/mitt';
+
   const { t } = useI18n('general.metanet');
   export default defineComponent({
     components: {
@@ -35,6 +41,7 @@
         }
         return false;
       });
+      const show = ref(true);
       let now = ref(0);
       let max = ref(10);
       setInterval(() => {
@@ -44,11 +51,13 @@
         }
         now.value = 0;
       }, 2500);
+      const mitt = new Mitt();
       function openUploadModal() {
         emit('openUploadModal');
+        mitt.emit('foo', { a: 'b' });
       }
-      mitt().emit('foo', { a: 'b' });
-      return { bottom, per, status, openUploadModal };
+
+      return { bottom, per, status, openUploadModal, show };
     },
   });
 </script>

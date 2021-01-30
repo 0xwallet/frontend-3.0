@@ -92,7 +92,7 @@ class netFileStore extends VuexModule {
         FileSize: item.size,
         UserId: localStorage.getItem('uid'),
         Space: 'PRIVATE',
-        Description: '',
+        Description: item.desc || '',
       };
       this.setItemValue({ uuid: item.uuid, key: 'status', value: UploadResultStatus.UPLOADING });
       let timeStart = Date.now();

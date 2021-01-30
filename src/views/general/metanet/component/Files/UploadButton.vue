@@ -22,7 +22,7 @@
   import { useModal } from '/@/components/Modal';
   import UploadModal from './upload/UploadModal.vue';
 
-  import mitt from 'mitt';
+  import Mitt from '/@/utils/mitt';
 
   const { t } = useI18n('general.metanet');
   export default defineComponent({
@@ -40,7 +40,8 @@
       function openUploadModal() {
         openModal(true);
       }
-      mitt().on('foo', (e) => console.log('foo', e));
+      const mitt = new Mitt();
+      mitt.on('foo', (e) => console.log('foo', e));
 
       return {
         openUploadModal,

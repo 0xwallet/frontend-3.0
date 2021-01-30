@@ -44,7 +44,10 @@
     },
     emits: ['refetch'],
     setup(props, { emit }) {
-      const [registerCreateFileModal, { openModal: openFileModal }] = useModal();
+      const [
+        registerCreateFileModal,
+        { openModal: openFileModal, setModalProps: setFileModal },
+      ] = useModal();
       const [
         registerCreateFolderModal,
         { openModal: openFolderModal, setModalProps: setFolderModal },
@@ -52,7 +55,12 @@
       const [registerImportFileModal, { openModal: openImportModal }] = useModal();
 
       function openCreateFileModal() {
-        openFileModal(true);
+        openFileModal(true, props.path, true);
+        setFileModal({
+          afterClose: () => {
+            emit('refetch');
+          },
+        });
       }
       function openCreateFolderModal() {
         openFolderModal(true, props.path, true);

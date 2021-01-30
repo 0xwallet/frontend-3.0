@@ -335,7 +335,7 @@
           },
         }),
         pagination: false,
-        showTableSetting: true,
+        showTableSetting: false,
         scroll: { x: 1000, y: 1500 },
       });
 

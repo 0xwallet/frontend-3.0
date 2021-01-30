@@ -1,5 +1,5 @@
 <template>
-  <BasicModal v-bind="$attrs" @register="register" :title="t('createFile')" @ok="createFolder">
+  <BasicModal v-bind="$attrs" @register="register" :title="t('createFile')" @ok="createFile">
     <BasicForm @register="registerForm" :model="model" />
   </BasicModal>
 </template>
@@ -7,10 +7,11 @@
   import { defineComponent, ref } from 'vue';
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { BasicForm, FormSchema, useForm } from '/@/components/Form/index';
-  import { driveMakeDir, driveMakeDirUnder } from '/@/hooks/apollo/gqlFile';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { useMutation } from '@vue/apollo-composable';
   import { useI18n } from '/@/hooks/web/useI18n';
+  import CryptoES from 'crypto-es';
+  import { buildUUID } from '/@/utils/uuid';
+  import { fileStore } from '/@/store/modules/netFile';
   const { t } = useI18n('general.metanet');
   const schemas: FormSchema[] = [
     {
@@ -53,8 +54,7 @@
     components: { BasicModal, BasicForm },
     setup() {
       const modelRef = ref({});
-      const folder = ref({});
-      let dirId = '';
+      const path = ref([]);
       const [registerForm, { validateFields }] = useForm({
         labelWidth: 120,
         schemas,
@@ -66,31 +66,44 @@
       const { createErrorModal } = useMessage();
 
       const [register, { closeModal }] = useModalInner((data) => {
-        dirId = data.dirId;
-        folder.value = data.folder;
-      });
-
-      const { mutate: MakeDir, onDone } = useMutation(
-        dirId === 'root' ? driveMakeDir : driveMakeDirUnder
-      );
-      onDone(() => {
-        closeModal();
-      });
-      function createFolder() {
-        validateFields().then((res) => {
-          if (folder.value.find((v) => v.fullName == res.fullName)) {
-            createErrorModal({
-              title: '错误',
-              content: res.fullName + '已存在',
-            });
-            return;
-          }
-          res.parentId = dirId;
-
-          MakeDir(res);
+        path.value = [];
+        data.forEach((v) => {
+          path.value.push(v.name);
         });
+      });
+
+      async function createFile() {
+        try {
+          const data = await validateFields();
+          if (data.fullName.indexOf('.' + data.type) === -1) {
+            data.fullName += '.' + data.type;
+          }
+          const file = new File([''], data.fullName, { type: 'text/plain' });
+          let wordArray = CryptoES.lib.WordArray.create(await file.arrayBuffer());
+          let hash = CryptoES.SHA256(wordArray).toString();
+          await fileStore.uploadApiByItem(
+            {
+              uuid: buildUUID(),
+              file,
+              size: file.size,
+              name: data.fullName,
+              hash,
+              percent: 0,
+              type: data.type,
+              status: '',
+              thumbUrl: '',
+              desc: data.desc,
+            },
+            path
+          );
+        } catch (e) {
+          console.log(e);
+          createErrorModal({ content: e });
+        } finally {
+          closeModal();
+        }
       }
-      return { register, schemas, registerForm, model: modelRef, createFolder, t };
+      return { register, schemas, registerForm, model: modelRef, createFile, t };
     },
   });
 </script>
