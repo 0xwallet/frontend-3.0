@@ -3,14 +3,13 @@
     <div class="login-mask" />
     <div class="login-form-wrap">
       <div class="login-form mx-6">
+        <AppLocalePicker v-if="showLocale" class="login-form__locale" />
         <div class="login-form__content px-2 py-10">
           <header>
-            <img :src="logo" class="mr-4" />
-            <h1>{{ title }}</h1>
+            <img :src="logo" />
           </header>
-
           <a-form
-            class="mx-auto mt-10"
+            class="mx-auto mt-10 main"
             :model="formData"
             layout="vertical"
             :rules="formRules"
@@ -75,20 +74,26 @@
 </template>
 <script lang="ts">
   import { defineComponent, reactive, ref, unref } from 'vue';
-  import { Checkbox } from 'ant-design-vue';
+  import { Checkbox, Form, Input } from 'ant-design-vue';
   import { Button } from '/@/components/Button';
   import { useMessage } from '/@/hooks/web/useMessage';
   import logo from '/@/assets/images/logo.png';
   import { useGo } from '/@/hooks/web/usePage';
   import { sendVerifyCode, signUp } from '/@/hooks/apollo/gqlUser';
   import { newWallet, saveWallet } from '/@/hooks/nkn/getNKN';
-  import { useGlobSetting } from '/@/hooks/setting';
+  import { useGlobSetting, useProjectSetting } from '/@/hooks/setting';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMutation } from '@vue/apollo-composable';
+  import { AppLocalePicker } from '/@/components/Application';
   export default defineComponent({
     components: {
       AButton: Button,
       ACheckbox: Checkbox,
+      [Form.name]: Form,
+      [Form.Item.name]: Form.Item,
+      [Input.name]: Input,
+      [Input.Password.name]: Input.Password,
+      AppLocalePicker,
     },
     setup() {
       const formRef = ref<any>(null);
@@ -115,6 +120,7 @@
         password2: [{ required: true, message: t('passwordPlaceholder'), trigger: 'blur' }],
         code: [{ required: true, message: t('verificationPlaceholder'), trigger: 'blur' }],
       });
+      const { locale } = useProjectSetting();
       const { mutate: SendCode, onDone } = useMutation(sendVerifyCode);
       const { mutate: SignUp } = useMutation(signUp);
       onDone(() => {
@@ -191,16 +197,28 @@
         info,
         emailButton,
         register,
+        showLocale: locale.show,
       };
     },
   });
 </script>
 <style lang="less" scoped>
-  @import (reference) '../../../design/index.less';
+  //@import (reference) '../../../design/index.less';
 
   .email-button {
     margin-top: 2px;
     color: #ff4d4f;
+  }
+
+  .main {
+    margin: 30px auto 0 auto !important;
+  }
+
+  .login-form__locale {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    z-index: 1;
   }
 
   .login {
@@ -219,7 +237,7 @@
     }
 
     &-form {
-      width: 520px;
+      width: 400px;
       background: @white;
       border: 10px solid rgba(255, 255, 255, 0.5);
       border-width: 8px;
@@ -236,10 +254,6 @@
         height: 90%;
         justify-content: center;
         align-items: center;
-        .respond-to(large, {
-          width: 600px;
-          right: calc(50% - 270px);
-          });
         .respond-to(xlarge, { width: 100vw; right:0});
       }
 
@@ -256,7 +270,7 @@
 
           img {
             display: inline-block;
-            width: 48px;
+            width: 70%;
           }
 
           h1 {

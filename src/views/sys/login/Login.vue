@@ -285,8 +285,7 @@
     &-mask {
       display: none;
       height: 100%;
-      background: url(../../../assets/images/login/login-in.png) no-repeat;
-      background-position: 30% 30%;
+      background: url(../../../assets/images/login/login-in.png) no-repeat 30% 30%;
       background-size: 80% 80%;
 
       .respond-to(xlarge, { display: block;});
