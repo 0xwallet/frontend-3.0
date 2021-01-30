@@ -14,7 +14,7 @@
         <span>
           <CreateButton :path="path" @refetch="refetch" />
           <Divider type="vertical" />
-          <UploadButton />
+          <UploadButton ref="uploadRef" />
 
           <!--          列表顶部下拉-->
           <Space v-if="choose">
@@ -153,6 +153,7 @@
       :width="400"
       ><FileInfo :file="file"
     /></Drawer>
+    <UploadStatus @openUploadModal="openUploadModal" />
     <MoveModal @register="registerMoveModal" />
     <ShareModal @register="registerShareModal" />
     <MarkdownModal @register="registerMarkdownModal" />
@@ -172,6 +173,7 @@
   import GIcon from '/@/components/Icon/index';
   import CreateButton from './component/Files/CreateButton.vue';
   import UploadButton from './component/Files/UploadButton.vue';
+  import UploadStatus from './component/Files/upload/UploadStatus.vue';
 
   import {
     DownOutlined,
@@ -217,6 +219,7 @@
       Button,
       Drawer,
       InputSearch: Input.Search,
+      UploadStatus,
     },
     setup() {
       // 信息框
@@ -525,6 +528,10 @@
       function changeInfo() {
         infoButton.value = !infoButton.value;
       }
+      const uploadRef = ref(null);
+      function openUploadModal() {
+        uploadRef.value.openUploadModal();
+      }
 
       return {
         registerTable,
@@ -553,6 +560,8 @@
         infoButton,
         infoVisible,
         searchValue,
+        openUploadModal,
+        uploadRef,
       };
     },
   });

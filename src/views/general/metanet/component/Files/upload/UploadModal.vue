@@ -66,6 +66,7 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import { fileStore } from '/@/store/modules/netFile';
   import { useMutation } from '@vue/apollo-composable';
+
   const { t } = useI18n('general.metanet');
   export default defineComponent({
     components: { BasicModal, Upload: Upload.Dragger, Alert, FileList, InboxOutlined, Space },
@@ -146,7 +147,6 @@
           hash = CryptoES.SHA256(wordArray).toString();
           let status = '';
           let percent = 0;
-          console.log(hash);
           UploadByHash({
             fullName: [...path, name],
             hash: hash,
@@ -155,9 +155,7 @@
               status = UploadResultStatus.SUCCESS;
               percent = 100;
             })
-            .catch((err) => {
-              console.log(err);
-            })
+            .catch((err) => {})
             .finally(() => {
               const commonItem: FileItem = {
                 uuid: buildUUID(),
