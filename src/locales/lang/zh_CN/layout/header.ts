@@ -17,4 +17,8 @@ export default {
   lockScreenBtn: '锁定',
 
   home: '首页',
+
+  dashboard: '仪表板',
+  blog: '博客',
+  help: '帮助',
 };

@@ -16,4 +16,8 @@ export default {
   lockScreenBtn: 'Locking',
 
   home: 'Home',
+
+  dashboard: 'Dashboard',
+  blog: 'Blog',
+  help: 'Help',
 };

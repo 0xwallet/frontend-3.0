@@ -17,7 +17,7 @@
         :theme="getHeaderTheme"
         :sider="false"
       />
-
+      <HeaderRouter :theme="getHeaderTheme" />
       <!--      <LayoutBreadcrumb v-if="getShowContent && getShowBread" :theme="getHeaderTheme" />-->
     </div>
     <!-- left end -->
@@ -83,6 +83,7 @@
     Notify,
     LockItem,
     ErrorAction,
+    HeaderRouter,
   } from './components';
   import { useAppInject } from '/@/hooks/web/useAppInject';
   import { useDesign } from '/@/hooks/web/useDesign';
@@ -103,6 +104,7 @@
       AppSearch,
       ErrorAction,
       Space,
+      HeaderRouter,
     },
     props: {
       fixed: propTypes.bool,
