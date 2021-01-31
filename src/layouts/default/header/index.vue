@@ -36,6 +36,12 @@
     <!-- action  -->
     <div :class="`${prefixCls}-action`">
       <AppSearch :class="`${prefixCls}-action__item `" />
+      <AppLocalePicker
+        v-if="getShowLocale"
+        :reload="true"
+        :showText="false"
+        :class="`${prefixCls}-action__item`"
+      />
 
       <ErrorAction v-if="getUseErrorHandle" :class="`${prefixCls}-action__item error-action`" />
 
@@ -46,13 +52,8 @@
       <FullScreen v-if="getShowFullScreen" :class="`${prefixCls}-action__item fullscreen-item`" />
 
       <UserDropDown :theme="getHeaderTheme" />
-
-      <AppLocalePicker
-        v-if="getShowLocale"
-        :reload="true"
-        :showText="false"
-        :class="`${prefixCls}-action__item`"
-      />
+      <MenuOutlined @click="openRightMenuDrawer" />
+      <RightMenuDrawer @register="registerRightMenuDrawer" />
     </div>
   </Header>
 </template>
@@ -60,7 +61,7 @@
   import { defineComponent, unref, computed } from 'vue';
 
   import { propTypes } from '/@/utils/propTypes';
-
+  import { MenuOutlined } from '@ant-design/icons-vue';
   import { Layout, Space } from 'ant-design-vue';
   import { AppLogo } from '/@/components/Application';
   import LayoutMenu from '../menu';
@@ -84,9 +85,11 @@
     LockItem,
     ErrorAction,
     HeaderRouter,
+    RightMenuDrawer,
   } from './components';
   import { useAppInject } from '/@/hooks/web/useAppInject';
   import { useDesign } from '/@/hooks/web/useDesign';
+  import { useDrawer } from '/@/components/Drawer';
 
   export default defineComponent({
     name: 'LayoutHeader',
@@ -105,6 +108,8 @@
       ErrorAction,
       Space,
       HeaderRouter,
+      RightMenuDrawer,
+      MenuOutlined,
     },
     props: {
       fixed: propTypes.bool,
@@ -162,6 +167,12 @@
         return unref(getSplit) ? MenuModeEnum.HORIZONTAL : null;
       });
 
+      const [registerRightMenuDrawer, { openDrawer }] = useDrawer();
+
+      function openRightMenuDrawer() {
+        openDrawer(true, {});
+      }
+
       return {
         prefixCls,
         getHeaderClass,
@@ -182,6 +193,8 @@
         getUseErrorHandle,
         getLogoWidth,
         getIsMixSidebar,
+        registerRightMenuDrawer,
+        openRightMenuDrawer,
       };
     },
   });

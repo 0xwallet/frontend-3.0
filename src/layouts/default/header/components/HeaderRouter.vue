@@ -26,7 +26,6 @@
       const { t } = useI18n('layout.header');
       const { prefixCls } = useDesign('layout-breadcrumb');
       const go = useGo();
-      console.log(t('blog'));
       return { t, prefixCls };
     },
   });

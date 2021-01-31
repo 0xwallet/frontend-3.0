@@ -20,4 +20,7 @@ export default {
   dashboard: 'Dashboard',
   blog: 'Blog',
   help: 'Help',
+  todo: 'Todo',
+  message: 'Message',
+  setting: 'Setting',
 };

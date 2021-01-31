@@ -21,4 +21,8 @@ export default {
   dashboard: '仪表板',
   blog: '博客',
   help: '帮助',
+
+  todo: '代办事项',
+  message: '消息',
+  setting: '设置',
 };
