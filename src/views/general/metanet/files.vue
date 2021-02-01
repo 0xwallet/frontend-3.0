@@ -1,74 +1,78 @@
 <template>
   <div class="p-4">
-    <div class="fileHead"
-      ><BreadCrumb :path="path" @jump="goPath" />
-      <InputSearch
-        v-model:value="searchValue"
-        placeholder="input search text"
-        enter-button
-        class="search"
-    /></div>
+    <!--    <div class="fileHead"-->
+    <!--      ><BreadCrumb :path="path" @jump="goPath" />-->
+    <!--      &lt;!&ndash;      <InputSearch&ndash;&gt;-->
+    <!--      &lt;!&ndash;        v-model:value="searchValue"&ndash;&gt;-->
+    <!--      &lt;!&ndash;        placeholder="input search text"&ndash;&gt;-->
+    <!--      &lt;!&ndash;        enter-button&ndash;&gt;-->
+    <!--      &lt;!&ndash;        class="search"&ndash;&gt;-->
+    <!--      &lt;!&ndash;    />&ndash;&gt;-->
+    <!--    </div>-->
 
     <BasicTable @register="registerTable">
       <template #tableTitle>
-        <span>
-          <CreateButton :path="path" @refetch="refetch" />
-          <Divider type="vertical" />
-          <UploadButton ref="uploadRef" />
-
+        <Space>
+          <CreateButton :path="path" @refetch="refetch" v-if="!choose" />
+          <a-button type="primary" @click="openMoveModal" v-if="choose">{{
+            t('moveButton')
+          }}</a-button>
+          <UploadButton ref="uploadRef" v-if="!choose" />
+          <a-button type="primary" v-if="choose">{{ t('copyButton') }}</a-button>
+          <BreadCrumb :path="path" @jump="goPath" />
           <!--          列表顶部下拉-->
-          <Space v-if="choose">
-            <Divider type="vertical" />
-            <a-button type="primary"> {{ t('previewButton') }} </a-button>
-            <a-button type="primary"> {{ t('shareButton') }} </a-button>
-            <a-button type="primary"> {{ t('publish') }} </a-button>
-            <Dropdown :trigger="['click']">
-              <a-button type="primary"><EllipsisOutlined /></a-button>
-              <template #overlay>
-                <Menu>
-                  <MenuItem>
-                    <a-button type="link">{{ t('previewButton') }}</a-button>
-                  </MenuItem>
+          <!--          <Space v-if="choose">-->
+          <!--            <Divider type="vertical" />-->
+          <!--            <a-button type="primary"> {{ t('previewButton') }} </a-button>-->
+          <!--            <a-button type="primary"> {{ t('shareButton') }} </a-button>-->
+          <!--            <a-button type="primary"> {{ t('publish') }} </a-button>-->
+          <!--            <Dropdown :trigger="['click']">-->
+          <!--              <a-button type="primary"><EllipsisOutlined /></a-button>-->
+          <!--              <template #overlay>-->
+          <!--                <Menu>-->
+          <!--                  <MenuItem>-->
+          <!--                    <a-button type="link">{{ t('previewButton') }}</a-button>-->
+          <!--                  </MenuItem>-->
 
-                  <MenuItem>
-                    <a-button type="link">{{ t('shareButton') }}</a-button>
-                  </MenuItem>
-                  <MenuItem>
-                    <a-button type="link">{{ t('publish') }}</a-button>
-                  </MenuItem>
+          <!--                  <MenuItem>-->
+          <!--                    <a-button type="link">{{ t('shareButton') }}</a-button>-->
+          <!--                  </MenuItem>-->
+          <!--                  <MenuItem>-->
+          <!--                    <a-button type="link">{{ t('publish') }}</a-button>-->
+          <!--                  </MenuItem>-->
 
-                  <MenuItem>
-                    <a-button type="link">{{ t('send') }}</a-button></MenuItem
-                  >
-                  <MenuItem>
-                    <a-button type="link" @click="openCreateFolderModal">{{
-                      t('downloadButton')
-                    }}</a-button>
-                  </MenuItem>
-                  <MenuItem>
-                    <a-button type="link" @click="openMoveModal">{{
-                      t('moveButton')
-                    }}</a-button></MenuItem
-                  >
-                  <MenuItem>
-                    <a-button type="link">{{ t('copyButton') }}</a-button></MenuItem
-                  >
-                  <MenuItem>
-                    <a-button type="link">{{ t('rename') }}</a-button></MenuItem
-                  >
-                  <MenuItem>
-                    <a-button type="link" @click="delFiles">{{
-                      t('delButton')
-                    }}</a-button></MenuItem
-                  >
-                  <MenuItem>
-                    <a-button type="link">{{ t('desc') }}</a-button></MenuItem
-                  >
-                </Menu>
-              </template>
-            </Dropdown>
-          </Space>
-        </span>
+          <!--                  <MenuItem>-->
+          <!--                    <a-button type="link">{{ t('send') }}</a-button></MenuItem-->
+          <!--                  >-->
+          <!--                  <MenuItem>-->
+          <!--                    <a-button type="link" @click="openCreateFolderModal">{{-->
+          <!--                      t('downloadButton')-->
+          <!--                    }}</a-button>-->
+          <!--                  </MenuItem>-->
+          <!--                  <MenuItem>-->
+          <!--                    <a-button type="link" @click="openMoveModal">{{-->
+          <!--                      t('moveButton')-->
+          <!--                    }}</a-button></MenuItem-->
+          <!--                  >-->
+          <!--                  <MenuItem>-->
+          <!--                    <a-button type="link">{{ t('copyButton') }}</a-button></MenuItem-->
+          <!--                  >-->
+          <!--                  <MenuItem>-->
+          <!--                    <a-button type="link">{{ t('rename') }}</a-button></MenuItem-->
+          <!--                  >-->
+          <!--                  <MenuItem>-->
+          <!--                    <a-button type="link" @click="delFiles">{{-->
+          <!--                      t('delButton')-->
+          <!--                    }}</a-button></MenuItem-->
+          <!--                  >-->
+          <!--                  <MenuItem>-->
+          <!--                    <a-button type="link">{{ t('desc') }}</a-button></MenuItem-->
+          <!--                  >-->
+          <!--                </Menu>-->
+          <!--              </template>-->
+          <!--            </Dropdown>-->
+          <!--          </Space>-->
+        </Space>
       </template>
       <template #name="{ record }">
         <a-button type="link" @click="openFile(record)">
@@ -138,7 +142,7 @@
         <Button @click="changeInfo" type="link">
           <ExclamationCircleTwoTone
             :style="{ fontSize: '20px' }"
-            :twoToneColor="`#${infoButton ? '52c41a' : 'eb2f96'}`" />{{
+            :twoToneColor="`#${infoButton ? '2E2EFE' : '6E6E6E'}`" />{{
         }}</Button>
       </template>
     </BasicTable>

@@ -9,12 +9,19 @@
     }
   }
 
+
+
   &-dark&-vertical .@{simple-prefix-cls}__children,
   &-dark&-popup .@{simple-prefix-cls}__children {
     background-color: @sider-dark-lighten-1-bg-color;
     > .@{prefix-cls}-submenu-title {
       background-color: @sider-dark-lighten-1-bg-color;
     }
+  }
+
+  .@{simple-prefix-cls}__children:hover,
+  .@{simple-prefix-cls}__parent:hover,{
+    background-color: #321fdb;
   }
 
   .collapse-title {
@@ -28,6 +35,7 @@
     transition: all 0.3s;
     .text-truncate();
   }
+
 
   &-tag {
     position: absolute;

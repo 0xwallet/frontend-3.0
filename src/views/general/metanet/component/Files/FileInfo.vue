@@ -6,6 +6,7 @@
 
     <template v-if="key === 'basic'">
       <Descriptions :column="1">
+        <DescriptionsItem :label="t('desc')">{{ info.desc }}</DescriptionsItem>
         <DescriptionsItem :label="t('type')">{{ info.type }}</DescriptionsItem>
         <DescriptionsItem :label="t('size')"
           >{{ byteTransfer(info.size) }}({{ info.size }} bytes)</DescriptionsItem

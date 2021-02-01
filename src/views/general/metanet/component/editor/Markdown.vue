@@ -39,7 +39,8 @@
           const vditor = markDown.getVditor();
           vditor.setValue(d);
           // valueRef.value = d;
-        } catch {
+        } catch (e) {
+          console.log(e);
         } finally {
           setModalProps({ loading: false });
         }

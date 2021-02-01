@@ -93,13 +93,21 @@ export class NetFile {
   }
 
   // 文件下载
-  download() {
+  async download() {
     if (this.type === 'folder') {
       return;
     }
+    let token = this.token;
+    if (token === '') {
+      const res = await useApollo({
+        mode: 'mutate',
+        gql: drivePreviewToken,
+      });
+      token = res.data.drivePreviewToken;
+    }
     let url = `https://drive-s.owaf.io/download/${this.userId}/${toLower(this.space)}/${this.id}/${
       this.fullName.slice(-1)[0]
-    }?token=${this.token}`;
+    }?token=${token}`;
     downloadByUrl({
       url: url,
       target: '_blank',
