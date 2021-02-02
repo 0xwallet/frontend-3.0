@@ -16,6 +16,7 @@ export interface FileItem {
   file: File;
   hash: string;
   desc?: string;
+  speed: number;
   status?: UploadResultStatus | string;
   responseData?: UploadApiResult;
   uuid: string;

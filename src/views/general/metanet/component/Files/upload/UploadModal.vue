@@ -164,6 +164,7 @@
                 name,
                 hash,
                 percent,
+                speed: 0,
                 type: name.split('.').pop(),
                 status,
                 thumbUrl: '',

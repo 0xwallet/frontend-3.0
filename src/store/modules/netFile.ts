@@ -28,6 +28,7 @@ class netFileStore extends VuexModule {
   get getShareFile(): NetFile[] {
     return this.shareFiles;
   }
+
   @Mutation
   appendItem(file: FileItem): void {
     this.uploadList.push(file);
@@ -121,7 +122,7 @@ class netFileStore extends VuexModule {
           });
           let speed: number | string =
             ((n + buf.length) / (1 << 20) / (Date.now() - timeStart)) * 1000;
-
+          this.setItemValue({ uuid: item.uuid, key: 'speed', value: speed });
           if (speed > 0.9) {
             speed = speed.toFixed(2) + ' MB/s';
           } else if (speed * 1000 > 0.9) {

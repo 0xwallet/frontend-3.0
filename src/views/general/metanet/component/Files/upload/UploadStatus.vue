@@ -5,7 +5,11 @@
     @click="openUploadModal"
     class="upload_status"
   >
-    {{ status.name }}
+    <div class="upload_info">
+      <span>{{ status.name }}</span>
+      <span>{{ speedFormat(status.speed) }}</span>
+    </div>
+
     <Progress :percent="per" :status="per === 100 ? 'success' : 'active'" size="small" />
   </Affix>
 </template>
@@ -37,6 +41,7 @@
       const status = computed(() => {
         if (fileStore.getUploadList.length > 0) {
           max.value = fileStore.getUploadList.length - 1;
+
           return fileStore.getUploadList[now.value];
         }
         return false;
@@ -57,20 +62,34 @@
         mitt.emit('foo', { a: 'b' });
       }
 
-      return { bottom, per, status, openUploadModal, show };
+      function speedFormat(speed: number): string {
+        if (speed > 0.9) {
+          return speed.toFixed(2) + ' MB/s';
+        } else if (speed * 1000 > 0.9) {
+          return (speed * 1000).toFixed(2) + 'KB/s';
+        }
+        return (speed * 1000 * 1000).toFixed(2) + 'B/s';
+      }
+
+      return { bottom, per, status, openUploadModal, show, speedFormat };
     },
   });
 </script>
 <style lang="less">
   .upload_status {
     position: fixed;
-    left: 50%;
-    bottom: 10%;
-    width: 200px;
+    left: 15%;
+    bottom: 1%;
+    width: 80%;
     background: @white;
     border: 1px solid #999;
     border-radius: 2px;
     border-radius: 4px;
     padding: 5px;
+  }
+
+  .upload_info {
+    display: flex;
+    justify-content: space-between;
   }
 </style>
