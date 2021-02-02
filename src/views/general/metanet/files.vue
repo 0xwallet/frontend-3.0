@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4">
+  <div class="p-4 files">
     <!--    <div class="fileHead"-->
     <!--      ><BreadCrumb :path="path" @jump="goPath" />-->
     <!--      &lt;!&ndash;      <InputSearch&ndash;&gt;-->
@@ -17,7 +17,7 @@
           <a-button type="primary" @click="openMoveModal" v-if="choose">{{
             t('moveButton')
           }}</a-button>
-          <UploadButton ref="uploadRef" v-if="!choose" />
+          <UploadButton ref="uploadRef" v-if="!choose" @refetch="refetch" />
           <a-button type="primary" v-if="choose">{{ t('copyButton') }}</a-button>
           <BreadCrumb :path="path" @jump="goPath" />
           <!--          列表顶部下拉-->
@@ -227,7 +227,7 @@
     },
     setup() {
       // 信息框
-      const { createMessage, createErrorModal } = useMessage();
+      const { createMessage, createErrorModal, notification } = useMessage();
 
       // 文件路径面包屑
       // 储存本级目录所有文件夹名
@@ -321,6 +321,7 @@
         columns: getBasicColumns(),
         rowKey: 'id',
         showIndexColumn: false,
+
         rowSelection: {
           type: 'checkbox',
           getCheckboxProps: (record) => ({
@@ -517,10 +518,15 @@
           path.value.push({ name: f.name, dirId: f.id });
           return;
         }
-        if (f.type === 'md') {
-          openMDModal(f);
-        } else if (f.type === 'png') {
-          f.preview();
+        switch (f.type) {
+          case 'md':
+            openMDModal(f);
+            break;
+          case 'png':
+            f.preview();
+            break;
+          default:
+            notification.warning({ message: '无法打开' });
         }
 
         // 根据ID获取最新进入目录文件
@@ -578,5 +584,9 @@
     .search {
       width: 300px;
     }
+  }
+
+  .files {
+    height: 100vh;
   }
 </style>

@@ -1,7 +1,7 @@
 <template
   ><Affix
     :offset-bottom="bottom"
-    v-if="show && status"
+    v-if="show && status && per !== 100"
     @click="openUploadModal"
     class="upload_status"
   >

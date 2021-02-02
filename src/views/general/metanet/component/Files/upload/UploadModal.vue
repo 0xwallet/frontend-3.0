@@ -11,21 +11,28 @@
     :keyboard="false"
     wrapClassName="upload-modal"
     :showOkBtn="false"
+    :showCancelBtn="false"
     :okButtonProps="getOkButtonProps"
     :cancelButtonProps="{ disabled: isUploadingRef }"
   >
+    <template #closeIcon><MinusOutlined /></template>
     <template #centerFooter>
-      <a-button
-        @click="handleStartUpload"
-        color="success"
-        :disabled="!getIsSelectFile"
-        :loading="isUploadingRef"
-      >
-        {{ getUploadBtnText }}
-      </a-button>
+      <Space>
+        <a-button @click="deleteAll" type="primary">
+          {{ t('cancelAll') }}
+        </a-button>
+        <a-button
+          @click="handleStartUpload"
+          color="success"
+          :disabled="!getIsSelectFile"
+          :loading="isUploadingRef"
+        >
+          {{ getUploadBtnText }}
+        </a-button>
+      </Space>
     </template>
     <div class="upload-modal-toolbar">
-      <Alert :message="getHelpText" type="info" banner class="upload-modal-toolbar__text"></Alert>
+      <!--      <Alert :message="getHelpText" type="info" banner class="upload-modal-toolbar__text"></Alert>-->
       <Upload
         :accept="getStringAccept"
         :multiple="multiple"
@@ -39,7 +46,7 @@
         >
       </Upload>
     </div>
-    <FileList :dataSource="fileList" :columns="columns" :actionColumn="actionColumn" />
+    <FileList :dataSource="fileList" :columns="columns" :actionColumn="actionColumn"> </FileList>
   </BasicModal>
 </template>
 <script lang="ts">
@@ -60,7 +67,7 @@
 
   import FileList from './FileList';
   //Apollo
-  import { InboxOutlined } from '@ant-design/icons-vue';
+  import { InboxOutlined, MinusOutlined } from '@ant-design/icons-vue';
   import { driveUploadByHash } from '/@/hooks/apollo/gqlFile';
   import CryptoES from 'crypto-es';
   import { useI18n } from '/@/hooks/web/useI18n';
@@ -69,7 +76,15 @@
 
   const { t } = useI18n('general.metanet');
   export default defineComponent({
-    components: { BasicModal, Upload: Upload.Dragger, Alert, FileList, InboxOutlined, Space },
+    components: {
+      BasicModal,
+      Upload: Upload.Dragger,
+      Alert,
+      FileList,
+      InboxOutlined,
+      Space,
+      MinusOutlined,
+    },
     props: basicProps,
     setup(props, { emit }) {
       //   是否正在上传
@@ -264,6 +279,10 @@
       //       y: 3000,
       //     },
       //   });
+
+      function deleteAll() {
+        fileStore.delAllItem();
+      }
       return {
         columns: createTableColumns(),
         actionColumn: createActionColumn(handleRemove),
@@ -284,6 +303,7 @@
         getUploadBtnText,
         t,
         fileList,
+        deleteAll,
       };
     },
   });

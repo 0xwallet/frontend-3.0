@@ -3,7 +3,7 @@ import { fileListProps } from './props';
 import { isFunction } from '/@/utils/is';
 import './FileList.less';
 import { useModalContext } from '/@/components/Modal/src/hooks/useModalContext';
-
+import { Alert, Space } from 'ant-design-vue';
 export default defineComponent({
   name: 'FileList',
   props: fileListProps,
@@ -40,7 +40,19 @@ export default defineComponent({
                 const { title = '', align = 'center', dataIndex } = item;
                 return (
                   <th class={['file-table-th', align]} key={dataIndex}>
-                    {title}
+                    <Space>
+                      {title}
+                      {dataIndex == 'name' ? (
+                        <Alert
+                          message="单个文件不超过20M"
+                          type="info"
+                          banner
+                          class="upload-modal-toolbar__text"
+                        ></Alert>
+                      ) : (
+                        ''
+                      )}
+                    </Space>
                   </th>
                 );
               })}

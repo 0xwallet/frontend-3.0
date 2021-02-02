@@ -37,6 +37,10 @@ class netFileStore extends VuexModule {
   spliceItem(index: number): void {
     this.uploadList.splice(index, 1);
   }
+  @Mutation
+  delAllItems(): void {
+    this.uploadList = [];
+  }
 
   @Mutation
   appendShareFile(file: NetFile): void {
@@ -61,6 +65,10 @@ class netFileStore extends VuexModule {
   @Action
   delItem(index: number): void {
     this.spliceItem(index);
+  }
+  @Action
+  delAllItem(): void {
+    this.delAllItems();
   }
 
   @Action

@@ -33,12 +33,17 @@
       MenuItem: Menu.Item,
       UploadModal,
     },
-
-    setup() {
-      const [registerUploadModal, { openModal }] = useModal();
+    emits: ['refetch'],
+    setup(_, { emit }) {
+      const [registerUploadModal, { openModal, setModalProps }] = useModal();
 
       function openUploadModal() {
         openModal(true);
+        setModalProps({
+          afterClose: () => {
+            emit('refetch');
+          },
+        });
       }
       const mitt = new Mitt();
       mitt.on('foo', (e) => console.log('foo', e));
