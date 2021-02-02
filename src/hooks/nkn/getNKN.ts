@@ -4,6 +4,7 @@ import CryptoES from 'crypto-es';
 import dayjs from 'dayjs';
 export const getGlobal = (): any => (typeof window !== 'undefined' ? window : global);
 export let wallet: any = null;
+export let NknClient: [] = [];
 export let session: any = null;
 const numSubClients = 4;
 export async function useMClient(): Promise<any> {
@@ -21,6 +22,10 @@ export async function useMClient(): Promise<any> {
     session = await disk.dial(
       'file.33ed3f20f423dfa816ebd8c33f05523170b7ba86a78d5b39365bfb57db443f6c'
     );
+    setInterval(() => {
+      NknClient = disk.readyClientIDs();
+    }, 1000);
+
     console.log('session ready');
     return session;
   } catch (e) {

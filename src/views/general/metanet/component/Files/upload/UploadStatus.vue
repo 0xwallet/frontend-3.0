@@ -6,10 +6,10 @@
     class="upload_status"
   >
     <div class="upload_info">
+      <span>nkn节点：{{ clients }}</span>
       <span>{{ status.name }}</span>
       <span>{{ speedFormat(status.speed) }}</span>
     </div>
-
     <Progress :percent="per" :status="per === 100 ? 'success' : 'active'" size="small" />
   </Affix>
 </template>
@@ -19,6 +19,7 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import { fileStore } from '/@/store/modules/netFile';
   import Mitt from '/@/utils/mitt';
+  import { NknClient } from '/@/hooks/nkn/getNKN';
 
   const { t } = useI18n('general.metanet');
   export default defineComponent({
@@ -46,6 +47,9 @@
         }
         return false;
       });
+      const clients = computed(() => {
+        return NknClient.length;
+      });
       const show = ref(true);
       let now = ref(0);
       let max = ref(10);
@@ -71,7 +75,7 @@
         return (speed * 1000 * 1000).toFixed(2) + 'B/s';
       }
 
-      return { bottom, per, status, openUploadModal, show, speedFormat };
+      return { bottom, per, status, openUploadModal, show, speedFormat, clients };
     },
   });
 </script>

@@ -87,6 +87,7 @@ class netFileStore extends VuexModule {
       const writeChunkSize = 1024;
       // 获取client session
       const session = await useMClient();
+
       const object = {
         File: new Uint8Array(await item.file.arrayBuffer()),
         FullName: [...path, item.name],
