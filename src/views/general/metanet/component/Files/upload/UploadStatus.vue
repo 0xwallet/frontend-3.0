@@ -8,7 +8,7 @@
     <div class="upload_info">
       <span>nkn节点：{{ clients }}</span>
       <span>{{ status.name }}</span>
-      <span>{{ speedFormat(status.speed) }}</span>
+      <span>{{ speed }}</span>
     </div>
     <Progress :percent="per" :status="per === 100 ? 'success' : 'active'" size="small" />
   </Affix>
@@ -47,6 +47,16 @@
         }
         return false;
       });
+      const speed = computed(() => {
+        console.log(fileStore.getUploadSpeed);
+        const { speed } = fileStore.getUploadSpeed;
+        if (speed > 0.9) {
+          return speed.toFixed(2) + ' MB/s';
+        } else if (speed * 1000 > 0.9) {
+          return (speed * 1000).toFixed(2) + 'KB/s';
+        }
+        return (speed * 1000 * 1000).toFixed(2) + 'B/s';
+      });
       const clients = computed(() => {
         return NknClient.length;
       });
@@ -66,16 +76,7 @@
         mitt.emit('foo', { a: 'b' });
       }
 
-      function speedFormat(speed: number): string {
-        if (speed > 0.9) {
-          return speed.toFixed(2) + ' MB/s';
-        } else if (speed * 1000 > 0.9) {
-          return (speed * 1000).toFixed(2) + 'KB/s';
-        }
-        return (speed * 1000 * 1000).toFixed(2) + 'B/s';
-      }
-
-      return { bottom, per, status, openUploadModal, show, speedFormat, clients };
+      return { bottom, per, status, openUploadModal, show, speed, clients };
     },
   });
 </script>

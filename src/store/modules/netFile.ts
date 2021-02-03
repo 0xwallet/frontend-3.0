@@ -11,10 +11,14 @@ import { NetFile } from '/@/components/NetFile/netFile';
 import { useApollo } from '/@/hooks/apollo/apollo';
 import { driveFindShare } from '/@/hooks/apollo/gqlFile';
 import { useMessage } from '/@/hooks/web/useMessage';
+import dayjs from 'dayjs';
 const { createErrorModal } = useMessage();
 const NAME = 'netFileStore';
 hotModuleUnregisterModule(NAME);
-
+interface uploadSpeed {
+  time: number;
+  speed: number;
+}
 @Module({ namespaced: true, name: NAME, dynamic: true, store })
 class netFileStore extends VuexModule {
   // user info
@@ -22,11 +26,16 @@ class netFileStore extends VuexModule {
 
   private shareFiles: NetFile[] = [];
 
+  private uploadSpeed: uploadSpeed = { time: 0, speed: 0 };
+
   get getUploadList(): FileItem[] {
     return this.uploadList || [];
   }
   get getShareFile(): NetFile[] {
     return this.shareFiles;
+  }
+  get getUploadSpeed(): uploadSpeed {
+    return this.uploadSpeed;
   }
 
   @Mutation
@@ -45,6 +54,15 @@ class netFileStore extends VuexModule {
   @Mutation
   appendShareFile(file: NetFile): void {
     this.shareFiles.push(file);
+  }
+  @Mutation
+  setSpeed(s: number): void {
+    if (dayjs().unix() === this.uploadSpeed.time) {
+      this.uploadSpeed.speed += s;
+    } else {
+      this.uploadSpeed.speed = s;
+      this.uploadSpeed.time = dayjs().unix();
+    }
   }
 
   @Mutation
@@ -74,6 +92,18 @@ class netFileStore extends VuexModule {
   @Action
   addShare(file: NetFile): void {
     this.appendShareFile(file);
+  }
+
+  @Action
+  addSpeed(s: number): void {
+    this.setSpeed(s);
+
+    setInterval(() => {
+      if (this.uploadSpeed.speed === 0) {
+        clearInterval();
+      }
+      this.setSpeed(0);
+    }, 1000);
   }
 
   @Action
@@ -129,6 +159,7 @@ class netFileStore extends VuexModule {
             // @ts-ignore
             value: (((n + buf.length) / item.size) * 100) | 0,
           });
+          this.addSpeed(((n + buf.length) / (1 << 20) / (Date.now() - timeStart)) * 1000);
           let speed: number | string =
             ((n + buf.length) / (1 << 20) / (Date.now() - timeStart)) * 1000;
           this.setItemValue({ uuid: item.uuid, key: 'speed', value: speed });
