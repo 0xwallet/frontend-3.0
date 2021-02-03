@@ -1,12 +1,4 @@
-<template>
-  <Tooltip :title="t('copy')" v-if="hash !== ''">
-    <span @click="copy"
-      >{{ hash.slice(0, 2)
-      }}<span v-for="v in list" :style="'background-color:#' + v">&nbsp;&nbsp;&nbsp;</span
-      >{{ hash.slice(hash.length - 2, hash.length) }}</span
-    >
-  </Tooltip>
-</template>
+<template> </template>
 
 <script lang="ts">
   import { computed, defineComponent, unref } from 'vue';
@@ -21,11 +13,11 @@
   export default defineComponent({
     components: { Tooltip },
     props: {
-      hash: propTypes.string,
+      type: propTypes.string,
     },
     setup(props) {
-      const hash = computed(() => {
-        return props.hash;
+      const type = computed(() => {
+        return props.type;
       });
       const list = computed(() => {
         if (props.hash === '') return '';
@@ -45,7 +37,7 @@
       return {
         t,
         copy,
-        hash,
+        type,
         list,
       };
     },

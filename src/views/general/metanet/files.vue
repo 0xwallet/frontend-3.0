@@ -192,7 +192,7 @@
   import { Dropdown, Menu, Divider, Space, Row, Col, Modal, Drawer, Input } from 'ant-design-vue';
   import { createVNode } from 'vue';
   import FileInfo from './component/Files/FileInfo.vue';
-  import Hash from '/@/components/NetFile/Hash.vue';
+  import { Hash } from '/@/components/NetFile';
   import { useMutation, useQuery } from '@vue/apollo-composable';
   import { Button } from '/@/components/Button';
   const { t } = useI18n('general.metanet');

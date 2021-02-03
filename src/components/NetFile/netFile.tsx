@@ -14,6 +14,7 @@ import { useCopyToClipboard } from '/@/hooks/web/useCopyToClipboard';
 import { useMessage } from '/@/hooks/web/useMessage';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { Tooltip } from 'ant-design-vue';
+
 export const getGlobal = (): any => (typeof window !== 'undefined' ? window : global);
 // 循环获取NKN.JS
 
