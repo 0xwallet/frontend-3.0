@@ -123,13 +123,9 @@
                 <a-button type="link">{{ t('rename') }}</a-button></MenuItem
               >
               <MenuItem>
-                <a-button
-                  type="link"
-                  color="error"
-                  :pop="{ title: t('delButton') + ' ' + record.fullName + '?' }"
-                  @click="delFile(record)"
-                  >{{ t('delButton') }}</a-button
-                ></MenuItem
+                <a-button type="link" color="error" @click="delFile(record)">{{
+                  t('delButton')
+                }}</a-button></MenuItem
               >
               <MenuItem>
                 <a-button type="link">{{ t('desc') }}</a-button></MenuItem
@@ -414,15 +410,25 @@
         f.download();
       }
       // 删除文件或文件夹
-      function delFile(file) {
-        const f: NetFile = file;
-        f.delFile()
-          .then(() => {
-            createMessage.success('删除成功');
-          })
-          .finally(() => {
-            refetch();
-          });
+      function delFile(file: NetFile) {
+        Modal.confirm({
+          title: t('error'),
+          icon: createVNode(ExclamationCircleOutlined),
+          content: t('delButton') + ' ' + file.fullName + '?',
+          centered: true,
+          okText: t('yes'),
+          cancelText: t('cancelAll'),
+          onOk() {
+            file
+              .delFile()
+              .then(() => {
+                createMessage.success('删除成功');
+              })
+              .finally(() => {
+                refetch();
+              });
+          },
+        });
       }
       const { mutate: DeleteFiles } = useMutation(driveDeleteFiles);
       //批量删除文件
