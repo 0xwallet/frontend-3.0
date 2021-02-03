@@ -3,7 +3,7 @@
     <TabPane key="1" :tab="t('basic')">
       <Space direction="vertical">
         <div class="info_header">
-          <Icon :type="info.type" size="100" />
+          <Icon :type="info.type" :size="100" />
           <p
             >{{ byteTransfer(info.size).value }} {{ byteTransfer(info.size).unit }}({{
               byteTransfer(info.size).unit
