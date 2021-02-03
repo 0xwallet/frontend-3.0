@@ -76,10 +76,7 @@
       </template>
       <template #name="{ record }">
         <a-button type="link" @click="openFile(record)">
-          <GIcon
-            :icon="record.type === 'folder' ? 'bx-bx-folder' : 'bx-bxs-file-' + record.type"
-            size="30"
-          />
+          <Icon :type="record.type" />
           {{ record.name }}{{ record.type === 'folder' ? '' : '.' + record.type }}</a-button
         > </template
       ><template #hash="{ text }">
@@ -188,7 +185,7 @@
   import { Dropdown, Menu, Divider, Space, Row, Col, Modal, Drawer, Input } from 'ant-design-vue';
   import { createVNode } from 'vue';
   import FileInfo from './component/Files/FileInfo.vue';
-  import { Hash } from '/@/components/NetFile';
+  import { Hash, Icon } from '/@/components/NetFile';
   import { useMutation, useQuery } from '@vue/apollo-composable';
   import { Button } from '/@/components/Button';
   const { t } = useI18n('general.metanet');
@@ -197,7 +194,7 @@
       Hash,
       BasicTable,
       BreadCrumb,
-      GIcon,
+      Icon,
       MoveModal,
       ShareModal,
       Dropdown,
