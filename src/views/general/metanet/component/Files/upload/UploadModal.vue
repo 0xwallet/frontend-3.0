@@ -98,6 +98,7 @@
       });
       let path: string[] = [];
       const [register, { closeModal }] = useModalInner((data) => {
+        isUploadingRef.value = false;
         path = [...unref(data.path)];
       });
 

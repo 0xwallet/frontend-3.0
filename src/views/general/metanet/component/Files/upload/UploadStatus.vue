@@ -89,7 +89,7 @@
     border: 1px solid #999;
     border-radius: 2px;
     border-radius: 4px;
-    padding: 5px;
+    padding: 10px;
   }
 
   .upload_info {
