@@ -79,16 +79,13 @@ export function saveWallet(params: { email: string; password: string; walletJson
   }
 }
 
-export async function initJS() {
+export function initJS() {
   // 加载nkn.JS
-  const { toPromise: loadNKN } = useScript({
-    src: `./resource/nkn/nkn.min.js`,
-  });
-  await useScript({
+  useScript({
     src: `./resource/build/pdf.js`,
-  }).toPromise();
-  loadNKN().then(() => {
-    console.log('NKN加载成功');
+  });
+  useScript({
+    src: `./resource/nkn/nkn.min.js`,
   });
 }
 

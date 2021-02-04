@@ -78,7 +78,7 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
       vue(),
       vueJsx(),
       ...(VITE_LEGACY && isBuild ? [legacy()] : []),
-      ...createVitePlugins(viteEnv, isBuild, mode),
+      ...createVitePlugins(viteEnv, isBuild),
     ],
 
     optimizeDeps: {
