@@ -37,7 +37,8 @@ export function getBasicColumns(): BasicColumn[] {
       dataIndex: 'size',
       width: 100,
       customRender: ({ record, text }) => {
-        return record.type === 'folder' ? '' : byteTransfer(text);
+        let v = byteTransfer(text);
+        return record.type === 'folder' ? '' : v.value + ' ' + v.unit;
       },
     },
     {

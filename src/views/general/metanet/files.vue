@@ -167,7 +167,6 @@
   import MoveModal from './component/MoveModal.vue';
   import MarkdownModal from './component/editor/Markdown.vue';
   import PublishModal from './component/PublishModal.vue';
-  import GIcon from '/@/components/Icon/index';
   import CreateButton from './component/Files/CreateButton.vue';
   import UploadButton from './component/Files/UploadButton.vue';
   import UploadStatus from './component/Files/upload/UploadStatus.vue';
