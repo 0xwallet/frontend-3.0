@@ -240,7 +240,7 @@ export class NetFile {
         this.uri
       }   `;
     }
-    if (mode === 2 || mode === 3) {
+    if ((mode === 2 || mode === 3) && this.code) {
       temp += `${t('general.metanet.code')}:${this.code}`;
     }
 
