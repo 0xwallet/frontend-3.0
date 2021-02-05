@@ -148,7 +148,7 @@
       :mask="false"
       :wrap-style="{ position: 'absolute' }"
       :width="400"
-      ><FileInfo :file="file"
+      ><FileInfo :file="file" @refetch="infoRefetch"
     /></Drawer>
     <UploadStatus @openUploadModal="openUploadModal" />
     <MoveModal @register="registerMoveModal" />
@@ -544,6 +544,10 @@
       function openUploadModal() {
         uploadRef.value.openUploadModal();
       }
+      function infoRefetch() {
+        refetch();
+        file.value = {};
+      }
 
       return {
         registerTable,
@@ -574,6 +578,7 @@
         searchValue,
         openUploadModal,
         uploadRef,
+        infoRefetch,
       };
     },
   });

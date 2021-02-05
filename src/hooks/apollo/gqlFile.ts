@@ -220,6 +220,15 @@ export const driveUpdatePublish = gql`
   }
 `;
 
+// 发布文件
+export const driveEditDescription = gql`
+  mutation($description: String!, $userFileId: Sting!) {
+    driveEditDescription(description: $description, userFileId: $userFileId) {
+      id
+    }
+  }
+`;
+
 // subscriptions
 export const driveFileUploaded = gql`
   subscription($userId: ID!) {

@@ -26,7 +26,17 @@
           <DescriptionsItem :label="t('created')">{{ time(info.createdAt) }}</DescriptionsItem>
         </Descriptions>
 
-        {{ info.desc }}
+        <div class="desc" v-if="!edit"
+          ><span>{{ info.desc }}</span
+          ><Button type="link" @click="openEdit"><EditOutlined /></Button>
+        </div>
+        <div v-if="edit"
+          ><InputTextArea v-model:value="desc" />
+          <div class="TextArea"
+            ><Button type="link" @click="closeEdit"><CloseOutlined /></Button>
+            <Button type="link" @click="changeDesc"><CheckOutlined /></Button
+          ></div>
+        </div>
       </Space>
     </TabPane>
     <TabPane key="2" :tab="t('dynamic')">
@@ -92,7 +102,8 @@
 
 <script lang="ts">
   import { computed, defineComponent, ref } from 'vue';
-  import { Tabs, Card, Descriptions, Space, Divider } from 'ant-design-vue';
+  import { Tabs, Card, Descriptions, Space, Divider, Input, Button } from 'ant-design-vue';
+  import { EditOutlined, CloseOutlined, CheckOutlined } from '@ant-design/icons-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { NetFile } from '/@/components/NetFile/netFile';
   const { t } = useI18n('general.metanet');
@@ -101,6 +112,8 @@
   import { formatToDateTime } from '/@/utils/dateUtil';
   import { List } from 'ant-design-vue';
   import { Icon } from '/@/components/NetFile';
+  import { useMutation } from '@vue/apollo-composable';
+  import { driveEditDescription } from '/@/hooks/apollo/gqlFile';
   export default defineComponent({
     name: 'FileInfo',
     components: {
@@ -115,11 +128,17 @@
       Space,
       Divider,
       Icon,
+      InputTextArea: Input.TextArea,
+      EditOutlined,
+      Button,
+      CloseOutlined,
+      CheckOutlined,
     },
     props: {
       file: propTypes.any,
     },
-    setup(props) {
+    emits: ['refetch'],
+    setup(props, { emit }) {
       const info: NetFile = computed(() => {
         return props.file;
       });
@@ -134,12 +153,9 @@
           tab: t('dynamic'),
         },
       ];
-      const desc = [
-        {
-          label: 'type',
-          data: 'type',
-        },
-      ];
+
+      const edit = ref(false);
+      const desc = ref('');
       function onTabChange(k) {
         key.value = k;
       }
@@ -153,7 +169,20 @@
       function time(t: string): string {
         return formatToDateTime(t, 'YYYY-MM-DD HH:mm:ss');
       }
-
+      function openEdit() {
+        desc.value = info.value.desc;
+        edit.value = true;
+      }
+      function closeEdit() {
+        edit.value = false;
+      }
+      const { mutate: editDesc } = useMutation(driveEditDescription);
+      async function changeDesc() {
+        console.log(desc.value);
+        await editDesc({ description: desc.value, userFileId: info.value.id });
+        edit.value = false;
+        emit('refetch');
+      }
       return {
         t,
         info,
@@ -176,6 +205,10 @@
             time: '2021-01-29',
           },
         ],
+        openEdit,
+        closeEdit,
+        edit,
+        changeDesc,
       };
     },
   });
@@ -183,6 +216,16 @@
 <style lang="less" scoped>
   .tabs {
     margin: 10px;
+  }
+
+  .desc {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .TextArea {
+    display: flex;
+    justify-content: flex-end;
   }
 
   .info_header {
