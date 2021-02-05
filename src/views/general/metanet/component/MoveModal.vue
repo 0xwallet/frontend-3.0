@@ -26,7 +26,8 @@
       const now = ref(0);
       const path = ref([]);
       const treeData = ref([{ title: '根目录', key: 'root', value: 'root' }] as TreeItem[]);
-      const [register] = useModalInner((data) => {
+      const [register, { closeModal }] = useModalInner((data) => {
+        console.log(data);
         folder = data.folder;
         total.value = data.folder.length;
         path.value = [data.path[data.path.length - 1]];
@@ -81,6 +82,7 @@
           createErrorModal({ title: t('error'), content: err.message });
         } finally {
           createMessage.success(`${t('success')} ${t('moveButton')}` + now.value + t('file'));
+          closeModal();
         }
       }
       return { register, treeData, onLoadData, moveFile, path, total, now, t };

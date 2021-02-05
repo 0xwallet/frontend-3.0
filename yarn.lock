@@ -9481,10 +9481,10 @@ validate-npm-package-license@^3.0.1:
     spdx-correct "^3.0.0"
     spdx-expression-parse "^3.0.0"
 
-vditor@^3.8.0:
-  version "3.8.0"
-  resolved "https://registry.npmjs.org/vditor/-/vditor-3.8.0.tgz#1953172e38b7cc368406a5025f8ebb5a3fe7cf09"
-  integrity sha512-H5/jhizdl05wDUYxqmOMwIbHKIAMf1bVLRz0FUyGRkZaQpmEyqN8P+BTtXijHaGDi19TM9nSVTLBBLfCq0QidA==
+vditor@^3.8.1:
+  version "3.8.1"
+  resolved "https://registry.npmjs.org/vditor/-/vditor-3.8.1.tgz#93567193d481ff1772b56ca28691ccf67094e7cb"
+  integrity sha512-aVqkaF81sTA58038RZzNPOz/iW3ZjRgU2A78kcBX/oWecfhh1w679OuFf2owYGMZlFJmO4Bme1L0y52XNajb/A==
   dependencies:
     diff-match-patch "^1.0.5"
 
@@ -9515,10 +9515,10 @@ vite-plugin-html@^2.0.0:
     fs-extra "^9.1.0"
     html-minifier-terser "^5.1.1"
 
-vite-plugin-imagemin@^0.2.1:
-  version "0.2.1"
-  resolved "https://registry.npmjs.org/vite-plugin-imagemin/-/vite-plugin-imagemin-0.2.1.tgz#8be0dafb2b0d389f3f40af9f531de25ac0ac8371"
-  integrity sha512-Ee+2AOiz7EGgSKcO+r8L8vcrRQpm4TMgyftk4G1N4zdWwhV+w6FW/QAHHIQZRCkwvavlyRlk9KzS0Xx/9FE6CQ==
+vite-plugin-imagemin@^0.2.2:
+  version "0.2.2"
+  resolved "https://registry.npmjs.org/vite-plugin-imagemin/-/vite-plugin-imagemin-0.2.2.tgz#e85c5956f787f1c636f40af449f1b064c919149f"
+  integrity sha512-bEf5kznbWFo7wxaJ0G9e0WQ4/Ce6FtNxwoMt2w+9SoIxPAraP/etQ/L+rnLuuiKwl2L22YrPoS2hWa4XxMK5Rw==
   dependencies:
     "@types/imagemin" "^7.0.0"
     "@types/imagemin-gifsicle" "^7.0.0"

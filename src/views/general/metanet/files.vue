@@ -109,7 +109,7 @@
                 <a-button type="link" @click="download(record)">{{ t('downloadButton') }}</a-button>
               </MenuItem>
               <MenuItem>
-                <a-button type="link" @click="openMoveModal">{{
+                <a-button type="link" @click="openMoveModal(record)">{{
                   t('moveButton')
                 }}</a-button></MenuItem
               >
@@ -350,8 +350,8 @@
       // 打开新建文件夹modal
 
       // 打开移动窗口
-      function openMoveModal() {
-        openModal2(true, { folder: getSelectRowKeys(), path });
+      function openMoveModal(f: NetFile) {
+        openModal2(true, { folder: [f.id, ...getSelectRowKeys()], path });
         nextTick(() => {
           setModal2({
             canFullscreen: false,
