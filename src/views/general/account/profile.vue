@@ -223,10 +223,10 @@
       onDone(() => {
         refetch();
       });
-      function editInfo(checked: Boolean) {
+      async function editInfo(checked: Boolean) {
         if (!checked) {
           spinning.value = true;
-          EditUser({
+          await EditUser({
             avatar: userInfo.avatar,
             bio: userInfo.bio,
             username: userInfo.username,
@@ -235,6 +235,7 @@
               passport: userInfo.country,
             },
           });
+          spinning.value = false;
         }
       }
 
