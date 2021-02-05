@@ -7,6 +7,7 @@ export let wallet: any = null;
 export let NknClient: [] = [];
 export let session: any = null;
 const numSubClients = 4;
+const sessionConfig = { mtu: 16000 };
 export async function useMClient(): Promise<any> {
   if (session) return session;
   try {
@@ -16,6 +17,7 @@ export async function useMClient(): Promise<any> {
     let disk = new NKN.MultiClient({
       seed,
       numSubClients,
+      sessionConfig,
       identifier: dayjs(),
     });
     await new Promise((resolve) => disk.onConnect(resolve));
