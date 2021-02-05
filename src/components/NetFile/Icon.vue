@@ -16,11 +16,18 @@
     },
     setup(props) {
       const type = computed(() => {
+        if (props.type === 'folder') {
+          return 'bx-bx-folder';
+        }
+        const l = ['txt', 'pdf', 'md', 'jpg', 'png', 'gif', 'html', 'css', 'doc', 'js', 'json'];
+        if (l.find((value) => value == props.type)) {
+          return `bx-bxs-file-${props.type}`;
+        }
         switch (props.type) {
-          case 'folder':
-            return 'bx-bx-folder';
+          case 'zip':
+            return `bx-bxs-file-archive`;
           default:
-            return 'bx-bxs-file-' + props.type;
+            return 'bx-bx-file-blank';
         }
       });
       const size = computed(() => {
