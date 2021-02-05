@@ -211,7 +211,7 @@
   }
 
   .main {
-    margin: 30px auto 0 auto !important;
+    margin: 0 auto 0 auto !important;
   }
 
   .login-form__locale {
@@ -237,13 +237,15 @@
     }
 
     &-form {
+      position: relative;
       width: 400px;
+      height: 50vh;
       background: @white;
       border: 10px solid rgba(255, 255, 255, 0.5);
       border-width: 8px;
       border-radius: 4px;
       background-clip: padding-box;
-      .respond-to(xlarge, { margin: 0 50px 0 50px});
+      .respond-to(xlarge, { margin: 0 120px 0 50px});
 
       &-wrap {
         position: absolute;
@@ -251,10 +253,10 @@
         right: 0;
         display: flex;
         width: 100%;
-        height: 90%;
+        //height: 90%;
         justify-content: center;
         align-items: center;
-        .respond-to(xlarge, { width: 100vw; right:0});
+        .respond-to(xlarge, { justify-content: flex-end;});
       }
 
       &__content {

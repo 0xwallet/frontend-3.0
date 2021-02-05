@@ -25,6 +25,7 @@
                 v-model:value="formData.password"
                 placeholder="password"
                 v-if="loginMode === 'basic'"
+                @pressEnter="login"
               >
                 <template #addonBefore><LockOutlined /></template>
               </a-input-password>
@@ -322,7 +323,6 @@
       }
 
       &__content {
-        position: relative;
         width: 100%;
         height: 100%;
         padding: 60px 0 40px 0;
