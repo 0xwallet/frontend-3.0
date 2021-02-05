@@ -91,6 +91,7 @@
     border-radius: 2px;
     border-radius: 4px;
     padding: 10px;
+    z-index: 10;
   }
 
   .upload_info {

@@ -10,13 +10,14 @@
         :theme="getHeaderTheme"
         :style="getLogoWidth"
       />
-      <LayoutTrigger
-        v-if="
-          (getShowContent && getShowHeaderTrigger && !getSplit && !getIsMixSidebar) || getIsMobile
-        "
-        :theme="getHeaderTheme"
-        :sider="false"
-      />
+      <LayoutTrigger :theme="getHeaderTheme" :sider="false" />
+      <!--      <LayoutTrigger-->
+      <!--        v-if="-->
+      <!--          (getShowContent && getShowHeaderTrigger && !getSplit && !getIsMixSidebar) || getIsMobile-->
+      <!--        "-->
+      <!--        :theme="getHeaderTheme"-->
+      <!--        :sider="false"-->
+      <!--      />-->
       <HeaderRouter :theme="getHeaderTheme" />
       <!--      <LayoutBreadcrumb v-if="getShowContent && getShowBread" :theme="getHeaderTheme" />-->
     </div>
