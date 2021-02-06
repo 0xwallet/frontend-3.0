@@ -95,4 +95,5 @@ export default {
   drag: `Click or drag file to this area to upload`,
   basic: 'Basic',
   dynamic: 'Dynamic',
+  favoritesTitle: 'My Favorites',
 };

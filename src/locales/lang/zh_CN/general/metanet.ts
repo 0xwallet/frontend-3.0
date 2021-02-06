@@ -95,4 +95,5 @@ export default {
   drag: `单击或拖动文件到该区域以上传`,
   basic: '基本',
   dynamic: '动态',
+  favoritesTitle: '我的收藏',
 };

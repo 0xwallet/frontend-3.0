@@ -2,8 +2,8 @@
   <div :style="getPlaceholderDomStyle" v-if="getIsShowPlaceholderDom"></div>
   <div :style="getWrapStyle" :class="getClass">
     <LayoutHeader v-if="getShowInsetHeaderRef" />
-    <LayoutBreadcrumb :theme="getHeaderTheme" v-if="getShowTabs" />
-    <!--    <MultipleTabs v-if="getShowTabs" />-->
+    <!--    <LayoutBreadcrumb :theme="getHeaderTheme" v-if="getShowTabs" />-->
+    <MultipleTabs v-if="getShowTabs" />
   </div>
 </template>
 <script lang="ts">
