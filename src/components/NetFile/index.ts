@@ -1,4 +1,4 @@
-import Hash from './Hash.vue';
-import Icon from './Icon.vue';
+import Hash from './components/Hash.vue';
+import Icon from './components/Icon.vue';
 
 export { Hash, Icon };

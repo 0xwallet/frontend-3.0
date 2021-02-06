@@ -313,7 +313,7 @@
         columns: getBasicColumns(),
         rowKey: 'id',
         showIndexColumn: false,
-
+        maxHeight: 300,
         rowSelection: {
           type: 'checkbox',
           getCheckboxProps: (record) => ({
@@ -333,7 +333,7 @@
         }),
         pagination: false,
         showTableSetting: false,
-        scroll: { x: 1000, y: 1500 },
+        scroll: { x: 1000, y: window.innerHeight * 0.7 },
       });
 
       // 移动文件Modal
@@ -520,15 +520,15 @@
           path.value.push({ name: f.name, dirId: f.id });
           return;
         }
+        if (['png', 'jpg'].includes(f.type)) {
+          f.preview();
+          return;
+        }
         switch (f.type) {
           case 'md':
             openMDModal(f);
             break;
-          case 'png':
-            f.preview();
-            break;
-          case 'jpg':
-            f.preview();
+          case 'pdf':
             break;
           default:
             notification.warning({ message: '无法打开' });

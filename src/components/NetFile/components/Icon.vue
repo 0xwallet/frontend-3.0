@@ -4,7 +4,7 @@
 
 <script lang="ts">
   import { computed, defineComponent } from 'vue';
-  import GIcon from '/@/components/Icon/index';
+  import GIcon from '/@/components/Icon';
   import { propTypes } from '/@/utils/propTypes';
   import { useI18n } from '/@/hooks/web/useI18n';
   const { t } = useI18n('general.metanet');
@@ -19,8 +19,11 @@
         if (props.type === 'folder') {
           return 'bx-bx-folder';
         }
-        const l = ['txt', 'pdf', 'md', 'jpg', 'png', 'gif', 'html', 'css', 'doc', 'js', 'json'];
-        if (l.find((value) => value == props.type)) {
+        if (
+          ['txt', 'pdf', 'md', 'jpg', 'png', 'gif', 'html', 'css', 'doc', 'js', 'json'].includes(
+            props.type
+          )
+        ) {
           return `bx-bxs-file-${props.type}`;
         }
         switch (props.type) {

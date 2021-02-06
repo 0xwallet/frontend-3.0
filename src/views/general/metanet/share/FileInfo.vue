@@ -49,7 +49,7 @@
   import { byteTransfer } from '/@/utils/disk/file';
   import { CloseSquareOutlined } from '@ant-design/icons-vue';
   import { propTypes } from '/@/utils/propTypes';
-  import Hash from '/@/components/NetFile/Hash.vue';
+  import Hash from '/@/components/NetFile/components/Hash.vue';
   import { formatToDate } from '/@/utils/dateUtil';
 
   export default defineComponent({

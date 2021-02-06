@@ -93,7 +93,7 @@
   import { useI18n } from '/@/hooks/web/useI18n';
 
   import { BasicForm, useForm } from '/@/components/Form';
-  import Hash from '/@/components/NetFile/Hash.vue';
+  import Hash from '/@/components/NetFile/components/Hash.vue';
   import { fileStore } from '/@/store/modules/netFile';
   import ShareFileMobile from '/@/views/general/metanet/share/component/ShareFileMobile.vue';
   import { useQuery } from '@vue/apollo-composable';
