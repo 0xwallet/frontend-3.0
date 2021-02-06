@@ -23,7 +23,7 @@
         { value: '*', id: '' },
       ]);
       const variables = ref({
-        dirId: '',
+        dirId: 'root',
       });
       let path = '';
       let rootId = '';
