@@ -124,6 +124,8 @@
           case 'md':
             openMarkdownDrawer(true, {}, true);
             break;
+          default:
+            await f.preview();
         }
       }
       function openShareDrawer() {

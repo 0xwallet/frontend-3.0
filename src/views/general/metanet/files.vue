@@ -527,6 +527,9 @@
           case 'png':
             f.preview();
             break;
+          case 'jpg':
+            f.preview();
+            break;
           default:
             notification.warning({ message: '无法打开' });
         }

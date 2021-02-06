@@ -14,6 +14,7 @@ import { useCopyToClipboard } from '/@/hooks/web/useCopyToClipboard';
 import { useMessage } from '/@/hooks/web/useMessage';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { Tooltip } from 'ant-design-vue';
+import { createImgPreview } from '/@/components/Preview';
 
 export const getGlobal = (): any => (typeof window !== 'undefined' ? window : global);
 // 循环获取NKN.JS
@@ -128,23 +129,10 @@ export class NetFile {
       let url = `https://drive-s.owaf.io/preview/${this.userId}/${toLower(this.space)}/${this.id}/${
         this.fullName.slice(-1)[0]
       }?token=${token}`;
+      if (this.type == 'png' || this.type == 'jpg') {
+        createImgPreview({ imageList: [url] });
+      }
       resolve(url);
-      // switch (this.type) {
-      //   case 'folder':
-      //     reject();
-      //     break;
-      //   case 'pdf':
-      //     console.log(url);
-      //     resolve(url);
-      //     break;
-      //   case 'md':
-      //     resolve(url);
-      //     break;
-      //   default:
-      //     console.log(url);
-      //     createMessage.warning('浏览组件有问题');
-      //     resolve(url);
-      // }
     });
   }
 

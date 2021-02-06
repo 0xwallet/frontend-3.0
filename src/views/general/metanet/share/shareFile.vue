@@ -240,6 +240,8 @@
           case 'md':
             openMarkdownModal(true, file, true);
             break;
+          default:
+            file.preview();
         }
       }
       function download(file: NetFile) {
