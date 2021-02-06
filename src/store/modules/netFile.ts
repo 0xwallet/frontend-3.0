@@ -5,7 +5,7 @@ import {
   FileItem,
   UploadResultStatus,
 } from '/@/views/general/metanet/component/Files/upload/types';
-import { useMClient } from '/@/hooks/nkn/getNKN';
+import { useSession } from '/@/hooks/nkn/getNKN';
 import { encode } from '@msgpack/msgpack';
 import { NetFile } from '/@/components/NetFile/netFile';
 import { useApollo } from '/@/hooks/apollo/apollo';
@@ -124,7 +124,7 @@ class netFileStore extends VuexModule {
       this.setItemValue({ uuid: item.uuid, key: 'status', value: UploadResultStatus.UPLOADING });
       const writeChunkSize = 1024;
       // 获取client session
-      const session = await useMClient();
+      const session = await useSession();
 
       const object = {
         File: new Uint8Array(await item.file.arrayBuffer()),
