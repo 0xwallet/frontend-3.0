@@ -155,10 +155,11 @@
     <ShareModal @register="registerShareModal" />
     <MarkdownModal @register="registerMarkdownModal" />
     <PublishModal @register="registerPublishModal" />
+    <PdfDrawer @register="registerPdfDrawer" />
   </div>
 </template>
 <script lang="ts">
-  import { defineComponent, computed, ref, nextTick, unref } from 'vue';
+  import { defineComponent, computed, ref, nextTick, unref, createVNode } from 'vue';
   import { BasicTable, useTable } from '/@/components/Table';
   import { getBasicColumns } from './tableData';
   import { useMessage } from '/@/hooks/web/useMessage';
@@ -170,7 +171,6 @@
   import CreateButton from './component/Files/CreateButton.vue';
   import UploadButton from './component/Files/UploadButton.vue';
   import UploadStatus from './component/Files/upload/UploadStatus.vue';
-
   import {
     DownOutlined,
     EllipsisOutlined,
@@ -179,14 +179,13 @@
   } from '@ant-design/icons-vue';
   import { driveListFiles, driveDeleteFiles } from '/@/hooks/apollo/gqlFile';
   import { useModal } from '/@/components/Modal';
-  import { NetFile } from '/@/components/NetFile/netFile';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { Dropdown, Menu, Divider, Space, Row, Col, Modal, Drawer, Input } from 'ant-design-vue';
-  import { createVNode } from 'vue';
   import FileInfo from './component/Files/FileInfo.vue';
-  import { Hash, Icon } from '/@/components/NetFile';
+  import { Hash, Icon, PdfDrawer, NetFile } from '/@/components/NetFile';
   import { useMutation, useQuery } from '@vue/apollo-composable';
   import { Button } from '/@/components/Button';
+  import { useDrawer } from '/@/components/Drawer';
   const { t } = useI18n('general.metanet');
   export default defineComponent({
     components: {
@@ -216,6 +215,7 @@
       Drawer,
       InputSearch: Input.Search,
       UploadStatus,
+      PdfDrawer,
     },
     setup() {
       // 信息框
@@ -306,14 +306,13 @@
       // 文件列表表格
       const [
         registerTable,
-        { getSelectRowKeys, setSelectedRowKeys, clearSelectedRowKeys, getDataSource, reload },
+        { getSelectRowKeys, setSelectedRowKeys, clearSelectedRowKeys, getDataSource },
       ] = useTable({
         canResize: false,
         dataSource: tableData,
         columns: getBasicColumns(),
         rowKey: 'id',
         showIndexColumn: false,
-        maxHeight: 300,
         rowSelection: {
           type: 'checkbox',
           getCheckboxProps: (record) => ({
@@ -346,7 +345,7 @@
         registerPublishModal,
         { openModal: openModal6, setModalProps: setModal6 },
       ] = useModal();
-
+      const [registerPdfDrawer, { openDrawer: openPdfDrawer }] = useDrawer();
       // 打开新建文件夹modal
 
       // 打开移动窗口
@@ -529,6 +528,7 @@
             openMDModal(f);
             break;
           case 'pdf':
+            openPdfDrawer(true, { file: f }, true);
             break;
           default:
             notification.warning({ message: '无法打开' });
@@ -582,6 +582,7 @@
         openUploadModal,
         uploadRef,
         infoRefetch,
+        registerPdfDrawer,
       };
     },
   });

@@ -14,8 +14,10 @@
     <BasicForm @register="registerForm" layout="vertical" v-if="needCode && file == null" />
     <div v-if="file" class="row">
       <Space direction="vertical" align="center">
+        <div><Icon :type="file.type" :size="100" /></div>
         <div>{{ file.fullName.slice(-1)[0] }}</div>
         <div>{{ file.byteTransfer() }}</div>
+        <div><Hash :hash="file.hash" /></div>
         <div
           ><Button type="primary" @click="preview(file)">{{ t('previewButton') }}</Button></div
         >
@@ -36,7 +38,7 @@
   import { drivePreviewShare } from '/@/hooks/apollo/gqlFile';
   import { useQuery } from '@vue/apollo-composable';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { NetFile } from '/@/components/NetFile/netFile';
+  import { Hash, Icon, PdfDrawer, NetFile } from '/@/components/NetFile';
   import { Card, Space, Row, Col, Button } from 'ant-design-vue';
   import { Svg } from '/@/components/Svg';
   import { fileStore } from '/@/store/modules/netFile';
@@ -45,7 +47,6 @@
   const { t } = useI18n('general.metanet');
   import { useDrawer } from '/@/components/Drawer';
   import ShareDrawer from './component/ShareDrawer.vue';
-  import PdfDrawer from './component/PdfDrawer.vue';
   import MarkdownDrawer from './component/MarkdownDrawer.vue';
   import { MoreOutlined } from '@ant-design/icons-vue';
 
@@ -63,6 +64,8 @@
       ShareDrawer,
       MoreOutlined,
       PdfDrawer,
+      Icon,
+      Hash,
       MarkdownDrawer,
     },
     setup() {
@@ -119,7 +122,7 @@
       async function preview(f: NetFile) {
         switch (f.type) {
           case 'pdf':
-            openPdfDrawer(true, {}, true);
+            openPdfDrawer(true, { file: f }, true);
             break;
           case 'md':
             openMarkdownDrawer(true, {}, true);

@@ -42,10 +42,8 @@
       <BasicTable @register="registerTable">
         <template #name="{ record }">
           <a-button type="link" @click="openFile(record)"
-            ><GIcon
-              :icon="record.type === 'folder' ? 'bx-bx-folder' : 'bx-bxs-file-' + record.type"
-              size="30"
-            />{{ record.name }}{{ record.type === 'folder' ? '' : '.' + record.type }}</a-button
+            ><Icon :type="record.type" />{{ record.name
+            }}{{ record.type === 'folder' ? '' : '.' + record.type }}</a-button
           >
         </template>
         <template #hash="{ text }">
@@ -78,7 +76,7 @@
       >
     </Card>
 
-    <PdfDrawer @register="registerPdfDrawer" :file="file" />
+    <PdfDrawer @register="registerPdfDrawer" />
     <MarkdownModal @register="registerMarkdownModal" />
   </div>
 </template>
@@ -87,18 +85,15 @@
   import { Card, Space, Row, Col, Avatar } from 'ant-design-vue';
   import { useRouter } from 'vue-router';
   import { drivePreviewShare } from '/@/hooks/apollo/gqlFile';
-  import { NetFile } from '/@/components/NetFile/netFile';
   import { useTable, BasicTable } from '/@/components/Table';
   import { getBasicColumns } from './tableData';
   import { useI18n } from '/@/hooks/web/useI18n';
-
+  import { Hash, Icon, PdfDrawer, NetFile } from '/@/components/NetFile';
   import { BasicForm, useForm } from '/@/components/Form';
-  import Hash from '/@/components/NetFile/components/Hash.vue';
   import { fileStore } from '/@/store/modules/netFile';
   import ShareFileMobile from '/@/views/general/metanet/share/component/ShareFileMobile.vue';
   import { useQuery } from '@vue/apollo-composable';
   import router from '/@/router';
-  import PdfDrawer from './component/PdfDrawer.vue';
   import MarkdownModal from '../component/editor/Markdown.vue';
   import { useDrawer } from '/@/components/Drawer';
   import { useModal } from '/@/components/Modal';
@@ -118,6 +113,7 @@
       Avatar,
       PdfDrawer,
       MarkdownModal,
+      Icon,
     },
     setup() {
       const { currentRoute } = useRouter();
@@ -235,7 +231,7 @@
       function preview(file: NetFile) {
         switch (file.type) {
           case 'pdf':
-            openPdfDrawer(true, {}, true);
+            openPdfDrawer(true, { file }, true);
             break;
           case 'md':
             openMarkdownModal(true, file, true);
