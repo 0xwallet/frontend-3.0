@@ -4,6 +4,13 @@
 
 - 修复菜单在 hmr 时数据被置空
 - 修复 Upload 组件 maxNumber 失效问题
+- 修复打包 sourcemap 报错
+- 修复 mock 插件 post 请求错误问题
+
+### 🎫 Chores
+
+- 文档更新
+- 升级 ant-design-vue 到 2.0.0
 
 ## 2.0.0-rc.18 (2021-02-05)
 
