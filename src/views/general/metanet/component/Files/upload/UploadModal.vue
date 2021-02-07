@@ -57,6 +57,7 @@
   // hooks
   import { useUploadType } from './useUpload';
   import { useMessage } from '/@/hooks/web/useMessage';
+  import { closeSession } from '/@/hooks/nkn/getNKN';
   //   types
   import { FileItem, UploadResultStatus } from './types';
   import { basicProps } from './props';
@@ -262,6 +263,7 @@
 
       // 点击关闭：则所有操作不保存，包括上传的
       function handleCloseFunc() {
+        closeSession();
         return true;
         // if (!isUploadingRef.value) {
         //   fileListRef.value = [];

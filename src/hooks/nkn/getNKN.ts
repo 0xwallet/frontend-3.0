@@ -5,11 +5,12 @@ import dayjs from 'dayjs';
 export const getGlobal = (): any => (typeof window !== 'undefined' ? window : global);
 export let wallet: any = null;
 export let NknClient: [] = [];
+export let disk: any = null;
 export let session: any = null;
 const numSubClients = 4;
 const sessionConfig = { mtu: 16000 };
 export async function useMClient(): Promise<any> {
-  if (session) return session;
+  if (disk) return disk;
   try {
     if (!wallet) return;
     const seed = wallet.getSeed();
@@ -21,19 +22,39 @@ export async function useMClient(): Promise<any> {
       identifier: dayjs(),
     });
     await new Promise((resolve) => disk.onConnect(resolve));
+    console.log('nkn ready');
+    return disk;
+  } catch (e) {
+    console.log(e);
+  }
+  return null;
+}
+
+export async function useSession(): Promise<any> {
+  if (session && !session.isClosed) return session;
+
+  try {
+    const disk = await useMClient();
     session = await disk.dial(
-      'file.33ed3f20f423dfa816ebd8c33f05523170b7ba86a78d5b39365bfb57db443f6c'
+      'file-jpgkdpid.5281e9f852705a509b748414148a9909a2e30ec860b3bf6ac0633c39d88613bf'
     );
     setInterval(() => {
       NknClient = disk.readyClientIDs();
     }, 1000);
 
     console.log('session ready');
+    console.log(session);
     return session;
   } catch (e) {
     console.log(e);
   }
   return null;
+}
+
+export function closeSession() {
+  if (!session) return;
+  if (session.isClosed) return;
+  session.close();
 }
 
 export function useWallet(): Promise<any> {

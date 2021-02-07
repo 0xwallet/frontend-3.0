@@ -20,7 +20,7 @@ import { getUserInfoById } from '/@/api/sys/user';
 import { setLocal, getLocal, getSession, setSession } from '/@/utils/helper/persistent';
 import { useProjectSetting } from '/@/hooks/setting';
 import { useI18n } from '/@/hooks/web/useI18n';
-import { session } from '/@/hooks/nkn/getNKN';
+import { disk } from '/@/hooks/nkn/getNKN';
 // import { ErrorMessageMode } from '/@/utils/http/axios/types';
 
 export type UserInfo = Omit<GetUserInfoByUserIdModel, 'roles'>;
@@ -99,7 +99,7 @@ class User extends VuexModule {
   @Action
   checkNKN(): void {
     setInterval(() => {
-      if (session) {
+      if (disk) {
         this.commitNKNState(true);
       } else {
         this.commitNKNState(false);
