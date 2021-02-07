@@ -15,7 +15,7 @@ export async function useMClient(): Promise<any> {
     if (!wallet) return;
     const seed = wallet.getSeed();
     const NKN: any = await useNKN();
-    let disk = new NKN.MultiClient({
+    disk = new NKN.MultiClient({
       seed,
       numSubClients,
       sessionConfig,
