@@ -21,19 +21,15 @@ export function getBasicColumns(): BasicColumn[] {
       dataIndex: 'hash',
       slots: { customRender: 'hash' },
     },
-    {
-      title: '操作',
-      fixed: 'right',
-      width: 300,
-      slots: { customRender: 'action' },
-    },
+
     {
       title: '大小',
       dataIndex: 'size',
       fixed: 'right',
       width: 100,
       customRender: ({ text }) => {
-        return byteTransfer(text);
+        const t = byteTransfer(text);
+        return `${t.value} ${t.unit}`;
       },
     },
     {
@@ -41,6 +37,12 @@ export function getBasicColumns(): BasicColumn[] {
       width: 150,
       dataIndex: 'createAt',
       fixed: 'right',
+    },
+    {
+      title: '操作',
+      fixed: 'right',
+      width: 300,
+      slots: { customRender: 'action' },
     },
   ];
 }

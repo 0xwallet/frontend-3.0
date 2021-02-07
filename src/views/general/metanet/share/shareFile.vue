@@ -63,7 +63,8 @@
               :pop="{ title: '删除' + record.fullName + '?' }"
               @click="del(record)"
               >删除</a-button
-            ></div
+            >
+            <a-button type="link" @click="save(record)">保存</a-button></div
           >
         </template>
 
@@ -255,6 +256,11 @@
         }
         return;
       }
+
+      async function save(f: NetFile) {
+        await f.save();
+      }
+
       return {
         registerTable,
         choose,
@@ -274,6 +280,7 @@
         params,
         registerPdfDrawer,
         registerMarkdownModal,
+        save,
       };
     },
   });
