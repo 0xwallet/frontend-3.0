@@ -215,6 +215,7 @@
         if (slots.expandedRowRender) {
           propsData = omit(propsData, 'scroll');
         }
+
         return propsData;
       });
 

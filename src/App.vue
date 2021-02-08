@@ -34,7 +34,6 @@
       initApollo();
       //加载外部JS
       initJS();
-
       useWallet().then(() => {
         console.log('wallet ready');
         useMClient();
