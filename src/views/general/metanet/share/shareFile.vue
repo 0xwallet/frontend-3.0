@@ -52,19 +52,15 @@
         <template #action="{ record }">
           <div>
             <!--          <a-button type="link" v-if="record.type !== 'folder'">详情</a-button>-->
-            <a-button type="link" v-if="record.type !== 'folder'" @click="preview(record)"
-              >预览</a-button
-            >
+            <a-button type="link" v-if="record.type !== 'folder'" @click="preview(record)">{{
+              t('previewButton')
+            }}</a-button>
             <!--          <a-button type="link">复制路径</a-button>-->
-            <a-button type="link" @click="download(record)">下载</a-button>
-            <a-button
-              type="link"
-              color="error"
-              :pop="{ title: '删除' + record.fullName + '?' }"
-              @click="del(record)"
-              >删除</a-button
-            >
-            <a-button type="link" @click="save(record)">保存</a-button></div
+            <a-button type="link" @click="download(record)">{{ t('downloadButton') }}</a-button>
+
+            <a-button type="link" @click="save(record)">{{ t('saveButton') }}</a-button>
+            <a-button type="link" @click="favorties(record)">{{ t('favoritesButton') }}</a-button>
+            <a-button type="link" @click="comment(record)">{{ t('comment') }}</a-button></div
           >
         </template>
 
@@ -183,9 +179,7 @@
         columns: getBasicColumns(),
         rowKey: 'id',
         showIndexColumn: false,
-        rowSelection: {
-          type: 'checkbox',
-        },
+
         scroll: { x: 1000, y: 800 },
       });
       const [registerPdfDrawer, { openDrawer: openPdfDrawer }] = useDrawer();
@@ -261,6 +255,13 @@
         await f.save();
       }
 
+      async function favorties(f: NetFile) {
+        await f.favorties();
+      }
+
+      async function comment(f: NetFile) {
+        await f.commnet();
+      }
       return {
         registerTable,
         choose,
@@ -281,6 +282,8 @@
         registerPdfDrawer,
         registerMarkdownModal,
         save,
+        favorties,
+        comment,
       };
     },
   });

@@ -32,7 +32,6 @@ export async function useMClient(): Promise<any> {
 
 export async function useSession(): Promise<any> {
   if (session && !session.isClosed) return session;
-
   try {
     const disk = await useMClient();
     session = await disk.dial(
@@ -52,9 +51,7 @@ export async function useSession(): Promise<any> {
 }
 
 export function closeSession() {
-  if (!session) return;
-  if (session.isClosed) return;
-  session.close();
+  if (session && session.isClosed) session.close();
 }
 
 export function useWallet(): Promise<any> {

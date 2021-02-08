@@ -41,7 +41,7 @@ export function getBasicColumns(): BasicColumn[] {
     {
       title: '操作',
       fixed: 'right',
-      width: 300,
+      width: 350,
       slots: { customRender: 'action' },
     },
   ];

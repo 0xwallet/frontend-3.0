@@ -83,6 +83,7 @@ export default {
   changeVersion: '切换版本',
   publishDeleted: '发布已删除',
   publishUpdate: '更新',
+  saveButton: '保存',
   saveShareConfirm: '确认保存文件？',
   saveTo: '保存到 我的网盘',
   showComment: '显示评论',
@@ -95,5 +96,6 @@ export default {
   drag: `单击或拖动文件到该区域以上传`,
   basic: '基本',
   dynamic: '动态',
+  favoritesButton: '收藏',
   favoritesTitle: '我的收藏',
 };

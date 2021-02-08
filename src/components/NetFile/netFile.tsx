@@ -9,19 +9,38 @@ import {
 } from '/@/hooks/apollo/gqlFile';
 import { toLower } from 'lodash-es';
 import { downloadByUrl } from '/@/utils/file/download';
-import { unref } from 'vue';
+import { createVNode, unref } from 'vue';
 import { useCopyToClipboard } from '/@/hooks/web/useCopyToClipboard';
 import { useMessage } from '/@/hooks/web/useMessage';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { Tooltip } from 'ant-design-vue';
 import { createImgPreview } from '/@/components/Preview';
 export const getGlobal = (): any => (typeof window !== 'undefined' ? window : global);
-
+import { Modal } from 'ant-design-vue';
+import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
+import router from '/@/router';
+import { PageEnum } from '/@/enums/pageEnum';
 // 循环获取NKN.JS
 
 const { t } = useI18n();
 const { clipboardRef, copiedRef } = useCopyToClipboard();
 const { createMessage, createErrorModal, createConfirm } = useMessage();
+
+function CheckToken(): boolean {
+  if (localStorage.getItem('token')) return true;
+  Modal.confirm({
+    title: t('error'),
+    icon: createVNode(ExclamationCircleOutlined),
+    content: '未登录账号，请登录',
+    centered: true,
+    okText: t('login'),
+    onOk() {
+      router.push(PageEnum.BASE_LOGIN);
+    },
+  });
+  return false;
+}
+
 interface fileParams {
   userFile: userFile;
   id?: string;
@@ -139,6 +158,7 @@ export class NetFile {
   // 保存分享
   save(): Promise<any> {
     return new Promise<any>((resolve, reject) => {
+      if (!CheckToken()) return;
       createConfirm({
         iconType: 'warning',
         title: t('general.metanet.saveShareConfirm'),
@@ -159,6 +179,17 @@ export class NetFile {
             });
         },
       });
+    });
+  }
+
+  commnet(): Promise<any> {
+    return new Promise<any>((resolve, reject) => {
+      if (!CheckToken()) return;
+    });
+  }
+  favorties(): Promise<any> {
+    return new Promise<any>((resolve, reject) => {
+      if (!CheckToken()) return;
     });
   }
 

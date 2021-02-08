@@ -84,6 +84,7 @@ export default {
   changeVersion: 'Change Version',
   publishDeleted: 'Publish Deleted',
   publishUpdate: 'Update',
+  saveButton: 'Save',
   saveShareConfirm: 'Confirm Save Share ？',
   saveTo: 'Save to My Driver',
   showComment: 'Show Comment',
@@ -95,5 +96,6 @@ export default {
   drag: `Click or drag file to this area to upload`,
   basic: 'Basic',
   dynamic: 'Dynamic',
+  favoritesButton: 'Favorites',
   favoritesTitle: 'My Favorites',
 };
