@@ -5,6 +5,7 @@
     title="title"
     placement="bottom"
     :closable="false"
+    :height="300"
     destroyOnClose
   >
     <div class="row">
@@ -14,6 +15,9 @@
         </div>
         <div
           ><Button type="link" @click="save">{{ t('saveTo') }}</Button></div
+        >
+        <div
+          ><Button type="link" @click="favorites">{{ t('favoritesButton') }}</Button></div
         >
         <div
           ><Button type="link">{{ t('showComment') }}</Button></div
@@ -56,6 +60,10 @@
         await file.value.save();
         closeDrawer();
       }
+      async function favorites() {
+        await file.value.favorites();
+        closeDrawer();
+      }
       async function login() {
         await router.replace(PageEnum.BASE_HOME);
       }
@@ -63,6 +71,7 @@
         register,
         download,
         save,
+        favorites,
         t,
         login,
       };

@@ -13,9 +13,10 @@
       {{ file.type }}
     </template>
     <template class="ant-card-actions" #actions>
-      <a-button type="primary" @click="preview(file)">预览</a-button>
-      <a-button type="primary">保存</a-button>
-      <a-button type="primary">评论</a-button>
+      <a-button type="primary" @click="preview(file)">{{ t('previewButton') }}</a-button>
+      <a-button type="primary" @click="save(file)">{{ t('saveButton') }}</a-button>
+      <a-button type="primary" @click="favorites(file)">{{ t('favoritesButton') }}</a-button>
+      <a-button type="primary" @click="comment(file)">{{ t('comment') }}</a-button>
     </template>
     <CardMeta>
       <template #title> {{ file.fullName[file.fullName.length - 1] }} </template>
@@ -47,8 +48,15 @@
       });
       const userPreview = computed(() => props.user);
       const needCode = computed(() => props.needCode);
-      function preview(f: NetFile) {
-        f.preview();
+      async function preview(f: NetFile) {
+        await f.preview();
+      }
+      async function favorites(f: NetFile) {
+        await f.favorites();
+      }
+
+      async function comment(f: NetFile) {
+        await f.comment();
       }
       return {
         file,
@@ -56,6 +64,8 @@
         preview,
         userPreview,
         needCode,
+        favorites,
+        comment,
       };
     },
   });

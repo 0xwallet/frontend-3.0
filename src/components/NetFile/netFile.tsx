@@ -182,12 +182,12 @@ export class NetFile {
     });
   }
 
-  commnet(): Promise<any> {
+  comment(): Promise<any> {
     return new Promise<any>((resolve, reject) => {
       if (!CheckToken()) return;
     });
   }
-  favorties(): Promise<any> {
+  favorites(): Promise<any> {
     return new Promise<any>((resolve, reject) => {
       if (!CheckToken()) return;
     });

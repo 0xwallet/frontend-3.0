@@ -22,7 +22,7 @@
           ><Button type="primary" @click="preview(file)">{{ t('previewButton') }}</Button></div
         >
         <div
-          ><Button>{{ t('comment') }}</Button></div
+          ><Button @click="comment(file)">{{ t('comment') }}</Button></div
         ></Space
       >
     </div>
@@ -134,7 +134,9 @@
       function openShareDrawer() {
         openDrawer(true);
       }
-
+      async function comment(f: NetFile) {
+        await f.comment();
+      }
       return {
         file,
         registerForm,
@@ -146,6 +148,7 @@
         t,
         registerPdfDrawer,
         registerMarkdownDrawer,
+        comment,
       };
     },
   });

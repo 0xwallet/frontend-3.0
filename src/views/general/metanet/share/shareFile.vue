@@ -255,12 +255,12 @@
         await f.save();
       }
 
-      async function favorties(f: NetFile) {
-        await f.favorties();
+      async function favorites(f: NetFile) {
+        await f.favorites();
       }
 
       async function comment(f: NetFile) {
-        await f.commnet();
+        await f.comment();
       }
       return {
         registerTable,
@@ -282,7 +282,7 @@
         registerPdfDrawer,
         registerMarkdownModal,
         save,
-        favorties,
+        favorites,
         comment,
       };
     },
