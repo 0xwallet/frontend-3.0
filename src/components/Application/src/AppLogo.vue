@@ -20,12 +20,11 @@
   import { useGlobSetting } from '/@/hooks/setting';
   import { useGo } from '/@/hooks/web/usePage';
   import { useMenuSetting } from '/@/hooks/setting/useMenuSetting';
+  import { useDesign } from '/@/hooks/web/useDesign';
 
   import { PageEnum } from '/@/enums/pageEnum';
-
   import { propTypes } from '/@/utils/propTypes';
 
-  import { useDesign } from '/@/hooks/web/useDesign';
   import { Svg } from '/@/components/Svg';
   export default defineComponent({
     name: 'AppLogo',
