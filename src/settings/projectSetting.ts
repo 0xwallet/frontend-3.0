@@ -2,14 +2,22 @@ import type { ProjectConfig } from '/@/types/config';
 
 import { MenuTypeEnum, MenuModeEnum, TriggerEnum, MixSidebarTriggerEnum } from '/@/enums/menuEnum';
 import { CacheTypeEnum } from '/@/enums/cacheEnum';
-import { ContentEnum, PermissionModeEnum, ThemeEnum, RouterTransitionEnum } from '/@/enums/appEnum';
+import {
+  ContentEnum,
+  PermissionModeEnum,
+  ThemeEnum,
+  RouterTransitionEnum,
+  SettingButtonPositionEnum,
+} from '/@/enums/appEnum';
 import { primaryColor, themeMode } from '../../build/config/themeConfig';
-import { isProdMode } from '/@/utils/env';
 
 // ! You need to clear the browser cache after the change
 const setting: ProjectConfig = {
   // Whether to show the configuration button
   showSettingButton: true,
+
+  // `Settings` button position
+  settingButtonPosition: SettingButtonPositionEnum.AUTO,
 
   // Permission mode
   permissionMode: PermissionModeEnum.ROLE,
@@ -161,7 +169,7 @@ const setting: ProjectConfig = {
   showBreadCrumbIcon: false,
 
   // Use error-handler-plugin
-  useErrorHandle: isProdMode(),
+  useErrorHandle: false,
 
   // Whether to open back to top
   useOpenBackTop: true,

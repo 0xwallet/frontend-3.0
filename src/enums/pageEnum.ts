@@ -10,5 +10,5 @@ export enum PageEnum {
 
   SHARE_PAGE = '/general/s',
   // error log page path
-  ERROR_LOG_PAGE = '/feat/error-log',
+  ERROR_LOG_PAGE = '/error-log/list',
 }

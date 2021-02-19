@@ -9,8 +9,6 @@ import { wrapperEnv } from './build/utils';
 import { createVitePlugins } from './build/vite/plugin';
 import { OUTPUT_DIR } from './build/constant';
 
-const pkg = require('./package.json');
-
 function pathResolve(dir: string) {
   return resolve(__dirname, '.', dir);
 }
@@ -30,13 +28,15 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
   return {
     base: VITE_PUBLIC_PATH,
     root,
-    alias: [
-      {
-        // /@/xxxx  =>  src/xxx
-        find: /^\/@\//,
-        replacement: pathResolve('src') + '/',
-      },
-    ],
+    resolve: {
+      alias: [
+        {
+          // /@/xxxx  =>  src/xxx
+          find: /^\/@\//,
+          replacement: pathResolve('src') + '/',
+        },
+      ],
+    },
     server: {
       port: VITE_PORT,
       // Load proxy configuration from .env
@@ -61,7 +61,6 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
       chunkSizeWarningLimit: 1200,
     },
     define: {
-      __VERSION__: pkg.version,
       // setting vue-i18-next
       // Suppress warning
       __VUE_I18N_LEGACY_API__: false,
@@ -88,6 +87,7 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
     optimizeDeps: {
       // @iconify/iconify: The dependency is dynamically and virtually loaded by @purge-icons/generated, so it needs to be specified explicitly
       include: ['@iconify/iconify'],
+      exclude: ['vue-demi'],
     },
   };
 };

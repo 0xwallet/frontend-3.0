@@ -1,3 +1,6 @@
+import '/@/design/index.less';
+import 'windi.css';
+
 import { createApp } from 'vue';
 import App from './App.vue';
 

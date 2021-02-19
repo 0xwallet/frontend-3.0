@@ -46,8 +46,6 @@
 
       <ErrorAction v-if="getUseErrorHandle" :class="`${prefixCls}-action__item error-action`" />
 
-      <LockItem v-if="getUseLockPage" :class="`${prefixCls}-action__item lock-item`" />
-
       <Notify v-if="getShowNotice" :class="`${prefixCls}-action__item notify-item`" />
 
       <FullScreen v-if="getShowFullScreen" :class="`${prefixCls}-action__item fullscreen-item`" />
@@ -65,7 +63,7 @@
   import { MenuOutlined } from '@ant-design/icons-vue';
   import { Layout, Space } from 'ant-design-vue';
   import { AppLogo } from '/@/components/Application';
-  import LayoutMenu from '../menu';
+  import LayoutMenu from '../menu/index.vue';
   import LayoutTrigger from '../trigger/index.vue';
 
   import { AppSearch } from '/@/components/Application';
@@ -76,6 +74,7 @@
   import { useLocaleSetting } from '/@/hooks/setting/useLocaleSetting';
 
   import { MenuModeEnum, MenuSplitTyeEnum } from '/@/enums/menuEnum';
+  import { SettingButtonPositionEnum } from '/@/enums/appEnum';
   import { AppLocalePicker } from '/@/components/Application';
 
   import {
@@ -92,6 +91,8 @@
   import { useDesign } from '/@/hooks/web/useDesign';
   import { useDrawer } from '/@/components/Drawer';
 
+  import { createAsyncComponent } from '/@/utils/factory/createAsyncComponent';
+
   export default defineComponent({
     name: 'LayoutHeader',
     components: {
@@ -104,7 +105,6 @@
       AppLocalePicker,
       FullScreen,
       Notify,
-      LockItem,
       AppSearch,
       ErrorAction,
       Space,
@@ -126,7 +126,11 @@
         getIsMixSidebar,
       } = useMenuSetting();
       const { getShowLocale } = useLocaleSetting();
-      const { getUseErrorHandle } = useRootSetting();
+      const {
+        getUseErrorHandle,
+        getShowSettingButton,
+        getSettingButtonPosition,
+      } = useRootSetting();
 
       const {
         getHeaderTheme,
@@ -136,6 +140,7 @@
         getShowContent,
         getShowBread,
         getShowHeaderLogo,
+        getShowHeader,
       } = useHeaderSetting();
 
       const { getIsMobile } = useAppInject();
@@ -150,6 +155,18 @@
             [`${prefixCls}--${theme}`]: theme,
           },
         ];
+      });
+
+      const getShowSetting = computed(() => {
+        if (!unref(getShowSettingButton)) {
+          return false;
+        }
+        const settingButtonPosition = unref(getSettingButtonPosition);
+
+        if (settingButtonPosition === SettingButtonPositionEnum.AUTO) {
+          return unref(getShowHeader);
+        }
+        return settingButtonPosition === SettingButtonPositionEnum.HEADER;
       });
 
       const getLogoWidth = computed(() => {
@@ -194,6 +211,8 @@
         getUseErrorHandle,
         getLogoWidth,
         getIsMixSidebar,
+        getShowSettingButton,
+        getShowSetting,
         registerRightMenuDrawer,
         openRightMenuDrawer,
       };

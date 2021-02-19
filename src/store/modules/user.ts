@@ -141,10 +141,10 @@ class User extends VuexModule {
   }
 
   /**
-   * @description: login out
+   * @description: logout
    */
   @Action
-  async loginOut(goLogin = false) {
+  async logout(goLogin = false) {
     goLogin && router.push(PageEnum.BASE_LOGIN);
   }
 
@@ -157,10 +157,10 @@ class User extends VuexModule {
     const { t } = useI18n();
     createConfirm({
       iconType: 'warning',
-      title: t('sys.app.loginOutTip'),
-      content: t('sys.app.loginOutMessage'),
+      title: t('sys.app.logoutTip'),
+      content: t('sys.app.logoutMessage'),
       onOk: async () => {
-        await this.loginOut(true);
+        await this.logout(true);
       },
     });
   }

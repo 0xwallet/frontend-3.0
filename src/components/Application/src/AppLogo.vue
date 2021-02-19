@@ -9,7 +9,11 @@
     @click="handleGoHome"
   >
     <Svg :width="40" :height="40" />
-    <div class="ml-2 ellipsis" :class="[`${prefixCls}__title`]" v-show="showTitle">
+    <div
+      class="ml-2 truncate xs:opacity-0 md:opacity-100"
+      :class="`${prefixCls}__title`"
+      v-show="showTitle"
+    >
       {{ title }}
     </div>
   </div>
@@ -68,12 +72,6 @@
     cursor: pointer;
     transition: all 0.2s ease;
 
-    img {
-      display: inline-block;
-      width: 70%;
-      margin-left: 30px;
-    }
-
     &.collapsed-show-title {
       padding-left: 20px;
     }
@@ -97,12 +95,7 @@
     &__title {
       font-size: 16px;
       font-weight: 700;
-      opacity: 0;
       transition: all 0.5s;
-
-      .respond-to(medium,{
-       opacity: 1;
-      });
     }
   }
 </style>
