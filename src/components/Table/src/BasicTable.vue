@@ -98,6 +98,7 @@
       'edit-end',
       'edit-cancel',
       'edit-row-end',
+      'edit-change',
     ],
     setup(props, { attrs, emit, slots }) {
       const tableElRef = ref<ComponentRef>(null);
