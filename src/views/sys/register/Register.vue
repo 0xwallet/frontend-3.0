@@ -232,8 +232,6 @@
       height: 100%;
       background: url(../../../assets/images/login/login-in.png) no-repeat 30% 30%;
       background-size: 80% 80%;
-
-      .respond-to(xlarge, { display: block;});
     }
 
     &-form {
@@ -245,7 +243,6 @@
       border-width: 8px;
       border-radius: 4px;
       background-clip: padding-box;
-      .respond-to(xlarge, { margin: 0 120px 0 50px});
 
       &-wrap {
         position: absolute;
@@ -256,7 +253,6 @@
         //height: 90%;
         justify-content: center;
         align-items: center;
-        .respond-to(xlarge, { justify-content: flex-end;});
       }
 
       &__content {
