@@ -114,9 +114,8 @@
   import { propTypes } from '/@/utils/propTypes';
   import { formatToDateTime } from '/@/utils/dateUtil';
   import { List } from 'ant-design-vue';
-  import { Icon } from '/@/components/NetFile';
+  import { Icon, NetGql } from '/@/components/NetFile';
   import { useMutation } from '@vue/apollo-composable';
-  import { driveEditDescription } from '/@/hooks/apollo/gqlFile';
   export default defineComponent({
     name: 'FileInfo',
     components: {
@@ -179,7 +178,7 @@
       function closeEdit() {
         edit.value = false;
       }
-      const { mutate: editDesc } = useMutation(driveEditDescription);
+      const { mutate: editDesc } = useMutation(NetGql.Basic.Desc);
       async function changeDesc() {
         console.log(desc.value);
         await editDesc({ description: desc.value, userFileId: info.value.id });

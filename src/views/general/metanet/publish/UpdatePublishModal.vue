@@ -7,10 +7,11 @@
   import { defineComponent, ref } from 'vue';
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { BasicForm, useForm } from '/@/components/Form/index';
-  import { driveListFiles, driveUpdatePublish } from '/@/hooks/apollo/gqlFile';
+
   import { useMessage } from '/@/hooks/web/useMessage';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMutation, useQuery } from '@vue/apollo-composable';
+  import { NetGql } from '/@/components/NetFile';
   const { t } = useI18n('general.metanet');
   export default defineComponent({
     components: { BasicModal, BasicForm },
@@ -52,10 +53,10 @@
           treeData.value = getTreeData(list);
         });
       });
-      const { refetch } = useQuery(driveListFiles, null, () => ({
+      const { refetch } = useQuery(NetGql.Basic.FileList, null, () => ({
         fetchPolicy: 'network-only',
       }));
-      const { mutate: UpdatePublishFile } = useMutation(driveUpdatePublish);
+      const { mutate: UpdatePublishFile } = useMutation(NetGql.Publish.Update);
       function getTreeData(data: any[]): any[] {
         let folder: any[] = [];
         let file: any[] = [];

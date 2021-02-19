@@ -7,15 +7,12 @@
   import { defineComponent, ref } from 'vue';
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { BasicForm, useForm } from '/@/components/Form/index';
-  import {
-    driveListPublishs,
-    driveCreatePublish,
-    driveUpdatePublish,
-  } from '/@/hooks/apollo/gqlFile';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMutation, useQuery } from '@vue/apollo-composable';
+  import { NetGql } from '/@/components/NetFile';
   const { t } = useI18n('general.metanet');
+
   export default defineComponent({
     components: { BasicModal, BasicForm },
     setup() {
@@ -58,10 +55,10 @@
         id = data.id;
         refetch();
       });
-      const { onResult, refetch } = useQuery(driveListPublishs, null, () => ({
+      const { onResult, refetch } = useQuery(NetGql.Publish.List, null, () => ({
         fetchPolicy: 'network-only',
       }));
-      const { mutate: PublishFile } = useMutation(driveCreatePublish);
+      const { mutate: PublishFile } = useMutation(NetGql.Publish.Create);
       const { mutate: UpdatePublishFile } = useMutation(driveUpdatePublish);
 
       onResult((res) => {

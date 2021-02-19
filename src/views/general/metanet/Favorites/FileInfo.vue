@@ -67,8 +67,8 @@
   import { propTypes } from '/@/utils/propTypes';
   import Hash from '/@/components/NetFile/components/Hash.vue';
   import { useMutation } from '@vue/apollo-composable';
-  import { driveChangePublishVersion } from '/@/hooks/apollo/gqlFile';
   import { formatToDate } from '/@/utils/dateUtil';
+  import { NetGql } from '/@/components/NetFile';
 
   export default defineComponent({
     name: 'FileInfo',
@@ -125,7 +125,7 @@
         info.value.copyShareUrl(1);
       }
 
-      const { mutate: PublishChangeVerison } = useMutation(driveChangePublishVersion);
+      const { mutate: PublishChangeVerison } = useMutation(NetGql.Publish.ChangeVersion);
       async function changeVersion(publishHistoryId) {
         await PublishChangeVerison({
           id: info.value.publishId,

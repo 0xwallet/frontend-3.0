@@ -4,13 +4,13 @@
   </BasicModal>
 </template>
 <script lang="ts">
-  import { defineComponent, ref, nextTick } from 'vue';
+  import { defineComponent, ref } from 'vue';
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { BasicForm, FormSchema, useForm } from '/@/components/Form/index';
-  import { driveMakeDir, driveMakeDirUnder } from '/@/hooks/apollo/gqlFile';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { useMutation } from '@vue/apollo-composable';
   import { useI18n } from '/@/hooks/web/useI18n';
+  import { NetGql } from '/@/components/NetFile';
 
   const { t } = useI18n('general.metanet');
   const schemas: FormSchema[] = [
@@ -77,7 +77,7 @@
       const { createErrorModal } = useMessage();
 
       const { mutate: MakeDir, onDone } = useMutation(
-        dirId === 'root' ? driveMakeDir : driveMakeDirUnder
+        dirId === 'root' ? NetGql.Basic.MakeDir : NetGql.Basic.MakeDirUnder
       );
       onDone(() => {
         closeModal();

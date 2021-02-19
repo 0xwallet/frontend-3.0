@@ -35,10 +35,9 @@
 <script lang="ts">
   import { computed, defineComponent, ref, unref } from 'vue';
   import { useRouter } from 'vue-router';
-  import { drivePreviewShare } from '/@/hooks/apollo/gqlFile';
   import { useQuery } from '@vue/apollo-composable';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { Hash, Icon, PdfDrawer, NetFile } from '/@/components/NetFile';
+  import { Hash, Icon, PdfDrawer, NetFile, NetGql } from '/@/components/NetFile';
   import { Card, Space, Row, Col, Button } from 'ant-design-vue';
   import { Svg } from '/@/components/Svg';
   import { fileStore } from '/@/store/modules/netFile';
@@ -49,7 +48,6 @@
   import ShareDrawer from './component/ShareDrawer.vue';
   import MarkdownDrawer from './component/MarkdownDrawer.vue';
   import { MoreOutlined } from '@ant-design/icons-vue';
-
   export default defineComponent({
     name: 'ReleaseFile',
     components: {
@@ -106,7 +104,7 @@
       const [registerDrawer, { openDrawer }] = useDrawer();
       const [registerPdfDrawer, { openDrawer: openPdfDrawer }] = useDrawer();
       const [registerMarkdownDrawer, { openDrawer: openMarkdownDrawer }] = useDrawer();
-      const { onResult: PreviewShare } = useQuery(drivePreviewShare, params.value);
+      const { onResult: PreviewShare } = useQuery(NetGql.Share.Preview, params.value);
       PreviewShare((res) => {
         needCode.value = res.data?.drivePreviewShare.needCode;
         userPreview.value = res.data?.drivePreviewShare.UserPreview;

@@ -57,9 +57,7 @@
   import { BasicTable, useTable } from '/@/components/Table';
   import { useMessage } from '/@/hooks/web/useMessage';
   import GIcon from '/@/components/Icon';
-  import { driveListPublishs, driveDeletePublish } from '/@/hooks/apollo/gqlFile';
   import { getBasicColumns } from './Data';
-  import { NetFile } from '/@/components/NetFile/netFile';
   import { BasicHelp } from '/@/components/Basic';
   import FileInfo from './FileInfo.vue';
   import { useI18n } from '/@/hooks/web/useI18n';
@@ -68,6 +66,7 @@
   import { useMutation, useQuery } from '@vue/apollo-composable';
   import { useModal } from '/@/components/Modal';
   import UpdatePublishModal from './UpdatePublishModal.vue';
+  import { NetGql, NetFile } from '/@/components/NetFile';
 
   const { t } = useI18n('general.metanet');
   export default defineComponent({
@@ -122,7 +121,7 @@
       });
       const [registerUpdatePublishModal, { openModal, setModalProps }] = useModal();
 
-      const { onResult: Publishs, refetch } = useQuery(driveListPublishs, null, () => ({
+      const { onResult: Publishs, refetch } = useQuery(NetGql.Publish.List, null, () => ({
         fetchPolicy: 'network-only',
       }));
 
@@ -142,7 +141,7 @@
         });
         tableData.value = temp;
       });
-      const { mutate: DeletePublish, onDone } = useMutation(driveDeletePublish);
+      const { mutate: DeletePublish, onDone } = useMutation(NetGql.Publish.Delete);
       onDone(() => {
         createMessage.success(t('publishDeleted'));
         refetch();

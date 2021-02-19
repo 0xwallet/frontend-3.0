@@ -7,11 +7,12 @@
   import { defineComponent, ref } from 'vue';
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { BasicForm, FormSchema, useForm } from '/@/components/Form/index';
-  import { driveListFiles, driveMakeDir, driveMakeDirUnder } from '/@/hooks/apollo/gqlFile';
+
   import { useMessage } from '/@/hooks/web/useMessage';
   import { useMutation, useQuery } from '@vue/apollo-composable';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { Input, Space } from 'ant-design-vue';
+  import { NetGql } from '/@/components/NetFile';
 
   const { t } = useI18n('general.metanet');
 
@@ -130,7 +131,7 @@
         }
       }
 
-      const { onResult, refetch } = useQuery(driveListFiles, variables, () => ({
+      const { onResult, refetch } = useQuery(NetGql.Basic.FileList, variables, () => ({
         fetchPolicy: 'network-only',
       }));
       onResult((res) => {
@@ -183,8 +184,10 @@
 
       const { createErrorModal } = useMessage();
 
-      const { mutate: MakeDir, onDone: MakeDirDone } = useMutation(driveMakeDir);
-      const { mutate: MakeDirUnder, onDone: MakeDirUnderDone } = useMutation(driveMakeDirUnder);
+      const { mutate: MakeDir, onDone: MakeDirDone } = useMutation(NetGql.Basic.MakeDir);
+      const { mutate: MakeDirUnder, onDone: MakeDirUnderDone } = useMutation(
+        NetGql.Basic.MakeDirUnder
+      );
       MakeDirDone(() => {
         closeModal();
       });

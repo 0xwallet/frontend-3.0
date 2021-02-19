@@ -49,15 +49,15 @@
   import { BasicTable, useTable } from '/@/components/Table';
   import { useMessage } from '/@/hooks/web/useMessage';
   import GIcon from '/@/components/Icon';
-  import { driveListShares } from '/@/hooks/apollo/gqlFile';
   import { getBasicColumns } from './shareData';
-  import { NetFile } from '/@/components/NetFile/netFile';
   import { useQuery } from '@vue/apollo-composable';
   import { BasicHelp } from '/@/components/Basic';
   import FileInfo from './FileInfo.vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { Tooltip, Row, Col, Dropdown, Menu } from 'ant-design-vue';
   import { InfoCircleOutlined } from '@ant-design/icons-vue';
+  import { NetGql, NetFile } from '/@/components/NetFile';
+
   const { t } = useI18n('general.metanet');
   export default defineComponent({
     components: {
@@ -109,7 +109,7 @@
         scroll: { x: 1000, y: 1000 },
       });
 
-      const { onResult, refetch } = useQuery(driveListShares, null, () => ({
+      const { onResult, refetch } = useQuery(NetGql.Share.List, null, () => ({
         fetchPolicy: 'network-only',
       }));
       onResult((res) => {

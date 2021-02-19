@@ -6,12 +6,11 @@
 <script lang="ts">
   import { defineComponent, ref } from 'vue';
   import { BasicModal, useModalInner } from '/@/components/Modal';
-  import { driveRenameFile } from '/@/hooks/apollo/gqlFile';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMutation } from '@vue/apollo-composable';
   import { useForm, BasicForm } from '/@/components/Form';
-  import { NetFile } from '/@/components/NetFile';
+  import { NetFile, NetGql } from '/@/components/NetFile';
   const { t } = useI18n('general.metanet');
   export default defineComponent({
     components: { BasicModal, BasicForm },
@@ -27,7 +26,7 @@
         setFieldsValue({ newName: f.fileName() });
       });
 
-      const { mutate: RenameFile } = useMutation(driveRenameFile);
+      const { mutate: RenameFile } = useMutation(NetGql.Basic.Rename);
       const [registerForm, { validateFields, setFieldsValue }] = useForm({
         schemas: [
           {

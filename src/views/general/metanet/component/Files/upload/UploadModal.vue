@@ -69,11 +69,11 @@
   import FileList from './FileList';
   //Apollo
   import { InboxOutlined, MinusOutlined } from '@ant-design/icons-vue';
-  import { driveUploadByHash } from '/@/hooks/apollo/gqlFile';
   import CryptoES from 'crypto-es';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { fileStore } from '/@/store/modules/netFile';
   import { useMutation } from '@vue/apollo-composable';
+  import { NetGql } from '/@/components/NetFile';
 
   const { t } = useI18n('general.metanet');
   export default defineComponent({
@@ -140,7 +140,7 @@
           ? t('reUpload')
           : t('uploadButton');
       });
-      const { mutate: UploadByHash } = useMutation(driveUploadByHash);
+      const { mutate: UploadByHash } = useMutation(NetGql.Basic.Hash);
 
       // 上传前校验
       function beforeUpload(file: File) {

@@ -4,11 +4,11 @@
 <script lang="ts">
   import { computed, defineComponent, unref } from 'vue';
   import { useRouter } from 'vue-router';
-  import { driveFindPublish } from '/@/hooks/apollo/gqlFile';
   import { useQuery } from '@vue/apollo-composable';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { NetFile } from '/@/components/NetFile/netFile';
   import { getPublishRaw } from '/@/api/publish';
+  import { NetGql } from '/@/components/NetFile';
 
   export default defineComponent({
     name: 'ReleaseFile',
@@ -20,7 +20,7 @@
       });
       const { createErrorModal } = useMessage();
 
-      const { onResult } = useQuery(driveFindPublish, { txid: params.value }, () => ({
+      const { onResult } = useQuery(NetGql.Publish.Find, { txid: params.value }, () => ({
         fetchPolicy: 'network-only',
       }));
       onResult(async (res) => {

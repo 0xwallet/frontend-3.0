@@ -7,11 +7,10 @@ import {
 } from '/@/views/general/metanet/component/Files/upload/types';
 import { useSession } from '/@/hooks/nkn/getNKN';
 import { encode } from '@msgpack/msgpack';
-import { NetFile } from '/@/components/NetFile/netFile';
 import { useApollo } from '/@/hooks/apollo/apollo';
-import { driveFindShare } from '/@/hooks/apollo/gqlFile';
 import { useMessage } from '/@/hooks/web/useMessage';
 import { dateUtil } from '/@/utils/dateUtil';
+import { NetGql, NetFile } from '/@/components/NetFile';
 
 const { createErrorModal } = useMessage();
 const NAME = 'netFileStore';
@@ -109,7 +108,7 @@ class netFileStore extends VuexModule {
 
   @Action
   fetchShareFile(params: { code?: string; uri: string }) {
-    useApollo({ mode: 'query', gql: driveFindShare, variables: params }).then((res) => {
+    useApollo({ mode: 'query', gql: NetGql.Share.Find, variables: params }).then((res) => {
       const data = res.data?.driveFindShare;
       if (!data) {
         createErrorModal({ title: '错误', content: '分享文件信息错误' });

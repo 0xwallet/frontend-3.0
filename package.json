@@ -61,7 +61,7 @@
     "vuex": "^4.0.0",
     "vuex-module-decorators": "^1.0.1",
     "web-streams-node": "^0.4.0",
-    "xlsx": "^0.16.9",
+    "xlsx": "^0.16.9"
   },
   "devDependencies": {
     "@commitlint/cli": "^11.0.0",

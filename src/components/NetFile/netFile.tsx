@@ -1,12 +1,4 @@
 import { useApollo } from '/@/hooks/apollo/apollo';
-import {
-  driveCreateShare,
-  driveDeleteFile,
-  driveDeleteShare,
-  driveCreatePublish,
-  driveUploadByHash,
-  drivePreviewToken,
-} from '/@/hooks/apollo/gqlFile';
 import { toLower } from 'lodash-es';
 import { downloadByUrl } from '/@/utils/file/download';
 import { createVNode, unref } from 'vue';
@@ -20,6 +12,7 @@ import { Modal } from 'ant-design-vue';
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
 import router from '/@/router';
 import { PageEnum } from '/@/enums/pageEnum';
+import { NetGql } from '/@/components/NetFile/gql';
 // 循环获取NKN.JS
 
 const { t } = useI18n();
@@ -119,19 +112,23 @@ export class NetFile {
   fileName(): string {
     return this.fullName.slice(-1)[0];
   }
+  getToken(): Promise<string> {
+    return new Promise<string>((resolve) => {
+      if (this.token !== '') resolve(this.token || '');
+      useApollo({
+        mode: 'mutate',
+        gql: NetGql.Basic.Token,
+      }).then((res) => {
+        resolve(res.data.drivePreviewToken || '');
+      });
+    });
+  }
   // 文件下载
   async download() {
     if (this.type === 'folder') {
       return;
     }
-    let token = this.token;
-    if (token === '') {
-      const res = await useApollo({
-        mode: 'mutate',
-        gql: drivePreviewToken,
-      });
-      token = res.data.drivePreviewToken;
-    }
+    let token = await this.getToken();
     let url = `https://drive-s.owaf.io/download/${this.userId}/${toLower(this.space)}/${this.id}/${
       this.fullName.slice(-1)[0]
     }?token=${token}`;
@@ -142,14 +139,7 @@ export class NetFile {
   }
   // 文件预览
   async preview(): Promise<any> {
-    let token = this.token;
-    if (token === '') {
-      const res = await useApollo({
-        mode: 'mutate',
-        gql: drivePreviewToken,
-      });
-      token = res.data.drivePreviewToken;
-    }
+    let token = await this.getToken();
     return new Promise<any>((resolve) => {
       let url = `https://drive-s.owaf.io/preview/${this.userId}/${toLower(this.space)}/${this.id}/${
         this.fullName.slice(-1)[0]
@@ -173,7 +163,7 @@ export class NetFile {
         onOk: () => {
           useApollo({
             mode: 'mutate',
-            gql: driveUploadByHash,
+            gql: NetGql.Basic.Hash,
             variables: { fullName: this.fullName, hash: this.hash },
           })
             .then((res) => {
@@ -206,7 +196,7 @@ export class NetFile {
       content: this.id,
       okText: t('general.metanet.yes'),
       onOk: () => {
-        useApollo({ mode: 'mutate', gql: driveCreatePublish, variables: { id: this.id } }).then(
+        useApollo({ mode: 'mutate', gql: NetGql.Publish.Create, variables: { id: this.id } }).then(
           (res) => {
             console.log(res);
           }
@@ -220,7 +210,7 @@ export class NetFile {
   share(code: string = ''): Promise<boolean> {
     return useApollo({
       mode: 'mutate',
-      gql: driveCreateShare,
+      gql: NetGql.Share.Create,
       variables: { code, userFileId: this.id },
     })
       .then((res) => {
@@ -241,7 +231,7 @@ export class NetFile {
   delShare(): Promise<any> {
     return useApollo({
       mode: 'mutate',
-      gql: driveDeleteShare,
+      gql: NetGql.Share.Delete,
       variables: { id: this.shareId },
     });
   }
@@ -278,7 +268,7 @@ export class NetFile {
   delFile(): Promise<any> {
     return useApollo({
       mode: 'mutate',
-      gql: driveDeleteFile,
+      gql: NetGql.Basic.Delete,
       variables: { id: this.id, space: this.space },
     });
   }

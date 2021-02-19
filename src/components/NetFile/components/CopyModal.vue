@@ -11,11 +11,11 @@
   import { defineComponent, ref } from 'vue';
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { Tree, Progress, Row, Col } from 'ant-design-vue';
-  import { driveListFiles, driveCopyFile } from '/@/hooks/apollo/gqlFile';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { TreeItem } from '/@/components/Tree';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMutation, useQuery } from '@vue/apollo-composable';
+  import { NetGql } from '/@/components/NetFile';
   const { t } = useI18n('general.metanet');
   export default defineComponent({
     components: { BasicModal, Tree, Progress, Row, Col },
@@ -28,8 +28,8 @@
         file.value = data.id;
       });
       const variables = ref({});
-      const { onResult } = useQuery(driveListFiles, variables);
-      const { mutate: CopyFile } = useMutation(driveCopyFile);
+      const { onResult } = useQuery(NetGql.Basic.FileList, variables);
+      const { mutate: CopyFile } = useMutation(NetGql.Basic.Copy);
       let tree = null;
 
       onResult((res) => {

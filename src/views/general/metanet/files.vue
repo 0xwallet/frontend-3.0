@@ -183,13 +183,21 @@
     ExclamationCircleOutlined,
     ExclamationCircleTwoTone,
   } from '@ant-design/icons-vue';
-  import { driveListFiles, driveDeleteFiles } from '/@/hooks/apollo/gqlFile';
   import { useModal } from '/@/components/Modal';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { Dropdown, Menu, Divider, Space, Row, Col, Modal, Drawer, Input } from 'ant-design-vue';
   import FileInfo from './component/Files/FileInfo.vue';
-  import { Hash, Icon, PdfDrawer, NetFile, RenameModal, CopyModal } from '/@/components/NetFile';
+  import {
+    Hash,
+    Icon,
+    PdfDrawer,
+    NetFile,
+    RenameModal,
+    CopyModal,
+    NetGql,
+  } from '/@/components/NetFile';
   import { useMutation, useQuery } from '@vue/apollo-composable';
+
   import { Button } from '/@/components/Button';
   import { useDrawer } from '/@/components/Drawer';
   const { t } = useI18n('general.metanet');
@@ -260,7 +268,7 @@
       const variables = ref({
         dirId: 'root',
       });
-      const { onResult, refetch } = useQuery(driveListFiles, variables, () => ({
+      const { onResult, refetch } = useQuery(NetGql.Basic.FileList, variables, () => ({
         fetchPolicy: 'network-only',
       }));
 
@@ -469,7 +477,7 @@
           },
         });
       }
-      const { mutate: DeleteFiles } = useMutation(driveDeleteFiles);
+      const { mutate: DeleteFiles } = useMutation(NetGql.Basic.DeleteFiles);
       //批量删除文件
       function delFiles() {
         if (getSelectRowKeys().length === 0) {

@@ -81,11 +81,10 @@
   import { computed, defineComponent, unref, ref } from 'vue';
   import { Card, Space, Row, Col, Avatar } from 'ant-design-vue';
   import { useRouter } from 'vue-router';
-  import { drivePreviewShare } from '/@/hooks/apollo/gqlFile';
   import { useTable, BasicTable } from '/@/components/Table';
   import { getBasicColumns } from './tableData';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import { Hash, Icon, PdfDrawer, NetFile } from '/@/components/NetFile';
+  import { Hash, Icon, PdfDrawer, NetFile, NetGql } from '/@/components/NetFile';
   import { BasicForm, useForm } from '/@/components/Form';
   import { fileStore } from '/@/store/modules/netFile';
   import ShareFileMobile from '/@/views/general/metanet/share/component/ShareFileMobile.vue';
@@ -95,6 +94,7 @@
   import { useDrawer } from '/@/components/Drawer';
   import { useModal } from '/@/components/Modal';
   const { t } = useI18n('general.metanet');
+
   export default defineComponent({
     name: 'TestTab',
     components: {
@@ -209,7 +209,7 @@
       //   //   }, 1000);
       //   // });
       // });
-      const { onResult: PreviewShare } = useQuery(drivePreviewShare, params.value);
+      const { onResult: PreviewShare } = useQuery(NetGql.Share.Preview, params.value);
       PreviewShare((res) => {
         needCode.value = res.data?.drivePreviewShare.needCode;
         userPreview.value = res.data?.drivePreviewShare.UserPreview;
