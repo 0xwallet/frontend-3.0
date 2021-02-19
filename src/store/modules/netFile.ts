@@ -11,7 +11,8 @@ import { NetFile } from '/@/components/NetFile/netFile';
 import { useApollo } from '/@/hooks/apollo/apollo';
 import { driveFindShare } from '/@/hooks/apollo/gqlFile';
 import { useMessage } from '/@/hooks/web/useMessage';
-import dayjs from 'dayjs';
+import { dateUtil } from '/@/utils/dateUtil';
+
 const { createErrorModal } = useMessage();
 const NAME = 'netFileStore';
 hotModuleUnregisterModule(NAME);
@@ -57,11 +58,11 @@ class netFileStore extends VuexModule {
   }
   @Mutation
   setSpeed(s: number): void {
-    if (dayjs().unix() === this.uploadSpeed.time) {
+    if (dateUtil.unix() === this.uploadSpeed.time) {
       this.uploadSpeed.speed += s;
     } else {
       this.uploadSpeed.speed = s;
-      this.uploadSpeed.time = dayjs().unix();
+      this.uploadSpeed.time = dateUtil.unix();
     }
   }
 
@@ -125,7 +126,6 @@ class netFileStore extends VuexModule {
       const writeChunkSize = 1024;
       // 获取client session
       const session = await useSession();
-
       const object = {
         File: new Uint8Array(await item.file.arrayBuffer()),
         FullName: [...path, item.name],
@@ -135,13 +135,13 @@ class netFileStore extends VuexModule {
         Description: item.desc || '',
       };
       this.setItemValue({ uuid: item.uuid, key: 'status', value: UploadResultStatus.UPLOADING });
-      let timeStart = Date.now();
       const encoded: Uint8Array = encode(object);
       let buffer = new ArrayBuffer(4);
       let dv = new DataView(buffer);
       dv.setUint32(0, encoded.length, true);
       await session.write(new Uint8Array(buffer));
       let buf!: Uint8Array;
+      let timeStart = Date.now();
       for (let n = 0; n < encoded.length; n += buf.length) {
         buf = new Uint8Array(Math.min(encoded.length - n, writeChunkSize));
         for (let i = 0; i < buf.length; i++) {

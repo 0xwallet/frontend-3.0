@@ -98,4 +98,5 @@ export default {
   dynamic: 'Dynamic',
   favoritesButton: 'Favorites',
   favoritesTitle: 'My Favorites',
+  shared: 'Shared',
 };

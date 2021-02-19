@@ -98,4 +98,5 @@ export default {
   dynamic: '动态',
   favoritesButton: '收藏',
   favoritesTitle: '我的收藏',
+  shared: '已分享',
 };

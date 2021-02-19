@@ -49,6 +49,7 @@ interface fileParams {
   token?: string;
   expiredAt?: string;
   updatedAt: string;
+
   user: { id: string } | null;
 }
 
@@ -61,6 +62,7 @@ interface userFile {
   space: string;
   updatedAt: string;
   insertedAt: string;
+  isBeShared: boolean;
   user?: { id: string } | null;
 }
 
@@ -83,6 +85,7 @@ export class NetFile {
   space: string;
   desc: string;
   userId?: string;
+  isBeShared?: boolean;
   public publishId?: number;
 
   constructor(params: fileParams) {
@@ -111,8 +114,11 @@ export class NetFile {
     this.hash = params.userFile.hash;
     this.shareId = params.id;
     this.userId = params.user?.id || params.userFile?.user?.id || '';
+    this.isBeShared = params.userFile.isBeShared;
   }
-
+  fileName(): string {
+    return this.fullName.slice(-1)[0];
+  }
   // 文件下载
   async download() {
     if (this.type === 'folder') {

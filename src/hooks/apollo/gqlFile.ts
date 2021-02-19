@@ -24,6 +24,7 @@ export const driveListFiles = gql`
       isDir
       hash
       space
+      isBeShared
       insertedAt
       updatedAt
       info {
@@ -119,8 +120,8 @@ export const drivePreviewShare = gql`
 // mutations
 // 新建目录
 export const driveMakeDir = gql`
-  mutation($fullName: [String]!) {
-    driveMakeDir(fullName: $fullName) {
+  mutation($fullName: [String]!, $description: String) {
+    driveMakeDir(fullName: $fullName, description: $description) {
       isDir
       fullName
     }
@@ -128,8 +129,8 @@ export const driveMakeDir = gql`
 `;
 // 指定目录下新建目录
 export const driveMakeDirUnder = gql`
-  mutation($fullName: String!, $parentId: String!) {
-    driveMakeDirUnder(name: $fullName, parentId: $parentId) {
+  mutation($fullName: String!, $parentId: String!, $description: String) {
+    driveMakeDirUnder(name: $fullName, parentId: $parentId, description: $description) {
       isDir
       fullName
     }
@@ -194,7 +195,7 @@ export const driveCreatePublish = gql`
     }
   }
 `;
-
+// 删除发布
 export const driveDeletePublish = gql`
   mutation($id: ID!) {
     driveDeletePublish(id: $id) {
@@ -229,6 +230,21 @@ export const driveEditDescription = gql`
   }
 `;
 
+// 重命名
+export const driveRenameFile = gql`
+  mutation($id: String!, $newName: Sting!, $space: DriveSpace!) {
+    driveRenameFile(id: $id, newName: $newName, space: $space) {
+      id
+    }
+  }
+`;
+
+// 重命名
+export const driveCopyFile = gql`
+  mutation($fromId: String!, $toId: String!) {
+    driveCopyFile(fromId: $fromId, toId: $toId)
+  }
+`;
 // subscriptions
 export const driveFileUploaded = gql`
   subscription($userId: ID!) {

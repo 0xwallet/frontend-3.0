@@ -24,6 +24,9 @@
           <DescriptionsItem :label="t('modified')">{{ time(info.updatedAt) }}</DescriptionsItem>
           <DescriptionsItem :label="t('opened')"></DescriptionsItem>
           <DescriptionsItem :label="t('created')">{{ time(info.createdAt) }}</DescriptionsItem>
+          <DescriptionsItem :label="t('shared')" v-if="info.isBeShared">{{
+            t('shared')
+          }}</DescriptionsItem>
         </Descriptions>
 
         <div class="desc" v-if="!edit"

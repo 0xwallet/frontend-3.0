@@ -66,7 +66,7 @@
           defaultValue: '',
         },
         {
-          field: 'desc',
+          field: 'description',
           component: 'Input',
           label: t('desc'),
           colProps: {

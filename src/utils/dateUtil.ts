@@ -34,4 +34,4 @@ export function formatAgo(str: string | number) {
   }
 }
 
-export const dateUtil = dayjs;
+export const dateUtil = dayjs();

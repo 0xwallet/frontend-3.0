@@ -114,10 +114,14 @@
                 }}</a-button></MenuItem
               >
               <MenuItem>
-                <a-button type="link">{{ t('copyButton') }}</a-button></MenuItem
+                <a-button type="link" @click="openCopy(record)">{{
+                  t('copyButton')
+                }}</a-button></MenuItem
               >
               <MenuItem>
-                <a-button type="link">{{ t('rename') }}</a-button></MenuItem
+                <a-button type="link" @click="openRename(record)">{{
+                  t('rename')
+                }}</a-button></MenuItem
               >
               <MenuItem>
                 <a-button type="link" color="error" @click="delFile(record)">{{
@@ -156,6 +160,8 @@
     <MarkdownModal @register="registerMarkdownModal" />
     <PublishModal @register="registerPublishModal" />
     <PdfDrawer @register="registerPdfDrawer" />
+    <RenameModal @register="registerRenameModal" />
+    <CopyModal @register="registerCopyModal" />
   </div>
 </template>
 <script lang="ts">
@@ -182,7 +188,7 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import { Dropdown, Menu, Divider, Space, Row, Col, Modal, Drawer, Input } from 'ant-design-vue';
   import FileInfo from './component/Files/FileInfo.vue';
-  import { Hash, Icon, PdfDrawer, NetFile } from '/@/components/NetFile';
+  import { Hash, Icon, PdfDrawer, NetFile, RenameModal, CopyModal } from '/@/components/NetFile';
   import { useMutation, useQuery } from '@vue/apollo-composable';
   import { Button } from '/@/components/Button';
   import { useDrawer } from '/@/components/Drawer';
@@ -216,6 +222,8 @@
       InputSearch: Input.Search,
       UploadStatus,
       PdfDrawer,
+      RenameModal,
+      CopyModal,
     },
     setup() {
       // 信息框
@@ -345,9 +353,45 @@
         registerPublishModal,
         { openModal: openModal6, setModalProps: setModal6 },
       ] = useModal();
+      const [
+        registerRenameModal,
+        { openModal: openRenameModal, setModalProps: setRenameModal },
+      ] = useModal();
+      const [
+        registerCopyModal,
+        { openModal: openCopyModal, setModalProps: setCopyModal },
+      ] = useModal();
       const [registerPdfDrawer, { openDrawer: openPdfDrawer }] = useDrawer();
       // 打开新建文件夹modal
-
+      // 打开移动窗口
+      function openCopy(f: NetFile) {
+        openCopyModal(true, { id: f.id }, true);
+        nextTick(() => {
+          setCopyModal({
+            canFullscreen: false,
+            width: '50%',
+            destroyOnClose: true,
+            afterClose: () => {
+              clearSelectedRowKeys();
+              refetch();
+            },
+          });
+        });
+      }
+      function openRename(f: NetFile) {
+        openRenameModal(true, { file: f }, true);
+        nextTick(() => {
+          setRenameModal({
+            canFullscreen: false,
+            width: '50%',
+            destroyOnClose: true,
+            afterClose: () => {
+              clearSelectedRowKeys();
+              refetch();
+            },
+          });
+        });
+      }
       // 打开移动窗口
       function openMoveModal(f: NetFile) {
         openModal2(true, { folder: [f.id, ...getSelectRowKeys()], path });
@@ -583,6 +627,10 @@
         uploadRef,
         infoRefetch,
         registerPdfDrawer,
+        registerRenameModal,
+        openRename,
+        registerCopyModal,
+        openCopy,
       };
     },
   });
