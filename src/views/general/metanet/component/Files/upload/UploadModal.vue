@@ -73,7 +73,7 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import { fileStore } from '/@/store/modules/netFile';
   import { useMutation } from '@vue/apollo-composable';
-  import { NetGql } from '/@/components/NetFile';
+  import { NetGql, NetUpload } from '/@/components/NetFile';
 
   const { t } = useI18n('general.metanet');
   export default defineComponent({
@@ -144,59 +144,47 @@
 
       // 上传前校验
       function beforeUpload(file: File) {
-        const { size, name } = file;
-        const { maxSize } = props;
-        const accept = unref(getAccept);
-        // 设置类型,则判断
-        if (accept.length > 0 && !checkFileType(file, accept)) {
-          createMessage.error!(`只能上传${accept.join(',')}格式文件`);
-          return false;
-        }
-        // 设置最大值，则判断
-        if (maxSize && file.size / 1024 / 1024 >= maxSize) {
-          createMessage.error(`只能上传不超过${maxSize}MB的文件!`);
-          return false;
-        }
+        NetUpload.checkFile(file, path);
 
-        let hash = '';
-        file.arrayBuffer().then((res) => {
-          let wordArray = CryptoES.lib.WordArray.create(res);
-          hash = CryptoES.SHA256(wordArray).toString();
-          let status = '';
-          let percent = 0;
-          UploadByHash({
-            fullName: [...path, name],
-            hash: hash,
-          })
-            .then(() => {
-              status = UploadResultStatus.SUCCESS;
-              percent = 100;
-            })
-            .catch((err) => {})
-            .finally(() => {
-              const commonItem: FileItem = {
-                uuid: buildUUID(),
-                file,
-                size,
-                name,
-                hash,
-                percent,
-                speed: 0,
-                type: name.split('.').pop(),
-                status,
-                thumbUrl: '',
-              };
-              // 生成图片缩略图
-              if (checkImgType(file)) {
-                // beforeUpload，如果异步会调用自带上传方法
-                // file.thumbUrl = await getBase64(file);
-                getBase64WithFile(file).then(({ result: thumbUrl }) => {
-                  commonItem.thumbUrl = thumbUrl;
-                });
-              }
-              fileStore.addItem(commonItem);
-            });
-        });
+        // let hash = '';
+        // file.arrayBuffer().then((res) => {
+        //   let wordArray = CryptoES.lib.WordArray.create(res);
+        //   hash = CryptoES.SHA256(wordArray).toString();
+        //   let status = '';
+        //   let percent = 0;
+        //   UploadByHash({
+        //     fullName: [...path, name],
+        //     hash: hash,
+        //   })
+        //     .then(() => {
+        //       status = UploadResultStatus.SUCCESS;
+        //       percent = 100;
+        //     })
+        //     .catch((err) => {})
+        //     .finally(() => {
+        //       const commonItem: FileItem = {
+        //         uuid: buildUUID(),
+        //         file,
+        //         size,
+        //         name,
+        //         hash,
+        //         percent,
+        //         speed: 0,
+        //         type: name.split('.').pop(),
+        //         status,
+        //         thumbUrl: '',
+        //       };
+        //       // 生成图片缩略图
+        //       if (checkImgType(file)) {
+        //         // beforeUpload，如果异步会调用自带上传方法
+        //         // file.thumbUrl = await getBase64(file);
+        //         getBase64WithFile(file).then(({ result: thumbUrl }) => {
+        //           commonItem.thumbUrl = thumbUrl;
+        //         });
+        //       }
+        //       fileStore.addItem(commonItem);
+        //     });
+        // });
 
         return false;
       }
@@ -284,7 +272,7 @@
       //   });
 
       function deleteAll() {
-        fileStore.delAllItem();
+        fileStore.delAllItems();
       }
       return {
         columns: createTableColumns(),

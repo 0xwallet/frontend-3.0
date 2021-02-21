@@ -7,7 +7,7 @@
           <a-button type="primary" @click="openMoveModal" v-if="choose">{{
             t('moveButton')
           }}</a-button>
-          <UploadButton ref="uploadRef" v-if="!choose" @refetch="refetch" />
+          <UploadButton ref="uploadRef" :path="path" v-if="!choose" @refetch="refetch" />
           <a-button type="primary" v-if="choose" @click="openCopy">{{ t('copyButton') }}</a-button>
           <BreadCrumb :path="path" @jump="goPath" />
         </Space>
@@ -103,7 +103,7 @@
   </div>
 </template>
 <script lang="ts">
-  import { defineComponent, computed, ref, nextTick, unref, createVNode } from 'vue';
+  import { defineComponent, computed, ref, nextTick, unref, createVNode, watch } from 'vue';
   import { BasicTable, useTable } from '/@/components/Table';
   import { getBasicColumns } from './tableData';
   import { useMessage } from '/@/hooks/web/useMessage';
@@ -135,10 +135,11 @@
     FileInfo,
   } from '/@/components/NetFile';
   import { useMutation, useQuery } from '@vue/apollo-composable';
-
   import { Button } from '/@/components/Button';
   import { useDrawer } from '/@/components/Drawer';
+  import { fileStore } from '/@/store/modules/netFile';
   const { t } = useI18n('general.metanet');
+
   export default defineComponent({
     components: {
       Hash,
@@ -174,7 +175,17 @@
     setup() {
       // 信息框
       const { createMessage, createErrorModal, notification } = useMessage();
-
+      watch(
+        () => fileStore.getRefetch,
+        (v) => {
+          if (fileStore.getRefetch == 0) return;
+          setTimeout(() => {
+            refetch();
+            console.log('刷新', v);
+            fileStore.setRefetch(0);
+          }, v * 1000);
+        }
+      );
       // 文件路径面包屑
       // 储存本级目录所有文件夹名
       let folder = ref([]);

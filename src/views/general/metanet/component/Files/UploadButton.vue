@@ -4,10 +4,10 @@
       <a-button type="primary"> {{ t('uploadButton') }}<DownOutlined /> </a-button>
       <template #overlay>
         <Menu>
-          <MenuItem @click="openUploadModal">
-            {{ t('file') }}
+          <MenuItem>
+            <Upload :before-upload="beforeUpload" :showUploadList="false">{{ t('file') }}</Upload>
           </MenuItem>
-          <MenuItem> {{ t('folder') }}</MenuItem>
+          <MenuItem @click="openUploadModal"> {{ t('folder') }}</MenuItem>
         </Menu>
       </template>
     </Dropdown>
@@ -16,13 +16,14 @@
 </template>
 <script lang="ts">
   import { defineComponent, ref } from 'vue';
-  import { Dropdown, Menu } from 'ant-design-vue';
+  import { Dropdown, Menu, Upload } from 'ant-design-vue';
   import { DownOutlined } from '@ant-design/icons-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useModal } from '/@/components/Modal';
   import UploadModal from './upload/UploadModal.vue';
-
-  import Mitt from '/@/utils/mitt';
+  import { NetUpload } from '/@/components/NetFile';
+  import { propTypes } from '/@/utils/propTypes';
+  import { fileStore } from '/@/store/modules/netFile';
 
   const { t } = useI18n('general.metanet');
   export default defineComponent({
@@ -32,9 +33,13 @@
       Menu,
       MenuItem: Menu.Item,
       UploadModal,
+      Upload,
+    },
+    props: {
+      path: propTypes.array,
     },
     emits: ['refetch'],
-    setup(_, { emit }) {
+    setup(props, { emit }) {
       const [registerUploadModal, { openModal, setModalProps }] = useModal();
 
       function openUploadModal() {
@@ -45,13 +50,20 @@
           },
         });
       }
-      const mitt = new Mitt();
-      mitt.on('foo', (e) => console.log('foo', e));
+      async function beforeUpload(file) {
+        const path = props.path.map((v) => {
+          return v.name;
+        });
+        await NetUpload.checkFile(file, path, true);
+
+        return false;
+      }
 
       return {
         openUploadModal,
         t,
         registerUploadModal,
+        beforeUpload,
       };
     },
   });

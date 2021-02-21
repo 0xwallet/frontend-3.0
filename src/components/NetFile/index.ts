@@ -8,6 +8,8 @@ import MoveModal from './components/MoveModal.vue';
 import FileInfo from './components/FileInfo.vue';
 import { NetGql } from './gql/index';
 import { NetFile } from './netFile';
+import { NetUpload } from './upload';
+
 export {
   Hash,
   Icon,
@@ -19,4 +21,5 @@ export {
   NetGql,
   MoveModal,
   FileInfo,
+  NetUpload,
 };

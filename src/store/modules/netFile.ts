@@ -12,7 +12,7 @@ import { useMessage } from '/@/hooks/web/useMessage';
 import { dateUtil } from '/@/utils/dateUtil';
 import { NetGql, NetFile } from '/@/components/NetFile';
 
-const { createErrorModal } = useMessage();
+const { createErrorModal, createMessage } = useMessage();
 const NAME = 'netFileStore';
 hotModuleUnregisterModule(NAME);
 interface uploadSpeed {
@@ -28,6 +28,8 @@ class netFileStore extends VuexModule {
 
   private uploadSpeed: uploadSpeed = { time: 0, speed: 0 };
 
+  private refetch: number = 0;
+
   get getUploadList(): FileItem[] {
     return this.uploadList || [];
   }
@@ -37,18 +39,25 @@ class netFileStore extends VuexModule {
   get getUploadSpeed(): uploadSpeed {
     return this.uploadSpeed;
   }
+  get getRefetch(): number {
+    return this.refetch;
+  }
 
   @Mutation
   appendItem(file: FileItem): void {
     this.uploadList.push(file);
   }
   @Mutation
-  spliceItem(index: number): void {
+  delItem(index: number): void {
     this.uploadList.splice(index, 1);
   }
   @Mutation
   delAllItems(): void {
     this.uploadList = [];
+  }
+  @Mutation
+  setRefetch(t: number): void {
+    this.refetch = t;
   }
 
   @Mutation
@@ -77,27 +86,8 @@ class netFileStore extends VuexModule {
   }
 
   @Action
-  addItem(file: FileItem): void {
-    this.appendItem(file);
-  }
-  @Action
-  delItem(index: number): void {
-    this.spliceItem(index);
-  }
-  @Action
-  delAllItem(): void {
-    this.delAllItems();
-  }
-
-  @Action
-  addShare(file: NetFile): void {
-    this.appendShareFile(file);
-  }
-
-  @Action
   addSpeed(s: number): void {
     this.setSpeed(s);
-
     setInterval(() => {
       if (this.uploadSpeed.speed === 0) {
         clearInterval();
@@ -114,7 +104,7 @@ class netFileStore extends VuexModule {
         createErrorModal({ title: '错误', content: '分享文件信息错误' });
         return;
       }
-      this.addShare(new NetFile(data));
+      this.appendShareFile(new NetFile(data));
     });
   }
 
@@ -184,6 +174,8 @@ class netFileStore extends VuexModule {
         // c
       }
       this.setItemValue({ uuid: item.uuid, key: 'status', value: UploadResultStatus.SUCCESS });
+      createMessage.success(item.name + '上传成功', 2);
+      this.setRefetch(2);
       return {
         success: true,
         error: null,

@@ -57,11 +57,18 @@ export function initApollo(): ApolloClient<any> | null {
   const error = onError(({ graphQLErrors, networkError }) => {
     if (graphQLErrors)
       graphQLErrors.map(({ message, locations, path }) => {
-        if (message === 'Please sign in first!') {
-          userStore.loginOut(true);
-          return;
+        switch (message) {
+          case 'Please sign in first!':
+            userStore.logout(true);
+            break;
+          case 'file hash not found':
+            break;
+          default:
+            createErrorModal({ content: message });
+            console.log(
+              `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
+            );
         }
-        console.log(`[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`);
       });
 
     if (networkError) console.log(`[Network error]: ${networkError}`);
@@ -103,13 +110,6 @@ export function useApollo(params: { mode: string; gql: any; variables?: any }): 
     r.then((res) => {
       resolve(res);
     }).catch((err) => {
-      if (err.message === 'Please sign in first!') {
-        userStore.loginOut(true);
-      }
-      createErrorModal({
-        title: '错误',
-        content: err.message,
-      });
       reject(err);
     });
   });
@@ -117,7 +117,7 @@ export function useApollo(params: { mode: string; gql: any; variables?: any }): 
 
 export function handleApolloError(err: any) {
   if (err.message === 'Please sign in first!') {
-    userStore.loginOut(true);
+    userStore.logout(true);
   }
   createErrorModal({
     title: '错误',
