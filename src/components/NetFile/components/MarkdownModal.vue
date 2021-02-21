@@ -6,20 +6,22 @@
     :minHeight="height"
     width="80%"
     destroyOnClose
+    :closeFunc="handleCloseFunc"
   >
     <div ref="wrapRef"></div>
   </BasicModal>
 </template>
 <script lang="ts">
-  import { computed, defineComponent, ref, unref } from 'vue';
+  import { computed, createVNode, defineComponent, ref, unref } from 'vue';
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { NetFile } from '/@/components/NetFile/netFile';
-  import { getFile } from '/@/api/general/metanet/file';
   const { t } = useI18n('general.metanet');
   import Vditor from 'vditor';
   import 'vditor/dist/index.css';
   import { useLocale } from '/@/locales/useLocale';
+  import { Modal } from 'ant-design-vue';
+  import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
   type Lang = 'zh_CN' | 'en_US' | 'ja_JP' | 'ko_KR' | undefined;
   export default defineComponent({
     components: { BasicModal },
@@ -49,27 +51,50 @@
         }
         return lang;
       });
-      const [register, { setModalProps }] = useModalInner(async (data) => {
-        const f: NetFile = data;
-        setModalProps({ loading: true });
-        // try {
-        //   valueRef.value = '';
-        //   const url = ;
-        //   const d = await getFile(await f.preview());
-        //   const markDown = unref(markDownRef);
-        //   if (!markDown) return;
-        //   const vditor = markDown.getVditor();
-        //   vditor.setValue(d);
-        //   // valueRef.value = d;
-        // } catch (e) {
-        //   console.log(e);
-        // } finally {
-        //   setModalProps({ loading: false });
-        // }
-        const value = await getFile(await f.preview());
 
+      const [register, { setModalProps, closeModal }] = useModalInner(async (data) => {
+        const f: NetFile = data;
+        setModalProps({
+          loading: true,
+          okText: t('saveButton'),
+          title: f.fileName(),
+          //   return new Promise<any>((resolve) => {
+          //     console.log(123);
+          //     resolve(true);
+          //     // Modal.confirm({
+          //     //   title: t('error'),
+          //     //   icon: createVNode(ExclamationCircleOutlined),
+          //     //   content: '文件内容有变化，不保存吗?',
+          //     //   centered: true,
+          //     //   okText: t('yes'),
+          //     //   cancelText: t('cancelAll'),
+          //     //   onOk() {},
+          //     // });
+          //   });
+          // },
+        });
+
+        const value = await f.raw();
+        valueRef.value = value;
         init(value);
       });
+      const edited = ref(false);
+      async function handleCloseFunc() {
+        if (!edited.value) return true;
+        Modal.confirm({
+          title: t('error'),
+          icon: createVNode(ExclamationCircleOutlined),
+          content: '文件内容有变化，不保存吗?',
+          centered: true,
+          okText: t('yes'),
+          cancelText: t('cancelAll'),
+          onOk() {
+            closeModal();
+          },
+        });
+        return false;
+      }
+
       function init(value) {
         const wrapEl = unref(wrapRef);
 
@@ -85,12 +110,16 @@
             enable: false,
           },
           height: height.value,
+          input: () => {
+            edited.value = true;
+          },
         });
         initedRef.value = true;
         setModalProps({ loading: false });
       }
 
       return {
+        handleCloseFunc,
         valueRef,
         register,
         t,

@@ -12,6 +12,7 @@ import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
 import router from '/@/router';
 import { PageEnum } from '/@/enums/pageEnum';
 import { NetGql } from '/@/components/NetFile/gql';
+import { getFile } from '/@/api/general/metanet/file';
 // 循环获取NKN.JS
 
 const { t } = useI18n();
@@ -148,6 +149,10 @@ export class NetFile {
       }
       resolve(url);
     });
+  }
+
+  async raw() {
+    return await getFile(await this.preview());
   }
 
   // 保存分享
