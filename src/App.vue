@@ -26,10 +26,12 @@
     setup() {
       // support Multi-language
       const { antConfigLocale, setLocale } = useLocale();
+
       setLocale();
 
       // Initialize vuex internal system configuration
       initAppConfigStore();
+
       initApollo();
       //加载外部JS
       initJS();

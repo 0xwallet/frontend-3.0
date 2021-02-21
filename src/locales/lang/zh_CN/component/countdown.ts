@@ -1,5 +1,4 @@
 export default {
-  wait: '等待',
-  seconds: '秒',
-  send: '发送',
+  normalText: '获取验证码',
+  sendText: '{0}秒后重新获取',
 };
