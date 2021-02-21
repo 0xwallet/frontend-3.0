@@ -1,5 +1,11 @@
 <template>
-  <BasicModal v-bind="$attrs" @register="register" :title="t('shareButton')" @ok="shareFile">
+  <BasicModal
+    v-bind="$attrs"
+    @register="register"
+    :title="t('shareButton')"
+    @ok="shareFile"
+    :height="250"
+  >
     <Card>
       <template #title>
         <Space
@@ -8,11 +14,7 @@
         </Space>
       </template>
       <template v-if="shareUrl === ''">
-        <RadioGroup v-model:value="radio">
-          <Radio :style="radioStyle" :value="0"> {{ t('public') }}</Radio>
-          <Radio :style="radioStyle" :value="1"> {{ t('private') }} </Radio>
-        </RadioGroup>
-        <BasicForm @register="registerForm" :model="model" v-if="radio === 1" />
+        <BasicForm @register="registerForm" :model="model" />
       </template>
       <template v-if="shareUrl !== ''">
         <Space>
@@ -37,7 +39,7 @@
   import { computed, defineComponent, ref, unref } from 'vue';
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { BasicForm, FormSchema, useForm } from '/@/components/Form';
-  import { Card, Space, Radio } from 'ant-design-vue';
+  import { Card, Space } from 'ant-design-vue';
   import { NetFile } from '/@/components/NetFile/netFile';
   import { useI18n } from '/@/hooks/web/useI18n';
   const { t } = useI18n('general.metanet');
@@ -54,30 +56,52 @@
   }
   const schemas: FormSchema[] = [
     {
-      field: 'code',
-      component: 'Input',
+      field: 'shareType',
+      label: t('shareType'),
+      component: 'RadioGroup',
       labelWidth: 100,
-      label: '分享码',
-      required: true,
-      colProps: {
-        span: 8,
+      defaultValue: 'public',
+      componentProps: {
+        options: [
+          {
+            value: 'public',
+            label: t('public'),
+          },
+          {
+            value: 'private',
+            label: t('private'),
+          },
+        ],
       },
-      defaultValue: randomString(4),
     },
+
     {
       field: 'day',
       component: 'InputNumber',
       labelWidth: 100,
       label: '有效期',
       required: true,
-      colProps: {
-        span: 8,
-      },
+      colProps: { span: 12 },
       defaultValue: 7,
+    },
+    {
+      field: 'code',
+      component: 'Input',
+      labelWidth: 100,
+      label: '分享码',
+      required: true,
+      componentProps: {
+        style: { width: '200px' },
+      },
+      colProps: { span: 12 },
+      defaultValue: randomString(4),
+      ifShow: ({ values }) => {
+        return values.shareType === 'private';
+      },
     },
   ];
   export default defineComponent({
-    components: { BasicModal, BasicForm, Card, Space, Radio, RadioGroup: Radio.Group },
+    components: { BasicModal, BasicForm, Card, Space },
     setup() {
       const modelRef = ref({});
       const file = ref(NetFile);

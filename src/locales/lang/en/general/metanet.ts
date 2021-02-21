@@ -99,4 +99,5 @@ export default {
   favoritesButton: 'Favorites',
   favoritesTitle: 'My Favorites',
   shared: 'Shared',
+  shareType: 'Share Type',
 };

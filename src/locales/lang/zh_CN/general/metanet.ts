@@ -99,4 +99,5 @@ export default {
   favoritesButton: '收藏',
   favoritesTitle: '我的收藏',
   shared: '已分享',
+  shareType: '分享类型',
 };
