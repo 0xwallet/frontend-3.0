@@ -59,7 +59,7 @@
         fetchPolicy: 'network-only',
       }));
       const { mutate: PublishFile } = useMutation(NetGql.Publish.Create);
-      const { mutate: UpdatePublishFile } = useMutation(driveUpdatePublish);
+      const { mutate: UpdatePublishFile } = useMutation(NetGql.Publish.Update);
 
       onResult((res) => {
         const list = res.data.driveListPublishs;

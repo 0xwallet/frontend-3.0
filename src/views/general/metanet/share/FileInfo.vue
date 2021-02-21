@@ -22,10 +22,16 @@
         /></DescriptionsItem>
         <DescriptionsItem :label="t('type')">{{ info.type }}</DescriptionsItem>
         <DescriptionsItem :label="t('size')"
-          >{{ byteTransfer(info.size) }}({{ info.size }} bytes)</DescriptionsItem
+          >{{ byteTransfer(info.size).value + ' ' + byteTransfer(info.size).unit }} ({{
+            info.size
+          }}
+          bytes)</DescriptionsItem
         >
         <DescriptionsItem :label="t('storage')"
-          >{{ byteTransfer(info.size) }}({{ info.size }} bytes)</DescriptionsItem
+          >{{ byteTransfer(info.size).value + ' ' + byteTransfer(info.size).unit }} ({{
+            info.size
+          }}
+          bytes)</DescriptionsItem
         >
         <DescriptionsItem :label="t('location')">{{ getLocation(info.fullName) }}</DescriptionsItem>
         <DescriptionsItem :label="t('modified')">{{
@@ -34,6 +40,9 @@
         <DescriptionsItem :label="t('opened')"></DescriptionsItem>
         <DescriptionsItem :label="t('created')">{{
           formatToDate(info.createdAt)
+        }}</DescriptionsItem>
+        <DescriptionsItem :label="t('shared')" v-if="info.isBeShared">{{
+          t('shared')
         }}</DescriptionsItem>
       </Descriptions>
     </template>

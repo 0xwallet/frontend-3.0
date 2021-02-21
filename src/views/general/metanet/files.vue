@@ -1,15 +1,5 @@
 <template>
   <div class="p-4 files">
-    <!--    <div class="fileHead"-->
-    <!--      ><BreadCrumb :path="path" @jump="goPath" />-->
-    <!--      &lt;!&ndash;      <InputSearch&ndash;&gt;-->
-    <!--      &lt;!&ndash;        v-model:value="searchValue"&ndash;&gt;-->
-    <!--      &lt;!&ndash;        placeholder="input search text"&ndash;&gt;-->
-    <!--      &lt;!&ndash;        enter-button&ndash;&gt;-->
-    <!--      &lt;!&ndash;        class="search"&ndash;&gt;-->
-    <!--      &lt;!&ndash;    />&ndash;&gt;-->
-    <!--    </div>-->
-
     <BasicTable @register="registerTable">
       <template #tableTitle>
         <Space>
@@ -18,60 +8,8 @@
             t('moveButton')
           }}</a-button>
           <UploadButton ref="uploadRef" v-if="!choose" @refetch="refetch" />
-          <a-button type="primary" v-if="choose">{{ t('copyButton') }}</a-button>
+          <a-button type="primary" v-if="choose" @click="openCopy">{{ t('copyButton') }}</a-button>
           <BreadCrumb :path="path" @jump="goPath" />
-          <!--          列表顶部下拉-->
-          <!--          <Space v-if="choose">-->
-          <!--            <Divider type="vertical" />-->
-          <!--            <a-button type="primary"> {{ t('previewButton') }} </a-button>-->
-          <!--            <a-button type="primary"> {{ t('shareButton') }} </a-button>-->
-          <!--            <a-button type="primary"> {{ t('publish') }} </a-button>-->
-          <!--            <Dropdown :trigger="['click']">-->
-          <!--              <a-button type="primary"><EllipsisOutlined /></a-button>-->
-          <!--              <template #overlay>-->
-          <!--                <Menu>-->
-          <!--                  <MenuItem>-->
-          <!--                    <a-button type="link">{{ t('previewButton') }}</a-button>-->
-          <!--                  </MenuItem>-->
-
-          <!--                  <MenuItem>-->
-          <!--                    <a-button type="link">{{ t('shareButton') }}</a-button>-->
-          <!--                  </MenuItem>-->
-          <!--                  <MenuItem>-->
-          <!--                    <a-button type="link">{{ t('publish') }}</a-button>-->
-          <!--                  </MenuItem>-->
-
-          <!--                  <MenuItem>-->
-          <!--                    <a-button type="link">{{ t('send') }}</a-button></MenuItem-->
-          <!--                  >-->
-          <!--                  <MenuItem>-->
-          <!--                    <a-button type="link" @click="openCreateFolderModal">{{-->
-          <!--                      t('downloadButton')-->
-          <!--                    }}</a-button>-->
-          <!--                  </MenuItem>-->
-          <!--                  <MenuItem>-->
-          <!--                    <a-button type="link" @click="openMoveModal">{{-->
-          <!--                      t('moveButton')-->
-          <!--                    }}</a-button></MenuItem-->
-          <!--                  >-->
-          <!--                  <MenuItem>-->
-          <!--                    <a-button type="link">{{ t('copyButton') }}</a-button></MenuItem-->
-          <!--                  >-->
-          <!--                  <MenuItem>-->
-          <!--                    <a-button type="link">{{ t('rename') }}</a-button></MenuItem-->
-          <!--                  >-->
-          <!--                  <MenuItem>-->
-          <!--                    <a-button type="link" @click="delFiles">{{-->
-          <!--                      t('delButton')-->
-          <!--                    }}</a-button></MenuItem-->
-          <!--                  >-->
-          <!--                  <MenuItem>-->
-          <!--                    <a-button type="link">{{ t('desc') }}</a-button></MenuItem-->
-          <!--                  >-->
-          <!--                </Menu>-->
-          <!--              </template>-->
-          <!--            </Dropdown>-->
-          <!--          </Space>-->
         </Space>
       </template>
       <template #name="{ record }">
@@ -171,7 +109,6 @@
   import { useMessage } from '/@/hooks/web/useMessage';
   import BreadCrumb from './component/BreadCrumb.vue';
   import ShareModal from './share/component/ShareModal.vue';
-  import MoveModal from './component/MoveModal.vue';
   import MarkdownModal from './component/editor/Markdown.vue';
   import PublishModal from './component/PublishModal.vue';
   import CreateButton from './component/Files/CreateButton.vue';
@@ -186,7 +123,6 @@
   import { useModal } from '/@/components/Modal';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { Dropdown, Menu, Divider, Space, Row, Col, Modal, Drawer, Input } from 'ant-design-vue';
-  import FileInfo from './component/Files/FileInfo.vue';
   import {
     Hash,
     Icon,
@@ -194,7 +130,9 @@
     NetFile,
     RenameModal,
     CopyModal,
+    MoveModal,
     NetGql,
+    FileInfo,
   } from '/@/components/NetFile';
   import { useMutation, useQuery } from '@vue/apollo-composable';
 
@@ -243,7 +181,7 @@
       // 储存本级目录路所有文件
       let files = ref([]);
       // 当前选择的文件
-      const file = (ref({}) as unknown) as NetFile;
+      const file = ref({});
       //当前路径
       const path = ref([]);
       // info相关
@@ -340,9 +278,9 @@
           onClick: () => {
             if (!infoButton.value) {
               file.value = {};
-
               return;
             }
+            if (record.name === '...') return;
             file.value = record;
           },
         }),
@@ -373,7 +311,7 @@
       // 打开新建文件夹modal
       // 打开移动窗口
       function openCopy(f: NetFile) {
-        openCopyModal(true, { id: f.id }, true);
+        openCopyModal(true, { file: [f.id, ...getSelectRowKeys()] }, true);
         nextTick(() => {
           setCopyModal({
             canFullscreen: false,

@@ -27,8 +27,8 @@
       const path = ref([]);
       const treeData = ref([{ title: '根目录', key: 'root', value: 'root' }] as TreeItem[]);
       const [register, { closeModal }] = useModalInner((data) => {
-        console.log(data);
-        folder = data.folder;
+        folder = data.folder.filter((v) => v && v.trim());
+        console.log(folder);
         total.value = data.folder.length;
         path.value = [data.path[data.path.length - 1]];
       });
@@ -48,7 +48,7 @@
           if (index < 2) {
             return;
           }
-          if (v && v.isDir && v.id !== 'root' && v.id != tree.value) {
+          if (v && v.isDir && v.id !== 'root' && v.id != tree.value && !folder.includes(v.id)) {
             temp.push({ title: v.fullName[v.fullName.length - 1], key: v.id, value: v.id });
           }
         });

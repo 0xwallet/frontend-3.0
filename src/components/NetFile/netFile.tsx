@@ -290,40 +290,4 @@ export class NetFile {
 
     return str;
   }
-
-  hashToStr() {
-    if (this.hash === '' || this.hash === undefined) {
-      return '';
-    }
-    const hash = this.hash;
-    let list: any[] = [];
-    for (let i = 1; i < 11; i++) {
-      list.push(hash.slice(2 + 6 * (i - 1), 2 + 6 * i));
-    }
-
-    return (
-      <Tooltip title={t('copy')}>
-        {{
-          default: () => {
-            return (
-              <span
-                onClick={() => {
-                  clipboardRef.value = hash;
-                  if (unref(copiedRef)) {
-                    createMessage.warning(t('copySuccess'));
-                  }
-                }}
-              >
-                {hash.slice(0, 2)}
-                {list.map((value) => (
-                  <span style={'background-color:#' + value}>&nbsp;&nbsp;&nbsp;</span>
-                ))}
-                {hash.slice(hash.length - 2, hash.length)}
-              </span>
-            );
-          },
-        }}
-      </Tooltip>
-    );
-  }
 }

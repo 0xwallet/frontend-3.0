@@ -17,8 +17,9 @@ export function getBasicColumns(): BasicColumn[] {
       width: 200,
       dataIndex: 'updatedAt',
       customRender: ({ text }) => {
+        return text ? formatToDate(text) : '';
+
         // return moment(text).format('MMM DD YYYY, hh:mm:ss A');
-        return formatToDate(text);
       },
     },
     // {

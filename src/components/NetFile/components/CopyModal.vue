@@ -1,9 +1,9 @@
 <template>
   <BasicModal v-bind="$attrs" @register="register" :title="t('copyButton')" @ok="copyFile">
-    <!--    <Row-->
-    <!--      ><Col>{{ t('select') }} {{ total }} {{ t('file') }},{{ t('processed') }} {{ now }} </Col-->
-    <!--      ><Col><Progress :percent="total === 0 ? 0 : (now / total) * 100" /></Col-->
-    <!--    ></Row>-->
+    <Row
+      ><Col>{{ t('select') }} {{ total }} {{ t('file') }},{{ t('processed') }} {{ now }} </Col
+      ><Col><Progress :percent="total === 0 ? 0 : (now / total) * 100" /></Col
+    ></Row>
     <Tree :treeData="treeData" :loadData="onLoadData" v-model:selectedKeys="path" />
   </BasicModal>
 </template>
@@ -21,11 +21,14 @@
     components: { BasicModal, Tree, Progress, Row, Col },
     setup() {
       const { createMessage, createErrorModal } = useMessage();
-      let file = ref('');
+      let file: string[] = [];
       const path = ref([]);
+      const total = ref(0);
+      const now = ref(0);
       const treeData = ref([{ title: '根目录', key: 'root', value: 'root' }] as TreeItem[]);
       const [register, { closeModal }] = useModalInner((data) => {
-        file.value = data.id;
+        file = data.file.filter((v) => v && v.trim());
+        total.value = file.length;
       });
       const variables = ref({});
       const { onResult } = useQuery(NetGql.Basic.FileList, variables);
@@ -58,13 +61,17 @@
       }
       async function copyFile() {
         try {
-          if (path.value.length == 0) {
+          if (file.length == 0) {
             return;
           }
-          await CopyFile({
-            fromId: file.value,
-            toId: path.value[0],
-          });
+          for (const f of file) {
+            await CopyFile({
+              fromId: f,
+              toId: path.value[0],
+            });
+            now.value++;
+          }
+          return;
 
           //
         } catch (err) {
@@ -75,7 +82,7 @@
           closeModal();
         }
       }
-      return { register, treeData, onLoadData, copyFile, path, t };
+      return { register, treeData, onLoadData, copyFile, path, t, total, now };
     },
   });
 </script>

@@ -121,7 +121,7 @@
     "vite-plugin-pwa": "^0.5.1",
     "vite-plugin-style-import": "^0.7.2",
     "vite-plugin-theme": "^0.4.3",
-    "vite-plugin-windicss": "0.3.12",
+    "vite-plugin-windicss": "0.4.1",
     "vue-eslint-parser": "^7.5.0",
     "yargs": "^16.2.0"
   },
