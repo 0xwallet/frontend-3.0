@@ -208,11 +208,11 @@ export class NetFile {
   }
 
   // 文件分享
-  share(code: string = ''): Promise<boolean> {
+  share(params: { code: string; day: number } = { code: '', day: 7 }): Promise<boolean> {
     return useApollo({
       mode: 'mutate',
       gql: NetGql.Share.Create,
-      variables: { code, userFileId: this.id },
+      variables: { userFileId: this.id, ...params },
     })
       .then((res) => {
         this.uri = res.data?.driveCreateShare.uri;

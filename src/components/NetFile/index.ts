@@ -2,6 +2,7 @@ import Hash from './components/Hash.vue';
 import Icon from './components/Icon.vue';
 import PdfDrawer from './components/PdfDrawer.vue';
 import MarkdownDrawer from './components/MarkdownDrawer.vue';
+import MarkdownModal from './components/MarkdownModal.vue';
 import RenameModal from './components/RenameModal.vue';
 import CopyModal from './components/CopyModal.vue';
 import MoveModal from './components/MoveModal.vue';
@@ -16,6 +17,7 @@ export {
   PdfDrawer,
   NetFile,
   MarkdownDrawer,
+  MarkdownModal,
   RenameModal,
   CopyModal,
   NetGql,

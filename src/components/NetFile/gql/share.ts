@@ -49,8 +49,8 @@ const drivePreviewShare = gql`
 
 // 分享文件
 const driveCreateShare = gql`
-  mutation($code: String, $userFileId: String!) {
-    driveCreateShare(userFileId: $userFileId, code: $code) {
+  mutation($code: String, $userFileId: String!, $day: Int) {
+    driveCreateShare(userFileId: $userFileId, code: $code, expiredAfterDays: $day) {
       uri
       token
       code

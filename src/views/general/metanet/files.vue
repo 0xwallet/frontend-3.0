@@ -109,7 +109,6 @@
   import { useMessage } from '/@/hooks/web/useMessage';
   import BreadCrumb from './component/BreadCrumb.vue';
   import ShareModal from './share/component/ShareModal.vue';
-  import MarkdownModal from './component/editor/Markdown.vue';
   import PublishModal from './component/PublishModal.vue';
   import CreateButton from './component/Files/CreateButton.vue';
   import UploadButton from './component/Files/UploadButton.vue';
@@ -133,6 +132,7 @@
     MoveModal,
     NetGql,
     FileInfo,
+    MarkdownModal,
   } from '/@/components/NetFile';
   import { useMutation, useQuery } from '@vue/apollo-composable';
   import { Button } from '/@/components/Button';

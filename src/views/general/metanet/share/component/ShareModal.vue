@@ -64,6 +64,17 @@
       },
       defaultValue: randomString(4),
     },
+    {
+      field: 'day',
+      component: 'InputNumber',
+      labelWidth: 100,
+      label: '有效期',
+      required: true,
+      colProps: {
+        span: 8,
+      },
+      defaultValue: 7,
+    },
   ];
   export default defineComponent({
     components: { BasicModal, BasicForm, Card, Space, Radio, RadioGroup: Radio.Group },
@@ -99,7 +110,7 @@
           return;
         }
         const params = await validateFields();
-        await file.value.share(params.code);
+        await file.value.share(params);
       }
       function copy(v) {
         file.value.copyShareUrl(v);
