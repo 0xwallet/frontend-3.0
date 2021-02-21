@@ -1,7 +1,4 @@
-import type {
-  GetUserInfoByUserIdModel,
-  GetUserInfoByUserIdParams,
-} from '/@/api/sys/model/userModel';
+import type { GetUserInfoByUserIdModel } from '/@/api/sys/model/userModel';
 
 import store from '/@/store/index';
 import { VuexModule, Module, getModule, Mutation, Action } from 'vuex-module-decorators';
@@ -14,8 +11,6 @@ import { CacheTypeEnum, ROLES_KEY, TOKEN_KEY, USER_INFO_KEY } from '/@/enums/cac
 import { useMessage } from '/@/hooks/web/useMessage';
 
 import router from '/@/router';
-
-import { getUserInfoById } from '/@/api/sys/user';
 
 import { setLocal, getLocal, getSession, setSession } from '/@/utils/helper/persistent';
 import { useProjectSetting } from '/@/hooks/setting';
@@ -130,15 +125,15 @@ class User extends VuexModule {
     }
   }
 
-  @Action
-  async getUserInfoAction({ userId }: GetUserInfoByUserIdParams) {
-    const userInfo = await getUserInfoById({ userId });
-    const { role } = userInfo;
-    const roleList = [role.value] as RoleEnum[];
-    this.commitUserInfoState(userInfo);
-    this.commitRoleListState(roleList);
-    return userInfo;
-  }
+  // @Action
+  // async getUserInfoAction({ userId }: GetUserInfoByUserIdParams) {
+  //   const userInfo = await getUserInfoById({ userId });
+  //   const { role } = userInfo;
+  //   const roleList = [role.value] as RoleEnum[];
+  //   this.commitUserInfoState(userInfo);
+  //   this.commitRoleListState(roleList);
+  //   return userInfo;
+  // }
 
   /**
    * @description: logout

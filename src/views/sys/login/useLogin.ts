@@ -20,11 +20,12 @@ export function useFormTitle() {
       [LoginStateEnum.RESET_PASSWORD]: t('sys.login.forgetFormTitle'),
       [LoginStateEnum.LOGIN]: t('sys.login.signInFormTitle'),
       [LoginStateEnum.REGISTER]: t('sys.login.signUpFormTitle'),
-      [LoginStateEnum.MOBILE]: t('sys.login.mobileSignInFormTitle'),
+      [LoginStateEnum.MOBILE]: 'nMoblie登录',
       [LoginStateEnum.QR_CODE]: t('sys.login.qrSignInFormTitle'),
     };
     return titleObj[unref(currentState)];
   });
+
   return { getFormTitle };
 }
 
@@ -64,7 +65,7 @@ export function useFormValid<T extends Object = any>(formRef: Ref<any>) {
 export function useFormRules(formData?: Recordable) {
   const { t } = useI18n();
 
-  const getAccountFormRule = computed(() => createRule(t('sys.login.accountPlaceholder')));
+  const getAccountFormRule = computed(() => createRule(t('sys.login.emailPlaceholder')));
   const getPasswordFormRule = computed(() => createRule(t('sys.login.passwordPlaceholder')));
   const getSmsFormRule = computed(() => createRule(t('sys.login.smsPlaceholder')));
   const getMobileFormRule = computed(() => createRule(t('sys.login.mobilePlaceholder')));
@@ -98,7 +99,7 @@ export function useFormRules(formData?: Recordable) {
     switch (unref(currentState)) {
       case LoginStateEnum.REGISTER:
         return {
-          account: accountFormRule,
+          email: accountFormRule,
           password: passwordFormRule,
           confirmPassword: [
             { validator: validateConfirmPassword(formData?.password), trigger: 'change' },
@@ -115,7 +116,7 @@ export function useFormRules(formData?: Recordable) {
         return mobileRule;
       default:
         return {
-          account: accountFormRule,
+          email: accountFormRule,
           password: passwordFormRule,
         };
     }

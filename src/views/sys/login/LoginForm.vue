@@ -1,7 +1,7 @@
 <template>
   <Form class="p-4" :model="formData" :rules="getFormRules" ref="formRef">
-    <FormItem name="account" class="enter-x">
-      <Input size="large" v-model:value="formData.account" :placeholder="t('sys.login.userName')" />
+    <FormItem name="email" class="enter-x">
+      <Input size="large" v-model:value="formData.email" :placeholder="t('sys.login.email')" />
     </FormItem>
     <FormItem name="password" class="enter-x">
       <InputPassword
@@ -48,14 +48,10 @@
     </FormItem>
     <ARow class="enter-x">
       <ACol :span="7">
-        <Button block @click="setLoginState(LoginStateEnum.MOBILE)">
-          {{ t('sys.login.mobileSignInFormTitle') }}
-        </Button>
+        <Button block @click="setLoginState(LoginStateEnum.QR_CODE)"> WebAuth登录 </Button>
       </ACol>
       <ACol :span="8" :offset="1">
-        <Button block @click="setLoginState(LoginStateEnum.QR_CODE)">
-          {{ t('sys.login.qrSignInFormTitle') }}
-        </Button>
+        <Button block @click="setLoginState(LoginStateEnum.MOBILE)"> nMoblie登录 </Button>
       </ACol>
       <ACol :span="7" :offset="1">
         <Button block @click="setLoginState(LoginStateEnum.REGISTER)">
@@ -64,15 +60,15 @@
       </ACol>
     </ARow>
 
-    <Divider>{{ t('sys.login.otherSignIn') }}</Divider>
+    <!--    <Divider>{{ t('sys.login.otherSignIn') }}</Divider>-->
 
-    <div class="flex justify-evenly enter-x" :class="`${prefixCls}-sign-in-way`">
-      <GithubFilled />
-      <WechatFilled />
-      <AlipayCircleFilled />
-      <GoogleCircleFilled />
-      <TwitterCircleFilled />
-    </div>
+    <!--    <div class="flex justify-evenly enter-x" :class="`${prefixCls}-sign-in-way`">-->
+    <!--      <GithubFilled />-->
+    <!--      <WechatFilled />-->
+    <!--      <AlipayCircleFilled />-->
+    <!--      <GoogleCircleFilled />-->
+    <!--      <TwitterCircleFilled />-->
+    <!--    </div>-->
   </Form>
 </template>
 <script lang="ts">
@@ -89,11 +85,12 @@
 
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
-
   import { userStore } from '/@/store/modules/user';
   import { LoginStateEnum, useLoginState, useFormRules, useFormValid } from './useLogin';
   import { useDesign } from '/@/hooks/web/useDesign';
-
+  import { useMutation } from '@vue/apollo-composable';
+  import { useMClient, useWallet, saveWallet } from '/@/hooks/nkn/getNKN';
+  import { signIn } from '/@/hooks/apollo/gqlUser';
   export default defineComponent({
     name: 'LoginForm',
     components: {
@@ -125,32 +122,52 @@
       const rememberMe = ref(false);
 
       const formData = reactive({
-        account: 'vben',
-        password: '123456',
+        email: 'jinmao88@qq.com',
+        password: '111111',
       });
 
       const { validForm } = useFormValid(formRef);
+      const { mutate: SignIn, onDone } = useMutation(signIn);
 
-      async function handleLogin() {
+      onDone(async (res) => {
+        console.log(res);
         const data = await validForm();
-        if (!data) return;
+        useWallet();
+        // 保存wallet信息
+        saveWallet({
+          email: data.email,
+          password: data.password,
+          walletJson: res.data.signin.User.wallets.filter((v) => v.tags[0] === 'MESSAGE')[0].info
+            .encryptedWallet,
+        });
+
+        localStorage.setItem('token', res.data?.signin?.token || '');
+        localStorage.setItem('uid', res.data?.signin?.User?.id || 0);
+
+        // websocket调试;
+
+        notification.success({
+          message: t('loginSuccessTitle'),
+          description: `${t('loginSuccessDesc')}: ${res.data?.signin?.User?.email}`,
+          duration: 3,
+        });
+        await userStore.login();
+      });
+      async function handleLogin() {
+        loading.value = true;
         try {
-          loading.value = true;
-          const userInfo = await userStore.login(
-            toRaw({
-              password: data.password,
-              username: data.account,
-            })
-          );
-          if (userInfo) {
-            notification.success({
-              message: t('sys.login.loginSuccessTitle'),
-              description: `${t('sys.login.loginSuccessDesc')}: ${userInfo.realName}`,
-              duration: 3,
-            });
-          }
+          const data = await validForm();
+          data.code = '';
+          // 登录
+          await SignIn(data);
+        } catch (err) {
+          console.log(err);
         } finally {
           loading.value = false;
+          useWallet().then(() => {
+            console.log('wallet ready');
+            useMClient();
+          });
         }
       }
 

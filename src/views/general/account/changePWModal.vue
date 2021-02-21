@@ -12,14 +12,14 @@
     <!--    >-->
     <!--    <Divider />-->
     <BasicForm @register="registerForm" :model="model">
-      <template #code="{ model, field }">
-        <CountDown
-          :value="model[field]"
-          :placeholder="t('verificationPlaceholder')"
-          @click="getVerifyCode"
-          :title="t('send')"
-        />
-      </template>
+      <!--      <template #code="{ model, field }">-->
+      <!--        <CountDown-->
+      <!--          :value="model[field]"-->
+      <!--          :placeholder="t('verificationPlaceholder')"-->
+      <!--          @click="getVerifyCode"-->
+      <!--          :title="t('send')"-->
+      <!--        />-->
+      <!--      </template>-->
     </BasicForm>
   </BasicModal>
 </template>
@@ -33,7 +33,7 @@
   import { useWallet, useNKN, saveWallet } from '/@/hooks/nkn/getNKN';
   import CryptoES from 'crypto-es';
   import { Divider, Row, Col } from 'ant-design-vue';
-  import { CountDown } from '/@/components/CountDown';
+  // import { CountDown } from '/@/components/CountDown';
   import { useMutation, useQuery } from '@vue/apollo-composable';
 
   const { t } = useI18n('general.account');
@@ -67,7 +67,7 @@
     },
   ];
   export default defineComponent({
-    components: { BasicModal, BasicForm, Divider, Row, Col, CountDown },
+    components: { BasicModal, BasicForm, Divider, Row, Col },
     setup() {
       const modelRef = ref({});
       const [registerForm, { validateFields, appendSchemaByField, updateSchema }] = useForm({

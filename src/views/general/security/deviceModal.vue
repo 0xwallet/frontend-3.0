@@ -1,20 +1,20 @@
 <template>
   <BasicModal v-bind="$attrs" @register="register" @ok="bindDevice">
     <BasicForm @register="registerForm" layout="vertical">
-      <template #publicKey="{ model, field }">
-        <CountDown
-          :value="model[field]"
-          :placeholder="t('verificationPlaceholder')"
-          @click="getVerifyCode"
-          :title="t('send')"
-        />
-      </template>
+      <!--      <template #publicKey="{ model, field }">-->
+      <!--        <CountDown-->
+      <!--          :value="model[field]"-->
+      <!--          :placeholder="t('verificationPlaceholder')"-->
+      <!--          @click="getVerifyCode"-->
+      <!--          :title="t('send')"-->
+      <!--        />-->
+      <!--      </template>-->
     </BasicForm>
   </BasicModal>
 </template>
 <script lang="ts">
   import { defineComponent, ref } from 'vue';
-  import { CountDown } from '/@/components/CountDown';
+  // import { CountDown } from '/@/components/CountDown';
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { BasicForm, FormSchema, useForm } from '/@/components/Form';
@@ -54,7 +54,7 @@
     },
   ];
   export default defineComponent({
-    components: { BasicModal, BasicForm, Divider, CountDown },
+    components: { BasicModal, BasicForm, Divider },
     setup() {
       const publicKey = ref('');
       const { createMessage, createErrorModal } = useMessage();
