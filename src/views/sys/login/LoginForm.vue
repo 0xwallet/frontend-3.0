@@ -1,7 +1,8 @@
 <template>
-  <Form class="p-4" :model="formData" :rules="getFormRules" ref="formRef">
+  <LoginFormTitle v-show="getShow" class="enter-x" />
+  <Form class="p-4 enter-x" :model="formData" :rules="getFormRules" ref="formRef" v-show="getShow">
     <FormItem name="email" class="enter-x">
-      <Input size="large" v-model:value="formData.email" :placeholder="t('sys.login.email')" />
+      <Input size="large" v-model:value="formData.email" :placeholder="t('sys.login.userName')" />
     </FormItem>
     <FormItem name="password" class="enter-x">
       <InputPassword
@@ -32,14 +33,7 @@
     </ARow>
 
     <FormItem class="enter-x">
-      <Button
-        type="primary"
-        size="large"
-        block
-        @click="handleLogin"
-        :loading="loading"
-        class="enter-x"
-      >
+      <Button type="primary" size="large" block @click="handleLogin" :loading="loading">
         {{ t('sys.login.loginButton') }}
       </Button>
       <!-- <Button size="large" class="mt-4 enter-x" block @click="handleRegister">
@@ -60,7 +54,7 @@
       </ACol>
     </ARow>
 
-    <!--    <Divider>{{ t('sys.login.otherSignIn') }}</Divider>-->
+    <Divider class="enter-x">{{ t('sys.login.otherSignIn') }}</Divider>
 
     <!--    <div class="flex justify-evenly enter-x" :class="`${prefixCls}-sign-in-way`">-->
     <!--      <GithubFilled />-->
@@ -72,7 +66,7 @@
   </Form>
 </template>
 <script lang="ts">
-  import { defineComponent, reactive, ref, toRaw } from 'vue';
+  import { defineComponent, reactive, ref, toRaw, unref, computed } from 'vue';
 
   import { Checkbox, Form, Input, Row, Col, Button, Divider } from 'ant-design-vue';
   import {
@@ -82,6 +76,7 @@
     GoogleCircleFilled,
     TwitterCircleFilled,
   } from '@ant-design/icons-vue';
+  import LoginFormTitle from './LoginFormTitle.vue';
 
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
@@ -94,15 +89,16 @@
   export default defineComponent({
     name: 'LoginForm',
     components: {
+      [Col.name]: Col,
+      [Row.name]: Row,
       Checkbox,
       Button,
       Form,
       FormItem: Form.Item,
       Input,
       Divider,
+      LoginFormTitle,
       InputPassword: Input.Password,
-      [Col.name]: Col,
-      [Row.name]: Row,
       GithubFilled,
       WechatFilled,
       AlipayCircleFilled,
@@ -114,7 +110,7 @@
       const { notification } = useMessage();
       const { prefixCls } = useDesign('login');
 
-      const { setLoginState } = useLoginState();
+      const { setLoginState, getLoginState } = useLoginState();
       const { getFormRules } = useFormRules();
 
       const formRef = ref<any>(null);
@@ -128,7 +124,7 @@
 
       const { validForm } = useFormValid(formRef);
       const { mutate: SignIn, onDone } = useMutation(signIn);
-
+      const getShow = computed(() => unref(getLoginState) === LoginStateEnum.LOGIN);
       onDone(async (res) => {
         console.log(res);
         const data = await validForm();
@@ -182,6 +178,7 @@
         loading,
         setLoginState,
         LoginStateEnum,
+        getShow,
       };
     },
   });

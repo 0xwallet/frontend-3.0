@@ -14,8 +14,9 @@ import { registerGlobComp } from '/@/components/registerGlobComp';
 
 import { isDevMode } from '/@/utils/env';
 
-import '/@/design/index.less';
 const app = createApp(App);
+
+// Register global components
 registerGlobComp(app);
 
 // Multilingual configuration

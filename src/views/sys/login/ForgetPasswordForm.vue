@@ -1,57 +1,59 @@
 <template>
-  <Form class="p-4" :model="formData" :rules="getFormRules" ref="formRef">
-    <FormItem name="email" class="enter-x">
-      <Input size="large" v-model:value="formData.email" :placeholder="t('sys.login.email')" />
-    </FormItem>
-    <FormItem name="sms" class="enter-x">
-      <CountdownInput
-        size="large"
-        v-model:value="formData.sms"
-        :placeholder="t('sys.login.verification')"
-        :sendCodeApi="handleSendCode"
-      />
-    </FormItem>
-    <FormItem name="password" class="enter-x">
-      <StrengthMeter
-        size="large"
-        v-model:value="formData.password"
-        :placeholder="t('sys.login.password')"
-      />
-    </FormItem>
-    <FormItem name="confirmPassword" class="enter-x">
-      <InputPassword
-        size="large"
-        visibilityToggle
-        v-model:value="formData.confirmPassword"
-        :placeholder="t('sys.login.confirmPassword')"
-      />
-    </FormItem>
+  <template v-if="getShow">
+    <LoginFormTitle class="enter-x" />
+    <Form class="p-4 enter-x" :model="formData" :rules="getFormRules" ref="formRef">
+      <FormItem name="account" class="enter-x">
+        <Input
+          size="large"
+          v-model:value="formData.email"
+          :placeholder="t('sys.login.email')"
+        />
+      </FormItem>
+      <FormItem name="sms" class="enter-x">
+        <CountdownInput
+          size="large"
+          v-model:value="formData.sms"
+          :placeholder="t('sys.login.verification')"
+          :sendCodeApi="handleSendCode"
+        />
+      </FormItem>
+      <FormItem name="password" class="enter-x">
+        <StrengthMeter
+          size="large"
+          v-model:value="formData.password"
+          :placeholder="t('sys.login.password')"
+        />
+      </FormItem>
+      <FormItem name="confirmPassword" class="enter-x">
+        <InputPassword
+          size="large"
+          visibilityToggle
+          v-model:value="formData.confirmPassword"
+          :placeholder="t('sys.login.confirmPassword')"
+        />
+      </FormItem>
 
-    <FormItem class="enter-x">
-      <Button
-        type="primary"
-        size="large"
-        block
-        @click="handleReset"
-        :loading="loading"
-        class="enter-x"
-      >
-        {{ t('common.resetText') }}
-      </Button>
-      <Button size="large" block class="mt-4 enter-x" @click="handleBackLogin">
-        {{ t('sys.login.backSignIn') }}
-      </Button>
-    </FormItem>
-  </Form>
+      <FormItem class="enter-x">
+        <Button type="primary" size="large" block @click="handleReset" :loading="loading">
+          {{ t('common.resetText') }}
+        </Button>
+        <Button size="large" block class="mt-4" @click="handleBackLogin">
+          {{ t('sys.login.backSignIn') }}
+        </Button>
+      </FormItem>
+    </Form>
+  </template>
 </template>
 <script lang="ts">
-  import { defineComponent, reactive, ref, unref } from 'vue';
+  import { defineComponent, reactive, ref, computed, unref } from 'vue';
 
+  import LoginFormTitle from './LoginFormTitle.vue';
   import { Form, Input, Button } from 'ant-design-vue';
   import { CountdownInput } from '/@/components/CountDown';
   import { StrengthMeter } from '/@/components/StrengthMeter';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import { LoginStateEnum, useLoginState, useFormRules, useFormValid } from './useLogin';
+  import { useLoginState, useFormRules, useFormValid, LoginStateEnum } from './useLogin';
+
   import { useMutation } from '@vue/apollo-composable';
   import { resetPassword, sendVerifyCode } from '/@/hooks/apollo/gqlUser';
   import { useMessage } from '/@/hooks/web/useMessage';
@@ -66,23 +68,26 @@
       Input,
       InputPassword: Input.Password,
       CountdownInput,
+      LoginFormTitle,
       StrengthMeter,
     },
     setup() {
       const { t } = useI18n();
-      const { setLoginState } = useLoginState();
+      const { handleBackLogin, getLoginState } = useLoginState();
       const { getFormRules } = useFormRules();
 
       const formRef = ref<any>(null);
       const loading = ref(false);
 
       const formData = reactive({
-        account: '',
-        mobile: '',
+        email: '',
         sms: '',
       });
 
       const { validForm } = useFormValid(formRef);
+
+      const getShow = computed(() => unref(getLoginState) === LoginStateEnum.RESET_PASSWORD);
+
       const { mutate: ResetPassword, onDone } = useMutation(resetPassword);
       onDone((res) => {
         localStorage.setItem('token', res.data?.resetPassword?.token || '');
@@ -126,6 +131,7 @@
         handleReset,
         loading,
         handleBackLogin,
+        getShow,
         handleSendCode,
       };
     },
