@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4 files">
+  <div>
     <BasicTable @register="registerTable">
       <template #tableTitle>
         <Space>
@@ -88,8 +88,8 @@
       :getContainer="`.ant-card-body`"
       @close="closeInfo"
       :mask="false"
-      :wrap-style="{ position: 'absolute' }"
       :width="400"
+      :wrapClassName="'!mt-52'"
       ><FileInfo :file="file" @refetch="infoRefetch"
     /></Drawer>
     <UploadStatus @openUploadModal="openUploadModal" />
@@ -593,17 +593,3 @@
     },
   });
 </script>
-<style lang="less" scoped>
-  .fileHead {
-    display: flex;
-    justify-content: space-between;
-
-    .search {
-      width: 300px;
-    }
-  }
-
-  .files {
-    height: 100vh;
-  }
-</style>

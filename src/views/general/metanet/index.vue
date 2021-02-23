@@ -1,25 +1,23 @@
 <template>
-  <Card
-    :tab-list="tabList"
-    :active-tab-key="tabKey"
-    @tabChange="(key) => onTabChange(key)"
-    class="tabs"
-  >
-    <template #tabBarExtraContent>
-      <InputSearch
-        v-model:value="value"
-        placeholder="input search text"
-        enter-button
-        @search="onSearch"
-        style="margin: 10px"
-      />
-    </template>
-    <template v-if="tabKey === 'files'"><Files /></template>
-    <template v-if="tabKey === 'share'"> <Share /> </template>
-    <template v-if="tabKey === 'favorites'"> <Favorites /> </template>
-    <template v-if="tabKey === 'recycle'"> <Recycle /> </template>
-    <template v-if="tabKey === 'publish'"> <Publish /> </template>
-  </Card>
+  <div class="f-full">
+    <Card :tab-list="tabList" :active-tab-key="tabKey" @tabChange="(key) => onTabChange(key)">
+      <template #tabBarExtraContent>
+        <InputSearch
+          v-model:value="value"
+          placeholder="input search text"
+          enter-button
+          @search="onSearch"
+          style="margin: 10px"
+        />
+      </template>
+      <template v-if="tabKey === 'files'"><Files /></template>
+      <template v-if="tabKey === 'share'"> <Share /> </template>
+      <template v-if="tabKey === 'favorites'"> <Favorites /> </template>
+      <template v-if="tabKey === 'recycle'"> <Recycle /> </template>
+      <template v-if="tabKey === 'publish'"> <Publish /> </template>
+      <div class="h-28"></div>
+    </Card>
+  </div>
 </template>
 
 <script lang="ts">
@@ -77,8 +75,3 @@
     },
   });
 </script>
-<style lang="less" scoped>
-  .tabs {
-    margin: 5px;
-  }
-</style>
