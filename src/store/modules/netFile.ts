@@ -7,12 +7,11 @@ import {
 } from '/@/views/general/metanet/component/Files/upload/types';
 import { useSession } from '/@/hooks/nkn/getNKN';
 import { encode } from '@msgpack/msgpack';
-import { useApollo } from '/@/hooks/apollo/apollo';
 import { useMessage } from '/@/hooks/web/useMessage';
 import { dateUtil } from '/@/utils/dateUtil';
-import { NetGql, NetFile } from '/@/components/NetFile';
+import { NetFile } from '/@/components/NetFile';
 
-const { createErrorModal, createMessage } = useMessage();
+const { createMessage } = useMessage();
 const NAME = 'netFileStore';
 hotModuleUnregisterModule(NAME);
 interface uploadSpeed {

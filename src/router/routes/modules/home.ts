@@ -7,16 +7,16 @@ const dashboard: AppRouteModule = {
   path: '/home',
   name: 'Home',
   component: LAYOUT,
-  redirect: '/home/welcome',
+  redirect: '/home/dashboard',
   meta: {
     icon: 'bx:bx-home',
     title: t('routes.dashboard.welcome'),
   },
   children: [
     {
-      path: 'welcome',
-      name: 'Welcome',
-      component: () => import('/@/views/dashboard/welcome/index.vue'),
+      path: 'dashboard',
+      name: 'Dashboard',
+      component: () => import('/@/views/home/index.vue'),
       meta: {
         title: t('routes.dashboard.welcome'),
         affix: true,

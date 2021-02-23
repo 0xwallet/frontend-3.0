@@ -4,7 +4,7 @@ export enum PageEnum {
   // basic register path
   BASE_REG = '/register',
   // basic home path
-  BASE_HOME = '/general/metanet',
+  BASE_HOME = '/home/dashboard',
   // error page path
   ERROR_PAGE = '/exception',
 
