@@ -12,29 +12,31 @@
     <!--    >-->
     <!--    <Divider />-->
     <BasicForm @register="registerForm" :model="model">
-      <!--      <template #code="{ model, field }">-->
-      <!--        <CountDown-->
-      <!--          :value="model[field]"-->
-      <!--          :placeholder="t('verificationPlaceholder')"-->
-      <!--          @click="getVerifyCode"-->
-      <!--          :title="t('send')"-->
-      <!--        />-->
-      <!--      </template>-->
+      <template #code="{ model, field }">
+        <CountdownInput
+          size="large"
+          v-model:value="model[field]"
+          :placeholder="t('verifyCode')"
+          :sendCodeApi="handleSendCode"
+        />
+      </template>
     </BasicForm>
   </BasicModal>
 </template>
 <script lang="ts">
-  import { defineComponent, ref } from 'vue';
+  import { defineComponent, ref, unref } from 'vue';
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { BasicForm, FormSchema, useForm } from '/@/components/Form';
-  import { me, resetPassword, sendVerifyCode } from '/@/hooks/apollo/gqlUser';
+  import { me, resetPassword } from '/@/hooks/apollo/gqlUser';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { useWallet, useNKN, saveWallet } from '/@/hooks/nkn/getNKN';
   import CryptoES from 'crypto-es';
   import { Divider, Row, Col } from 'ant-design-vue';
-  // import { CountDown } from '/@/components/CountDown';
+
   import { useMutation, useQuery } from '@vue/apollo-composable';
+  import { SendVerifyCode } from '/@/components/NetFile/user';
+  import { CountdownInput } from '/@/components/CountDown';
 
   const { t } = useI18n('general.account');
   const schemas: FormSchema[] = [
@@ -67,7 +69,7 @@
     },
   ];
   export default defineComponent({
-    components: { BasicModal, BasicForm, Divider, Row, Col },
+    components: { BasicModal, BasicForm, Divider, Row, Col, CountdownInput },
     setup() {
       const modelRef = ref({});
       const [registerForm, { validateFields, appendSchemaByField, updateSchema }] = useForm({
@@ -115,13 +117,18 @@
           closeModal();
         }
       }
-      const { mutate: SendCode } = useMutation(sendVerifyCode);
-      async function getVerifyCode() {
-        await SendCode({
+
+      async function handleSendCode() {
+        const form = unref(formRef);
+        if (!form) return;
+        const data = await form.validateField(['email']);
+        data.type = 'RESET_PASSWORD';
+        return await SendVerifyCode({
           email: user.email,
           type: 'RESET_PASSWORD',
         });
       }
+
       function forgetPassword() {
         updateSchema({
           field: 'oldPassword',
@@ -146,8 +153,8 @@
         model: modelRef,
         changePassword,
         t,
-        getVerifyCode,
         forgetPassword,
+        handleSendCode,
       };
     },
   });

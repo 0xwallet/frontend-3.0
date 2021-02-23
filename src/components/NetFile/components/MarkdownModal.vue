@@ -58,20 +58,6 @@
           loading: true,
           okText: t('saveButton'),
           title: f.fileName(),
-          //   return new Promise<any>((resolve) => {
-          //     console.log(123);
-          //     resolve(true);
-          //     // Modal.confirm({
-          //     //   title: t('error'),
-          //     //   icon: createVNode(ExclamationCircleOutlined),
-          //     //   content: '文件内容有变化，不保存吗?',
-          //     //   centered: true,
-          //     //   okText: t('yes'),
-          //     //   cancelText: t('cancelAll'),
-          //     //   onOk() {},
-          //     // });
-          //   });
-          // },
         });
 
         const value = await f.raw();

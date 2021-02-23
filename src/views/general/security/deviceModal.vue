@@ -1,27 +1,28 @@
 <template>
   <BasicModal v-bind="$attrs" @register="register" @ok="bindDevice">
     <BasicForm @register="registerForm" layout="vertical">
-      <!--      <template #publicKey="{ model, field }">-->
-      <!--        <CountDown-->
-      <!--          :value="model[field]"-->
-      <!--          :placeholder="t('verificationPlaceholder')"-->
-      <!--          @click="getVerifyCode"-->
-      <!--          :title="t('send')"-->
-      <!--        />-->
-      <!--      </template>-->
+      <template #code="{ model, field }">
+        <CountdownInput
+          size="large"
+          v-model:value="model[field]"
+          :placeholder="t('verifyCode')"
+          :sendCodeApi="handleSendCode"
+        />
+      </template>
     </BasicForm>
   </BasicModal>
 </template>
 <script lang="ts">
   import { defineComponent, ref } from 'vue';
-  // import { CountDown } from '/@/components/CountDown';
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { BasicForm, FormSchema, useForm } from '/@/components/Form';
   import { Divider } from 'ant-design-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import { sendVerifyCode, bindNknSecurityDevice } from '/@/hooks/apollo/gqlUser';
+  import { bindNknSecurityDevice } from '/@/hooks/apollo/gqlUser';
   import { useMutation } from '@vue/apollo-composable';
+  import { SendVerifyCode } from '/@/components/NetFile/user';
+  import { CountdownInput } from '/@/components/CountDown';
   const { t } = useI18n('general.security');
   const schemas: FormSchema[] = [
     {
@@ -54,7 +55,7 @@
     },
   ];
   export default defineComponent({
-    components: { BasicModal, BasicForm, Divider },
+    components: { BasicModal, BasicForm, Divider, CountdownInput },
     setup() {
       const publicKey = ref('');
       const { createMessage, createErrorModal } = useMessage();
@@ -65,14 +66,16 @@
       });
       const [register, { closeModal }] = useModalInner((data) => {});
       // 发送NKN验证码
-      const { mutate: SendCode } = useMutation(sendVerifyCode);
-      async function getVerifyCode() {
+
+      async function handleSendCode() {
         const params = await validateFields(['publicKey']);
-        await SendCode({
+        data.type = 'RESET_PASSWORD';
+        return await SendVerifyCode({
           nkn: params.publicKey,
           type: 'ACTIVE_NKN',
         });
       }
+
       const { mutate: BindDevice } = useMutation(bindNknSecurityDevice);
       // 绑定设备
       async function bindDevice() {
@@ -92,7 +95,7 @@
       return {
         register,
         registerForm,
-        getVerifyCode,
+        handleSendCode,
         publicKey,
         t,
         bindDevice,

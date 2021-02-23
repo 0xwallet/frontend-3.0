@@ -2,12 +2,8 @@
   <template v-if="getShow">
     <LoginFormTitle class="enter-x" />
     <Form class="p-4 enter-x" :model="formData" :rules="getFormRules" ref="formRef">
-      <FormItem name="account" class="enter-x">
-        <Input
-          size="large"
-          v-model:value="formData.email"
-          :placeholder="t('sys.login.email')"
-        />
+      <FormItem name="email" class="enter-x">
+        <Input size="large" v-model:value="formData.email" :placeholder="t('sys.login.email')" />
       </FormItem>
       <FormItem name="sms" class="enter-x">
         <CountdownInput
@@ -55,9 +51,10 @@
   import { useLoginState, useFormRules, useFormValid, LoginStateEnum } from './useLogin';
 
   import { useMutation } from '@vue/apollo-composable';
-  import { resetPassword, sendVerifyCode } from '/@/hooks/apollo/gqlUser';
+  import { resetPassword } from '/@/hooks/apollo/gqlUser';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { newWallet, saveWallet } from '/@/hooks/nkn/getNKN';
+  import { SendVerifyCode } from '/@/components/NetFile/user';
   const { createErrorModal, createMessage, notification } = useMessage();
   export default defineComponent({
     name: 'ForgetPasswordForm',
@@ -108,19 +105,12 @@
         handleBackLogin();
       }
 
-      function handleBackLogin() {
-        setLoginState(LoginStateEnum.LOGIN);
-      }
-      const { mutate: sendCode } = useMutation(sendVerifyCode);
       async function handleSendCode() {
         const form = unref(formRef);
         if (!form) return;
         const data = await form.validateField(['email']);
-
-        if (!data) return;
-        await sendCode({ email: data.email, type: 'RESET_PASSWORD' });
-        createMessage.success(t('sys.login.verificationSend'));
-        return true;
+        data.type = 'RESET_PASSWORD';
+        return await SendVerifyCode(data);
       }
 
       return {

@@ -16,6 +16,8 @@ import { setLocal, getLocal, getSession, setSession } from '/@/utils/helper/pers
 import { useProjectSetting } from '/@/hooks/setting';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { disk } from '/@/hooks/nkn/getNKN';
+import { useApollo } from '/@/hooks/apollo/apollo';
+import { NetFile, NetGql } from '/@/components/NetFile';
 // import { ErrorMessageMode } from '/@/utils/http/axios/types';
 
 export type UserInfo = Omit<GetUserInfoByUserIdModel, 'roles'>;

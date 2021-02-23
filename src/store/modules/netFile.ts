@@ -97,18 +97,6 @@ class netFileStore extends VuexModule {
   }
 
   @Action
-  fetchShareFile(params: { code?: string; uri: string }) {
-    useApollo({ mode: 'query', gql: NetGql.Share.Find, variables: params }).then((res) => {
-      const data = res.data?.driveFindShare;
-      if (!data) {
-        createErrorModal({ title: '错误', content: '分享文件信息错误' });
-        return;
-      }
-      this.appendShareFile(new NetFile(data));
-    });
-  }
-
-  @Action
   async uploadApiByItem(item: FileItem, path: string[] = []) {
     try {
       this.setItemValue({ uuid: item.uuid, key: 'status', value: UploadResultStatus.UPLOADING });

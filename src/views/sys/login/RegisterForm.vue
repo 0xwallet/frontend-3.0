@@ -3,20 +3,15 @@
     <LoginFormTitle class="enter-x" />
     <Form class="p-4 enter-x" :model="formData" :rules="getFormRules" ref="formRef">
       <FormItem name="email" class="enter-x">
-        <Input
-          size="large"
-          v-model:value="formData.email"
-          :placeholder="t('sys.login.email')"
-        />
+        <Input size="large" v-model:value="formData.email" :placeholder="t('sys.login.email')" />
       </FormItem>
-      <FormItem name="mobile" class="enter-x">
-        <Input size="large" v-model:value="formData.mobile" :placeholder="t('sys.login.mobile')" />
-      </FormItem>
+
       <FormItem name="sms" class="enter-x">
         <CountdownInput
           size="large"
           v-model:value="formData.sms"
           :placeholder="t('sys.login.smsCode')"
+          :sendCodeApi="handleSendCode"
         />
       </FormItem>
       <FormItem name="password" class="enter-x">
@@ -35,12 +30,12 @@
         />
       </FormItem>
 
-<!--      <FormItem class="enter-x" name="policy">-->
-<!--        &lt;!&ndash; No logic, you need to deal with it yourself &ndash;&gt;-->
-<!--        <Checkbox v-model:checked="formData.policy" size="small">-->
-<!--          {{ t('sys.login.policy') }}-->
-<!--        </Checkbox>-->
-<!--      </FormItem>-->
+      <!--      <FormItem class="enter-x" name="policy">-->
+      <!--        &lt;!&ndash; No logic, you need to deal with it yourself &ndash;&gt;-->
+      <!--        <Checkbox v-model:checked="formData.policy" size="small">-->
+      <!--          {{ t('sys.login.policy') }}-->
+      <!--        </Checkbox>-->
+      <!--      </FormItem>-->
 
       <Button
         type="primary"
@@ -68,11 +63,13 @@
 
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useLoginState, useFormRules, useFormValid, LoginStateEnum } from './useLogin';
-  import { sendVerifyCode, signUp } from '/@/hooks/apollo/gqlUser';
+  import { signUp } from '/@/hooks/apollo/gqlUser';
   import { useMutation } from '@vue/apollo-composable';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { newWallet, saveWallet } from '/@/hooks/nkn/getNKN';
+  import { SendVerifyCode } from '/@/components/NetFile/user';
   const { createErrorModal, createMessage, notification } = useMessage();
+
   export default defineComponent({
     name: 'RegisterPasswordForm',
     components: {
@@ -102,7 +99,6 @@
 
       const { getFormRules } = useFormRules(formData);
       const { validForm } = useFormValid(formRef);
-      const { mutate: sendCode } = useMutation(sendVerifyCode);
       const { mutate: SignUp } = useMutation(signUp);
 
       const getShow = computed(() => unref(getLoginState) === LoginStateEnum.REGISTER);
@@ -126,6 +122,12 @@
           duration: 3,
         });
         handleBackLogin();
+      }
+      async function handleSendCode() {
+        const form = unref(formRef);
+        if (!form) return;
+        const data = await form.validateField(['email']);
+        return await SendVerifyCode(data);
       }
 
       return {
