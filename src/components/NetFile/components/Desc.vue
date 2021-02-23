@@ -29,7 +29,7 @@
 </template>
 
 <script lang="ts">
-  import { computed, defineComponent, ref } from 'vue';
+  import { computed, defineComponent, ref, watch } from 'vue';
 
   import { propTypes } from '/@/utils/propTypes';
   import { useI18n } from '/@/hooks/web/useI18n';
@@ -58,8 +58,17 @@
     },
     setup(props) {
       const descFormat = computed(() => {
-        return props.desc.split(' ').filter((v) => v.trim());
+        return d.value.split(' ').filter((v) => v.trim()) || [];
       });
+      let d = ref('');
+      watch(
+        () => props.desc,
+        (v) => {
+          d.value = v;
+        },
+        { immediate: true }
+      );
+
       const edit = ref(false);
       const desc = ref('');
       function openEdit() {
@@ -72,9 +81,9 @@
       const { mutate: editDesc } = useMutation(NetGql.Basic.Desc);
       async function changeDesc() {
         console.log(desc.value);
-        await editDesc({ description: desc.value, userFileId: props.id });
+        const res = await editDesc({ description: desc.value, userFileId: props.id });
         edit.value = false;
-        // emit('refetch');
+        d.value = res.data?.driveEditDescription.info.description;
       }
       function checkTag(v) {
         return v.match(/#(.*)#/);

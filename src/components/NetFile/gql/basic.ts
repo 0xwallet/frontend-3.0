@@ -103,7 +103,9 @@ const drivePreviewToken = gql`
 const driveEditDescription = gql`
   mutation($description: String!, $userFileId: Sting!) {
     driveEditDescription(description: $description, userFileId: $userFileId) {
-      id
+      info {
+        description
+      }
     }
   }
 `;
