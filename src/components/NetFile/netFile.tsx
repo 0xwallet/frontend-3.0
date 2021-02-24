@@ -155,6 +155,21 @@ export class NetFile {
     return await getFile(await this.preview());
   }
 
+  fullType(): string {
+    switch (this.type) {
+      case 'folder':
+        return '';
+      case 'md':
+        return 'markdown';
+      default:
+        return this.type;
+    }
+  }
+
+  Location(): string[] {
+    return ['Home'].concat(this.fullName);
+  }
+
   // 保存分享
   save(): Promise<any> {
     return new Promise<any>((resolve, reject) => {

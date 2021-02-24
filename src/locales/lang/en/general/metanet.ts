@@ -99,5 +99,7 @@ export default {
   favoritesButton: 'Favorites',
   favoritesTitle: 'My Favorites',
   shared: 'Shared',
+  unShared: 'Not Shared',
   shareType: 'Share Type',
+  addDesc: 'Add a Description',
 };

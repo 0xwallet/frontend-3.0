@@ -6,26 +6,28 @@
           <Icon :type="info.type" :size="100" />
           <p
             >{{ byteTransfer(info.size).value }} {{ byteTransfer(info.size).unit }}({{
-              byteTransfer(info.size).unit
-            }}ytes)</p
+              info.size
+            }}
+            Bytes)</p
           >
           <p
             >{{ byteTransfer(info.size).value }} {{ byteTransfer(info.size).unit }}({{
-              byteTransfer(info.size).unit
-            }}ytes)</p
+              info.size
+            }}
+            Bytes)</p
           >
         </div>
         <Divider type="horizontal" />
         <Descriptions :column="1">
-          <DescriptionsItem :label="t('type')">{{ info.type }}</DescriptionsItem>
-          <DescriptionsItem :label="t('location')">{{
-            getLocation(info.fullName)
-          }}</DescriptionsItem>
+          <DescriptionsItem :label="t('type')">{{ info.fullType() }}</DescriptionsItem>
+          <DescriptionsItem :label="t('location')">
+            <span v-for="(v, i) in info.Location()" :key="i">{{ v }}/</span>
+          </DescriptionsItem>
           <DescriptionsItem :label="t('modified')">{{ time(info.updatedAt) }}</DescriptionsItem>
           <DescriptionsItem :label="t('opened')"></DescriptionsItem>
           <DescriptionsItem :label="t('created')">{{ time(info.createdAt) }}</DescriptionsItem>
-          <DescriptionsItem :label="t('shared')" v-if="info.isBeShared">{{
-            t('shared')
+          <DescriptionsItem :label="t('status')">{{
+            info.isBeShared ? t('shared') : t('unShared')
           }}</DescriptionsItem>
         </Descriptions>
       </Space>
@@ -90,8 +92,7 @@
     props: {
       file: propTypes.any,
     },
-    emits: ['refetch'],
-    setup(props, { emit }) {
+    setup(props) {
       const info: NetFile = computed(() => {
         return props.file;
       });
@@ -113,7 +114,7 @@
       }
       function getLocation(dir: string[] = []) {
         if (dir.length == 1) {
-          return 'ROOT';
+          return 'Home';
         }
         return dir;
       }

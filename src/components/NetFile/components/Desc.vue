@@ -57,8 +57,9 @@
       id: propTypes.string,
     },
     setup(props) {
-      const descFormat = computed(() => {
-        return d.value.split(' ').filter((v) => v.trim()) || [];
+      const descFormat: string[] = computed(() => {
+        if (d.value === '') return [t('addDesc')];
+        return d.value.split(' ').filter((v) => v.trim());
       });
       let d = ref('');
       watch(
@@ -68,21 +69,26 @@
         },
         { immediate: true }
       );
-
-      const edit = ref(false);
+      watch(
+        () => props.id,
+        () => {
+          editable.value = false;
+        }
+      );
+      const editable = ref(false);
       const desc = ref('');
       function openEdit() {
         desc.value = props.desc;
-        edit.value = true;
+        editable.value = true;
       }
       function closeEdit() {
-        edit.value = false;
+        editable.value = false;
       }
       const { mutate: editDesc } = useMutation(NetGql.Basic.Desc);
       async function changeDesc() {
         console.log(desc.value);
         const res = await editDesc({ description: desc.value, userFileId: props.id });
-        edit.value = false;
+        editable.value = false;
         d.value = res.data?.driveEditDescription.info.description;
       }
       function checkTag(v) {
@@ -92,7 +98,7 @@
         t,
         descFormat,
         desc,
-        edit,
+        edit: editable,
         openEdit,
         closeEdit,
         changeDesc,
@@ -101,8 +107,3 @@
     },
   });
 </script>
-<style lang="less" scoped>
-  .tabs {
-    margin: 5px;
-  }
-</style>

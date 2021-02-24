@@ -99,5 +99,7 @@ export default {
   favoritesButton: '收藏',
   favoritesTitle: '我的收藏',
   shared: '已分享',
+  unShared: '未分享',
   shareType: '分享类型',
+  addDesc: '添加描述',
 };

@@ -1,5 +1,5 @@
 <template>
-  <BasicModal v-bind="$attrs" @register="register" :title="t('createFile')" @ok="createFolder">
+  <BasicModal v-bind="$attrs" @register="register" :title="t('createFolder')" @ok="createFolder">
     <BasicForm @register="registerForm"> </BasicForm>
   </BasicModal>
 </template>
@@ -66,18 +66,7 @@
           },
           defaultValue: '',
         },
-        {
-          field: 'description',
-          component: 'Input',
-          label: t('desc'),
-          colProps: {
-            span: 24,
-          },
-          defaultValue: '',
-          ifShow: ({ values }) => {
-            return values.mode === 'basic';
-          },
-        },
+
         {
           field: 'path',
           component: 'AutoComplete',
@@ -114,6 +103,15 @@
             return values.mode === 'advance';
           },
         },
+        {
+          field: 'description',
+          component: 'Input',
+          label: t('desc'),
+          colProps: {
+            span: 24,
+          },
+          defaultValue: '',
+        },
       ];
 
       function fetchData(v) {
@@ -144,7 +142,7 @@
         }
         pathList.value = temp;
       });
-      const [registerForm, { validateFields, appendSchemaByField, resetFields }] = useForm({
+      const [registerForm, { validateFields, resetFields }] = useForm({
         labelWidth: 120,
         schemas,
         showActionButtonGroup: false,
@@ -152,7 +150,7 @@
           span: 24,
         },
       });
-      const [register, { closeModal, setModalProps }] = useModalInner((data) => {
+      const [register, { closeModal }] = useModalInner((data) => {
         parentId = data.slice(-1)[0].dirId || 'root';
         if (data) {
           currentPath = [];

@@ -21,14 +21,10 @@
         <Hash :hash="text" v-if="text" />
       </template>
       <template #action="{ record }">
-        <Dropdown>
+        <Dropdown v-if="record.name !== '...'">
           <a class="ant-dropdown-link"> ... </a>
           <template #overlay>
             <Menu>
-              <MenuItem>
-                <a-button type="link" @click="preview(record)">{{ t('previewButton') }}</a-button>
-              </MenuItem>
-
               <MenuItem>
                 <a-button type="link" @click="openShareModal(record)">{{
                   t('shareButton')
@@ -65,9 +61,6 @@
                 <a-button type="link" color="error" @click="delFile(record)">{{
                   t('delButton')
                 }}</a-button></MenuItem
-              >
-              <MenuItem>
-                <a-button type="link">{{ t('desc') }}</a-button></MenuItem
               >
             </Menu>
           </template>
