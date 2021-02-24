@@ -55,7 +55,7 @@ interface userFile {
   space: string;
   updatedAt: string;
   insertedAt: string;
-  isBeShared: boolean;
+  isShared: boolean;
   user?: { id: string } | null;
 }
 
@@ -78,7 +78,7 @@ export class NetFile {
   space: string;
   desc: string;
   userId?: string;
-  isBeShared?: boolean;
+  isShared?: boolean;
   public publishId?: number;
 
   constructor(params: fileParams) {
@@ -107,7 +107,7 @@ export class NetFile {
     this.hash = params.userFile.hash;
     this.shareId = params.id;
     this.userId = params.user?.id || params.userFile?.user?.id || '';
-    this.isBeShared = params.userFile.isBeShared;
+    this.isShared = params.userFile.isShared;
   }
   fileName(): string {
     return this.fullName.slice(-1)[0];

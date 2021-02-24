@@ -27,7 +27,7 @@
           <DescriptionsItem :label="t('opened')"></DescriptionsItem>
           <DescriptionsItem :label="t('created')">{{ time(info.createdAt) }}</DescriptionsItem>
           <DescriptionsItem :label="t('status')">{{
-            info.isBeShared ? t('shared') : t('unShared')
+            info.isShared ? t('shared') : t('unShared')
           }}</DescriptionsItem>
         </Descriptions>
       </Space>

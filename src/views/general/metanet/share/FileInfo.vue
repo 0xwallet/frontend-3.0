@@ -41,7 +41,7 @@
         <DescriptionsItem :label="t('created')">{{
           formatToDate(info.createdAt)
         }}</DescriptionsItem>
-        <DescriptionsItem :label="t('shared')" v-if="info.isBeShared">{{
+        <DescriptionsItem :label="t('shared')" v-if="info.isShared">{{
           t('shared')
         }}</DescriptionsItem>
       </Descriptions>
