@@ -6,7 +6,7 @@ export const userFile = `
     hash
     id
     isDir
-    isBeShared
+    isShared
     insertedAt
     updatedAt
     space
@@ -30,7 +30,7 @@ const driveListFiles = gql`
       isDir
       hash
       space
-      isBeShared
+      isShared
       insertedAt
       updatedAt
       info {
