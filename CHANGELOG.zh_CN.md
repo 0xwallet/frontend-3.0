@@ -1,13 +1,19 @@
 ## Wip
 
+### ✨ Features
+
+- axios 支持 form-data 格式请求
+
 ### ⚡ Performance Improvements
 
 - 登录界面动画优化
 - 修复 github 仓库体积过大问题.
+- 默认隐藏表格全屏按钮
 
 ### 🐛 Bug Fixes
 
 - 修复验证码组件警告问题
+- 修复表格不能正确的获取选中行
 
 ## 2.0.1 (2021-02-21)
 
