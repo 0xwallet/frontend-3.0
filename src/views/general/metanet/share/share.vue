@@ -1,47 +1,55 @@
 <template>
-  <div class="p-4">
-    <Row>
-      <Col :span="24 - span">
-        <BasicTable @register="registerTable">
-          <template #urlTitle>
-            <span>
-              {{ t('url') }}
-              <BasicHelp class="ml-2" :text="t('copyShare')" />
-            </span>
+  <div>
+    <BasicTable @register="registerTable">
+      <template #urlTitle>
+        <span>
+          {{ t('url') }}
+          <BasicHelp class="ml-2" :text="t('copyShare')" />
+        </span>
+      </template>
+      <template #uri="{ record, text }">
+        <Tooltip :title="t('copy')"
+          ><a-button type="link" @click="copyUrl(record)"> {{ text }}</a-button></Tooltip
+        >
+      </template>
+      <template #action="{ record }">
+        <Dropdown>
+          <a class="ant-dropdown-link"> ... </a>
+          <template #overlay>
+            <Menu>
+              <MenuItem v-if="record.name !== 'deleted'">
+                <a-button
+                  type="link"
+                  color="error"
+                  :pop="{ title: t('delButton') + ' ' + record.fullName + '?' }"
+                  @click="del(record)"
+                  >{{ t('delButton') }}</a-button
+                ></MenuItem
+              >
+              <MenuItem> <a-button type="link">分享设置</a-button></MenuItem>
+            </Menu>
           </template>
-          <template #uri="{ record, text }">
-            <Tooltip :title="t('copy')"
-              ><a-button type="link" @click="copyUrl(record)"> {{ text }}</a-button></Tooltip
-            >
-          </template>
-          <template #action="{ record }">
-            <Dropdown>
-              <a class="ant-dropdown-link"> ... </a>
-              <template #overlay>
-                <Menu>
-                  <MenuItem v-if="record.name !== 'deleted'">
-                    <a-button
-                      type="link"
-                      color="error"
-                      :pop="{ title: t('delButton') + ' ' + record.fullName + '?' }"
-                      @click="del(record)"
-                      >{{ t('delButton') }}</a-button
-                    ></MenuItem
-                  >
-                  <MenuItem> <a-button type="link">分享设置</a-button></MenuItem>
-                </Menu>
-              </template>
-            </Dropdown>
-          </template>
-          <template #toolbar>
-            <a-button type="primary" @click="refetch">{{ t('refresh') }}</a-button>
-            <a-button type="link" @click="openInfo"
-              ><InfoCircleOutlined :style="{ fontSize: '20px' }"
-            /></a-button>
-          </template> </BasicTable
-      ></Col>
-      <Col :span="span"><FileInfo :file="file" @close="closeInfo" /></Col>
-    </Row>
+        </Dropdown>
+      </template>
+      <template #toolbar>
+        <Button @click="changeInfo" type="link">
+          <ExclamationCircleTwoTone
+            :style="{ fontSize: '20px' }"
+            :twoToneColor="`#${infoButton ? '2E2EFE' : '6E6E6E'}`" />{{
+        }}</Button>
+      </template>
+    </BasicTable>
+    <Drawer
+      :title="file.fullName?.slice(-1)[0] || 'none'"
+      placement="right"
+      :visible="infoVisible"
+      :getContainer="`.ant-card-body`"
+      @close="closeInfo"
+      :mask="false"
+      :width="400"
+      :wrapClassName="'!mt-50'"
+      ><FileInfo :file="file"
+    /></Drawer>
   </div>
 </template>
 <script lang="ts">
@@ -52,11 +60,11 @@
   import { getBasicColumns } from './shareData';
   import { useQuery } from '@vue/apollo-composable';
   import { BasicHelp } from '/@/components/Basic';
-  import FileInfo from './FileInfo.vue';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import { Tooltip, Row, Col, Dropdown, Menu } from 'ant-design-vue';
-  import { InfoCircleOutlined } from '@ant-design/icons-vue';
-  import { NetGql, NetFile } from '/@/components/NetFile';
+  import { Tooltip, Drawer, Dropdown, Menu } from 'ant-design-vue';
+  import { ExclamationCircleTwoTone } from '@ant-design/icons-vue';
+  import { NetGql, NetFile, FileInfo } from '/@/components/NetFile';
+  import { Button } from '/@/components/Button';
 
   const { t } = useI18n('general.metanet');
   export default defineComponent({
@@ -65,30 +73,30 @@
       GIcon,
       BasicHelp,
       Tooltip,
-      Row,
-      Col,
+      Drawer,
       Menu,
       MenuItem: Menu.Item,
       MenuGroup: Menu.ItemGroup,
       FileInfo,
-      InfoCircleOutlined,
+      ExclamationCircleTwoTone,
       Dropdown,
+      Button,
     },
     setup() {
       const { createMessage, createErrorModal } = useMessage();
       const path = ref([]);
       const tableData = ref([]);
-      const info = ref(false);
-      const file = ref({}) as NetFile;
-      const span = computed(() => {
-        if (file.value.fullName === undefined) {
-          return 0;
-        }
-        if (!info.value) {
-          return 0;
-        }
-        return 8;
+      const infoButton = ref(false);
+      const infoVisible = computed(() => {
+        return infoButton.value && file.value.fullName !== undefined;
       });
+      const file = ref({}) as NetFile;
+      function closeInfo() {
+        infoButton.value = false;
+      }
+      function changeInfo() {
+        infoButton.value = !infoButton.value;
+      }
       const [
         registerTable,
         { getSelectRowKeys, setSelectedRowKeys, clearSelectedRowKeys, getDataSource },
@@ -160,15 +168,6 @@
         const f: NetFile = record;
         f.copyShareUrl(1);
       }
-      function openInfo() {
-        if (file.value.fullName === undefined) {
-          createMessage.error(t('noChoose'));
-        }
-        info.value = !info.value;
-      }
-      function closeInfo() {
-        info.value = false;
-      }
 
       return {
         registerTable,
@@ -180,10 +179,11 @@
         copyUrl,
         refetch,
         t,
-        span,
+        infoVisible,
+        infoButton,
         file,
-        openInfo,
         closeInfo,
+        changeInfo,
       };
     },
   });

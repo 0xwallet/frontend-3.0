@@ -64,8 +64,7 @@
   import { propTypes } from '/@/utils/propTypes';
   import { formatToDateTime } from '/@/utils/dateUtil';
   import { List } from 'ant-design-vue';
-  import { Icon, NetGql } from '/@/components/NetFile';
-  import { useMutation } from '@vue/apollo-composable';
+  import { Icon } from '/@/components/NetFile';
   import Desc from './Desc.vue';
 
   export default defineComponent({

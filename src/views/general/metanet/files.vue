@@ -83,7 +83,7 @@
       :mask="false"
       :width="400"
       :wrapClassName="'!mt-52'"
-      ><FileInfo :file="file" @refetch="infoRefetch"
+      ><FileInfo :file="file"
     /></Drawer>
     <UploadStatus @openUploadModal="openUploadModal" />
     <MoveModal @register="registerMoveModal" />
