@@ -9,7 +9,7 @@
           }}</a-button>
           <UploadButton ref="uploadRef" :path="path" v-if="!choose" @refetch="refetch" />
           <a-button type="primary" v-if="choose" @click="openCopy">{{ t('copyButton') }}</a-button>
-          <BreadCrumb :path="path" @jump="goPath" />
+          <BreadCrumb :path="currentPath" @jump="goPath" />
         </Space>
       </template>
       <template #name="{ record }">
@@ -188,6 +188,9 @@
       const file = ref({});
       //当前路径
       const path = ref([]);
+
+      const currentPath = ref<string[]>([]);
+
       // info相关
       const infoButton = ref(false);
       const infoVisible = computed(() => {
@@ -222,6 +225,7 @@
         if (!list) {
           return;
         }
+        currentPath.value = list[0].fullName;
         // 列表[1]存在为存在上级目录，存入dirId，fullName设置为...
         if (list[1]) {
           temp.push({
@@ -240,7 +244,7 @@
         // 遍历返回信息，组成表格信息
         let p: NetFile[] = [];
         let f: NetFile[] = [];
-        list.forEach((v) => {
+        list.slice(1).forEach((v) => {
           if (!v) return;
           // 是目录
           if (v.isDir) {
@@ -473,24 +477,13 @@
       }
 
       // 路径面包屑跳转
-      function goPath(p) {
-        variables.value.dirId = p.dirId;
-        if (p.dirId === 'root') {
-          path.value = [];
-          return;
-        }
-        let l = [];
-        path.value.forEach((v) => {
-          l.push(v);
-          if (v.dirId == p.dirId) {
-            path.value = [...l];
-          }
-        });
+      function goPath(p: []) {
+        variables.value = { fullName: p };
       }
       // 打开文件或者进入目录
       function openFile(f: NetFile) {
         if (f.isDir) {
-          variables.value.dirId = f.id;
+          variables.value = { dirId: f.id };
           if (f.id === 'root') {
             path.value = [];
             return;
@@ -582,6 +575,7 @@
         openRename,
         registerCopyModal,
         openCopy,
+        currentPath,
       };
     },
   });

@@ -6,7 +6,7 @@ export const userFile = `
     hash
     id
     isDir
-    isBeShared
+    isShared
     insertedAt
     updatedAt
     space
@@ -23,14 +23,14 @@ export const userFile = `
 // query
 // 文件列表
 const driveListFiles = gql`
-  query($dirId: String) {
-    driveListFiles(dirId: $dirId) {
+  query($dirId: String, $fullName: [String]) {
+    driveListFiles(dirId: $dirId, dirFullName: $fullName) {
       id
       fullName
       isDir
       hash
       space
-      isBeShared
+      isShared
       insertedAt
       updatedAt
       info {
