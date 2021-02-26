@@ -12,6 +12,7 @@ import { useMessage } from '/@/hooks/web/useMessage';
 
 import router from '/@/router';
 
+
 import { setLocal, getLocal, getSession, setSession } from '/@/utils/helper/persistent';
 import { useProjectSetting } from '/@/hooks/setting';
 import { useI18n } from '/@/hooks/web/useI18n';
@@ -32,7 +33,6 @@ function getCache<T>(key: string) {
 
 function setCache(USER_INFO_KEY: string, info: any) {
   if (!info) return;
-  // const fn = permissionCacheType === CacheTypeEnum.LOCAL ? setLocal : setSession;
   setLocal(USER_INFO_KEY, info, true);
   // TODO
   setSession(USER_INFO_KEY, info, true);
