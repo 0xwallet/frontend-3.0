@@ -28,6 +28,7 @@
   import { NetUpload } from '/@/components/NetFile';
   import { propTypes } from '/@/utils/propTypes';
   import { Button } from '/@/components/Button';
+  import { fileStore } from '/@/store/modules/netFile';
 
   const { t } = useI18n('general.metanet');
   export default defineComponent({
@@ -43,15 +44,15 @@
     props: {
       path: propTypes.array,
     },
-    emits: ['refetch'],
-    setup(props, { emit }) {
+
+    setup(props) {
       const [registerUploadModal, { openModal, setModalProps }] = useModal();
 
       function openUploadModal() {
         openModal(true);
         setModalProps({
           afterClose: () => {
-            emit('refetch');
+            fileStore.setRefetch(2);
           },
         });
       }

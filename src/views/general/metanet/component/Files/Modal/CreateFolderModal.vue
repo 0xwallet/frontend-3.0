@@ -13,6 +13,7 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import { Input, Space } from 'ant-design-vue';
   import { NetGql } from '/@/components/NetFile';
+  import { fileStore } from '/@/store/modules/netFile';
 
   const { t } = useI18n('general.metanet');
 
@@ -188,9 +189,11 @@
       );
       MakeDirDone(() => {
         closeModal();
+        fileStore.setRefetch();
       });
       MakeDirUnderDone(() => {
         closeModal();
+        fileStore.setRefetch();
       });
       async function createFolder() {
         const data = await validateFields();
@@ -225,7 +228,6 @@
           p = currentPath.concat(p.filter((v) => v && v.trim()).slice(1));
         }
         await MakeDir({ fullName: p });
-        console.log(p);
       }
       return { register, registerForm, createFolder, t };
     },

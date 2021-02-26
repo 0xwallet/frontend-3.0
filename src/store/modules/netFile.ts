@@ -55,7 +55,7 @@ class netFileStore extends VuexModule {
     this.uploadList = [];
   }
   @Mutation
-  setRefetch(t: number): void {
+  setRefetch(t: number = 0): void {
     this.refetch = t;
   }
 

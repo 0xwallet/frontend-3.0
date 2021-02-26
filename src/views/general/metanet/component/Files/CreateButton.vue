@@ -50,33 +50,16 @@
         default: [],
       },
     },
-    emits: ['refetch'],
-    setup(props, { emit }) {
-      const [
-        registerCreateFileModal,
-        { openModal: openFileModal, setModalProps: setFileModal },
-      ] = useModal();
-      const [
-        registerCreateFolderModal,
-        { openModal: openFolderModal, setModalProps: setFolderModal },
-      ] = useModal();
+    setup(props) {
+      const [registerCreateFileModal, { openModal: openFileModal }] = useModal();
+      const [registerCreateFolderModal, { openModal: openFolderModal }] = useModal();
       const [registerImportFileModal, { openModal: openImportModal }] = useModal();
 
       function openCreateFileModal() {
         openFileModal(true, props.path, true);
-        setFileModal({
-          afterClose: () => {
-            emit('refetch');
-          },
-        });
       }
       function openCreateFolderModal() {
         openFolderModal(true, props.path, true);
-        setFolderModal({
-          afterClose: () => {
-            emit('refetch');
-          },
-        });
       }
       function openImportFileModal() {
         openImportModal(true);

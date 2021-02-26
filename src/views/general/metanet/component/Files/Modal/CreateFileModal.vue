@@ -101,6 +101,7 @@
           createErrorModal({ content: e });
         } finally {
           closeModal();
+          fileStore.setRefetch();
         }
       }
       return { register, schemas, registerForm, model: modelRef, createFile, t };

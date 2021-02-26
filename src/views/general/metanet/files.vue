@@ -3,11 +3,11 @@
     <BasicTable @register="registerTable">
       <template #tableTitle>
         <Space>
-          <CreateButton :path="path" @refetch="refetch" v-if="!choose" />
+          <CreateButton :path="path" v-if="!choose" />
           <a-button type="primary" @click="openMoveModal" v-if="choose">{{
             t('moveButton')
           }}</a-button>
-          <UploadButton ref="uploadRef" :path="path" v-if="!choose" @refetch="refetch" />
+          <UploadButton ref="uploadRef" :path="path" v-if="!choose" />
           <a-button type="primary" v-if="choose" @click="openCopy">{{ t('copyButton') }}</a-button>
           <BreadCrumb :path="currentPath" @jump="goPath" />
         </Space>
