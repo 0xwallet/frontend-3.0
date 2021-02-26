@@ -26,7 +26,7 @@ export default {
   shareUrl: '分享链接',
   copyShare: '复制链接及提取码',
   url: '链接',
-  code: '提取码',
+  code: '访问吗',
   moveFile: '移动文件',
   select: '选择',
   processed: '已处理',
