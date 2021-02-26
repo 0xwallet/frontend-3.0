@@ -1,15 +1,15 @@
 <template>
   <div class="grid grid-cols-6 gap-4">
     <div class="col-start-1 col-end-6">
-      <template v-if="!edit" v-for="(v, i) in descFormat" :key="i">
+      <template v-if="!editable" v-for="(v, i) in descFormat" :key="i">
         <span v-if="!checkTag(v)">{{ v }} &nbsp;</span>
         <Tag v-if="checkTag(v)" color="#f50">{{ v.replace(/#/g, '') }}</Tag>
       </template>
-      <InputTextArea v-model:value="desc" v-if="edit" />
+      <InputTextArea v-model:value="desc" v-if="editable" />
     </div>
     <div class=""
-      ><Button type="link" @click="openEdit" v-if="!edit"><EditOutlined /></Button>
-      <div class="TextArea" v-if="edit"
+      ><Button type="link" @click="openEdit" v-if="!editable && !share"><EditOutlined /></Button>
+      <div class="TextArea" v-if="editable"
         ><Button type="link" @click="closeEdit"><CloseOutlined /></Button>
         <Button type="link" @click="changeDesc"><CheckOutlined /></Button
       ></div>
@@ -33,7 +33,6 @@
 
   import { propTypes } from '/@/utils/propTypes';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import { useCopyToClipboard } from '/@/hooks/web/useCopyToClipboard';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { useMutation } from '@vue/apollo-composable';
   import { NetGql } from '/@/components/NetFile';
@@ -41,7 +40,6 @@
   import { Button } from '/@/components/Button';
   import { Input, Tag } from 'ant-design-vue';
   const { t } = useI18n('general.metanet');
-  const { clipboardRef, copiedRef } = useCopyToClipboard();
   const { createMessage } = useMessage();
   export default defineComponent({
     components: {
@@ -53,15 +51,17 @@
       Tag,
     },
     props: {
-      desc: propTypes.string,
-      id: propTypes.string,
+      desc: propTypes.string.def(''),
+      id: propTypes.string.def(''),
+      share: propTypes.bool.def(false),
     },
     setup(props) {
-      const descFormat: string[] = computed(() => {
-        if (d.value === '') return [t('addDesc')];
-        return d.value.split(' ').filter((v) => v.trim());
+      const d = ref('');
+      const editable = ref(false);
+      const desc = ref('');
+      const share = computed(() => {
+        return props.share;
       });
-      let d = ref('');
       watch(
         () => props.desc,
         (v) => {
@@ -75,12 +75,15 @@
           editable.value = false;
         }
       );
-      const editable = ref(false);
-      const desc = ref('');
       function openEdit() {
         desc.value = props.desc;
         editable.value = true;
       }
+      const descFormat: string[] = computed(() => {
+        if (d.value === '') return [t('addDesc')];
+        return d.value.split(' ').filter((v) => v.trim());
+      });
+
       function closeEdit() {
         editable.value = false;
       }
@@ -98,11 +101,12 @@
         t,
         descFormat,
         desc,
-        edit: editable,
+        editable,
         openEdit,
         closeEdit,
         changeDesc,
         checkTag,
+        share,
       };
     },
   });

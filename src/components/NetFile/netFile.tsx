@@ -97,7 +97,7 @@ export class NetFile {
     }
     this.path = params.userFile.fullName.slice(0, params.userFile.fullName.length - 1);
     this.size = Number(params.userFile.info.size);
-    this.desc = params.userFile.info.description;
+    this.desc = params.userFile.info.description || '';
     this.createdAt = params.userFile.insertedAt;
     this.updatedAt = params.userFile.updatedAt;
     this.code = params.code;
@@ -167,7 +167,7 @@ export class NetFile {
   }
 
   Location(): string[] {
-    return ['Home'].concat(this.fullName);
+    return ['~'].concat(this.fullName).slice(0, -1);
   }
 
   // 保存分享
@@ -278,6 +278,9 @@ export class NetFile {
     }
     if ((mode === 2 || mode === 3) && this.code) {
       temp += `${t('general.metanet.code')}:${this.code}`;
+    }
+    if (mode === 4) {
+      temp = `${window.location.origin}/#/s/file?uri=${this.uri}`;
     }
 
     clipboardRef.value = temp;

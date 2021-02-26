@@ -1,6 +1,6 @@
 <template>
   <Tabs>
-    <TabPane key="1" :tab="t('basic')">
+    <TabPane key="basic" :tab="t('basic')">
       <Space direction="vertical">
         <div class="info_header">
           <Icon :type="info.type" :size="100" />
@@ -19,6 +19,12 @@
         </div>
         <Divider type="horizontal" />
         <Descriptions :column="1">
+          <DescriptionsItem :label="t('url')" v-if="share"
+            ><a-button type="link" @click="copyUrl(3)">{{ info.uri }}</a-button>
+          </DescriptionsItem>
+          <DescriptionsItem label="Hash" v-if="info.hash && share"
+            ><Hash :hash="info.hash"
+          /></DescriptionsItem>
           <DescriptionsItem :label="t('type')">{{ info.fullType() }}</DescriptionsItem>
           <DescriptionsItem :label="t('location')">
             <span v-for="(v, i) in info.Location()" :key="i">{{ v }}/</span>
@@ -27,13 +33,13 @@
           <DescriptionsItem :label="t('opened')"></DescriptionsItem>
           <DescriptionsItem :label="t('created')">{{ time(info.createdAt) }}</DescriptionsItem>
           <DescriptionsItem :label="t('status')">{{
-            info.isBeShared ? t('shared') : t('unShared')
+            info.isShared ? t('shared') : t('unShared')
           }}</DescriptionsItem>
         </Descriptions>
       </Space>
-      <Desc :desc="info.desc" :id="info.id" />
+      <Desc :desc="info.desc" :id="info.id" :share="share" />
     </TabPane>
-    <TabPane key="2" :tab="t('dynamic')">
+    <TabPane key="dynamic" :tab="t('dynamic')">
       <List item-layout="horizontal" :data-source="data">
         <template #renderItem="{ item, index }">
           <ListItem>
@@ -58,13 +64,14 @@
   import { Tabs, Card, Descriptions, Space, Divider, Input, Button } from 'ant-design-vue';
   import { EditOutlined, CloseOutlined, CheckOutlined } from '@ant-design/icons-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
+
   import { NetFile } from '/@/components/NetFile/netFile';
   const { t } = useI18n('general.metanet');
   import { byteTransfer } from '/@/utils/disk/file';
   import { propTypes } from '/@/utils/propTypes';
   import { formatToDateTime } from '/@/utils/dateUtil';
   import { List } from 'ant-design-vue';
-  import { Icon } from '/@/components/NetFile';
+  import { Hash, Icon } from '/@/components/NetFile';
   import Desc from './Desc.vue';
 
   export default defineComponent({
@@ -87,14 +94,20 @@
       CloseOutlined,
       CheckOutlined,
       Desc,
+      Hash,
     },
     props: {
       file: propTypes.any,
+      share: propTypes.bool.def(false),
     },
     setup(props) {
       const info: NetFile = computed(() => {
         return props.file;
       });
+      const share = computed(() => {
+        return props.share;
+      });
+
       const key = ref('basic');
       const tabList = [
         {
@@ -113,7 +126,7 @@
       }
       function getLocation(dir: string[] = []) {
         if (dir.length == 1) {
-          return 'Home';
+          return '~';
         }
         return dir;
       }
@@ -122,6 +135,9 @@
         return formatToDateTime(t, 'YYYY-MM-DD HH:mm:ss');
       }
 
+      function copyUrl(mode: number) {
+        info.value.copyShareUrl(mode);
+      }
       return {
         t,
         info,
@@ -132,6 +148,8 @@
         byteTransfer,
         getLocation,
         time,
+        copyUrl,
+        share,
         data: [
           {
             title: '111',

@@ -18,15 +18,10 @@
           <template #overlay>
             <Menu>
               <MenuItem v-if="record.name !== 'deleted'">
-                <a-button
-                  type="link"
-                  color="error"
-                  :pop="{ title: t('delButton') + ' ' + record.fullName + '?' }"
-                  @click="del(record)"
-                  >{{ t('delButton') }}</a-button
-                ></MenuItem
+                <a-button type="link" color="error" @click="del(record)">{{
+                  t('delButton')
+                }}</a-button></MenuItem
               >
-              <MenuItem> <a-button type="link">分享设置</a-button></MenuItem>
             </Menu>
           </template>
         </Dropdown>
@@ -40,7 +35,6 @@
       </template>
     </BasicTable>
     <Drawer
-      :title="file.fullName?.slice(-1)[0] || 'none'"
       placement="right"
       :visible="infoVisible"
       :getContainer="`.ant-card-body`"
@@ -48,12 +42,17 @@
       :mask="false"
       :width="400"
       :wrapClassName="'!mt-50'"
-      ><FileInfo :file="file"
+    >
+      <template #title>
+        <span @click="copyUrl(file, 4)">{{ file.fullName?.slice(-1)[0] || 'none' }}</span>
+      </template>
+
+      <FileInfo :file="file" share
     /></Drawer>
   </div>
 </template>
 <script lang="ts">
-  import { defineComponent, computed, ref } from 'vue';
+  import { defineComponent, computed, ref, createVNode } from 'vue';
   import { BasicTable, useTable } from '/@/components/Table';
   import { useMessage } from '/@/hooks/web/useMessage';
   import GIcon from '/@/components/Icon';
@@ -61,8 +60,8 @@
   import { useQuery } from '@vue/apollo-composable';
   import { BasicHelp } from '/@/components/Basic';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import { Tooltip, Drawer, Dropdown, Menu } from 'ant-design-vue';
-  import { ExclamationCircleTwoTone } from '@ant-design/icons-vue';
+  import { Tooltip, Drawer, Dropdown, Menu, Modal } from 'ant-design-vue';
+  import { ExclamationCircleOutlined, ExclamationCircleTwoTone } from '@ant-design/icons-vue';
   import { NetGql, NetFile, FileInfo } from '/@/components/NetFile';
   import { Button } from '/@/components/Button';
 
@@ -105,7 +104,7 @@
         customRow: (record) => ({
           onClick: () => {
             file.value = record;
-            info.value = true;
+            infoButton.value = true;
           },
         }),
         pagination: false,
@@ -114,7 +113,7 @@
         columns: getBasicColumns(),
         rowKey: 'shareId',
         showIndexColumn: false,
-        scroll: { x: 1000, y: 1000 },
+        scroll: { x: 1000, y: window.innerHeight * 0.7 },
       });
 
       const { onResult, refetch } = useQuery(NetGql.Share.List, null, () => ({
@@ -140,10 +139,25 @@
 
       // fetchData();
       // 删除分享
-      async function del(record) {
-        const f: NetFile = record;
-        await f.delShare();
-        fetchData();
+      async function del(file: NetFile) {
+        Modal.confirm({
+          title: t('error'),
+          icon: createVNode(ExclamationCircleOutlined),
+          content: t('delButton') + ' ' + file.fullName + '?',
+          centered: true,
+          okText: t('yes'),
+          cancelText: t('cancelAll'),
+          onOk() {
+            file
+              .delFile()
+              .then(() => {
+                createMessage.success('删除成功');
+              })
+              .finally(() => {
+                refetch();
+              });
+          },
+        });
       }
 
       const choose = computed(() => {
@@ -164,9 +178,9 @@
       function clearSelect() {
         clearSelectedRowKeys();
       }
-      function copyUrl(record) {
+      function copyUrl(record, mode = 1) {
         const f: NetFile = record;
-        f.copyShareUrl(1);
+        f.copyShareUrl(mode);
       }
 
       return {
