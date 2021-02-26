@@ -4,9 +4,15 @@
       <a-button type="primary"> {{ t('create') }}<DownOutlined /> </a-button>
       <template #overlay>
         <Menu>
-          <MenuItem @click="openCreateFileModal"> {{ t('file') }} </MenuItem>
-          <MenuItem @click="openCreateFolderModal"> {{ t('folder') }} </MenuItem>
-          <MenuItem @click="openImportFileModal"> {{ t('import') }} </MenuItem>
+          <MenuItem @click="openCreateFileModal"
+            ><Button type="link">{{ t('file') }}</Button>
+          </MenuItem>
+          <MenuItem @click="openCreateFolderModal"
+            ><Button type="link">{{ t('folder') }}</Button>
+          </MenuItem>
+          <MenuItem @click="openImportFileModal"
+            ><Button type="link">{{ t('import') }}</Button>
+          </MenuItem>
         </Menu>
       </template>
     </Dropdown>
@@ -24,6 +30,7 @@
   import CreateFileModal from './Modal/CreateFileModal.vue';
   import CreateFolderModal from './Modal/CreateFolderModal.vue';
   import ImportFileModal from './Modal/ImportFileModal.vue';
+  import { Button } from '/@/components/Button';
 
   const { t } = useI18n('general.metanet');
   export default defineComponent({
@@ -35,6 +42,7 @@
       CreateFileModal,
       CreateFolderModal,
       ImportFileModal,
+      Button,
     },
     props: {
       path: {

@@ -5,9 +5,13 @@
       <template #overlay>
         <Menu>
           <MenuItem>
-            <Upload :before-upload="beforeUpload" :showUploadList="false">{{ t('file') }}</Upload>
+            <Upload :before-upload="beforeUpload" :showUploadList="false">
+              <Button type="link">{{ t('file') }}</Button></Upload
+            >
           </MenuItem>
-          <MenuItem @click="openUploadModal"> {{ t('folder') }}</MenuItem>
+          <MenuItem @click="openUploadModal">
+            <Button type="link">{{ t('folder') }}</Button></MenuItem
+          >
         </Menu>
       </template>
     </Dropdown>
@@ -15,7 +19,7 @@
   </span>
 </template>
 <script lang="ts">
-  import { defineComponent, ref } from 'vue';
+  import { defineComponent } from 'vue';
   import { Dropdown, Menu, Upload } from 'ant-design-vue';
   import { DownOutlined } from '@ant-design/icons-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
@@ -23,7 +27,7 @@
   import UploadModal from './upload/UploadModal.vue';
   import { NetUpload } from '/@/components/NetFile';
   import { propTypes } from '/@/utils/propTypes';
-  import { fileStore } from '/@/store/modules/netFile';
+  import { Button } from '/@/components/Button';
 
   const { t } = useI18n('general.metanet');
   export default defineComponent({
@@ -34,6 +38,7 @@
       MenuItem: Menu.Item,
       UploadModal,
       Upload,
+      Button,
     },
     props: {
       path: propTypes.array,
