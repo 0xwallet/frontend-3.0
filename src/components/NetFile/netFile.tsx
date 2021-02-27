@@ -203,10 +203,28 @@ export class NetFile {
       resolve(0);
     });
   }
-  favorites(): Promise<any> {
-    return new Promise<any>((resolve, reject) => {
-      if (!CheckToken()) reject();
-      resolve(0);
+  collection(mode: string, code: string = ''): Promise<any> {
+    return new Promise<any>((resolve) => {
+      if (mode === 'share') {
+        useApollo({
+          mode: 'mutate',
+          gql: NetGql.Collection.CreateShare,
+          variables: { id: this.shareId, code },
+        }).then((res) => {
+          console.log(res);
+          resolve(res);
+        });
+      }
+      if (mode === 'publish') {
+        useApollo({
+          mode: 'mutate',
+          gql: NetGql.Collection.CreatePublish,
+          variables: { id: this.publishId },
+        }).then((res) => {
+          console.log(res);
+          resolve(res);
+        });
+      }
     });
   }
 
@@ -265,8 +283,9 @@ export class NetFile {
     this.copyShareUrl(1);
     return url;
   }
+
   // 分享链接放出剪切板
-  copyShareUrl(mode: number) {
+  copyShareUrl(mode: number, txid?: string) {
     if (this.uri === '') {
       return '';
     }
@@ -282,12 +301,16 @@ export class NetFile {
     if (mode === 4) {
       temp = `${window.location.origin}/#/s/file?uri=${this.uri}`;
     }
+    if (mode === 5) {
+      temp = `${window.location.origin}/#/p?txid=${txid}`;
+    }
 
     clipboardRef.value = temp;
     if (unref(copiedRef)) {
       createMessage.success(t('general.metanet.copySuccess'));
     }
   }
+
   // 删除文件
   delFile(): Promise<any> {
     return useApollo({

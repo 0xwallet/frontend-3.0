@@ -1,8 +1,8 @@
 import { BasicColumn } from '/@/components/Table';
-import GIcon from '/@/components/Icon';
 import { useI18n } from '/@/hooks/web/useI18n';
 const { t } = useI18n('general.metanet');
 import { formatToDate } from '/@/utils/dateUtil';
+import { Icon } from '/@/components/NetFile';
 export function getBasicColumns(): BasicColumn[] {
   return [
     {
@@ -15,17 +15,14 @@ export function getBasicColumns(): BasicColumn[] {
         if (record.name === 'deleted') {
           return (
             <span>
-              <GIcon icon="bx-bx-question-mark" size="30" />
+              <Icon type="bx-bx-question-mark" size={30} />
               {t('deleted')}
             </span>
           );
         }
         return (
           <span>
-            <GIcon
-              icon={record.type === 'folder' ? 'bx-bx-folder' : 'bx-bxs-file-' + record.type}
-              size="30"
-            />
+            <Icon type={record.type} size={30} />
             <a-button type="link">
               {record.name}
               {record.type === 'folder' ? '' : '.' + record.type}
@@ -51,10 +48,7 @@ export function getBasicColumns(): BasicColumn[] {
     {
       title: t('publishLink'),
       dataIndex: 'txid',
-      customRender: ({ text }) => {
-        console.log(text);
-        return text;
-      },
+      slots: { customRender: 'uri' },
     },
     {
       title: t('status'),

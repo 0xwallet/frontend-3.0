@@ -9,9 +9,10 @@ import { useSession } from '/@/hooks/nkn/getNKN';
 import { encode } from '@msgpack/msgpack';
 import { useMessage } from '/@/hooks/web/useMessage';
 import { dateUtil } from '/@/utils/dateUtil';
-import { NetFile } from '/@/components/NetFile';
+import { NetFile, NetGql } from '/@/components/NetFile';
+import { useApollo } from '/@/hooks/apollo/apollo';
 
-const { createMessage } = useMessage();
+const { createMessage, createErrorModal } = useMessage();
 const NAME = 'netFileStore';
 hotModuleUnregisterModule(NAME);
 interface uploadSpeed {
@@ -175,6 +176,17 @@ class netFileStore extends VuexModule {
         error: e,
       };
     }
+  }
+  @Action
+  fetchShareFile(params: { code?: string; uri: string }) {
+    useApollo({ mode: 'query', gql: NetGql.Share.Find, variables: params }).then((res) => {
+      const data = res.data?.driveFindShare;
+      if (!data) {
+        createErrorModal({ title: '错误', content: '分享文件信息错误' });
+        return;
+      }
+      this.appendShareFile(new NetFile(data));
+    });
   }
 }
 export const fileStore = getModule<netFileStore>(netFileStore);

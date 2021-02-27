@@ -11,7 +11,7 @@
   import { NetGql } from '/@/components/NetFile';
 
   export default defineComponent({
-    name: 'ReleaseFile',
+    name: 'PublishFile',
 
     setup() {
       const { currentRoute } = useRouter();
@@ -43,14 +43,3 @@
     },
   });
 </script>
-<style>
-  .img {
-    width: 100px;
-  }
-
-  .footer {
-    position: fixed;
-    bottom: 0;
-    z-index: 999;
-  }
-</style>

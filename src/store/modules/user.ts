@@ -12,8 +12,7 @@ import { useMessage } from '/@/hooks/web/useMessage';
 
 import router from '/@/router';
 
-
-import { setLocal, getLocal, getSession, setSession } from '/@/utils/helper/persistent';
+import { setLocal, getLocal, getSession, setSession } from '/@/utils/cache/persistent';
 import { useProjectSetting } from '/@/hooks/setting';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { disk } from '/@/hooks/nkn/getNKN';

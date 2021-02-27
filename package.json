@@ -37,6 +37,7 @@
     "apexcharts": "^3.25.0",
     "axios": "^0.21.1",
     "crypto-es": "^1.2.7",
+    "crypto-js": "^4.0.0",
     "dayjs": "^1.10.4",
     "echarts": "^5.0.2",
     "filereader-stream": "^2.0.0",

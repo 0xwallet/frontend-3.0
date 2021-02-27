@@ -59,7 +59,7 @@
             <a-button type="link" @click="download(record)">{{ t('downloadButton') }}</a-button>
 
             <a-button type="link" @click="save(record)">{{ t('saveButton') }}</a-button>
-            <a-button type="link" @click="collection(record)">{{ t('collectionButton') }}</a-button>
+            <a-button type="link" @click="favorties(record)">{{ t('favoritesButton') }}</a-button>
             <a-button type="link" @click="comment(record)">{{ t('comment') }}</a-button></div
           >
         </template>
@@ -213,7 +213,6 @@
       PreviewShare((res) => {
         needCode.value = res.data?.drivePreviewShare.needCode;
         userPreview.value = res.data?.drivePreviewShare.UserPreview;
-        console.log(res);
         if (!res.data?.drivePreviewShare.needCode) {
           fileStore.fetchShareFile(params.value);
         }
@@ -255,8 +254,9 @@
       async function save(f: NetFile) {
         await f.save();
       }
-      async function collection(f: NetFile) {
-        await f.collection('share', params.value.code);
+
+      async function favorites(f: NetFile) {
+        await f.favorites();
       }
 
       async function comment(f: NetFile) {
@@ -282,7 +282,7 @@
         registerPdfDrawer,
         registerMarkdownModal,
         save,
-        collection,
+        favorites,
         comment,
       };
     },

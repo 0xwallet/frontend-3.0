@@ -11,7 +11,7 @@
           </template>
           <template #uri="{ record, text }">
             <Tooltip :title="t('copy')"
-              ><a-button type="link" @click="copyUrl(record)"> {{ text }}</a-button></Tooltip
+              ><a-button type="link" @click="copyUrl(text)"> {{ text }}</a-button></Tooltip
             >
           </template>
           <template #action="{ record }">
@@ -53,10 +53,9 @@
   </div>
 </template>
 <script lang="ts">
-  import { defineComponent, computed, ref } from 'vue';
+  import { defineComponent, computed, ref, unref } from 'vue';
   import { BasicTable, useTable } from '/@/components/Table';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import GIcon from '/@/components/Icon';
   import { getBasicColumns } from './Data';
   import { BasicHelp } from '/@/components/Basic';
   import FileInfo from './FileInfo.vue';
@@ -66,13 +65,14 @@
   import { useMutation, useQuery } from '@vue/apollo-composable';
   import { useModal } from '/@/components/Modal';
   import UpdatePublishModal from './UpdatePublishModal.vue';
-  import { NetGql, NetFile } from '/@/components/NetFile';
-
+  import { NetGql, NetFile, Icon } from '/@/components/NetFile';
+  import { useCopyToClipboard } from '/@/hooks/web/useCopyToClipboard';
+  const { clipboardRef, copiedRef } = useCopyToClipboard();
   const { t } = useI18n('general.metanet');
   export default defineComponent({
     components: {
       BasicTable,
-      GIcon,
+      Icon,
       BasicHelp,
       Tooltip,
       Row,
@@ -169,9 +169,14 @@
       function clearSelect() {
         clearSelectedRowKeys();
       }
-      function copyUrl(publishId) {
-        const f: NetFile = record;
-        f.copyShareUrl(1);
+      function copyUrl(txid: string) {
+        let temp = `${window.location.origin}/#/p?txid=${txid}`;
+        clipboardRef.value = temp;
+        if (unref(copiedRef)) {
+          createMessage.success(t('general.metanet.copySuccess'));
+        }
+        // f.copyPublishUrl();
+        // f.copyShareUrl(5);
       }
       function openInfo() {
         if (file.value.fullName === undefined) {
