@@ -77,7 +77,7 @@
   import { Hash, Icon } from '/@/components/NetFile';
 
   export default defineComponent({
-    name: 'FileInfo',
+    name: 'CollectionFileInfo',
     components: {
       Tabs,
       TabPane: Tabs.TabPane,
