@@ -126,7 +126,6 @@
       const { mutate: SignIn, onDone } = useMutation(signIn);
       const getShow = computed(() => unref(getLoginState) === LoginStateEnum.LOGIN);
       onDone(async (res) => {
-        console.log(res);
         const data = await validForm();
         useWallet();
         // 保存wallet信息

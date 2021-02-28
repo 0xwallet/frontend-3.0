@@ -102,4 +102,7 @@ export default {
   unShared: 'Not Shared',
   shareType: 'Share Type',
   addDesc: 'Add a Description',
+  invalid: 'Invalid',
+  accessible: 'Accessible',
+  publication: 'Publication',
 };

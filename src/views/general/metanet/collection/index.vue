@@ -34,6 +34,7 @@
         }}</Button>
       </template>
     </BasicTable>
+
     <Drawer
       placement="right"
       :visible="infoVisible"
@@ -44,10 +45,11 @@
       :wrapClassName="'!mt-50'"
     >
       <template #title>
-        <span @click="copyUrl(file, 4)">{{ file.fullName?.slice(-1)[0] || 'none' }}</span>
+        <span @click="copyUrl(file, 4)">{{
+          file.item?.userFile?.fullName?.slice(-1)[0] || 'none'
+        }}</span>
       </template>
-
-      <FileInfo :file="file" share
+      <FileInfo :file="file"
     /></Drawer>
   </div>
 </template>
@@ -55,21 +57,20 @@
   import { defineComponent, computed, ref, createVNode } from 'vue';
   import { BasicTable, useTable } from '/@/components/Table';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import GIcon from '/@/components/Icon';
-  import { getBasicColumns } from './shareData';
+  import { getBasicColumns } from './Data';
   import { useMutation, useQuery } from '@vue/apollo-composable';
   import { BasicHelp } from '/@/components/Basic';
   import { useI18n } from '/@/hooks/web/useI18n';
+  import FileInfo from './FileInfo.vue';
   import { Tooltip, Drawer, Dropdown, Menu, Modal } from 'ant-design-vue';
   import { ExclamationCircleOutlined, ExclamationCircleTwoTone } from '@ant-design/icons-vue';
-  import { NetGql, NetFile, FileInfo } from '/@/components/NetFile';
+  import { NetGql, NetFile } from '/@/components/NetFile';
   import { Button } from '/@/components/Button';
 
   const { t } = useI18n('general.metanet');
   export default defineComponent({
     components: {
       BasicTable,
-      GIcon,
       BasicHelp,
       Tooltip,
       Drawer,
@@ -87,22 +88,23 @@
       const tableData = ref([]);
       const infoButton = ref(false);
       const infoVisible = computed(() => {
-        return infoButton.value && file.value.fullName !== undefined;
+        return infoButton.value && file.value.id !== undefined;
       });
-      const file = ref({}) as NetFile;
+      const file = ref({});
       function closeInfo() {
         infoButton.value = false;
       }
       function changeInfo() {
         infoButton.value = !infoButton.value;
       }
-      const [
-        registerTable,
-        { getSelectRowKeys, setSelectedRowKeys, clearSelectedRowKeys, getDataSource },
-      ] = useTable({
+      const [registerTable] = useTable({
         canResize: false,
         customRow: (record) => ({
           onClick: () => {
+            if (file.value.id == record.id && infoVisible.value) {
+              infoButton.value = false;
+              return;
+            }
             file.value = record;
             infoButton.value = true;
           },
@@ -148,34 +150,13 @@
         });
       }
 
-      const choose = computed(() => {
-        return getSelectRowKeys().length !== 0;
-      });
-
-      function setSelectedRowKeyList() {
-        if (getSelectRowKeys().length !== 0) {
-          clearSelectedRowKeys();
-          return;
-        }
-        let arr: string[] = [];
-        for (let i = 0; i < getDataSource().length; i++) {
-          arr.push(String(i));
-        }
-        setSelectedRowKeys(arr);
-      }
-      function clearSelect() {
-        clearSelectedRowKeys();
-      }
       function copyUrl(record, mode = 1) {
-        const f: NetFile = record;
+        const f: NetFile = record?.item;
         f.copyShareUrl(mode);
       }
 
       return {
         registerTable,
-        setSelectedRowKeyList,
-        clearSelect,
-        choose,
         path,
         del,
         copyUrl,

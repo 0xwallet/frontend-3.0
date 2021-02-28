@@ -13,6 +13,8 @@ const driveListCollections = gql`
       item {
         ... on DriveShare {
           shareID: id
+          code
+          uri
           ${userFile}
           expiredAt
         }
@@ -41,9 +43,9 @@ const driveCreateShareCollection = gql`
   }
 `;
 
-const driveDelectCollection = gql`
+const driveDeleteCollection = gql`
   mutation($id: ID!) {
-    driveDelectCollection(id: $id) {
+    driveDeleteCollection(id: $id) {
       id
     }
   }
@@ -53,5 +55,5 @@ export const Collection = {
   List: driveListCollections,
   CreatePublish: driveCreatePublishCollection,
   CreateShare: driveCreateShareCollection,
-  Delete: driveDelectCollection,
+  Delete: driveDeleteCollection,
 };

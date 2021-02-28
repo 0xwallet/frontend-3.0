@@ -81,7 +81,7 @@
   import { useGo } from '/@/hooks/web/usePage';
   import { sendVerifyCode, signUp } from '/@/hooks/apollo/gqlUser';
   import { newWallet, saveWallet } from '/@/hooks/nkn/getNKN';
-  import { useGlobSetting, useProjectSetting } from '/@/hooks/setting';
+  import { useGlobSetting } from '/@/hooks/setting';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMutation } from '@vue/apollo-composable';
   import { AppLocalePicker } from '/@/components/Application';
