@@ -41,13 +41,13 @@
       </Button> -->
     </FormItem>
     <ARow class="enter-x">
-      <ACol :span="7">
+      <ACol :xs="24" :md="8">
         <Button block @click="setLoginState(LoginStateEnum.QR_CODE)"> WebAuth登录 </Button>
       </ACol>
-      <ACol :span="8" :offset="1">
+      <ACol :md="8" :xs="24" class="xs:my-2 md:my-0 xs:mx-0 md:mx-2">
         <Button block @click="setLoginState(LoginStateEnum.MOBILE)"> nMoblie登录 </Button>
       </ACol>
-      <ACol :span="7" :offset="1">
+      <ACol :md="7" :xs="24">
         <Button block @click="setLoginState(LoginStateEnum.REGISTER)">
           {{ t('sys.login.registerButton') }}
         </Button>

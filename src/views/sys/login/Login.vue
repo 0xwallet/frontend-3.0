@@ -170,7 +170,7 @@
       }
 
       @media (max-width: @screen-sm) {
-        min-width: 260px;
+        min-width: 180px;
       }
     }
     .@{countdown-prefix-cls} input {

@@ -9,7 +9,7 @@ const dashboard: AppRouteModule = {
   component: LAYOUT,
   redirect: '/home/dashboard',
   meta: {
-    icon: 'bx:bx-home',
+    icon: 'ion:home-outline',
     title: t('routes.dashboard.welcome'),
   },
   children: [
