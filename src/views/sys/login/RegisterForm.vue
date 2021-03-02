@@ -36,20 +36,35 @@
       <!--          {{ t('sys.login.policy') }}-->
       <!--        </Checkbox>-->
       <!--      </FormItem>-->
+      <FormItem class="enter-x">
+        <Button
+          type="primary"
+          class="enter-x"
+          size="large"
+          block
+          @click="handleRegister"
+          :loading="loading"
+        >
+          {{ t('sys.login.registerButton') }}
+        </Button>
+      </FormItem>
+      <ARow class="enter-x">
+        <ACol :xs="24" :md="8">
+          <Button block @click="setLoginState(LoginStateEnum.QR_CODE)"> WebAuth登录 </Button>
+        </ACol>
+        <ACol :md="8" :xs="24" class="xs:my-2 md:my-0 xs:mx-0 md:mx-2">
+          <Button block @click="setLoginState(LoginStateEnum.MOBILE)"> nMoblie登录 </Button>
+        </ACol>
+        <ACol :md="7" :xs="24">
+          <Button block @click="handleBackLogin">
+            {{ t('sys.login.loginButton') }}
+          </Button>
+        </ACol>
+      </ARow>
 
-      <Button
-        type="primary"
-        class="enter-x"
-        size="large"
-        block
-        @click="handleRegister"
-        :loading="loading"
-      >
-        {{ t('sys.login.registerButton') }}
-      </Button>
-      <Button size="large" block class="enter-x mt-4" @click="handleBackLogin">
-        {{ t('sys.login.backSignIn') }}
-      </Button>
+      <!--      <Button size="large" block class="enter-x mt-4" @click="handleBackLogin">-->
+      <!--        {{ t('sys.login.backSignIn') }}-->
+      <!--      </Button>-->
     </Form>
   </template>
 </template>
@@ -57,7 +72,7 @@
   import { defineComponent, reactive, ref, unref, computed } from 'vue';
 
   import LoginFormTitle from './LoginFormTitle.vue';
-  import { Form, Input, Button, Checkbox } from 'ant-design-vue';
+  import { Form, Input, Button, Checkbox, Row, Col } from 'ant-design-vue';
   import { StrengthMeter } from '/@/components/StrengthMeter';
   import { CountdownInput } from '/@/components/CountDown';
 
@@ -82,10 +97,12 @@
       StrengthMeter,
       CountdownInput,
       LoginFormTitle,
+      [Col.name]: Col,
+      [Row.name]: Row,
     },
     setup() {
       const { t } = useI18n();
-      const { handleBackLogin, getLoginState } = useLoginState();
+      const { handleBackLogin, getLoginState, setLoginState } = useLoginState();
 
       const formRef = ref<any>(null);
       const loading = ref(false);
@@ -140,6 +157,8 @@
         handleBackLogin,
         getShow,
         handleSendCode,
+        setLoginState,
+        LoginStateEnum,
       };
     },
   });

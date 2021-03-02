@@ -22,9 +22,9 @@
     "test:gzip": "http-server dist --cors --gzip -c-1",
     "test:br": "http-server dist --cors --brotli -c-1",
     "reinstall": "rimraf yarn.lock && rimraf package.lock.json && rimraf node_modules && npm run bootstrap",
-    "postinstall": "node scripts/vue-apollo-patch.js"
+    "postinstall": "node scripts/vue-apollo-patch.js",
     "install:husky": "is-ci || husky install",
-    "gen:icon": "esno ./build/gen/generateIconJson.ts",
+    "gen:icon": "esno ./build/gen/generateIconJson.ts"
   },
   "dependencies": {
     "@absinthe/socket": "^0.2.1",
