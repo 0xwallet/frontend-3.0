@@ -24,9 +24,12 @@
       const { t } = useI18n();
       const [registerMarkdownModal, { openModal }] = useModal();
       watch(
-        () => fileStore.getMarkdownFiles,
-        () => {
-          openModal(true, {});
+        () => fileStore.getMarkdownVisible,
+        (v) => {
+          if (v) {
+            openModal(true, {});
+            fileStore.setMarkdownVisible(false);
+          }
         },
         { deep: true }
       );
