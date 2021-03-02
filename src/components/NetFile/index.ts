@@ -10,6 +10,7 @@ import FileInfo from './components/FileInfo.vue';
 import { NetGql } from './gql/index';
 import { NetFile } from './netFile';
 import { NetUpload } from './upload';
+import MarkdownEditModal from './components/markdown/MarkdownEditModal.vue';
 
 export {
   Hash,
@@ -24,4 +25,5 @@ export {
   MoveModal,
   FileInfo,
   NetUpload,
+  MarkdownEditModal,
 };

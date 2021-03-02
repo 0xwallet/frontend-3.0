@@ -11,6 +11,7 @@ import { useMessage } from '/@/hooks/web/useMessage';
 import { dateUtil } from '/@/utils/dateUtil';
 import { NetFile, NetGql } from '/@/components/NetFile';
 import { useApollo } from '/@/hooks/apollo/apollo';
+import { ref } from 'vue';
 
 const { createMessage, createErrorModal } = useMessage();
 const NAME = 'netFileStore';
@@ -30,6 +31,8 @@ class netFileStore extends VuexModule {
 
   private refetch: number = 0;
 
+  private markdownFiles: any[] = [];
+
   get getUploadList(): FileItem[] {
     return this.uploadList || [];
   }
@@ -38,6 +41,9 @@ class netFileStore extends VuexModule {
   }
   get getUploadSpeed(): uploadSpeed {
     return this.uploadSpeed;
+  }
+  get getMarkdownFiles(): any[] {
+    return this.markdownFiles;
   }
   get getRefetch(): number {
     return this.refetch;
@@ -64,6 +70,18 @@ class netFileStore extends VuexModule {
   appendShareFile(file: NetFile): void {
     this.shareFiles.push(file);
   }
+  @Mutation
+  appendMarkdownFile(file: NetFile): void {
+    if (this.markdownFiles.some((v) => v.key === file.id)) return;
+    this.markdownFiles.push({
+      title: file.fileName(),
+      file,
+      key: file.id,
+      ref: ref(null),
+    });
+    console.log(this.markdownFiles);
+  }
+
   @Mutation
   setSpeed(s: number): void {
     if (dateUtil.unix() === this.uploadSpeed.time) {

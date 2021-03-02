@@ -1,38 +1,43 @@
 <template>
-  <BasicModal
-    v-bind="$attrs"
-    @register="register"
-    :title="t('markdownTitle')"
-    :minHeight="height"
-    width="80%"
-    destroyOnClose
-    :closeFunc="handleCloseFunc"
-  >
+  <div>
     <div ref="wrapRef"></div>
-  </BasicModal>
+  </div>
 </template>
 <script lang="ts">
-  import { computed, createVNode, defineComponent, ref, unref } from 'vue';
-  import { BasicModal, useModalInner } from '/@/components/Modal';
+  import { computed, defineComponent, nextTick, ref, unref, watch } from 'vue';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import { NetFile } from '/@/components/NetFile/netFile';
   const { t } = useI18n('general.metanet');
   import Vditor from 'vditor';
   import 'vditor/dist/index.css';
   import { useLocale } from '/@/locales/useLocale';
-  import { Modal } from 'ant-design-vue';
-  import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
+  import { propTypes } from '/@/utils/propTypes';
+  import { NetFile } from '/@/components/NetFile';
+
   type Lang = 'zh_CN' | 'en_US' | 'ja_JP' | 'ko_KR' | undefined;
   export default defineComponent({
-    components: { BasicModal },
-    setup() {
+    props: {
+      file: propTypes.object,
+    },
+    setup(props) {
       const valueRef = ref('');
       const wrapRef = ref<ElRef>(null);
+      const id = ref('');
       const vditorRef = ref<Nullable<Vditor>>(null);
       const initedRef = ref(false);
       const height = computed(() => {
         return document.body.clientHeight - 300;
       });
+      watch(
+        () => props.file,
+        () => {
+          id.value = props.file.id;
+          nextTick(() => {
+            init(props.file);
+          });
+        },
+        { immediate: true }
+      );
+
       const { getLang } = useLocale();
       const getCurrentLang = computed((): 'zh_CN' | 'en_US' | 'ja_JP' | 'ko_KR' => {
         let lang: Lang;
@@ -52,40 +57,16 @@
         return lang;
       });
 
-      const [register, { setModalProps, closeModal }] = useModalInner(async (data) => {
-        const f: NetFile = data;
-        setModalProps({
-          loading: true,
-          okText: t('saveButton'),
-          title: f.fileName(),
-        });
-
-        const value = await f.raw();
-        valueRef.value = value;
-        init(value);
-      });
       const edited = ref(false);
-      async function handleCloseFunc() {
-        if (!edited.value) return true;
-        Modal.confirm({
-          title: t('error'),
-          icon: createVNode(ExclamationCircleOutlined),
-          content: '文件内容有变化，不保存吗?',
-          centered: true,
-          okText: t('yes'),
-          cancelText: t('cancelAll'),
-          onOk() {
-            closeModal();
-          },
-        });
-        return false;
-      }
 
-      function init(value) {
+      async function init(file: NetFile) {
+        const value = await file.raw();
+        console.log(value);
+
+        console.log(id.value);
         const wrapEl = unref(wrapRef);
-        console.log(wrapEl);
         if (!wrapEl) return;
-        vditorRef.value = new Vditor(wrapEl, {
+        vditorRef.value = new Vditor(id.value, {
           lang: unref(getCurrentLang),
           value,
           mode: 'ir',
@@ -100,17 +81,15 @@
             edited.value = true;
           },
         });
-        initedRef.value = true;
-        setModalProps({ loading: false });
+        // initedRef.value = true;
       }
 
       return {
-        handleCloseFunc,
         valueRef,
-        register,
         t,
         height,
         wrapRef,
+        id,
       };
     },
   });

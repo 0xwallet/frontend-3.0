@@ -513,7 +513,7 @@
         }
         switch (f.type) {
           case 'md':
-            openMDModal(f);
+            fileStore.appendMarkdownFile(f);
             break;
           case 'pdf':
             openPdfDrawer(true, { file: f }, true);

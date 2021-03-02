@@ -19,6 +19,7 @@
       </template>
 
       <template #tabBarExtraContent v-if="getShowRedo || getShowQuick">
+        <MarkdownButton />
         <TabRedo v-if="getShowRedo" />
         <QuickButton v-if="getShowQuick" />
         <FoldButton v-if="getShowFold" />
@@ -53,6 +54,7 @@
       QuickButton: createAsyncComponent(() => import('./components/QuickButton.vue')),
       TabRedo: createAsyncComponent(() => import('./components/TabRedo.vue')),
       FoldButton: createAsyncComponent(() => import('./components/FoldButton.vue')),
+      MarkdownButton: createAsyncComponent(() => import('./components/TabMarkdown.vue')),
       Tabs,
       TabPane: Tabs.TabPane,
       TabContent,
