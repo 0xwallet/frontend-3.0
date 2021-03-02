@@ -20,7 +20,7 @@
   </BasicModal>
 </template>
 <script lang="ts">
-  import { computed, createVNode, defineComponent, nextTick, ref, unref, watch } from 'vue';
+  import { computed, createVNode, defineComponent, nextTick, ref, watch } from 'vue';
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { NetFile } from '/@/components/NetFile/netFile';
@@ -105,8 +105,9 @@
         return false;
       }
 
-      const onEdit = (targetKey: string) => {
-        console.log(targetKey);
+      const onEdit = async (targetKey: string) => {
+        const index = await fileStore.delMarkdownFile(targetKey);
+        refs.value.splice(index, 1);
       };
 
       return {

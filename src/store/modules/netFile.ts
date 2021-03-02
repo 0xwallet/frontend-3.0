@@ -86,6 +86,12 @@ class netFileStore extends VuexModule {
     this.markdownModalVisible = true;
   }
   @Mutation
+  delMarkdownFile(id: string): number {
+    const index = this.markdownFiles.findIndex((v) => v.key == id);
+    this.markdownFiles.splice(index, 1);
+    return index;
+  }
+  @Mutation
   setMarkdownVisible(v: boolean): void {
     this.markdownModalVisible = v;
   }
