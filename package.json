@@ -1,6 +1,6 @@
 {
   "name": "vben-admin",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "scripts": {
     "bootstrap": "yarn install",
     "serve": "vite",
@@ -34,7 +34,7 @@
     "@msgpack/msgpack": "^2.3.0",
     "@vue/apollo-composable": "^4.0.0-alpha.12",
     "@vueuse/core": "^4.3.1",
-    "@zxcvbn-ts/core": "^0.2.0",
+    "@zxcvbn-ts/core": "^0.3.0",
     "ant-design-vue": "2.0.1",
     "apexcharts": "^3.25.0",
     "axios": "^0.21.1",
@@ -67,7 +67,7 @@
   "devDependencies": {
     "@commitlint/cli": "^12.0.1",
     "@commitlint/config-conventional": "^12.0.1",
-    "@iconify/json": "^1.1.310",
+    "@iconify/json": "^1.1.311",
     "@ls-lint/ls-lint": "^1.9.2",
     "@purge-icons/generated": "^0.7.0",
     "@types/crypto-js": "^4.0.1",
@@ -115,7 +115,7 @@
     "stylelint-order": "^4.1.0",
     "ts-node": "^9.1.1",
     "typescript": "4.2.2",
-    "vite": "^2.0.4",
+    "vite": "^2.0.5",
     "vite-plugin-compression": "^0.2.3",
     "vite-plugin-html": "^2.0.3",
     "vite-plugin-imagemin": "^0.2.9",
@@ -124,7 +124,7 @@
     "vite-plugin-pwa": "^0.5.6",
     "vite-plugin-style-import": "^0.7.6",
     "vite-plugin-theme": "^0.4.8",
-    "vite-plugin-windicss": "0.6.2",
+    "vite-plugin-windicss": "0.6.4",
     "vue-eslint-parser": "^7.6.0",
     "yargs": "^16.2.0"
   },
