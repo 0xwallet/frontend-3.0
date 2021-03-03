@@ -16,7 +16,6 @@
   import { useLockPage } from '/@/hooks/web/useLockPage';
   import { initApollo } from '/@/hooks/apollo/apollo';
   import { initJS, useMClient, useWallet } from '/@/hooks/nkn/getNKN';
-
   import { userStore } from '/@/store/modules/user';
   import { useLocale } from '/@/locales/useLocale';
 

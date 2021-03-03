@@ -14,4 +14,5 @@ export default {
 
   redo: '刷新',
   back: '返回',
+  markdown: 'Markdown 编辑器',
 };

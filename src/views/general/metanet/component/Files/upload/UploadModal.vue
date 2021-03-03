@@ -69,7 +69,6 @@
   import FileList from './FileList';
   //Apollo
   import { InboxOutlined, MinusOutlined } from '@ant-design/icons-vue';
-  import CryptoES from 'crypto-es';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { fileStore } from '/@/store/modules/netFile';
   import { useMutation } from '@vue/apollo-composable';

@@ -31,7 +31,7 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { useWallet, useNKN, saveWallet } from '/@/hooks/nkn/getNKN';
-  import CryptoES from 'crypto-es';
+  import CryptoJS from 'crypto-js';
   import { Divider, Row, Col } from 'ant-design-vue';
 
   import { useMutation, useQuery } from '@vue/apollo-composable';
@@ -95,8 +95,8 @@
         try {
           const data = await validateFields();
           const oldWallet = await useWallet();
-          const secret = CryptoES.enc.Base64.stringify(
-            CryptoES.HmacSHA512(user.value.email, data.newPassword)
+          const secret = CryptoJS.enc.Base64.stringify(
+            CryptoJS.HmacSHA512(user.value.email, data.newPassword)
           );
           const NKN = await useNKN();
           let w = new NKN.Wallet({ seed: oldWallet.getSeed(), password: secret });

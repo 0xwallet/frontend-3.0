@@ -172,11 +172,34 @@
       }
     }
 
+    &__extra-markdown {
+      display: inline-block;
+      width: 80px;
+      height: @multiple-height;
+      line-height: @multiple-height;
+      color: #666;
+      text-align: center;
+      cursor: pointer;
+      border-left: 1px solid #eee;
+
+      &:hover {
+        color: @text-color-base;
+      }
+
+      span[role='img'] {
+        transform: rotate(90deg);
+      }
+    }
+
+
+
     &__extra-redo {
       span[role='img'] {
         transform: rotate(0deg);
       }
     }
+
+    
 
     &__info {
       display: inline-block;

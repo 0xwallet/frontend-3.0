@@ -1,6 +1,6 @@
 import { useScript } from '/@/hooks/web/useScript';
 
-import CryptoES from 'crypto-es';
+import CryptoJS from 'crypto-js';
 import dayjs from 'dayjs';
 export const getGlobal = (): any => (typeof window !== 'undefined' ? window : global);
 export let wallet: any = null;
@@ -79,8 +79,8 @@ export function newWallet(params: {
   password: string;
 }): Promise<{ json: string; publicKey: string }> {
   return new Promise((resolve, reject) => {
-    const secret = CryptoES.enc.Base64.stringify(
-      CryptoES.HmacSHA512(params.email, params.password)
+    const secret = CryptoJS.enc.Base64.stringify(
+      CryptoJS.HmacSHA512(params.email, params.password)
     );
     useNKN()
       .then((nkn) => {
@@ -92,7 +92,7 @@ export function newWallet(params: {
 }
 
 export function saveWallet(params: { email: string; password: string; walletJson?: string }) {
-  const secret = CryptoES.enc.Base64.stringify(CryptoES.HmacSHA512(params.email, params.password));
+  const secret = CryptoJS.enc.Base64.stringify(CryptoJS.HmacSHA512(params.email, params.password));
   localStorage.setItem('walletPassword', secret);
   if (params.walletJson) {
     localStorage.setItem('walletJson', params.walletJson);

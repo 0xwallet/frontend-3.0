@@ -4,7 +4,7 @@ import {
   // getBase64WithFile,
 } from '/@/views/general/metanet/component/Files/upload/utils';
 import { useMessage } from '/@/hooks/web/useMessage';
-import CryptoES from 'crypto-es';
+import CryptoJS from 'crypto-js';
 import {
   FileItem,
   UploadResultStatus,
@@ -34,8 +34,9 @@ async function checkFile(file: File, path: string[] = [], immediately: boolean =
   let status = '';
   let percent = 0;
   const data = await file.arrayBuffer();
-  let wordArray = CryptoES.lib.WordArray.create(data);
-  hash = CryptoES.SHA256(wordArray).toString();
+  // @ts-ignore
+  let wordArray = CryptoJS.lib.WordArray.create(data);
+  hash = CryptoJS.SHA256(wordArray).toString();
   useApollo({
     mode: 'mutate',
     gql: NetGql.Basic.Hash,

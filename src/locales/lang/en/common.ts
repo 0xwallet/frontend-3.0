@@ -14,4 +14,5 @@ export default {
 
   redo: 'Refresh',
   back: 'Back',
+  markdown: 'Markdown Edit',
 };

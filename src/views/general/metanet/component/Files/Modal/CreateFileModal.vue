@@ -9,7 +9,7 @@
   import { BasicForm, FormSchema, useForm } from '/@/components/Form/index';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import CryptoES from 'crypto-es';
+  import CryptoJS from 'crypto-js';
   import { buildUUID } from '/@/utils/uuid';
   import { fileStore } from '/@/store/modules/netFile';
   const { t } = useI18n('general.metanet');
@@ -79,8 +79,8 @@
             data.fullName += '.' + data.type;
           }
           const file = new File([''], data.fullName, { type: 'text/plain' });
-          let wordArray = CryptoES.lib.WordArray.create(await file.arrayBuffer());
-          let hash = CryptoES.SHA256(wordArray).toString();
+          let wordArray = CryptoJS.lib.WordArray.create(await file.arrayBuffer());
+          let hash = CryptoJS.SHA256(wordArray).toString();
           await fileStore.uploadApiByItem(
             {
               uuid: buildUUID(),

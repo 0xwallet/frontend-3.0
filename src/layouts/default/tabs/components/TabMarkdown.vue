@@ -1,6 +1,6 @@
 <template>
-  <Tooltip :title="t('common.redo')" placement="bottom" :mouseEnterDelay="0.5">
-    <span :class="`${prefixCls}__extra-redo`" @click="openMarkdown"> MD </span>
+  <Tooltip :title="t('common.markdown')" placement="bottom" :mouseEnterDelay="0.5">
+    <span :class="`${prefixCls}__extra-markdown`" @click="openMarkdown"> Markdown </span>
     <MarkdownEditModal @register="registerMarkdownModal" />
   </Tooltip>
 </template>
@@ -27,7 +27,7 @@
         () => fileStore.getMarkdownVisible,
         (v) => {
           if (v) {
-            openModal(true, {});
+            openModal(true);
             fileStore.setMarkdownVisible(false);
           }
         },

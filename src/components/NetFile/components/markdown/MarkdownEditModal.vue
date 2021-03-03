@@ -2,11 +2,11 @@
   <BasicModal
     v-bind="$attrs"
     @register="register"
-    :title="t('markdownTitle')"
     :minHeight="height"
     width="80%"
     :closeFunc="handleCloseFunc"
   >
+    <template #title></template>
     <Tabs v-model:activeKey="activeKey" hide-add type="editable-card" @edit="onEdit">
       <TabPane
         v-for="(pane, index) in panes"
@@ -56,17 +56,7 @@
 
       const height = computed(() => document.body.clientHeight - 300);
 
-      const [register, { setModalProps, closeModal }] = useModalInner((data) => {
-        // const f: NetFile = data;
-        // setModalProps({
-        //   loading: true,
-        //   okText: t('saveButton'),
-        //   title: f.fileName(),
-        // });
-        //
-        // const value = await f.raw();
-        // valueRef.value = value;
-      });
+      const [register, { closeModal }] = useModalInner();
       async function init(index: number) {
         const value = await panes.value[index].file.raw();
         const wrapEl = refs.value[index];
