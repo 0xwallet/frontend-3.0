@@ -25,7 +25,7 @@
 </template>
 <script lang="ts">
   import { defineComponent } from 'vue';
-  import { VScroll } from '/@/components/VirtualScroll/index';
+  import { VScroll } from '/@/components/VirtualScroll';
 
   import { Divider } from 'ant-design-vue';
   import { PageWrapper } from '/@/components/Page';

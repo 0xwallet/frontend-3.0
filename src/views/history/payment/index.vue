@@ -1,9 +1,15 @@
-<template> </template>
+<template>
+  <div>
+    <FileTree />
+  </div>
+</template>
 
 <script lang="ts">
+  import { FileTree } from '/@/components/NetFile';
+
   import { defineComponent } from 'vue';
   export default defineComponent({
-    components: {},
+    components: { FileTree },
     setup() {},
   });
 </script>

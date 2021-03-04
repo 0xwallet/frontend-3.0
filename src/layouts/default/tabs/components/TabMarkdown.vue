@@ -1,6 +1,7 @@
 <template>
   <Tooltip :title="t('common.markdown')" placement="bottom" :mouseEnterDelay="0.5">
-    <span :class="`${prefixCls}__extra-markdown`" @click="openMarkdown"> Markdown </span>
+    <img :src="markdown" :class="`${prefixCls}__extra-markdown`" @click="openMarkdown" />
+    <!--    <span :class="`${prefixCls}__extra-markdown`" @click="openMarkdown"> Markdown </span>-->
     <MarkdownEditModal @register="registerMarkdownModal" />
   </Tooltip>
 </template>
@@ -13,7 +14,7 @@
   import { useModal } from '/@/components/Modal';
   import { MarkdownEditModal } from '/@/components/NetFile';
   import { fileStore } from '/@/store/modules/netFile';
-
+  import markdown from '/@/assets/svg/markdown.svg';
   export default defineComponent({
     name: 'TabMarkdown',
     components: { RedoOutlined, Tooltip, MarkdownEditModal },
@@ -36,7 +37,7 @@
       function openMarkdown() {
         openModal(true);
       }
-      return { prefixCls, t, loading, registerMarkdownModal, openMarkdown };
+      return { prefixCls, t, loading, registerMarkdownModal, openMarkdown, markdown };
     },
   });
 </script>

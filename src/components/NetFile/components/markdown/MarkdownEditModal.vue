@@ -7,16 +7,23 @@
     :closeFunc="handleCloseFunc"
   >
     <template #title></template>
-    <Tabs v-model:activeKey="activeKey" hide-add type="editable-card" @edit="onEdit">
-      <TabPane
-        v-for="(pane, index) in panes"
-        :key="pane.key"
-        :tab="pane.title"
-        :closable="pane.closable"
-      >
-        <div :ref="setRef(index)" :id="pane.key"></div>
-      </TabPane>
-    </Tabs>
+
+    <div class="grid grid-cols-12 gap-2">
+      <div class="col-span-2">
+        <FileTree />
+      </div>
+      <div class="col-span-10">
+        <Tabs v-model:activeKey="activeKey" hide-add type="editable-card" @edit="onEdit">
+          <TabPane
+            v-for="(pane, index) in panes"
+            :key="pane.key"
+            :tab="pane.title"
+            :closable="pane.closable"
+          >
+            <div :ref="setRef(index)" :id="pane.key"></div>
+          </TabPane> </Tabs
+      ></div>
+    </div>
   </BasicModal>
 </template>
 <script lang="ts">
@@ -24,16 +31,18 @@
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { NetFile } from '/@/components/NetFile/netFile';
+
   import { Tabs, Modal } from 'ant-design-vue';
   import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
   import { fileStore } from '/@/store/modules/netFile';
   import Vditor from 'vditor';
   import 'vditor/dist/index.css';
+  import { FileTree } from '/@/components/NetFile';
 
   const { t } = useI18n('general.metanet');
 
   export default defineComponent({
-    components: { BasicModal, Tabs, TabPane: Tabs.TabPane },
+    components: { BasicModal, Tabs, TabPane: Tabs.TabPane, FileTree },
     setup() {
       const refs = ref<HTMLElement[]>([]);
       const setRef = (index: number) => (el: HTMLElement) => {
@@ -71,7 +80,7 @@
           cache: {
             enable: false,
           },
-          height: height.value,
+          height: height.value - 60,
           input: () => {
             edited.value = true;
           },
