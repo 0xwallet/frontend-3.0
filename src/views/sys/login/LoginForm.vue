@@ -86,6 +86,9 @@
   import { useMutation } from '@vue/apollo-composable';
   import { useMClient, useWallet, saveWallet } from '/@/hooks/nkn/getNKN';
   import { signIn } from '/@/hooks/apollo/gqlUser';
+  import { useKeyPress } from '/@/hooks/event/useKeyPress';
+  import { KeyCodeEnum } from '/@/enums/keyCodeEnum';
+
   export default defineComponent({
     name: 'LoginForm',
     components: {
@@ -124,6 +127,14 @@
 
       const { validForm } = useFormValid(formRef);
       const { mutate: SignIn, onDone } = useMutation(signIn);
+      useKeyPress(['enter'], (events) => {
+        const keyCode = events.keyCode;
+
+        if (keyCode === KeyCodeEnum.ENTER) {
+          handleLogin();
+        }
+      });
+
       const getShow = computed(() => unref(getLoginState) === LoginStateEnum.LOGIN);
       onDone(async (res) => {
         const data = await validForm();
