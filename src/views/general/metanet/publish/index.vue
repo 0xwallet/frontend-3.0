@@ -1,54 +1,51 @@
 <template>
   <div class="p-4">
-    <Row>
-      <Col :span="24 - span">
-        <BasicTable @register="registerTable">
-          <template #urlTitle>
-            <span>
-              {{ t('url') }}
-              <BasicHelp class="ml-2" :text="t('copyShare')" />
-            </span>
+    <BasicTable @register="registerTable">
+      <template #urlTitle>
+        <span>
+          {{ t('url') }}
+          <BasicHelp class="ml-2" :text="t('copyShare')" />
+        </span>
+      </template>
+      <template #uri="{ record, text }">
+        <Tooltip :title="t('copy')"
+          ><a-button type="link" @click="copyUrl(text)"> {{ text }}</a-button></Tooltip
+        >
+      </template>
+      <template #action="{ record }">
+        <Dropdown>
+          <a class="ant-dropdown-link"> ... </a>
+          <template #overlay>
+            <Menu>
+              <MenuItem>
+                <a-button type="link" @click="openUpdateModal(record.publishId)">{{
+                  t('publishUpdate')
+                }}</a-button></MenuItem
+              >
+              <MenuItem v-if="record.name !== 'deleted'">
+                <a-button
+                  type="link"
+                  color="error"
+                  :pop="{ title: t('delButton') + ' ' + record.fullName + '?' }"
+                  @click="del(record.publishId)"
+                  >{{ t('delButton') }}</a-button
+                ></MenuItem
+              >
+              <MenuItem>
+                <a-button type="link">{{ t('setting') }}</a-button></MenuItem
+              >
+            </Menu>
           </template>
-          <template #uri="{ record, text }">
-            <Tooltip :title="t('copy')"
-              ><a-button type="link" @click="copyUrl(text)"> {{ text }}</a-button></Tooltip
-            >
-          </template>
-          <template #action="{ record }">
-            <Dropdown>
-              <a class="ant-dropdown-link"> ... </a>
-              <template #overlay>
-                <Menu>
-                  <MenuItem>
-                    <a-button type="link" @click="openUpdateModal(record.publishId)">{{
-                      t('publishUpdate')
-                    }}</a-button></MenuItem
-                  >
-                  <MenuItem v-if="record.name !== 'deleted'">
-                    <a-button
-                      type="link"
-                      color="error"
-                      :pop="{ title: t('delButton') + ' ' + record.fullName + '?' }"
-                      @click="del(record.publishId)"
-                      >{{ t('delButton') }}</a-button
-                    ></MenuItem
-                  >
-                  <MenuItem>
-                    <a-button type="link">{{ t('setting') }}</a-button></MenuItem
-                  >
-                </Menu>
-              </template>
-            </Dropdown>
-          </template>
-          <template #toolbar>
-            <a-button type="primary" @click="refetch">{{ t('refresh') }}</a-button>
-            <a-button type="link" @click="openInfo"
-              ><InfoCircleOutlined :style="{ fontSize: '20px' }"
-            /></a-button>
-          </template> </BasicTable
-      ></Col>
-      <Col :span="span"><FileInfo :file="file" @close="closeInfo" @refetch="refetch" /></Col>
-    </Row>
+        </Dropdown>
+      </template>
+      <template #toolbar>
+        <Button @click="changeInfo" type="link">
+          <ExclamationCircleTwoTone
+            :style="{ fontSize: '20px' }"
+            :twoToneColor="`#${infoVisible ? '2E2EFE' : '6E6E6E'}`" />{{
+        }}</Button>
+      </template> </BasicTable
+    ><FileInfo :file="file" :visible="infoVisible" />
     <UpdatePublishModal @register="registerUpdatePublishModal" />
   </div>
 </template>
@@ -58,15 +55,16 @@
   import { useMessage } from '/@/hooks/web/useMessage';
   import { getBasicColumns } from './Data';
   import { BasicHelp } from '/@/components/Basic';
-  import FileInfo from './FileInfo.vue';
+
   import { useI18n } from '/@/hooks/web/useI18n';
-  import { Tooltip, Row, Col, Dropdown, Menu } from 'ant-design-vue';
-  import { InfoCircleOutlined } from '@ant-design/icons-vue';
+  import { Tooltip, Dropdown, Menu } from 'ant-design-vue';
+  import { ExclamationCircleTwoTone } from '@ant-design/icons-vue';
   import { useMutation, useQuery } from '@vue/apollo-composable';
   import { useModal } from '/@/components/Modal';
   import UpdatePublishModal from './UpdatePublishModal.vue';
-  import { NetGql, NetFile, Icon } from '/@/components/NetFile';
+  import { NetGql, NetFile, Icon, FileInfo } from '/@/components/NetFile';
   import { useCopyToClipboard } from '/@/hooks/web/useCopyToClipboard';
+  import { Button } from '/@/components/Button';
   const { clipboardRef, copiedRef } = useCopyToClipboard();
   const { t } = useI18n('general.metanet');
   export default defineComponent({
@@ -75,31 +73,25 @@
       Icon,
       BasicHelp,
       Tooltip,
-      Row,
-      Col,
       Menu,
       MenuItem: Menu.Item,
       MenuGroup: Menu.ItemGroup,
       FileInfo,
-      InfoCircleOutlined,
+      ExclamationCircleTwoTone,
       Dropdown,
       UpdatePublishModal,
+      Button,
     },
     setup() {
       const { createMessage, createErrorModal } = useMessage();
       const path = ref([]);
       const tableData = ref([]);
-      const info = ref(false);
-      const file = ref({}) as NetFile;
-      const span = computed(() => {
-        if (file.value.fullName === undefined) {
-          return 0;
-        }
-        if (!info.value) {
-          return 0;
-        }
-        return 8;
-      });
+      const infoVisible = ref(false);
+      function changeInfo() {
+        infoVisible.value = !infoVisible.value;
+      }
+      const file = ref({});
+
       const [
         registerTable,
         { getSelectRowKeys, setSelectedRowKeys, clearSelectedRowKeys, getDataSource },
@@ -107,15 +99,20 @@
         canResize: false,
         customRow: (record) => ({
           onClick: () => {
-            file.value = record;
-            info.value = true;
+            if (file.value.id == record.file.id && infoVisible.value) {
+              infoVisible.value = false;
+              return;
+            }
+
+            file.value = record.file;
+            infoVisible.value = true;
           },
         }),
         pagination: false,
         title: t('publishTitle'),
         dataSource: tableData,
         columns: getBasicColumns(),
-        rowKey: 'shareId',
+        rowKey: 'publishId',
         showIndexColumn: false,
         scroll: { x: 1000, y: 1000 },
       });
@@ -136,7 +133,7 @@
             version: v.current.id,
             history: v.history,
             publishId: v.id,
-            ...f,
+            file: f,
           });
         });
         tableData.value = temp;
@@ -210,12 +207,13 @@
         copyUrl,
         refetch,
         t,
-        span,
         file,
         openInfo,
         closeInfo,
         openUpdateModal,
         registerUpdatePublishModal,
+        changeInfo,
+        infoVisible,
       };
     },
   });

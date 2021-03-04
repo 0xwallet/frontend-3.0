@@ -114,13 +114,6 @@
     },
     setup(props) {
       const info: NetFile = computed<NetFile>(() => {
-        if (props.file.item) {
-          console.log(props.file.item.userFile.fullName.slice(-1)[0]);
-          const file = new NetFile({ userFile: props.file.item });
-          console.log(file);
-          return file;
-        }
-        console.log(props.file);
         return props.file;
       });
       const share = computed(() => {

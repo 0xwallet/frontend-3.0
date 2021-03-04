@@ -67,15 +67,13 @@
   import { Tabs, Card, Descriptions, Space, Divider, Input, Button } from 'ant-design-vue';
   import { EditOutlined, CloseOutlined, CheckOutlined } from '@ant-design/icons-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
-
   import { NetFile } from '/@/components/NetFile/netFile';
-  const { t } = useI18n('general.metanet');
   import { byteTransfer } from '/@/utils/disk/file';
   import { propTypes } from '/@/utils/propTypes';
   import { formatToDateTime } from '/@/utils/dateUtil';
   import { List } from 'ant-design-vue';
   import { Hash, Icon } from '/@/components/NetFile';
-
+  const { t } = useI18n('general.metanet');
   export default defineComponent({
     name: 'CollectionFileInfo',
     components: {
