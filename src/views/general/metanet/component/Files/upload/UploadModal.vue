@@ -314,7 +314,7 @@
 
     &-toolbar {
       display: flex;
-      align-items: start;
+      align-items: flex-start;
       margin-bottom: 8px;
 
       &__btn {

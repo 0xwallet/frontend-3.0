@@ -3,7 +3,7 @@ import { useI18n } from '/@/hooks/web/useI18n';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { Icon, NetFile, Hash } from '/@/components/NetFile';
+import { Icon, Hash } from '/@/components/NetFile';
 dayjs.extend(duration);
 dayjs.extend(relativeTime);
 const { t } = useI18n('general.metanet');
@@ -17,11 +17,10 @@ export function getBasicColumns(): BasicColumn[] {
       // slots: { customRender: 'name' },
       customRender: ({ record }) => {
         // console.log(record);
-        const f = new NetFile(record.item);
         return (
           <span>
-            <Icon type={f.type} size={30} />
-            <a-button type="link">{f.fileName()}</a-button>
+            <Icon type={record.file.type} size={30} />
+            <a-button type="link">{record.file.fileName()}</a-button>
           </span>
         );
       },

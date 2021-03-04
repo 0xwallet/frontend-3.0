@@ -1,17 +1,6 @@
 <template>
   <div>
     <BasicTable @register="registerTable">
-      <template #urlTitle>
-        <span>
-          {{ t('url') }}
-          <BasicHelp class="ml-2" :text="t('copyShare')" />
-        </span>
-      </template>
-      <template #uri="{ record, text }">
-        <Tooltip :title="t('copy')"
-          ><a-button type="link" @click="copyUrl(record)"> {{ text }}</a-button></Tooltip
-        >
-      </template>
       <template #action="{ record }">
         <Dropdown>
           <a class="ant-dropdown-link"> ... </a>
@@ -30,48 +19,30 @@
         <Button @click="changeInfo" type="link">
           <ExclamationCircleTwoTone
             :style="{ fontSize: '20px' }"
-            :twoToneColor="`#${infoButton ? '2E2EFE' : '6E6E6E'}`" />{{
+            :twoToneColor="`#${infoVisible ? '2E2EFE' : '6E6E6E'}`" />{{
         }}</Button>
       </template>
     </BasicTable>
 
-    <Drawer
-      placement="right"
-      :visible="infoVisible"
-      :getContainer="`.ant-card-body`"
-      @close="closeInfo"
-      :mask="false"
-      :width="400"
-      :wrapClassName="'!mt-50'"
-    >
-      <template #title>
-        <span @click="copyUrl(file, 4)">{{
-          file.item?.userFile?.fullName?.slice(-1)[0] || 'none'
-        }}</span>
-      </template>
-      <FileInfo :file="file"
-    /></Drawer>
+    <FileInfo :file="file" :visible="infoVisible" />
   </div>
 </template>
 <script lang="ts">
-  import { defineComponent, computed, ref, createVNode } from 'vue';
+  import { defineComponent, ref, createVNode } from 'vue';
   import { BasicTable, useTable } from '/@/components/Table';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { getBasicColumns } from './Data';
   import { useMutation, useQuery } from '@vue/apollo-composable';
-  import { BasicHelp } from '/@/components/Basic';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import FileInfo from './FileInfo.vue';
   import { Tooltip, Drawer, Dropdown, Menu, Modal } from 'ant-design-vue';
   import { ExclamationCircleOutlined, ExclamationCircleTwoTone } from '@ant-design/icons-vue';
-  import { NetGql, NetFile } from '/@/components/NetFile';
+  import { NetGql, NetFile, FileInfo } from '/@/components/NetFile';
   import { Button } from '/@/components/Button';
 
   const { t } = useI18n('general.metanet');
   export default defineComponent({
     components: {
       BasicTable,
-      BasicHelp,
       Tooltip,
       Drawer,
       Menu,
@@ -86,31 +57,26 @@
       const { createMessage, createErrorModal } = useMessage();
       const path = ref([]);
       const tableData = ref([]);
-      const infoButton = ref(false);
-      const infoVisible = computed(() => {
-        return infoButton.value && file.value.id !== undefined;
-      });
+
       const file = ref({});
-      function closeInfo() {
-        infoButton.value = false;
-      }
+      const infoVisible = ref(false);
       function changeInfo() {
-        infoButton.value = !infoButton.value;
+        infoVisible.value = !infoVisible.value;
       }
       const [registerTable] = useTable({
         canResize: false,
         customRow: (record) => ({
           onClick: () => {
-            if (file.value.id == record.id && infoVisible.value) {
-              infoButton.value = false;
+            if (file.value.id == record.file.id && infoVisible.value) {
+              infoVisible.value = false;
               return;
             }
-            file.value = record;
-            infoButton.value = true;
+            file.value = record.file;
+            infoVisible.value = true;
           },
         }),
         pagination: false,
-        title: t('share'),
+        title: t('collectionTitle'),
         dataSource: tableData,
         columns: getBasicColumns(),
         rowKey: 'id',
@@ -122,9 +88,12 @@
         fetchPolicy: 'network-only',
       }));
       onResult((res) => {
-        const list = res?.data?.driveListCollections;
-        console.log(list);
-        tableData.value = list;
+        let list = res?.data?.driveListCollections;
+        let t: [] = [];
+        list.forEach((v) => {
+          t.push({ file: new NetFile(v.item), ...v });
+        });
+        tableData.value = t;
       });
       const { mutate: DelCollection } = useMutation(NetGql.Collection.Delete);
 
@@ -163,9 +132,7 @@
         refetch,
         t,
         infoVisible,
-        infoButton,
         file,
-        closeInfo,
         changeInfo,
       };
     },

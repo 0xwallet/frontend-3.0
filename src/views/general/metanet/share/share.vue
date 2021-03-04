@@ -30,25 +30,12 @@
         <Button @click="changeInfo" type="link">
           <ExclamationCircleTwoTone
             :style="{ fontSize: '20px' }"
-            :twoToneColor="`#${infoButton ? '2E2EFE' : '6E6E6E'}`" />{{
+            :twoToneColor="`#${infoVisible ? '2E2EFE' : '6E6E6E'}`" />{{
         }}</Button>
       </template>
     </BasicTable>
-    <Drawer
-      placement="right"
-      :visible="infoVisible"
-      :getContainer="`.ant-card-body`"
-      @close="closeInfo"
-      :mask="false"
-      :width="400"
-      :wrapClassName="'!mt-50'"
-    >
-      <template #title>
-        <span @click="copyUrl(file, 4)">{{ file.fullName?.slice(-1)[0] || 'none' }}</span>
-      </template>
 
-      <FileInfo :file="file" share
-    /></Drawer>
+    <FileInfo :file="file" share :visible="infoVisible" />
   </div>
 </template>
 <script lang="ts">
@@ -85,17 +72,12 @@
       const { createMessage, createErrorModal } = useMessage();
       const path = ref([]);
       const tableData = ref([]);
-      const infoButton = ref(false);
-      const infoVisible = computed(() => {
-        return infoButton.value && file.value.fullName !== undefined;
-      });
-      const file = ref({}) as NetFile;
-      function closeInfo() {
-        infoButton.value = false;
-      }
+      const infoVisible = ref(false);
       function changeInfo() {
-        infoButton.value = !infoButton.value;
+        infoVisible.value = !infoVisible.value;
       }
+      const file = ref({}) as NetFile;
+
       const [
         registerTable,
         { getSelectRowKeys, setSelectedRowKeys, clearSelectedRowKeys, getDataSource },
@@ -103,8 +85,12 @@
         canResize: false,
         customRow: (record) => ({
           onClick: () => {
+            if (file.value.id == record.id && infoVisible.value) {
+              infoVisible.value = false;
+              return;
+            }
             file.value = record;
-            infoButton.value = true;
+            infoVisible.value = true;
           },
         }),
         pagination: false,
@@ -194,9 +180,7 @@
         refetch,
         t,
         infoVisible,
-        infoButton,
         file,
-        closeInfo,
         changeInfo,
       };
     },

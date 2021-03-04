@@ -3,7 +3,7 @@
     <ScrollContainer>
       <BasicTree
         :treeData="treeData"
-        :title="'文件夹' + height"
+        :title="'文件夹'"
         ref="treeRef"
         :loadData="onLoadData"
         :showIcon="true"

@@ -70,21 +70,11 @@
         <Button @click="changeInfo" type="link">
           <ExclamationCircleTwoTone
             :style="{ fontSize: '20px' }"
-            :twoToneColor="`#${infoButton ? '2E2EFE' : '6E6E6E'}`" />{{
+            :twoToneColor="`#${infoVisible ? '2E2EFE' : '6E6E6E'}`" />{{
         }}</Button>
       </template>
     </BasicTable>
-    <Drawer
-      :title="file.fullName?.slice(-1)[0] || 'none'"
-      placement="right"
-      :visible="infoVisible"
-      :getContainer="`.ant-card-body`"
-      @close="closeInfo"
-      :mask="false"
-      :width="400"
-      :wrapClassName="'!mt-52'"
-      ><FileInfo :file="file"
-    /></Drawer>
+    <FileInfo :file="file" :visible="infoVisible" />
     <UploadStatus @openUploadModal="openUploadModal" />
     <MoveModal @register="registerMoveModal" />
     <ShareModal @register="registerShareModal" />
@@ -192,10 +182,10 @@
       const currentPath = ref<string[]>([]);
 
       // info相关
-      const infoButton = ref(false);
-      const infoVisible = computed(() => {
-        return infoButton.value && file.value.fullName !== undefined;
-      });
+      const infoVisible = ref(false);
+      function changeInfo() {
+        infoVisible.value = !infoVisible.value;
+      }
       const searchValue = ref('');
 
       // 表格数据
@@ -284,12 +274,13 @@
         },
         customRow: (record) => ({
           onClick: () => {
-            if (!infoButton.value) {
-              file.value = {};
+            if (file.value.id == record.id && infoVisible.value) {
+              infoVisible.value = false;
               return;
             }
             if (record.name === '...') return;
             file.value = record;
+            infoVisible.value = true;
           },
         }),
         pagination: false,
@@ -525,12 +516,6 @@
         // 根据ID获取最新进入目录文件
       }
 
-      function closeInfo() {
-        infoButton.value = false;
-      }
-      function changeInfo() {
-        infoButton.value = !infoButton.value;
-      }
       const uploadRef = ref(null);
       function openUploadModal() {
         uploadRef.value.openUploadModal();
@@ -560,11 +545,9 @@
         t,
         refetch,
         file,
-        closeInfo,
         registerPublishModal,
         openPublishModal,
         changeInfo,
-        infoButton,
         infoVisible,
         searchValue,
         openUploadModal,

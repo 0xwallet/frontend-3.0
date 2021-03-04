@@ -12,7 +12,7 @@ const driveListCollections = gql`
       updatedAt
       item {
         ... on DriveShare {
-          shareID: id
+          id
           code
           uri
           ${userFile}

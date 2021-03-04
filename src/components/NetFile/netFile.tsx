@@ -42,7 +42,6 @@ interface fileParams {
   token?: string;
   expiredAt?: string;
   updatedAt: string;
-
   user: { id: string } | null;
 }
 
@@ -84,7 +83,7 @@ export class NetFile {
   constructor(params: fileParams) {
     this.id = params.userFile.id;
     this.fullName = params.userFile.fullName;
-    const path = params.userFile.fullName[params.userFile.fullName.length - 1];
+    const path = this.fullName.slice(-1)[0];
     this.isDir = params.userFile.isDir;
     this.space = params.userFile.space;
     if (params.userFile.isDir) {
