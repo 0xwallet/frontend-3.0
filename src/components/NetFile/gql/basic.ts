@@ -1,5 +1,14 @@
 import gql from 'graphql-tag';
-
+export const user = `
+  user {
+    id
+    driveSetting {
+      availableSpace
+      totalSpace
+      usedSpace
+    }
+  }
+`;
 export const userFile = `
   userFile {
     fullName
@@ -10,9 +19,7 @@ export const userFile = `
     insertedAt
     updatedAt
     space
-     user {
-        id
-      }
+    ${user}
     info {
       size
       description
@@ -25,22 +32,26 @@ export const userFile = `
 const driveListFiles = gql`
   query($dirId: String, $fullName: [String]) {
     driveListFiles(dirId: $dirId, dirFullName: $fullName) {
-      id
       fullName
-      isDir
       hash
-      space
+      id
+      isDir
       isShared
       insertedAt
       updatedAt
+      space
+      ${user}
       info {
         size
         description
       }
-      user {
-        id
-      }
     }
+  }
+`;
+
+const driveDirSize = gql`
+  query($dirId: String!) {
+    driveDirSize(dirId: $dirId)
   }
 `;
 // 新建目录
@@ -135,4 +146,5 @@ export const Basic = {
   Desc: driveEditDescription,
   Rename: driveRenameFile,
   Copy: driveCopyFile,
+  DirSize: driveDirSize,
 };

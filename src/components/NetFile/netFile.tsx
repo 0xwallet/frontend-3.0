@@ -42,7 +42,12 @@ interface fileParams {
   token?: string;
   expiredAt?: string;
   updatedAt: string;
-  user: { id: string } | null;
+  user: user;
+}
+
+interface user {
+  id: string;
+  driveSetting: fileSpace;
 }
 
 interface userFile {
@@ -55,7 +60,14 @@ interface userFile {
   updatedAt: string;
   insertedAt: string;
   isShared: boolean;
-  user?: { id: string } | null;
+  user: user;
+}
+
+interface fileSpace {
+  space: string;
+  totalSpace: number;
+  usedSpace: number;
+  availableSpace: number;
 }
 
 export class NetFile {
@@ -74,7 +86,7 @@ export class NetFile {
   expiredAt?: string;
   uri: string;
   token?: string;
-  space: string;
+  space: fileSpace;
   desc: string;
   userId?: string;
   isShared?: boolean;
@@ -85,7 +97,12 @@ export class NetFile {
     this.fullName = params.userFile.fullName;
     const path = this.fullName.slice(-1)[0];
     this.isDir = params.userFile.isDir;
-    this.space = params.userFile.space;
+    this.space = {
+      space: params.userFile.space,
+      totalSpace: params.userFile.user.driveSetting.totalSpace,
+      usedSpace: params.userFile.user.driveSetting.usedSpace,
+      availableSpace: params.userFile.user.driveSetting.availableSpace,
+    };
     if (params.userFile.isDir) {
       this.type = 'folder';
       this.name = path;
@@ -128,9 +145,9 @@ export class NetFile {
       return;
     }
     let token = await this.getToken();
-    let url = `https://drive-s.owaf.io/download/${this.userId}/${toLower(this.space)}/${this.id}/${
-      this.fullName.slice(-1)[0]
-    }?token=${token}`;
+    let url = `https://drive-s.owaf.io/download/${this.userId}/${toLower(this.space.space)}/${
+      this.id
+    }/${this.fullName.slice(-1)[0]}?token=${token}`;
     downloadByUrl({
       url: url,
       target: '_blank',
@@ -140,9 +157,9 @@ export class NetFile {
   async preview(): Promise<any> {
     let token = await this.getToken();
     return new Promise<any>((resolve) => {
-      let url = `https://drive-s.owaf.io/preview/${this.userId}/${toLower(this.space)}/${this.id}/${
-        this.fullName.slice(-1)[0]
-      }?token=${token}`;
+      let url = `https://drive-s.owaf.io/preview/${this.userId}/${toLower(this.space.space)}/${
+        this.id
+      }/${this.fullName.slice(-1)[0]}?token=${token}`;
       if (this.type == 'png' || this.type == 'jpg') {
         createImgPreview({ imageList: [url] });
       }

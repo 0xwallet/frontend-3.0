@@ -15,18 +15,21 @@
         <Space direction="vertical">
           <div class="info_header">
             <Icon :type="info.type" :size="100" />
-            <p
-              >{{ byteTransfer(info.size).value }} {{ byteTransfer(info.size).unit }}({{
-                info.size
-              }}
-              Bytes)</p
+            <p v-if="info.type !== 'folder'"
+              >{{ byteTransfer(info.size).value }} {{ byteTransfer(info.size).unit }} /
+              {{ ((info.size / info.space.totalSpace) * 100).toFixed(2) }}%</p
             >
-            <p
-              >{{ byteTransfer(info.size).value }} {{ byteTransfer(info.size).unit }}({{
-                info.size
-              }}
-              Bytes)</p
-            >
+            <p v-else>
+              <Button @click="getDirSize" v-if="dirSize === 0">查询</Button>
+              <span v-else
+                >{{ byteTransfer(dirSize).value }} {{ byteTransfer(dirSize).unit }} /
+                {{ ((dirSize / info.space.totalSpace) * 100).toFixed(2) }}%</span
+              >
+            </p>
+            <!--            <p-->
+            <!--              >{{ byteTransfer(info.space.totalSpace).value }}-->
+            <!--              {{ byteTransfer(info.space.totalSpace).unit }}({{ info.size }} Bytes)</p-->
+            <!--            >-->
           </div>
           <Divider type="horizontal" />
           <Descriptions :column="1">
@@ -81,8 +84,9 @@
   import { propTypes } from '/@/utils/propTypes';
   import { formatToDateTime } from '/@/utils/dateUtil';
   import { List } from 'ant-design-vue';
-  import { Hash, Icon } from '/@/components/NetFile';
+  import { Hash, Icon, NetGql } from '/@/components/NetFile';
   import Desc from './Desc.vue';
+  import { useApollo } from '/@/hooks/apollo/apollo';
   const { t } = useI18n('general.metanet');
   export default defineComponent({
     name: 'FileInfo',
@@ -114,6 +118,7 @@
     },
     setup(props) {
       const info: NetFile = computed<NetFile>(() => {
+        dirSize.value = 0;
         return props.file;
       });
       const share = computed(() => {
@@ -156,6 +161,16 @@
         info.value.copyShareUrl(mode);
       }
       function closeInfo() {}
+      const dirSize = ref(0);
+      function getDirSize() {
+        useApollo({
+          mode: 'query',
+          gql: NetGql.Basic.DirSize,
+          variables: { dirId: info.value.id },
+        }).then((res) => {
+          dirSize.value = res.data?.driveDirSize;
+        });
+      }
       return {
         t,
         info,
@@ -182,6 +197,8 @@
         ],
         visible,
         closeInfo,
+        getDirSize,
+        dirSize,
       };
     },
   });
