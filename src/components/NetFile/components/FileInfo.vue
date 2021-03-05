@@ -17,13 +17,11 @@
             <Icon :type="info.type" :size="100" />
             <p v-if="info.type !== 'folder'"
               >{{ byteTransfer(info.size).value }} {{ byteTransfer(info.size).unit }} /
-              <!--              <span -->
-              <!--                >{{ ((info.size / info.space.totalSpace) * 100).toFixed(2) }}%</span-->
-              <!--              >-->
+              <span>{{ ((info.size / info.space.totalSpace) * 100).toFixed(2) }}%</span>
             </p>
             <p v-else>
               <Button @click="getDirSize" v-if="dirSize === 0">查询</Button>
-              <span v-else-if="info.space.totalSpace"
+              <span v-else
                 >{{ byteTransfer(dirSize).value }} {{ byteTransfer(dirSize).unit }} /
                 {{ ((dirSize / info.space.totalSpace) * 100).toFixed(2) }}%</span
               >

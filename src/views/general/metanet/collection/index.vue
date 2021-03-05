@@ -94,6 +94,7 @@
         let list = res?.data?.driveListCollections;
         let t: [] = [];
         list.forEach((v) => {
+          if (!v.item) return;
           t.push({ file: new NetFile(v.item), ...v });
         });
         tableData.value = t;
