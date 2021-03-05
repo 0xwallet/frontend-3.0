@@ -13,7 +13,10 @@
         >
       </template>
       <template #expire="{ record, text }">
-        <span @click="editExpire(record.id)">{{ getExpired(text) }}</span>
+        <span @click="editExpire(record.shareInfo.id)">{{ getExpired(text) }}</span>
+      </template>
+      <template #code="{ record, text }">
+        <span @click="editCode(record.shareInfo.id)">{{ text }}</span>
       </template>
       <template #action="{ record }">
         <Dropdown>
@@ -38,16 +41,30 @@
       </template>
     </BasicTable>
     <FileInfo :info="info" />
-    <BasicModal :visible="modalVisible"> 1 </BasicModal>
+    <Modal
+      :visible="modal.visible"
+      :title="modal.title"
+      centered
+      @ok="handleSubmit"
+      @cancel="closeModal"
+    >
+      <div class="w-5/6 m-4">
+        <BasicForm
+          autoFocusFirstItem
+          :labelWidth="100"
+          :schemas="modal.schemas"
+          :show-action-button-group="false"
+          ref="formRef" /></div
+    ></Modal>
   </div>
 </template>
 <script lang="ts">
-  import { defineComponent, computed, ref, createVNode } from 'vue';
+  import { defineComponent, computed, ref, createVNode, unref } from 'vue';
   import { BasicTable, useTable } from '/@/components/Table';
   import { useMessage } from '/@/hooks/web/useMessage';
   import GIcon from '/@/components/Icon';
   import { getBasicColumns } from './shareData';
-  import { useQuery } from '@vue/apollo-composable';
+  import { useMutation, useQuery } from '@vue/apollo-composable';
   import { BasicHelp } from '/@/components/Basic';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { Tooltip, Drawer, Dropdown, Menu, Modal } from 'ant-design-vue';
@@ -55,12 +72,11 @@
   import { NetGql, NetFile, FileInfo } from '/@/components/NetFile';
   import { Button } from '/@/components/Button';
   import { dateUtil } from '/@/utils/dateUtil';
-  import { BasicModal } from '/@/components/Modal';
+  import { BasicForm } from '/@/components/Form';
 
   const { t } = useI18n('general.metanet');
   export default defineComponent({
     components: {
-      BasicModal,
       BasicTable,
       GIcon,
       BasicHelp,
@@ -73,24 +89,21 @@
       ExclamationCircleTwoTone,
       Dropdown,
       Button,
-      BasicModal,
+      BasicForm,
+      Modal,
     },
     setup() {
       const { createMessage, createErrorModal } = useMessage();
       const path = ref([]);
       const tableData = ref([]);
-
       const info = ref({
         button: false,
         file: {},
         share: true,
       });
-
       function changeInfo() {
         info.value.button = !info.value.button;
       }
-
-      const file = ref({}) as NetFile;
 
       const [
         registerTable,
@@ -189,10 +202,39 @@
         const du = dateUtil.duration(dateUtil(time) - dateUtil(), 'ms');
         return du.humanize(true);
       }
-      const modalVisible = ref(false);
+      const modal = ref({
+        visible: false,
+        title: '',
+        schemas: [],
+        id: '',
+      });
       function editExpire(id: string) {
+        modal.value.visible = true;
+        modal.value.title = '修改过期时间';
+        modal.value.schemas = [{ field: 'expiredAt', label: '过期时间', component: 'InputNumber' }];
+        modal.value.id = id;
+      }
+      function editCode(id: string) {
         console.log(id);
-        modalVisible.value = true;
+        modal.value.visible = true;
+        modal.value.title = '修改访问码';
+        modal.value.schemas = [{ field: 'code', label: '访问码', component: 'Input' }];
+        modal.value.id = id;
+      }
+
+      const formRef = ref({});
+      const { mutate: Edit } = useMutation(NetGql.Share.Edit);
+      async function handleSubmit() {
+        const form = unref(formRef);
+        if (!form) return;
+        const data = await form.validateFields();
+        console.log(data);
+        await Edit({ id: modal.value.id, ...data });
+        await refetch();
+        modal.value.visible = false;
+      }
+      function closeModal() {
+        modal.value.visible = false;
       }
 
       return {
@@ -205,12 +247,15 @@
         copyUrl,
         refetch,
         t,
-        file,
         changeInfo,
         getExpired,
         editExpire,
-        modalVisible,
+        editCode,
+        modal,
         info,
+        handleSubmit,
+        closeModal,
+        formRef,
       };
     },
   });

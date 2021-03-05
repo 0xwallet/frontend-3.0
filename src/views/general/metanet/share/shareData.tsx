@@ -52,6 +52,7 @@ export function getBasicColumns(): BasicColumn[] {
     {
       title: t('code'),
       dataIndex: 'code',
+      slots: { customRender: 'code' },
     },
     {
       title: t('action'),

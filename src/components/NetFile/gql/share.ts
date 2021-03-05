@@ -68,10 +68,21 @@ const driveDeleteShare = gql`
     }
   }
 `;
+
+// 删除分享文件
+const driveEditShare = gql`
+  mutation($id: ID!, $code: String, $expiredAt: Int) {
+    driveEditShare(id: $id, expiredAfterDays: $expiredAt, code: $code) {
+      id
+    }
+  }
+`;
+
 export const Share = {
   List: driveListShares,
   Find: driveFindShare,
   Preview: drivePreviewShare,
   Create: driveCreateShare,
   Delete: driveDeleteShare,
+  Edit: driveEditShare,
 };
