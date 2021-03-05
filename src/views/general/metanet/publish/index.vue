@@ -129,7 +129,7 @@
         let temp: any[] = [];
         list.forEach((v: any) => {
           let f = new NetFile(v.current);
-          f.publishId = v.id;
+          f.publishInfo.id = v.id;
           temp.push({
             txid: v.current.txid,
             version: v.current.id,

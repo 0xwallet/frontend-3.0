@@ -115,9 +115,6 @@
       Drawer,
     },
     props: {
-      file: propTypes.any,
-      share: propTypes.bool.def(false),
-      visible: propTypes.bool.def(false),
       info: propTypes.any.def({}),
     },
     setup(props) {

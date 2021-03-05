@@ -44,7 +44,10 @@ interface fileParams {
   updatedAt: string;
   isCollected: boolean;
   collectedCount: number;
+  version: number;
+  txid: string;
   user: user;
+  __typename: string;
 }
 
 interface user {
@@ -73,12 +76,20 @@ interface fileSpace {
 }
 interface fileShare {
   id: string;
-  collectedCount: number;
   expiredAt: string;
   code: string;
-  isCollected: boolean;
   token: string;
   uri: string;
+}
+interface filePublish {
+  id: number;
+  txid: string;
+  version: number;
+}
+interface fileStatus {
+  isShared: boolean;
+  isCollected: boolean;
+  collectedCount: number;
 }
 export class NetFile {
   id: string;
@@ -101,28 +112,15 @@ export class NetFile {
   userId?: string;
   isShared?: boolean;
   shareInfo?: fileShare;
-  public publishId?: number;
+  status?: fileStatus;
+  publishInfo?: filePublish;
+  // public publishId?: number;
 
   constructor(params: fileParams) {
     this.id = params.userFile.id;
     this.fullName = params.userFile.fullName;
     const path = this.fullName.slice(-1)[0];
     this.isDir = params.userFile.isDir;
-    this.space = {
-      space: params.userFile.space,
-      totalSpace: params.userFile.user.driveSetting.totalSpace,
-      usedSpace: params.userFile.user.driveSetting.usedSpace,
-      availableSpace: params.userFile.user.driveSetting.availableSpace,
-    };
-    this.shareInfo = {
-      id: params.id || '',
-      expiredAt: params.expiredAt || '',
-      code: params.code || '',
-      uri: params.uri || '',
-      token: params.token || '',
-      isCollected: params.isCollected,
-      collectedCount: params.collectedCount,
-    };
     if (params.userFile.isDir) {
       this.type = 'folder';
       this.name = path;
@@ -131,6 +129,36 @@ export class NetFile {
       // @ts-ignore
       this.type = path.split('.').pop().toLowerCase();
     }
+    this.space = {
+      space: params.userFile.space,
+      totalSpace: params.userFile.user.driveSetting.totalSpace,
+      usedSpace: params.userFile.user.driveSetting.usedSpace,
+      availableSpace: params.userFile.user.driveSetting.availableSpace,
+    };
+    this.status = {
+      isCollected: params.isCollected,
+      isShared: params.userFile.isShared,
+      collectedCount: params.collectedCount,
+    };
+    switch (params.__typename) {
+      case 'DriveShare':
+        this.shareInfo = {
+          id: params.id || '',
+          expiredAt: params.expiredAt || '',
+          code: params.code || '',
+          uri: params.uri || '',
+          token: params.token || '',
+        };
+        break;
+      case 'DrivePublishHistory':
+        this.publishInfo = {
+          id: 0,
+          txid: params.txid || '',
+          version: params.version,
+        };
+        break;
+    }
+
     this.path = params.userFile.fullName.slice(0, params.userFile.fullName.length - 1);
     this.size = Number(params.userFile.info.size);
     this.desc = params.userFile.info.description || '';
@@ -255,7 +283,7 @@ export class NetFile {
         useApollo({
           mode: 'mutate',
           gql: NetGql.Collection.CreatePublish,
-          variables: { id: this.publishId },
+          variables: { id: this.publishInfo?.id },
         }).then((res) => {
           console.log(res);
           resolve(res);
