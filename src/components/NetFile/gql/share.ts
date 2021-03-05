@@ -10,6 +10,8 @@ const driveListShares = gql`
       token
       uri
       expiredAt
+      collectedCount
+      isCollected
       ${userFile}
     }
   }

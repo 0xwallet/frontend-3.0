@@ -5,6 +5,8 @@ import { userFile } from '/@/components/NetFile/gql/basic';
 const driveListPublishs = gql`
   query {
     driveListPublishs {
+      collectedCount
+      isCollected
       current {
         id
         txid
@@ -17,7 +19,6 @@ const driveListPublishs = gql`
           version
           ${userFile}
         }
-
       id
     }
   }

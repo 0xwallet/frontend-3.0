@@ -12,6 +12,9 @@
           ><a-button type="link" @click="copyUrl(record)"> {{ text }}</a-button></Tooltip
         >
       </template>
+      <template #expire="{ record, text }">
+        <span @click="editExpire(record.id)">{{ getExpired(text) }}</span>
+      </template>
       <template #action="{ record }">
         <Dropdown>
           <a class="ant-dropdown-link"> ... </a>
@@ -30,12 +33,12 @@
         <Button @click="changeInfo" type="link">
           <ExclamationCircleTwoTone
             :style="{ fontSize: '20px' }"
-            :twoToneColor="`#${infoVisible ? '2E2EFE' : '6E6E6E'}`" />{{
-        }}</Button>
+            :twoToneColor="`#${info.button ? '2E2EFE' : '6E6E6E'}`"
+        /></Button>
       </template>
     </BasicTable>
-
-    <FileInfo :file="file" share :visible="infoVisible" />
+    <FileInfo :info="info" />
+    <BasicModal :visible="modalVisible"> 1 </BasicModal>
   </div>
 </template>
 <script lang="ts">
@@ -51,10 +54,13 @@
   import { ExclamationCircleOutlined, ExclamationCircleTwoTone } from '@ant-design/icons-vue';
   import { NetGql, NetFile, FileInfo } from '/@/components/NetFile';
   import { Button } from '/@/components/Button';
+  import { dateUtil } from '/@/utils/dateUtil';
+  import { BasicModal } from '/@/components/Modal';
 
   const { t } = useI18n('general.metanet');
   export default defineComponent({
     components: {
+      BasicModal,
       BasicTable,
       GIcon,
       BasicHelp,
@@ -67,15 +73,23 @@
       ExclamationCircleTwoTone,
       Dropdown,
       Button,
+      BasicModal,
     },
     setup() {
       const { createMessage, createErrorModal } = useMessage();
       const path = ref([]);
       const tableData = ref([]);
-      const infoVisible = ref(false);
+
+      const info = ref({
+        button: false,
+        file: {},
+        share: true,
+      });
+
       function changeInfo() {
-        infoVisible.value = !infoVisible.value;
+        info.value.button = !info.value.button;
       }
+
       const file = ref({}) as NetFile;
 
       const [
@@ -85,12 +99,11 @@
         canResize: false,
         customRow: (record) => ({
           onClick: () => {
-            if (file.value.id == record.id && infoVisible.value) {
-              infoVisible.value = false;
+            if (info.value.file.id == record.id && info.value.button) {
+              info.value.file = {};
               return;
             }
-            file.value = record;
-            infoVisible.value = true;
+            info.value.file = record;
           },
         }),
         pagination: false,
@@ -168,6 +181,19 @@
         const f: NetFile = record;
         f.copyShareUrl(mode);
       }
+      function getExpired(time: string): string {
+        if (dateUtil().isAfter(time) || time == null) {
+          return t('expired');
+        }
+        //@ts-ignore
+        const du = dateUtil.duration(dateUtil(time) - dateUtil(), 'ms');
+        return du.humanize(true);
+      }
+      const modalVisible = ref(false);
+      function editExpire(id: string) {
+        console.log(id);
+        modalVisible.value = true;
+      }
 
       return {
         registerTable,
@@ -179,9 +205,12 @@
         copyUrl,
         refetch,
         t,
-        infoVisible,
         file,
         changeInfo,
+        getExpired,
+        editExpire,
+        modalVisible,
+        info,
       };
     },
   });

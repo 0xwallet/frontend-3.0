@@ -1,5 +1,8 @@
 import dayjs from 'dayjs';
-
+import duration from 'dayjs/plugin/duration';
+import relativeTime from 'dayjs/plugin/relativeTime';
+dayjs.extend(duration);
+dayjs.extend(relativeTime);
 const DATE_TIME_FORMAT = 'YYYY-MM-DD HH:mm';
 const DATE_FORMAT = 'YYYY-MM-DD ';
 
@@ -34,4 +37,4 @@ export function formatAgo(str: string | number) {
   }
 }
 
-export const dateUtil = dayjs();
+export const dateUtil = dayjs;

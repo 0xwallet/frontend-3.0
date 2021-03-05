@@ -70,11 +70,11 @@
         <Button @click="changeInfo" type="link">
           <ExclamationCircleTwoTone
             :style="{ fontSize: '20px' }"
-            :twoToneColor="`#${infoVisible ? '2E2EFE' : '6E6E6E'}`" />{{
+            :twoToneColor="`#${info.button ? '2E2EFE' : '6E6E6E'}`" />{{
         }}</Button>
       </template>
     </BasicTable>
-    <FileInfo :file="file" :visible="infoVisible" />
+    <FileInfo :info="info" />
     <UploadStatus @openUploadModal="openUploadModal" />
     <MoveModal @register="registerMoveModal" />
     <ShareModal @register="registerShareModal" />
@@ -181,10 +181,13 @@
 
       const currentPath = ref<string[]>([]);
 
-      // info相关
-      const infoVisible = ref(false);
+      const info = ref({
+        button: false,
+        file: {},
+        share: false,
+      });
       function changeInfo() {
-        infoVisible.value = !infoVisible.value;
+        info.value.button = !info.value.button;
       }
       const searchValue = ref('');
 
@@ -274,13 +277,11 @@
         },
         customRow: (record) => ({
           onClick: () => {
-            if (file.value.id == record.id && infoVisible.value) {
-              infoVisible.value = false;
+            if (info.value.file.id == record.id && info.value.button) {
+              info.value.file = {};
               return;
             }
-            if (record.name === '...') return;
-            file.value = record;
-            infoVisible.value = true;
+            info.value.file = record;
           },
         }),
         pagination: false,
@@ -548,7 +549,6 @@
         registerPublishModal,
         openPublishModal,
         changeInfo,
-        infoVisible,
         searchValue,
         openUploadModal,
         uploadRef,
@@ -559,6 +559,7 @@
         registerCopyModal,
         openCopy,
         currentPath,
+        info,
       };
     },
   });

@@ -10,22 +10,27 @@
     <template #title>
       <span @click="copyUrl(4)">{{ info.fullName?.slice(-1)[0] || 'none' }}</span>
     </template>
-    <Tabs>
+    <Tabs v-if="visible">
       <TabPane key="basic" :tab="t('basic')">
         <Space direction="vertical">
           <div class="info_header">
             <Icon :type="info.type" :size="100" />
             <p v-if="info.type !== 'folder'"
               >{{ byteTransfer(info.size).value }} {{ byteTransfer(info.size).unit }} /
-              {{ ((info.size / info.space.totalSpace) * 100).toFixed(2) }}%</p
-            >
+              <!--              <span -->
+              <!--                >{{ ((info.size / info.space.totalSpace) * 100).toFixed(2) }}%</span-->
+              <!--              >-->
+            </p>
             <p v-else>
               <Button @click="getDirSize" v-if="dirSize === 0">查询</Button>
-              <span v-else
+              <span v-else-if="info.space.totalSpace"
                 >{{ byteTransfer(dirSize).value }} {{ byteTransfer(dirSize).unit }} /
                 {{ ((dirSize / info.space.totalSpace) * 100).toFixed(2) }}%</span
               >
             </p>
+            <p v-if="share && info.shareInfo.isCollected"
+              >被收藏数：{{ info.shareInfo.collectedCount }}</p
+            >
             <!--            <p-->
             <!--              >{{ byteTransfer(info.space.totalSpace).value }}-->
             <!--              {{ byteTransfer(info.space.totalSpace).unit }}({{ info.size }} Bytes)</p-->
@@ -75,7 +80,7 @@
 </template>
 
 <script lang="ts">
-  import { computed, defineComponent, ref } from 'vue';
+  import { computed, defineComponent, ref, watch } from 'vue';
   import { Tabs, Card, Descriptions, Space, Divider, Input, Button, Drawer } from 'ant-design-vue';
   import { EditOutlined, CloseOutlined, CheckOutlined } from '@ant-design/icons-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
@@ -115,17 +120,19 @@
       file: propTypes.any,
       share: propTypes.bool.def(false),
       visible: propTypes.bool.def(false),
+      info: propTypes.any.def({}),
     },
     setup(props) {
-      const info: NetFile = computed<NetFile>(() => {
+      const info = computed<NetFile>(() => {
         dirSize.value = 0;
-        return props.file;
+        return props.info.file;
       });
+
       const share = computed(() => {
-        return props.share;
+        return props.info.share;
       });
       const visible = computed(() => {
-        return props.visible && info.value.id !== undefined;
+        return props.info.button && info.value.id !== undefined;
       });
 
       const key = ref('basic');
@@ -160,7 +167,9 @@
         if (!share) return;
         info.value.copyShareUrl(mode);
       }
-      function closeInfo() {}
+      function closeInfo() {
+        props.info.file = {};
+      }
       const dirSize = ref(0);
       function getDirSize() {
         useApollo({

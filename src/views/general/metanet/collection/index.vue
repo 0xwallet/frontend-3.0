@@ -19,12 +19,12 @@
         <Button @click="changeInfo" type="link">
           <ExclamationCircleTwoTone
             :style="{ fontSize: '20px' }"
-            :twoToneColor="`#${infoVisible ? '2E2EFE' : '6E6E6E'}`" />{{
+            :twoToneColor="`#${info.button ? '2E2EFE' : '6E6E6E'}`" />{{
         }}</Button>
       </template>
     </BasicTable>
 
-    <FileInfo :file="file" :visible="infoVisible" />
+    <FileInfo :info="info" />
   </div>
 </template>
 <script lang="ts">
@@ -58,21 +58,24 @@
       const path = ref([]);
       const tableData = ref([]);
 
-      const file = ref({});
-      const infoVisible = ref(false);
+      const info = ref({
+        button: false,
+        file: {},
+        share: true,
+      });
+
       function changeInfo() {
-        infoVisible.value = !infoVisible.value;
+        info.value.button = !info.value.button;
       }
       const [registerTable] = useTable({
         canResize: false,
         customRow: (record) => ({
           onClick: () => {
-            if (file.value.id == record.file.id && infoVisible.value) {
-              infoVisible.value = false;
+            if (info.value.file.id == record.file.id && info.value.button) {
+              info.value.file = {};
               return;
             }
-            file.value = record.file;
-            infoVisible.value = true;
+            info.value.file = record.file;
           },
         }),
         pagination: false,
@@ -131,8 +134,7 @@
         copyUrl,
         refetch,
         t,
-        infoVisible,
-        file,
+        info,
         changeInfo,
       };
     },

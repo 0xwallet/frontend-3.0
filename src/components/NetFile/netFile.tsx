@@ -42,6 +42,8 @@ interface fileParams {
   token?: string;
   expiredAt?: string;
   updatedAt: string;
+  isCollected: boolean;
+  collectedCount: number;
   user: user;
 }
 
@@ -69,7 +71,15 @@ interface fileSpace {
   usedSpace: number;
   availableSpace: number;
 }
-
+interface fileShare {
+  id: string;
+  collectedCount: number;
+  expiredAt: string;
+  code: string;
+  isCollected: boolean;
+  token: string;
+  uri: string;
+}
 export class NetFile {
   id: string;
   name: string;
@@ -90,6 +100,7 @@ export class NetFile {
   desc: string;
   userId?: string;
   isShared?: boolean;
+  shareInfo?: fileShare;
   public publishId?: number;
 
   constructor(params: fileParams) {
@@ -102,6 +113,15 @@ export class NetFile {
       totalSpace: params.userFile.user.driveSetting.totalSpace,
       usedSpace: params.userFile.user.driveSetting.usedSpace,
       availableSpace: params.userFile.user.driveSetting.availableSpace,
+    };
+    this.shareInfo = {
+      id: params.id || '',
+      expiredAt: params.expiredAt || '',
+      code: params.code || '',
+      uri: params.uri || '',
+      token: params.token || '',
+      isCollected: params.isCollected,
+      collectedCount: params.collectedCount,
     };
     if (params.userFile.isDir) {
       this.type = 'folder';
