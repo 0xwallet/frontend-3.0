@@ -122,19 +122,23 @@
         },
       });
 
-      const [register] = useModalInner((data) => {
+      const [register, {  setModalProps }] = useModalInner((data) => {
         file.value = unref(data.record);
         radio.value = 0;
         file.value.uri = '';
       });
 
       async function shareFile() {
-        if (radio.value === 0) {
-          await file.value.share();
-          return;
+        try {
+          if (radio.value === 0) {
+            await file.value.share();
+            return;
+          }
+          const params = await validateFields();
+          await file.value.share(params);
+        } finally {
+          setModalProps({ showOkBtn: false });
         }
-        const params = await validateFields();
-        await file.value.share(params);
       }
       function copy(v) {
         file.value.copyShareUrl(v);

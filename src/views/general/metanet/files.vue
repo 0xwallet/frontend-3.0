@@ -375,7 +375,6 @@
           setModal4({
             canFullscreen: false,
             width: '50%',
-
             destroyOnClose: true,
             afterClose: () => {
               refetch();
