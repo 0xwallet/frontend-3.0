@@ -12,6 +12,7 @@
     </template>
     <Tabs v-if="visible">
       <TabPane key="basic" :tab="t('basic')">
+        {{ info }}
         <Space direction="vertical">
           <div class="info_header">
             <Icon :type="info.type" :size="100" />
@@ -50,7 +51,7 @@
             <DescriptionsItem :label="t('opened')" v-if="!share"></DescriptionsItem>
             <DescriptionsItem :label="t('created')">{{ time(info.createdAt) }}</DescriptionsItem>
             <DescriptionsItem :label="t('status')">{{
-              info.isShared ? t('shared') : t('unShared')
+              info.status.isShared ? t('shared') : t('unShared')
             }}</DescriptionsItem>
           </Descriptions>
         </Space>
@@ -118,7 +119,7 @@
       info: propTypes.any.def({}),
     },
     setup(props) {
-      const info = computed<NetFile>(() => {
+      const info: NetFile = computed<NetFile>(() => {
         dirSize.value = 0;
         return props.info.file;
       });

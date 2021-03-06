@@ -1,6 +1,24 @@
 import gql from 'graphql-tag';
-import { userFile } from '/@/components/NetFile/gql/basic';
 
+const userFile = `
+  userFile {
+    fullName
+    hash
+    id
+    isDir
+    isShared
+    insertedAt
+    updatedAt
+    space
+    user{
+    id
+    }
+    info {
+      size
+      description
+    }
+  }
+`;
 //分享文件列表
 const driveListShares = gql`
   query {

@@ -131,9 +131,9 @@ export class NetFile {
     }
     this.space = {
       space: params.userFile.space,
-      totalSpace: params.userFile.user.driveSetting.totalSpace,
-      usedSpace: params.userFile.user.driveSetting.usedSpace,
-      availableSpace: params.userFile.user.driveSetting.availableSpace,
+      totalSpace: params.userFile.user.driveSetting?.totalSpace || 0,
+      usedSpace: params.userFile.user.driveSetting?.usedSpace || 0,
+      availableSpace: params.userFile.user.driveSetting?.availableSpace || 0,
     };
     this.status = {
       isCollected: params.isCollected,
