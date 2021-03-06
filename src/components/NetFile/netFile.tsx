@@ -383,6 +383,14 @@ export class NetFile {
       variables: { id: this.id, space: this.space },
     });
   }
+  // 删除文件
+  delFileShare(): Promise<any> {
+    return useApollo({
+      mode: 'mutate',
+      gql: NetGql.Share.Delete,
+      variables: { id: this.shareInfo?.id },
+    });
+  }
 
   byteTransfer() {
     const k: number = 1024;

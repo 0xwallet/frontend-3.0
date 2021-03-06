@@ -83,7 +83,7 @@ const driveMoveFile = gql`
 
 // 删除文件
 const driveDeleteFile = gql`
-  mutation($id: String!, $space: Sting!) {
+  mutation($id: String!, $space: String!) {
     driveDeleteFile(id: $id, space: $space)
   }
 `;

@@ -122,7 +122,7 @@
         },
       });
 
-      const [register, {  setModalProps }] = useModalInner((data) => {
+      const [register, { setModalProps }] = useModalInner((data) => {
         file.value = unref(data.record);
         radio.value = 0;
         file.value.uri = '';

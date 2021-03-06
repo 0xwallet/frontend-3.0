@@ -78,7 +78,7 @@
 </template>
 
 <script lang="ts">
-  import { computed, defineComponent, ref, watch } from 'vue';
+  import { computed, defineComponent, ref } from 'vue';
   import { Tabs, Card, Descriptions, Space, Divider, Input, Button, Drawer } from 'ant-design-vue';
   import { EditOutlined, CloseOutlined, CheckOutlined } from '@ant-design/icons-vue';
   import { useI18n } from '/@/hooks/web/useI18n';

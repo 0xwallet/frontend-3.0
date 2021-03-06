@@ -161,7 +161,7 @@
           cancelText: t('cancelAll'),
           onOk() {
             file
-              .delFile()
+              .delFileShare()
               .then(() => {
                 createMessage.success('删除成功');
               })
