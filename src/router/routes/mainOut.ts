@@ -5,7 +5,7 @@ the contents of the file still need to log in to access
  */
 import type { AppRouteModule } from '/@/router/types';
 import { LAYOUT } from '/@/router/constant';
-
+//调试
 function getRoute(mode: string): AppRouteModule {
   const t = mode == 's' ? 'ShareFile' : 'PublishFile';
   if (
