@@ -98,6 +98,7 @@ export default {
   dynamic: 'Dynamic',
   collectionButton: 'Collection',
   collectionTitle: 'My Collection',
+  collectionSuccess: 'Collect Success',
   shared: 'Shared',
   unShared: 'Not Shared',
   shareType: 'Share Type',

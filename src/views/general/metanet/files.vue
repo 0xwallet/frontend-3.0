@@ -268,6 +268,7 @@
         columns: getBasicColumns(),
         rowKey: 'id',
         showIndexColumn: false,
+
         rowSelection: {
           type: 'checkbox',
           getCheckboxProps: (record) => ({

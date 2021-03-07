@@ -12,7 +12,8 @@ export function getBasicColumns(): BasicColumn[] {
       align: 'left',
       // slots: { customRender: 'name' },
       customRender: ({ record }) => {
-        if (record.name === 'deleted') {
+        const { file } = record;
+        if (file.name === 'deleted') {
           return (
             <span>
               <Icon type="bx-bx-question-mark" size={30} />
@@ -22,10 +23,10 @@ export function getBasicColumns(): BasicColumn[] {
         }
         return (
           <span>
-            <Icon type={record.type} size={30} />
+            <Icon type={file.type} size={30} />
             <a-button type="link">
-              {record.name}
-              {record.type === 'folder' ? '' : '.' + record.type}
+              {file.name}
+              {file.type === 'folder' ? '' : '.' + file.type}
             </a-button>
           </span>
         );

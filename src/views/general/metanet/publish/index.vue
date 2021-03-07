@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4">
+  <div>
     <BasicTable @register="registerTable">
       <template #urlTitle>
         <span>
@@ -169,7 +169,7 @@
         clearSelectedRowKeys();
       }
       function copyUrl(txid: string) {
-        let temp = `${window.location.origin}/#/p?txid=${txid}`;
+        let temp = `${window.location.origin}/#/p/file?txid=${txid}`;
         clipboardRef.value = temp;
         if (unref(copiedRef)) {
           createMessage.success(t('general.metanet.copySuccess'));

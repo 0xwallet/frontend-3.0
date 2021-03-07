@@ -7,14 +7,16 @@
           placeholder="input search text"
           enter-button
           @search="onSearch"
-          style="margin: 10px"
+          class="m-px-10"
         />
       </template>
-      <template v-if="tabKey === 'files'"><Files /></template>
-      <template v-if="tabKey === 'share'"> <Share /> </template>
-      <template v-if="tabKey === 'collection'"> <Collection /> </template>
-      <template v-if="tabKey === 'recycle'"> <Recycle /> </template>
-      <template v-if="tabKey === 'publish'"> <Publish /> </template>
+      <div class="tabsHeight">
+        <template v-if="tabKey === 'files'"><Files /></template>
+        <template v-if="tabKey === 'share'"> <Share /> </template>
+        <template v-if="tabKey === 'collection'"> <Collection /> </template>
+        <template v-if="tabKey === 'recycle'"> <Recycle /> </template>
+        <template v-if="tabKey === 'publish'"> <Publish /> </template>
+      </div>
       <div class="h-28"></div>
     </Card>
   </div>
@@ -75,3 +77,8 @@
     },
   });
 </script>
+<style>
+  .tabsHeight {
+    height: 74vh;
+  }
+</style>

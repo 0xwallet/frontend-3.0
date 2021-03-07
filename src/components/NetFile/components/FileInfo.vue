@@ -12,7 +12,6 @@
     </template>
     <Tabs v-if="visible">
       <TabPane key="basic" :tab="t('basic')">
-        {{ info }}
         <Space direction="vertical">
           <div class="info_header">
             <Icon :type="info.type" :size="100" />
@@ -27,8 +26,8 @@
                 {{ ((dirSize / info.space.totalSpace) * 100).toFixed(2) }}%</span
               >
             </p>
-            <p v-if="share && info.shareInfo.isCollected"
-              >被收藏数：{{ info.shareInfo.collectedCount }}</p
+            <p v-if="share && info.status.isCollected"
+              >被收藏数：{{ info.status.collectedCount }}</p
             >
             <!--            <p-->
             <!--              >{{ byteTransfer(info.space.totalSpace).value }}-->
@@ -36,6 +35,7 @@
             <!--            >-->
           </div>
           <Divider type="horizontal" />
+          {{ info.publishInfo.txid }}
           <Descriptions :column="1">
             <DescriptionsItem :label="t('url')" v-if="share"
               ><a-button type="link" @click="copyUrl(3)">{{ info.uri }}</a-button>

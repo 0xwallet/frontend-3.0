@@ -98,6 +98,7 @@ export default {
   dynamic: '动态',
   collectionButton: '收藏',
   collectionTitle: '我的收藏',
+  collectionSuccess: '收藏成功',
   shared: '已分享',
   unShared: '未分享',
   shareType: '分享类型',

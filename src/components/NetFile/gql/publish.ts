@@ -62,6 +62,7 @@ const driveUpdatePublish = gql`
 export const driveFindPublish = gql`
   query ($txid:String!){
     driveFindPublish(txid:$txid) {
+    id
       current {
         id
         txid
