@@ -1,13 +1,13 @@
 <template>
   <div class="f-full">
     <Card :tab-list="tabList" :active-tab-key="tabKey" @tabChange="(key) => onTabChange(key)">
-      <template #tabBarExtraContent>
-        <InputSearch
+      <template #tabBarExtraContent
+        ><InputSearch
           v-model:value="value"
           placeholder="input search text"
           enter-button
           @search="onSearch"
-          class="m-px-10"
+          class="search"
         />
       </template>
       <div class="tabsHeight">
@@ -80,5 +80,9 @@
 <style>
   .tabsHeight {
     height: 74vh;
+  }
+
+  .search {
+    margin: 10px;
   }
 </style>

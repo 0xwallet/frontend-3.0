@@ -140,24 +140,18 @@ export class NetFile {
       isShared: params.userFile.isShared,
       collectedCount: params.collectedCount,
     };
-    switch (params.__typename) {
-      case 'DriveShare':
-        this.shareInfo = {
-          id: params.id || '',
-          expiredAt: params.expiredAt || '',
-          code: params.code || '',
-          uri: params.uri || '',
-          token: params.token || '',
-        };
-        break;
-      case 'DrivePublishHistory':
-        this.publishInfo = {
-          id: 0,
-          txid: params.txid || '',
-          version: params.version,
-        };
-        break;
-    }
+    this.shareInfo = {
+      id: params.id || '',
+      expiredAt: params.expiredAt || '',
+      code: params.code || '',
+      uri: params.uri || '',
+      token: params.token || '',
+    };
+    this.publishInfo = {
+      id: 0,
+      txid: params.txid || '',
+      version: params.version,
+    };
 
     this.path = params.userFile.fullName.slice(0, params.userFile.fullName.length - 1);
     this.size = Number(params.userFile.info.size);

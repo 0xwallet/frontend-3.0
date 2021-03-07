@@ -23,6 +23,7 @@
               <Button @click="getDirSize" v-if="dirSize === 0">查询</Button>
               <span v-else
                 >{{ byteTransfer(dirSize).value }} {{ byteTransfer(dirSize).unit }} /
+                {{ info.space }}
                 {{ ((dirSize / info.space.totalSpace) * 100).toFixed(2) }}%</span
               >
             </p>
