@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="w-1/3 h-1/3 grid">
     <FileTree />
   </div>
 </template>

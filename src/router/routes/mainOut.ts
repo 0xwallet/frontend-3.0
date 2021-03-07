@@ -7,26 +7,22 @@ import type { AppRouteModule } from '/@/router/types';
 import { LAYOUT } from '/@/router/constant';
 
 function getRoute(mode: string): AppRouteModule {
+  const t = mode == 's' ? 'ShareFile' : 'PublishFile';
   if (
     navigator.userAgent.match(
       /(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i
     ) !== null
   ) {
-    const t = `/@/views/general/metanet/mainOut/mobile/${
-      mode == 's' ? 'Share' : 'Publish'
-    }File.vue`;
-    console.log(t);
     return {
       path: `/${mode}/file`,
       name: `Mobile${mode == 's' ? 'Share' : 'Publish'}File`,
-      component: () => import(t),
+      component: () => import(`/@/views/general/metanet/mainOut/mobile/${t}.vue`),
       meta: {
         title: 'routes.menu.file',
         ignoreAuth: true,
       },
     };
   }
-  const t = `/@/views/general/metanet/mainOut/${mode == 's' ? 'Share' : 'Publish'}File.vue`;
   return {
     path: `/${mode}`,
     name: `${mode == 's' ? 'share' : 'publish'}MainOut`,
@@ -40,7 +36,7 @@ function getRoute(mode: string): AppRouteModule {
       {
         path: 'file',
         name: `${mode == 's' ? 'Share' : 'Publish'}File`,
-        component: () => import(t),
+        component: () => import(`/@/views/general/metanet/mainOut/${t}.vue`),
         meta: {
           hideBreadcrumb: true,
           title: 'routes.menu.file',
