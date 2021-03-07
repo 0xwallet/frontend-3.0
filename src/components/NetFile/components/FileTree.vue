@@ -1,21 +1,18 @@
 <template>
   <div class="scroll-wrap">
-    <ScrollContainer>
-      <BasicTree
-        :treeData="treeData"
-        :title="'文件夹'"
-        ref="treeRef"
-        :loadData="onLoadData"
-        :showIcon="true"
-        @select="select"
-      />
-    </ScrollContainer>
+    <BasicTree
+      :treeData="treeData"
+      :title="'文件夹'"
+      ref="treeRef"
+      :loadData="onLoadData"
+      :showIcon="true"
+      @select="select"
+    />
   </div>
 </template>
 <script lang="ts">
   import { computed, defineComponent, ref, unref, watch } from 'vue';
   import { BasicTree, TreeActionType } from '/@/components/Tree/index';
-  import { ScrollContainer } from '/@/components/Container/index';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { useApollo } from '/@/hooks/apollo/apollo';
   import { propTypes } from '/@/utils/propTypes';
@@ -23,7 +20,7 @@
   import type { TreeDataItem } from 'ant-design-vue/es/tree/Tree';
   import { fileStore } from '/@/store/modules/netFile';
   export default defineComponent({
-    components: { BasicTree, ScrollContainer },
+    components: { BasicTree },
     props: {
       path: propTypes.string.def(''),
     },
@@ -111,7 +108,7 @@
 </script>
 <style lang="less" scoped>
   .scroll-wrap {
-    height: 70%;
+    height: 75vh;
     background: #fff;
   }
 </style>

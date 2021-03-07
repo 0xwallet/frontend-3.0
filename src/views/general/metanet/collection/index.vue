@@ -92,6 +92,7 @@
       }));
       onResult((res) => {
         let list = res?.data?.driveListCollections;
+        console.log(list);
         let t: [] = [];
         list.forEach((v) => {
           if (!v.item) return;
