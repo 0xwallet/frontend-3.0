@@ -3,6 +3,7 @@
     ref="wrapRef"
     :class="[
       prefixCls,
+      $attrs.class,
       {
         [`${prefixCls}-form-container`]: getBindValues.useSearchForm,
         [`${prefixCls}--inset`]: getBindValues.inset,
@@ -220,6 +221,8 @@
         if (slots.expandedRowRender) {
           propsData = omit(propsData, 'scroll');
         }
+
+        propsData = omit(propsData, 'class');
 
         return propsData;
       });
