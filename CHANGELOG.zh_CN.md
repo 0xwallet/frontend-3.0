@@ -1,9 +1,10 @@
-## Wip
+## 2.0.3 (2021-03-07)
 
 ### ✨ Features
 
 - `BasicTree` 新增`clickRowToExpand`,用于单击树节点展开
 - 新增 SvgIcon 插件及示例
+- 账号管理界面增加左侧部门树·
 
 ### ⚡ Performance Improvements
 
@@ -21,6 +22,8 @@
 - 修复树组件 demo 示例样式错误
 - 修复账号管理新增未清空旧数据
 - form 组件应允许 setFieldsValue 方法值为 null 或者 undefined
+- 确保单级面包屑正确跳转
+- 确保 Form 组件不校验隐藏的表单项
 
 ## 2.0.2 (2021-03-04)
 
