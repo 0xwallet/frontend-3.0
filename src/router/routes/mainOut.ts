@@ -15,8 +15,8 @@ function getRoute(mode: string): AppRouteModule {
   ) {
     return {
       path: `/${mode}/file`,
-      name: `Mobile${mode == 's' ? 'Share' : 'Publish'}File`,
-      component: () => import(`./@/views/general/metanet/mainOut/mobile/${t}.vue`),
+      name: t,
+      component: () => import(`/@/views/general/metanet/mainOut/mobile/${t}.vue`),
       meta: {
         title: 'routes.menu.file',
         ignoreAuth: true,
@@ -35,8 +35,8 @@ function getRoute(mode: string): AppRouteModule {
     children: [
       {
         path: 'file',
-        name: `${mode == 's' ? 'Share' : 'Publish'}File`,
-        component: () => import(`./@/views/general/metanet/mainOut/${t}.vue`),
+        name: t,
+        component: () => import(`/@/views/general/metanet/mainOut/${t}.vue`),
         meta: {
           hideBreadcrumb: true,
           title: 'routes.menu.file',
