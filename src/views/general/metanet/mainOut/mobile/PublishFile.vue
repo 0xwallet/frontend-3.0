@@ -68,7 +68,7 @@
       });
 
       const publish = ref({});
-      const file: NetFile = ref({});
+      const file: NetFile = ref<NetFile>({});
       const [registerDrawer, { openDrawer }] = useDrawer();
       const [registerPdfDrawer, { openDrawer: openPdfDrawer }] = useDrawer();
       const [registerMarkdownDrawer, { openDrawer: openMarkdownDrawer }] = useDrawer();

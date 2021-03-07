@@ -35,7 +35,6 @@
             <!--            >-->
           </div>
           <Divider type="horizontal" />
-          {{ info.publishInfo.txid }}
           <Descriptions :column="1">
             <DescriptionsItem :label="t('url')" v-if="share"
               ><a-button type="link" @click="copyUrl(3)">{{ info.uri }}</a-button>

@@ -28,7 +28,7 @@
   </div>
 </template>
 <script lang="ts">
-  import { defineComponent, ref, createVNode } from 'vue';
+  import { defineComponent, ref, createVNode, computed } from 'vue';
   import { BasicTable, useTable } from '/@/components/Table';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { getBasicColumns } from './Data';
@@ -56,8 +56,9 @@
     setup() {
       const { createMessage, createErrorModal } = useMessage();
       const path = ref([]);
-      const tableData = ref([]);
-
+      const tableData = computed(() => shareData.value.concat(publishData.value));
+      const shareData = ref([]);
+      const publishData = ref([]);
       const info = ref({
         button: false,
         file: {},
@@ -87,19 +88,46 @@
         scroll: { x: 1000, y: window.innerHeight * 0.7 },
       });
 
-      const { onResult, refetch } = useQuery(NetGql.Collection.List, null, () => ({
-        fetchPolicy: 'network-only',
-      }));
-      onResult((res) => {
+      const { onResult: shareList, refetch: reloadShare } = useQuery(
+        NetGql.Collection.List,
+        { type: 'SHARE' },
+        () => ({
+          fetchPolicy: 'network-only',
+        })
+      );
+      shareList((res) => {
         let list = res?.data?.driveListCollections;
-        console.log(list);
         let t: [] = [];
         list.forEach((v) => {
           if (!v.item) return;
           t.push({ file: new NetFile(v.item), ...v });
         });
-        tableData.value = t;
+        shareData.value = t;
       });
+      const { onResult: publishList, refetch: reloadPublish } = useQuery(
+        NetGql.Collection.List,
+        { type: 'PUBLISH' },
+        () => ({
+          fetchPolicy: 'network-only',
+        })
+      );
+      publishList((res) => {
+        let list = res?.data?.driveListCollections;
+        let t: [] = [];
+        list.forEach((v) => {
+          if (!v.item) return;
+          console.log(v.item.current);
+          t.push({ file: new NetFile(v.item.current), ...v });
+        });
+        publishData.value = t;
+        // tableData.value = t;
+      });
+
+      function refetch() {
+        reloadShare();
+        reloadPublish();
+      }
+
       const { mutate: DelCollection } = useMutation(NetGql.Collection.Delete);
 
       // fetchData();
@@ -138,6 +166,7 @@
         t,
         info,
         changeInfo,
+        tableData,
       };
     },
   });

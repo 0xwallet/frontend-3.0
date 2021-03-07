@@ -41,6 +41,7 @@
   import MarkdownModal from '../component/editor/Markdown.vue';
   import { useDrawer } from '/@/components/Drawer';
   import { useModal } from '/@/components/Modal';
+  import { useMessage } from '/@/hooks/web/useMessage';
   const { t } = useI18n('general.metanet');
 
   export default defineComponent({
@@ -60,6 +61,7 @@
     },
     setup() {
       const { currentRoute } = useRouter();
+      const { createMessage } = useMessage();
       if (
         navigator.userAgent.match(
           /(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i

@@ -2,8 +2,8 @@ import gql from 'graphql-tag';
 import { userFile } from '/@/components/NetFile/gql/basic';
 //发布文件列表
 const driveListCollections = gql`
-  query {
-    driveListCollections {
+  query($type:DriveCollectionType) {
+    driveListCollections (type:$type){
       id
       info {
         description
@@ -20,7 +20,11 @@ const driveListCollections = gql`
         }
 
         ... on DrivePublish {
-          publishID: id
+           id
+           current{
+           id
+           ${userFile}
+           }
         }
       }
     }
