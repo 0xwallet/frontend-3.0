@@ -131,7 +131,7 @@ export class NetFile {
     }
     this.space = {
       space: params.userFile.space,
-      totalSpace: params.userFile.user.driveSetting?.totalSpace || 0,
+      totalSpace: params.userFile.user.driveSetting?.totalSpace || 1,
       usedSpace: params.userFile.user.driveSetting?.usedSpace || 0,
       availableSpace: params.userFile.user.driveSetting?.availableSpace || 0,
     };
@@ -168,7 +168,7 @@ export class NetFile {
     this.isShared = params.userFile.isShared;
   }
   fileName(): string {
-    return this.fullName.slice(-1)[0];
+    return this.fullName.slice(-1)[0]||"none";
   }
   getToken(): Promise<string> {
     return new Promise<string>((resolve) => {

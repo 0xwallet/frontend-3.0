@@ -33,14 +33,13 @@
         </Dropdown>
       </template>
       <template #toolbar>
-        <Button @click="changeInfo" type="link">
+        <Button @click="changeButton" type="link">
           <ExclamationCircleTwoTone
             :style="{ fontSize: '20px' }"
-            :twoToneColor="`#${info.button ? '2E2EFE' : '6E6E6E'}`"
+            :twoToneColor="`#${infoButton ? '2E2EFE' : '6E6E6E'}`"
         /></Button>
       </template>
     </BasicTable>
-    <FileInfo :info="info" />
     <Modal
       :visible="modal.visible"
       :title="modal.title"
@@ -69,10 +68,11 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import { Tooltip, Drawer, Dropdown, Menu, Modal } from 'ant-design-vue';
   import { ExclamationCircleOutlined, ExclamationCircleTwoTone } from '@ant-design/icons-vue';
-  import { NetGql, NetFile, FileInfo } from '/@/components/NetFile';
+  import { NetGql, NetFile } from '/@/components/NetFile';
   import { Button } from '/@/components/Button';
   import { dateUtil } from '/@/utils/dateUtil';
   import { BasicForm } from '/@/components/Form';
+  import {fileStore} from "/@/store/modules/netFile";
 
   const { t } = useI18n('general.metanet');
   export default defineComponent({
@@ -85,7 +85,6 @@
       Menu,
       MenuItem: Menu.Item,
       MenuGroup: Menu.ItemGroup,
-      FileInfo,
       ExclamationCircleTwoTone,
       Dropdown,
       Button,
@@ -96,14 +95,7 @@
       const { createMessage, createErrorModal } = useMessage();
       const path = ref([]);
       const tableData = ref([]);
-      const info = ref({
-        button: false,
-        file: {},
-        share: true,
-      });
-      function changeInfo() {
-        info.value.button = !info.value.button;
-      }
+      const infoButton=computed(()=>fileStore.getFileInfo.button)
 
       const [
         registerTable,
@@ -112,11 +104,7 @@
         canResize: false,
         customRow: (record) => ({
           onClick: () => {
-            if (info.value.file.id == record.id && info.value.button) {
-              info.value.file = {};
-              return;
-            }
-            info.value.file = record;
+            fileStore.setFileInfo({file:record, mode:'share'})
           },
         }),
         pagination: false,
@@ -247,12 +235,12 @@
         copyUrl,
         refetch,
         t,
-        changeInfo,
         getExpired,
         editExpire,
         editCode,
         modal,
-        info,
+        infoButton,
+        changeButton:fileStore.changeButton,
         handleSubmit,
         closeModal,
         formRef,

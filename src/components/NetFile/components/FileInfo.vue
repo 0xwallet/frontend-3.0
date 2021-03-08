@@ -7,27 +7,27 @@
     :width="400"
     :wrapClassName="'!mt-52'"
   >
-    <template #title>
-      <span @click="copyUrl(4)">{{ info.fullName?.slice(-1)[0] || 'none' }}</span>
+    <template #title v-if="visible">
+      <span @click="copyUrl(4)">{{ file.fileName() }}</span>
     </template>
     <Tabs v-if="visible">
       <TabPane key="basic" :tab="t('basic')">
         <Space direction="vertical">
           <div class="info_header">
-            <Icon :type="info.type" :size="100" />
-            <p v-if="info.type !== 'folder'"
-              >{{ byteTransfer(info.size).value }} {{ byteTransfer(info.size).unit }} /
-              <span>{{ ((info.size / info.space.totalSpace) * 100).toFixed(2) }}%</span>
+            <Icon :type="file.type" :size="100" />
+            <p v-if="file.type !== 'folder'"
+              >{{ byteTransfer(file.size).value }} {{ byteTransfer(file.size).unit }} /
+              <span>{{ ((file.size / file.space.totalSpace) * 100).toFixed(2) }}%</span>
             </p>
             <p v-else>
               <Button @click="getDirSize" v-if="dirSize === 0">查询</Button>
               <span v-else
                 >{{ byteTransfer(dirSize).value }} {{ byteTransfer(dirSize).unit }} /
-                {{ ((dirSize / info.space.totalSpace) * 100).toFixed(2) }}%</span
+                {{ ((dirSize / file.space.totalSpace) * 100).toFixed(2) }}%</span
               >
             </p>
-            <p v-if="share && info.status.isCollected"
-              >被收藏数：{{ info.status.collectedCount }}</p
+            <p v-if="mode==='share' && file.status.isCollected"
+              >被收藏数：{{ file.status.collectedCount }}</p
             >
             <!--            <p-->
             <!--              >{{ byteTransfer(info.space.totalSpace).value }}-->
@@ -36,25 +36,25 @@
           </div>
           <Divider type="horizontal" />
           <Descriptions :column="1">
-            <DescriptionsItem :label="t('url')" v-if="share"
-              ><a-button type="link" @click="copyUrl(3)">{{ info.uri }}</a-button>
+            <DescriptionsItem :label="t('url')" v-if="mode==='share'"
+              ><a-button type="link" @click="copyUrl(3)">{{ file.uri }}</a-button>
             </DescriptionsItem>
-            <DescriptionsItem label="Hash" v-if="info.hash && share"
-              ><Hash :hash="info.hash"
+            <DescriptionsItem label="Hash" v-if="file.hash && mode==='share'"
+              ><Hash :hash="file.hash"
             /></DescriptionsItem>
-            <DescriptionsItem :label="t('type')">{{ info.type }}</DescriptionsItem>
+            <DescriptionsItem :label="t('type')">{{ file.type }}</DescriptionsItem>
             <DescriptionsItem :label="t('location')">
-              <span v-for="(v, i) in info.Location()" :key="i">{{ v }}/</span>
+              <span v-for="(v, i) in file.Location()" :key="i">{{ v }}/</span>
             </DescriptionsItem>
-            <DescriptionsItem :label="t('modified')">{{ time(info.updatedAt) }}</DescriptionsItem>
-            <DescriptionsItem :label="t('opened')" v-if="!share"></DescriptionsItem>
-            <DescriptionsItem :label="t('created')">{{ time(info.createdAt) }}</DescriptionsItem>
+            <DescriptionsItem :label="t('modified')">{{ time(file.updatedAt) }}</DescriptionsItem>
+            <DescriptionsItem :label="t('opened')" v-if="!mode==='share'"></DescriptionsItem>
+            <DescriptionsItem :label="t('created')">{{ time(file.createdAt) }}</DescriptionsItem>
             <DescriptionsItem :label="t('status')">{{
-              info.status.isShared ? t('shared') : t('unShared')
+                file.status.isShared ? t('shared') : t('unShared')
             }}</DescriptionsItem>
           </Descriptions>
         </Space>
-        <Desc :desc="info.desc" :id="info.id" :share="share" v-if="!collection"/>
+        <Desc :desc="file.desc" :id="file.id" :share="mode==='share'"/>
 
 
 
@@ -76,7 +76,8 @@
           </template>
         </List></TabPane
       >
-    </Tabs></Drawer
+    </Tabs>
+  </Drawer
   >
 </template>
 
@@ -93,6 +94,7 @@
   import { Hash, Icon, NetGql } from '/@/components/NetFile';
   import Desc from './Desc.vue';
   import { useApollo } from '/@/hooks/apollo/apollo';
+  import {fileStore} from "/@/store/modules/netFile";
   const { t } = useI18n('general.metanet');
   export default defineComponent({
     name: 'FileInfo',
@@ -121,19 +123,18 @@
       info: propTypes.any.def({}),
     },
     setup(props) {
-      const info: NetFile = computed<NetFile>(() => {
+
+      const file: NetFile = computed<NetFile>(() => {
         dirSize.value = 0;
-        return props.info.file;
+        return fileStore.getFileInfo.file
       });
 
-      const share = computed(() => {
-        return props.info.share;
+      const mode = computed(() => {
+        return fileStore.getFileInfo.mode;
       });
-      const collection = computed(() => {
-        return props.info.collection;
-      });
+
       const visible = computed(() => {
-        return props.info.button && info.value.id !== undefined;
+        return fileStore.getFileInfo.button && fileStore.getFileInfo.file!==null;
       });
 
       const key = ref('basic');
@@ -165,25 +166,25 @@
       }
 
       function copyUrl(mode: number) {
-        if (!share) return;
-        info.value.copyShareUrl(mode);
+        if (!mode=='share') return;
+        file.value.copyShareUrl(mode);
       }
       function closeInfo() {
-        props.info.file = {};
+        fileStore.setFileInfo(null)
       }
       const dirSize = ref(0);
       function getDirSize() {
         useApollo({
           mode: 'query',
           gql: NetGql.Basic.DirSize,
-          variables: { dirId: info.value.id },
+          variables: { dirId: file.value.id },
         }).then((res) => {
           dirSize.value = res.data?.driveDirSize;
         });
       }
       return {
         t,
-        info,
+        file,
         tabList,
         key,
         onTabChange,
@@ -192,7 +193,7 @@
         getLocation,
         time,
         copyUrl,
-        share,
+        mode,
         data: [
           {
             title: '111',

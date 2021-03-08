@@ -67,14 +67,13 @@
         </Dropdown>
       </template>
       <template #toolbar>
-        <Button @click="changeInfo" type="link">
+        <Button @click="changeButton" type="link">
           <ExclamationCircleTwoTone
             :style="{ fontSize: '20px' }"
-            :twoToneColor="`#${info.button ? '2E2EFE' : '6E6E6E'}`" />{{
+            :twoToneColor="`#${infoButton ? '2E2EFE' : '6E6E6E'}`" />{{
         }}</Button>
       </template>
     </BasicTable>
-    <FileInfo :info="info" />
     <UploadStatus @openUploadModal="openUploadModal" />
     <MoveModal @register="registerMoveModal" />
     <ShareModal @register="registerShareModal" />
@@ -114,7 +113,6 @@
     CopyModal,
     MoveModal,
     NetGql,
-    FileInfo,
     MarkdownModal,
   } from '/@/components/NetFile';
   import { useMutation, useQuery } from '@vue/apollo-composable';
@@ -143,7 +141,7 @@
       Space,
       Row,
       Col,
-      FileInfo,
+
       PublishModal,
       CreateButton,
       UploadButton,
@@ -181,14 +179,9 @@
 
       const currentPath = ref<string[]>([]);
 
-      const info = ref({
-        button: false,
-        file: {},
-        share: false,
-      });
-      function changeInfo() {
-        info.value.button = !info.value.button;
-      }
+      const infoButton=computed(()=>fileStore.getFileInfo.button)
+
+
       const searchValue = ref('');
 
       // 表格数据
@@ -268,7 +261,6 @@
         columns: getBasicColumns(),
         rowKey: 'id',
         showIndexColumn: false,
-
         rowSelection: {
           type: 'checkbox',
           getCheckboxProps: (record) => ({
@@ -278,11 +270,7 @@
         },
         customRow: (record) => ({
           onClick: () => {
-            if (info.value.file.id == record.id && info.value.button) {
-              info.value.file = {};
-              return;
-            }
-            info.value.file = record;
+            fileStore.setFileInfo({file:record,mode:'basic'})
           },
         }),
         pagination: false,
@@ -545,10 +533,8 @@
         getSelectRowKeys,
         t,
         refetch,
-        file,
-        registerPublishModal,
+         registerPublishModal,
         openPublishModal,
-        changeInfo,
         searchValue,
         openUploadModal,
         uploadRef,
@@ -559,7 +545,8 @@
         registerCopyModal,
         openCopy,
         currentPath,
-        info,
+        infoButton,
+        changeButton:fileStore.changeButton,
       };
     },
   });

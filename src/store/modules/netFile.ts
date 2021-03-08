@@ -19,9 +19,17 @@ interface uploadSpeed {
   time: number;
   speed: number;
 }
+interface fileInfo {
+  file:NetFile
+  mode:string
+  button:boolean
+
+}
+
+
+
 @Module({ namespaced: true, name: NAME, dynamic: true, store })
 class netFileStore extends VuexModule {
-  // user info
   private uploadList: FileItem[] = [];
 
   private shareFiles: NetFile[] = [];
@@ -33,6 +41,9 @@ class netFileStore extends VuexModule {
   private markdownFiles: any[] = [];
 
   private markdownModalVisible: boolean = false;
+
+  // @ts-ignore
+  private Info:fileInfo={file:null,mode:'basic',button:false}
 
   get getUploadList(): FileItem[] {
     return this.uploadList || [];
@@ -51,6 +62,29 @@ class netFileStore extends VuexModule {
   }
   get getRefetch(): number {
     return this.refetch;
+  }
+  get getFileInfo(): fileInfo {
+    return this.Info;
+  }
+  @Mutation
+  setFileInfo(params:{file: NetFile, mode: string}): void {
+    this.Info.mode = params.mode
+    if(!params.file){
+      // @ts-ignore
+      this.Info.file=null
+    return;
+    }
+    if (this.Info.file&&this.Info.file.id == params.file.id && this.Info.button) {
+      // @ts-ignore
+      this.Info.file = null;
+      return;
+    }
+    this.Info.file=params.file;
+  }
+
+  @Mutation
+  changeButton(): void {
+    this.Info.button=!this.Info.button;
   }
 
   @Mutation
@@ -98,11 +132,11 @@ class netFileStore extends VuexModule {
 
   @Mutation
   setSpeed(s: number): void {
-    if (dateUtil.unix() === this.uploadSpeed.time) {
+    if (dateUtil().unix() === this.uploadSpeed.time) {
       this.uploadSpeed.speed += s;
     } else {
       this.uploadSpeed.speed = s;
-      this.uploadSpeed.time = dateUtil.unix();
+      this.uploadSpeed.time = dateUtil().unix();
     }
   }
 

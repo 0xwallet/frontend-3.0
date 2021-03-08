@@ -39,13 +39,13 @@
         </Dropdown>
       </template>
       <template #toolbar>
-        <Button @click="changeInfo" type="link">
+        <Button @click="changeButton" type="link">
           <ExclamationCircleTwoTone
             :style="{ fontSize: '20px' }"
-            :twoToneColor="`#${info.button ? '2E2EFE' : '6E6E6E'}`" />{{
+            :twoToneColor="`#${infoButton ? '2E2EFE' : '6E6E6E'}`" />{{
         }}</Button>
       </template> </BasicTable
-    ><FileInfo :info="info" />
+    >
     <UpdatePublishModal @register="registerUpdatePublishModal" />
   </div>
 </template>
@@ -62,9 +62,10 @@
   import { useMutation, useQuery } from '@vue/apollo-composable';
   import { useModal } from '/@/components/Modal';
   import UpdatePublishModal from './UpdatePublishModal.vue';
-  import { NetGql, NetFile, Icon, FileInfo } from '/@/components/NetFile';
+  import { NetGql, NetFile, Icon } from '/@/components/NetFile';
   import { useCopyToClipboard } from '/@/hooks/web/useCopyToClipboard';
   import { Button } from '/@/components/Button';
+  import {fileStore} from "/@/store/modules/netFile";
   const { clipboardRef, copiedRef } = useCopyToClipboard();
   const { t } = useI18n('general.metanet');
   export default defineComponent({
@@ -76,7 +77,6 @@
       Menu,
       MenuItem: Menu.Item,
       MenuGroup: Menu.ItemGroup,
-      FileInfo,
       ExclamationCircleTwoTone,
       Dropdown,
       UpdatePublishModal,
@@ -86,15 +86,7 @@
       const { createMessage, createErrorModal } = useMessage();
       const path = ref([]);
       const tableData = ref([]);
-      const info = ref({
-        button: false,
-        file: {},
-        share: true,
-      });
-
-      function changeInfo() {
-        info.value.button = !info.value.button;
-      }
+      const infoButton=computed(()=>fileStore.getFileInfo.button)
 
       const [
         registerTable,
@@ -103,11 +95,7 @@
         canResize: false,
         customRow: (record) => ({
           onClick: () => {
-            if (info.value.file.id == record.file.id && info.value.button) {
-              info.value.file = {};
-              return;
-            }
-            info.value.file = record.file;
+            fileStore.setFileInfo({file:record.file, mode:'share'})
           },
         }),
         pagination: false,
@@ -203,8 +191,8 @@
         t,
         openUpdateModal,
         registerUpdatePublishModal,
-        changeInfo,
-        info,
+        infoButton,
+        changeButton:fileStore.changeButton,
       };
     },
   });

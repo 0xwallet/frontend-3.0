@@ -19,6 +19,7 @@
       </div>
       <div class="h-28"></div>
     </Card>
+    <FileInfo />
   </div>
 </template>
 
@@ -31,9 +32,11 @@
   import Publish from './publish/index.vue';
   import Collection from './collection/index.vue';
   import { useI18n } from '/@/hooks/web/useI18n';
+  import {FileInfo} from "/@/components/NetFile";
   const { t } = useI18n('general.metanet');
   export default defineComponent({
     components: {
+      FileInfo,
       Tabs,
       TabPane: Tabs.TabPane,
       Files,
@@ -73,7 +76,8 @@
       }
       const value = ref('');
       function onSearch() {}
-      return { t, tabList, tabKey, onTabChange, onSearch, value };
+
+      return { t, tabList, tabKey, onTabChange, onSearch, value, };
     },
   });
 </script>
