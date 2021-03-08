@@ -211,7 +211,6 @@
       PreviewShare((res) => {
         needCode.value = res.data?.drivePreviewShare.needCode;
         userPreview.value = res.data?.drivePreviewShare.UserPreview;
-        console.log(res);
         if (!res.data?.drivePreviewShare.needCode) {
           fileStore.fetchShareFile(params.value);
         }

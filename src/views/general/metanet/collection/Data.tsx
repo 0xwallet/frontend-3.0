@@ -29,7 +29,6 @@ export function getBasicColumns(): BasicColumn[] {
       title: 'Hash',
       dataIndex: 'id',
       customRender: ({ record }) => {
-        console.log(record);
         return <Hash hash={record.file?.hash} />;
       },
     },

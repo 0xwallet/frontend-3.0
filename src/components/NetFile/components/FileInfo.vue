@@ -23,7 +23,6 @@
               <Button @click="getDirSize" v-if="dirSize === 0">查询</Button>
               <span v-else
                 >{{ byteTransfer(dirSize).value }} {{ byteTransfer(dirSize).unit }} /
-                {{ info.space }}
                 {{ ((dirSize / info.space.totalSpace) * 100).toFixed(2) }}%</span
               >
             </p>
@@ -55,7 +54,10 @@
             }}</DescriptionsItem>
           </Descriptions>
         </Space>
-        <Desc :desc="info.desc" :id="info.id" :share="share" />
+        <Desc :desc="info.desc" :id="info.id" :share="share" v-if="!collection"/>
+
+
+
       </TabPane>
       <TabPane key="dynamic" :tab="t('dynamic')">
         <List item-layout="horizontal" :data-source="data">
@@ -126,6 +128,9 @@
 
       const share = computed(() => {
         return props.info.share;
+      });
+      const collection = computed(() => {
+        return props.info.collection;
       });
       const visible = computed(() => {
         return props.info.button && info.value.id !== undefined;

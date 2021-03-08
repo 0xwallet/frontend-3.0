@@ -123,7 +123,7 @@
       async function handleRegister() {
         const data = await validForm();
         if (!data) return;
-        const wallet = await newWallet({ email: data.mail, password: data.password });
+        const wallet = await newWallet({ email: data.email, password: data.password });
         // 注册账号
         await SignUp({
           email: data.email,

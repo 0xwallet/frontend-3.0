@@ -62,7 +62,7 @@
       const info = ref({
         button: false,
         file: {},
-        share: true,
+        collection:true
       });
 
       function changeInfo() {
@@ -116,7 +116,6 @@
         let t: [] = [];
         list.forEach((v) => {
           if (!v.item) return;
-          console.log(v.item.current);
           t.push({ file: new NetFile(v.item.current), ...v });
         });
         publishData.value = t;
