@@ -37,7 +37,7 @@
   import { useRouter } from 'vue-router';
   import { useQuery } from '@vue/apollo-composable';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { Hash, Icon, PdfDrawer, NetFile, NetGql } from '/@/components/NetFile';
+  import { Hash, Icon, PdfDrawer, NetFile, NetGql, } from '/@/components/NetFile';
   import { Card, Space, Row, Col, Button } from 'ant-design-vue';
   import { Svg } from '/@/components/Svg';
   import { fileStore } from '/@/store/modules/netFile';
@@ -47,6 +47,7 @@
   import ShareDrawer from './component/ShareDrawer.vue';
   import MarkdownDrawer from './component/MarkdownDrawer.vue';
   import { MoreOutlined } from '@ant-design/icons-vue';
+  import {useModal} from "/@/components/Modal";
   const { t } = useI18n('general.metanet');
 
   export default defineComponent({
@@ -131,7 +132,7 @@
         }
       }
       function openShareDrawer() {
-        openDrawer(true);
+        openDrawer(true,{code:params.value.code});
       }
       async function comment(f: NetFile) {
         await f.comment();

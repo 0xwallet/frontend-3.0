@@ -56,7 +56,7 @@ export function getBasicColumns(): BasicColumn[] {
     {
       title: t('action'),
       fixed: 'right',
-      width: 100,
+      width: 300,
       slots: { customRender: 'action' },
     },
   ];

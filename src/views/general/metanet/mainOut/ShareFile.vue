@@ -67,7 +67,7 @@
         </template></BasicTable
       >
     </Card>
-
+    <CollectModal @register="registerCollectModal" />
     <PdfDrawer @register="registerPdfDrawer" />
     <MarkdownModal @register="registerMarkdownModal" />
   </div>
@@ -79,7 +79,7 @@
   import { useTable, BasicTable } from '/@/components/Table';
   import { getBasicColumns } from './tableData';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import { Hash, Icon, PdfDrawer, NetFile, NetGql } from '/@/components/NetFile';
+  import { Hash, Icon, PdfDrawer, NetFile, NetGql,CollectModal } from '/@/components/NetFile';
   import { BasicForm, useForm } from '/@/components/Form';
   import { fileStore } from '/@/store/modules/netFile';
   import ShareFileMobile from '/@/views/general/metanet/share/component/ShareFileMobile.vue';
@@ -106,7 +106,7 @@
       Avatar,
       PdfDrawer,
       MarkdownModal,
-      Icon,
+      Icon,CollectModal
     },
     setup() {
       const { currentRoute } = useRouter();
@@ -181,6 +181,7 @@
       });
       const [registerPdfDrawer, { openDrawer: openPdfDrawer }] = useDrawer();
       const [registerMarkdownModal, { openModal: openMarkdownModal }] = useModal();
+      const [registerCollectModal, { openModal: openCollectModal }] = useModal();
       const choose = computed(() => {
         return getSelectRowKeys().length !== 0;
       });
@@ -253,8 +254,7 @@
         await f.save();
       }
       async function collection(f: NetFile) {
-        await f.collection('share', params.value.code);
-        createMessage.success(t('collectionSuccess'));
+        openCollectModal(true,{mode:'share',id:f.shareInfo.id,code:params.code})
       }
 
       async function comment(f: NetFile) {
@@ -281,7 +281,7 @@
         registerMarkdownModal,
         save,
         collection,
-        comment,
+        comment,registerCollectModal
       };
     },
   });

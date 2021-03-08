@@ -8,6 +8,7 @@ import CopyModal from './components/CopyModal.vue';
 import MoveModal from './components/MoveModal.vue';
 import FileInfo from './components/FileInfo.vue';
 import FileTree from './components/FileTree.vue';
+import CollectModal from './components/CollectModal.vue';
 import { NetGql } from './gql/index';
 import { NetFile } from './netFile';
 import { NetUpload } from './upload';
@@ -27,5 +28,5 @@ export {
   FileInfo,
   FileTree,
   NetUpload,
-  MarkdownEditModal,
+  MarkdownEditModal,CollectModal
 };

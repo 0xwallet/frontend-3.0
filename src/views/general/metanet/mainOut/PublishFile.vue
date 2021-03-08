@@ -23,7 +23,7 @@
         </template>
       </BasicTable>
     </Card>
-
+    <CollectModal @register="registerCollectModal" />
     <PdfDrawer @register="registerPdfDrawer" />
     <MarkdownModal @register="registerMarkdownModal" />
   </div>
@@ -35,7 +35,7 @@
   import { useTable, BasicTable } from '/@/components/Table';
   import { getPublishColumns } from './tableData';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import { Hash, Icon, PdfDrawer, NetFile, NetGql } from '/@/components/NetFile';
+  import { Hash, Icon, PdfDrawer, NetFile, NetGql,CollectModal } from '/@/components/NetFile';
   import { useQuery } from '@vue/apollo-composable';
   import router from '/@/router';
   import MarkdownModal from '../component/editor/Markdown.vue';
@@ -57,7 +57,7 @@
       Avatar,
       PdfDrawer,
       MarkdownModal,
-      Icon,
+      Icon,CollectModal
     },
     setup() {
       const { currentRoute } = useRouter();
@@ -85,14 +85,13 @@
       });
       const [registerPdfDrawer, { openDrawer: openPdfDrawer }] = useDrawer();
       const [registerMarkdownModal, { openModal: openMarkdownModal }] = useModal();
-
+      const [registerCollectModal, { openModal: openCollectModal }] = useModal();
       const { onResult: PublishFind } = useQuery(NetGql.Publish.Find, { txid: params.value });
       PublishFind((res) => {
         const data = res.data?.driveFindPublish;
         const f = new NetFile(data.current);
         f.publishInfo.id = data.id;
         tableData.value.push({ id: data.id, file: f });
-        console.log(tableData.value);
       });
       // async function fetchData() {
       //   const { code } = await validateFields();
@@ -129,8 +128,7 @@
       }
 
       async function collection(f: NetFile) {
-        await f.collection('publish', params.value.code);
-        createMessage.success(t('collectionSuccess'));
+        openCollectModal(true,{mode:'publish',id:f.publishInfo.id})
       }
 
       async function comment(f: NetFile) {
@@ -146,7 +144,7 @@
         registerPdfDrawer,
         registerMarkdownModal,
         collection,
-        comment,
+        comment,registerCollectModal
       };
     },
   });
