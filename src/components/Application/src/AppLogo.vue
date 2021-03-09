@@ -50,9 +50,7 @@
     setup() {
       const { prefixCls } = useDesign('app-logo');
       const { getCollapsedShowTitle } = useMenuSetting();
-
       const { title } = useGlobSetting();
-
       const go = useGo();
 
       function handleGoHome(): void {

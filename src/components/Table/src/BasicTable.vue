@@ -171,7 +171,8 @@
         getProps,
         tableElRef,
         getColumnsRef,
-        getRowSelectionRef
+        getRowSelectionRef,
+        getDataSourceRef
       );
 
       const { customRow } = useCustomRow(getProps, {
