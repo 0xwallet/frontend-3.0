@@ -39,22 +39,14 @@
         <HeaderCell :column="column" />
       </template>
     </Table>
-    <!--    <Drawer-->
-    <!--      :title="'none'"-->
-    <!--      placement="right"-->
-    <!--      :visible="true"-->
-    <!--      :getContainer="'.fileInfo'"-->
-    <!--      :mask="false"-->
-    <!--      :wrap-style="{ position: 'absolute' }"-->
-    <!--      :width="400"-->
-    <!--    ></Drawer>-->
+
   </div>
 </template>
 <script lang="ts">
   import type { BasicTableProps, TableActionType, SizeType } from './types/table';
 
   import { defineComponent, ref, computed, unref } from 'vue';
-  import { Table, Drawer } from 'ant-design-vue';
+  import { Table } from 'ant-design-vue';
   import { BasicForm, useForm } from '/@/components/Form/index';
 
   import { omit } from 'lodash-es';
@@ -76,15 +68,14 @@
 
   import { basicProps } from './props';
   import expandIcon from './components/ExpandIcon';
-  import { createAsyncComponent } from '/@/utils/factory/createAsyncComponent';
+  import HeaderCell from './components/HeaderCell.vue';
 
   import './style/index.less';
   export default defineComponent({
     components: {
       Table,
       BasicForm,
-      HeaderCell: createAsyncComponent(() => import('./components/HeaderCell.vue')),
-      Drawer,
+      HeaderCell,
     },
     props: basicProps,
     emits: [

@@ -7,13 +7,15 @@
 ### ✨ Refactor
 
 - 重构项目以解决循环依赖项导致的热更新问题
+- 移除 vueHelper/useClickoutside,使用@vueuse/core 代替
 
 ### 🐛 Bug Fixes
 
 - 确保 `table action` 的值被正确更新
 - 修复页面切换的动画无法关闭
 - 修复`PageWrapper`title 不显示
-- 修复表格数据为空时高度计算错误
+- 修复表格已知问题
+- 修复 BasicTree 组件不能自定义 title 问题
 
 ## 2.0.3 (2021-03-07)
 
