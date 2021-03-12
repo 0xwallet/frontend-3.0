@@ -35,6 +35,8 @@
   import QuickButton from './components/QuickButton.vue';
   import FoldButton from './components/FoldButton.vue';
   import TabRedo from './components/TabRedo.vue';
+  import MarkdownButton from './components/TabMarkdown.vue';
+
   import type { RouteLocationNormalized } from 'vue-router';
 
   import { useGo } from '/@/hooks/web/usePage';
@@ -54,7 +56,7 @@
   export default defineComponent({
     name: 'MultipleTabs',
     components: {
-      MarkdownButton: createAsyncComponent(() => import('./components/TabMarkdown.vue')),
+      MarkdownButton,
       QuickButton,
       TabRedo: TabRedo,
       FoldButton,

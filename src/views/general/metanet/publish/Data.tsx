@@ -46,11 +46,11 @@ export function getBasicColumns(): BasicColumn[] {
       width: 200,
       dataIndex: 'version',
     },
-    {
-      title: t('publishLink'),
-      dataIndex: 'txid',
-      slots: { customRender: 'uri' },
-    },
+    // {
+    //   title: t('publishLink'),
+    //   dataIndex: 'txid',
+    //   slots: { customRender: 'uri' },
+    // },
     {
       title: t('status'),
       dataIndex: 'status',

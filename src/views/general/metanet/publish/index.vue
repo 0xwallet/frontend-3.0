@@ -95,7 +95,7 @@
         canResize: false,
         customRow: (record) => ({
           onClick: () => {
-            fileStore.setFileInfo({file:record.file, mode:'share'})
+            fileStore.setFileInfo({file:record.file, mode:'publish'})
           },
         }),
         pagination: false,

@@ -37,21 +37,26 @@
           <Divider type="horizontal" />
           <Descriptions :column="1">
             <DescriptionsItem :label="t('url')" v-if="mode==='share'"
-              ><a-button type="link" @click="copyUrl(3)">{{ file.uri }}</a-button>
+              ><Button type="link" @click="copyUrl(3)">{{ file.uri }}</Button>
             </DescriptionsItem>
-            <DescriptionsItem label="Hash" v-if="file.hash && mode==='share'"
+            <DescriptionsItem :label="t('url')" v-if="mode==='publish'"
+            ><Hash :hash="file.publishInfo.txid" mode="txid"
+            />
+            </DescriptionsItem>
+            <DescriptionsItem label="Hash" v-if="file.hash && (mode==='share'||mode==='publish')"
               ><Hash :hash="file.hash"
             /></DescriptionsItem>
             <DescriptionsItem :label="t('type')">{{ file.type }}</DescriptionsItem>
             <DescriptionsItem :label="t('location')">
               <span v-for="(v, i) in file.Location()" :key="i">{{ v }}/</span>
             </DescriptionsItem>
+            <DescriptionsItem :label="t('status')" v-if="mode==='basic'">{{
+                file.status.isShared ? t('shared') : t('unShared')
+              }}</DescriptionsItem>
             <DescriptionsItem :label="t('modified')">{{ time(file.updatedAt) }}</DescriptionsItem>
             <DescriptionsItem :label="t('opened')" v-if="!mode==='share'"></DescriptionsItem>
             <DescriptionsItem :label="t('created')">{{ time(file.createdAt) }}</DescriptionsItem>
-            <DescriptionsItem :label="t('status')">{{
-                file.status.isShared ? t('shared') : t('unShared')
-            }}</DescriptionsItem>
+
           </Descriptions>
         </Space>
         <Desc :desc="file.desc" :id="file.id" :share="mode==='share'"/>
@@ -166,11 +171,12 @@
       }
 
       function copyUrl(mode: number) {
-        if (!mode=='share') return;
+        if (mode.value==='basic') return;
+        console.log(mode)
         file.value.copyShareUrl(mode);
       }
       function closeInfo() {
-        fileStore.setFileInfo(null)
+        fileStore.setFileInfo({file:null, mode:'basic'})
       }
       const dirSize = ref(0);
       function getDirSize() {

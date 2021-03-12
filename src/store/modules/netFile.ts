@@ -20,7 +20,7 @@ interface uploadSpeed {
   speed: number;
 }
 interface fileInfo {
-  file:NetFile
+  file:NetFile|null
   mode:string
   button:boolean
 
@@ -42,7 +42,6 @@ class netFileStore extends VuexModule {
 
   private markdownModalVisible: boolean = false;
 
-  // @ts-ignore
   private Info:fileInfo={file:null,mode:'basic',button:false}
 
   get getUploadList(): FileItem[] {
@@ -70,12 +69,10 @@ class netFileStore extends VuexModule {
   setFileInfo(params:{file: NetFile, mode: string}): void {
     this.Info.mode = params.mode
     if(!params.file){
-      // @ts-ignore
       this.Info.file=null
     return;
     }
     if (this.Info.file&&this.Info.file.id == params.file.id && this.Info.button) {
-      // @ts-ignore
       this.Info.file = null;
       return;
     }

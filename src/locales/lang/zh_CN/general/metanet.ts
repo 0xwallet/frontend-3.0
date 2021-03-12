@@ -68,7 +68,7 @@ export default {
   private: '私密',
   valid: '7天有效期',
   createAt: '创建时间',
-  expiredAt: '过期时间',
+  expiredAt: '有效期',
   expired: '已过期',
   publishTitle: '我的发布',
   publishAt: '发布时间',

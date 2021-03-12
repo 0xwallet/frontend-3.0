@@ -1,10 +1,11 @@
 <template>
-  <Tooltip :title="t('copy')" v-if="hash !== ''">
+  <Tooltip :title="`[${mode}]`" v-if="hash !== ''">
     <span @click="copy"
       >{{ hash.slice(0, 2)
       }}<span v-for="v in list" :style="'background-color:#' + v">&nbsp;&nbsp;&nbsp;</span
       >{{ hash.slice(hash.length - 2, hash.length) }}</span
-    >
+    >   <CopyOutlined class="ml-4 "/>
+
   </Tooltip>
 </template>
 
@@ -15,18 +16,32 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useCopyToClipboard } from '/@/hooks/web/useCopyToClipboard';
   import { useMessage } from '/@/hooks/web/useMessage';
-  const { t } = useI18n('general.metanet');
+  import { CopyOutlined } from '@ant-design/icons-vue';
+
   const { clipboardRef, copiedRef } = useCopyToClipboard();
   const { createMessage } = useMessage();
+  const { t } = useI18n('general.metanet');
   export default defineComponent({
-    components: { Tooltip },
+    components: { Tooltip,CopyOutlined },
     props: {
       hash: propTypes.string,
+      mode:propTypes.string.def('md5')
     },
     setup(props) {
       const hash = computed(() => {
         return props.hash;
       });
+      const mode=computed(()=>{
+        switch (props.mode){
+          case 'md5':
+            return 'MD5'
+          case 'txid':
+            return "TxID"
+          default:
+            return 'mode'
+        }
+
+      })
       const list = computed(() => {
         if (props.hash === '') return '';
         let temp = [];
@@ -46,7 +61,7 @@
         t,
         copy,
         hash,
-        list,
+        list,mode
       };
     },
   });

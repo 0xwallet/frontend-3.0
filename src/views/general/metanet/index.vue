@@ -13,9 +13,10 @@
       <div class="tabsHeight">
         <template v-if="tabKey === 'files'"><Files /></template>
         <template v-if="tabKey === 'share'"> <Share /> </template>
+        <template v-if="tabKey === 'publish'"> <Publish /> </template>
         <template v-if="tabKey === 'collection'"> <Collection /> </template>
         <template v-if="tabKey === 'recycle'"> <Recycle /> </template>
-        <template v-if="tabKey === 'publish'"> <Publish /> </template>
+
       </div>
       <div class="h-28"></div>
     </Card>
