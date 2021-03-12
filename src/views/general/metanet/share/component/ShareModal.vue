@@ -136,7 +136,9 @@
           }
           const params = await validateFields();
           await file.value.share(params);
-        } finally {
+        } catch (e) {
+          console.log(err)
+        }finally {
           setModalProps({ showOkBtn: false });
         }
       }

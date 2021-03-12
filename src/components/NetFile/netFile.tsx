@@ -172,7 +172,10 @@ export class NetFile {
   }
   getToken(): Promise<string> {
     return new Promise<string>((resolve) => {
-      if (this.token !== '') resolve(this.token || '');
+      if (this.shareInfo?.token !== '') {
+        resolve(this.shareInfo?.token || '')
+        return
+      }
       useApollo({
         mode: 'mutate',
         gql: NetGql.Basic.Token,
@@ -316,11 +319,12 @@ export class NetFile {
         this.token = res.data?.driveCreateShare.token;
         return true;
       })
-      .catch(() => {
-        createErrorModal({
-          title: t('general.metanet.failed'),
-          content: t('general.metanet.share') + ' ' + t('general.metanet.failed'),
-        });
+      .catch((err) => {
+        // console.log(err)
+        // createErrorModal({
+        //   title: t('general.metanet.failed'),
+        //   content: t('general.metanet.share') + ' ' + t('general.metanet.failed'),
+        // });
         return false;
       });
   }
