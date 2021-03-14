@@ -34,7 +34,7 @@
             <LoginForm />
             <ForgetPasswordForm />
             <RegisterForm />
-            <MobileForm />
+            <nMobileForm />
             <QrCodeForm />
           </div>
         </div>
@@ -50,7 +50,7 @@
   import LoginForm from './LoginForm.vue';
   import ForgetPasswordForm from './ForgetPasswordForm.vue';
   import RegisterForm from './RegisterForm.vue';
-  import MobileForm from './MobileForm.vue';
+  import nMobileForm from './nMobileForm.vue';
   import QrCodeForm from './QrCodeForm.vue';
 
   import { useGlobSetting } from '/@/hooks/setting';
@@ -65,7 +65,7 @@
       LoginForm,
       ForgetPasswordForm,
       RegisterForm,
-      MobileForm,
+      nMobileForm,
       QrCodeForm,
       AppLocalePicker,
     },

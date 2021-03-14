@@ -49,7 +49,7 @@
       getMe((res) => {
         deviceList.value = [];
         deviceList.value.push({ publicKey: '', type: '新设备' });
-        res.wallets.forEach((v) => {
+        res.data?.me.wallets.forEach((v) => {
           if (v.tags[0] !== 'MESSAGE' && v.info.publicKey !== null) {
             deviceList.value.push({ publicKey: v.info.publicKey, type: 'NKN-nMobile' });
           }

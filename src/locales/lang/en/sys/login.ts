@@ -18,10 +18,13 @@ export default {
   nknVerifyCode: 'NKN Verify Code',
   backSignIn: 'Back sign in',
   mobileSignInFormTitle: 'Mobile sign in',
+  nMobileSignInFormTitle: 'nMobile sign in',
   qrSignInFormTitle: 'Qr code sign in',
   signInFormTitle: 'Sign in',
   signUpFormTitle: 'Sign up',
   forgetFormTitle: 'Reset password',
+
+
 
   signInTitle: 'Backstage management system',
   signInDesc: 'Enter your personal details and get started!',
@@ -50,5 +53,6 @@ export default {
   confirmPassword: 'Confirm Password',
   email: 'Email',
   smsCode: 'SMS code',
+  nMoblieCode: 'nMoblie Code',
   mobile: 'Mobile',
 };

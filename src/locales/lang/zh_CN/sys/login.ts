@@ -2,6 +2,7 @@ export default {
   backSignIn: '返回',
   signInFormTitle: '登录',
   mobileSignInFormTitle: '手机登录',
+  nMobileSignInFormTitle: 'nMoblie登录',
   qrSignInFormTitle: '二维码登录',
   signUpFormTitle: '注册',
   forgetFormTitle: '重置密码',
@@ -48,5 +49,7 @@ export default {
   confirmPassword: '确认密码',
   email: '邮箱',
   smsCode: '短信验证码',
+  nMoblieCode: 'nMoblie验证码',
   mobile: '手机号码',
 };
+

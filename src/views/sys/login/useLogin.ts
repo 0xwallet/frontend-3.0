@@ -8,6 +8,7 @@ export enum LoginStateEnum {
   RESET_PASSWORD,
   MOBILE,
   QR_CODE,
+  nMOBILE,
 }
 
 const currentState = ref(LoginStateEnum.LOGIN);
@@ -96,6 +97,23 @@ export function useFormRules(formData?: Recordable) {
         return mobileRule;
 
       // login form rules
+      case LoginStateEnum.nMOBILE:
+        return {
+          email: [
+            {
+              required: true,
+              message:'请输入邮箱',
+              trigger: 'change',
+            },
+          ],
+          sms: [
+            {
+              required: true,
+              message:'请输入'+t('sys.login.nMoblieCode'),
+              trigger: 'change',
+            },
+          ],
+        }
       default:
         return {
           email: accountFormRule,

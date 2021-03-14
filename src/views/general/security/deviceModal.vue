@@ -26,20 +26,20 @@
   const { t } = useI18n('general.security');
   const schemas: FormSchema[] = [
     {
-      field: 'publicKey',
+      field: 'nknPublicKey',
       component: 'Input',
       label: t('publicKey'),
       colProps: {
         span: 24,
       },
-      slot: 'publicKey',
-      rules: [{ required: true }],
+      required:true
     },
     {
       field: 'code',
       component: 'Input',
       label: t('nknVerifyCode'),
-      rules: [{ required: true }],
+      required:true,
+      slot:'code',
       colProps: {
         span: 24,
       },
@@ -48,7 +48,7 @@
       field: 'password',
       component: 'InputPassword',
       label: t('password'),
-      rules: [{ required: true }],
+      required:true,
       colProps: {
         span: 24,
       },
@@ -68,10 +68,9 @@
       // 发送NKN验证码
 
       async function handleSendCode() {
-        const params = await validateFields(['publicKey']);
-        data.type = 'RESET_PASSWORD';
+        const params = await validateFields(['nknPublicKey']);
         return await SendVerifyCode({
-          nkn: params.publicKey,
+          nkn: params.nknPublicKey,
           type: 'ACTIVE_NKN',
         });
       }
@@ -81,11 +80,7 @@
       async function bindDevice() {
         try {
           const data = await validate();
-          await BindDevice({
-            code: data.code,
-            nknPublicKey: data.publicKey,
-            password: data.password,
-          });
+          await BindDevice(data);
           createMessage.success('success');
           closeModal();
         } catch (err) {
