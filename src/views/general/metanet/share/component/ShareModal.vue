@@ -40,7 +40,7 @@
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { BasicForm, FormSchema, useForm } from '/@/components/Form';
   import { Card, Space } from 'ant-design-vue';
-  import { NetFile } from '/@/components/NetFile/netFile';
+  import { NetFile } from '/@/components/NetFile';
   import { useI18n } from '/@/hooks/web/useI18n';
   const { t } = useI18n('general.metanet');
   function randomString(len) {
@@ -104,11 +104,12 @@
     components: { BasicModal, BasicForm, Card, Space },
     setup() {
       const modelRef = ref({});
-      const file = ref(NetFile);
+      const file = ref<NetFile>({});
       const radio = ref(0);
       const shareUrl = computed(() => {
-        if (file.value.uri == '') return '';
-        return `${window.location.origin}/#/s/file?uri=${file.value.uri}`;
+
+        if (!file.value.shareInfo?.uri) return '';
+        return `${window.location.origin}/#/s/file?uri=${file.value.shareInfo.uri}`;
       });
       const radioStyle = {
         height: '30px',
@@ -125,7 +126,7 @@
       const [register, { setModalProps }] = useModalInner((data) => {
         file.value = unref(data.record);
         radio.value = 0;
-        file.value.uri = '';
+        file.value.shareInfo.uri = '';
       });
 
       async function shareFile() {

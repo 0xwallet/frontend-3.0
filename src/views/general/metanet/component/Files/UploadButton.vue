@@ -5,7 +5,7 @@
       <template #overlay>
         <Menu>
           <MenuItem>
-            <Upload :before-upload="beforeUpload" :showUploadList="false">
+            <Upload :beforeUpload="beforeUpload"  :showUploadList="false">
               <Button type="link">{{ t('file') }}</Button></Upload
             >
           </MenuItem>

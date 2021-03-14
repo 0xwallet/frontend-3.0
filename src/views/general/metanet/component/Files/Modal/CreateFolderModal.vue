@@ -152,7 +152,7 @@
         },
       });
       const [register, { closeModal }] = useModalInner((data) => {
-        parentId = data.slice(-1)[0].dirId || 'root';
+        parentId = data.slice(-1)[0]?.dirId || 'root';
         if (data) {
           currentPath = [];
           data.forEach((v) => {

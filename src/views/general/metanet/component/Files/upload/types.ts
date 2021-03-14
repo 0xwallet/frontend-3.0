@@ -20,6 +20,7 @@ export interface FileItem {
   status?: UploadResultStatus | string;
   responseData?: UploadApiResult;
   uuid: string;
+  path:string[]
 }
 
 export interface PreviewFileItem {

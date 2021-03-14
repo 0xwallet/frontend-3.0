@@ -59,6 +59,8 @@ async function checkFile(file: File, path: string[] = [], immediately: boolean =
         type: name.split('.').pop(),
         status,
         thumbUrl: '',
+        path
+
       };
       // // 生成图片缩略图
       // if (checkImgType(file)) {
@@ -69,7 +71,7 @@ async function checkFile(file: File, path: string[] = [], immediately: boolean =
       //   });
       // }
       fileStore.appendItem(commonItem);
-      if (immediately) fileStore.uploadApiByItem(commonItem, path);
+      if (immediately) fileStore.uploadApiByItem(commonItem);
     });
 }
 

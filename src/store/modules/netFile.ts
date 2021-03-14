@@ -160,7 +160,7 @@ class netFileStore extends VuexModule {
   }
 
   @Action
-  async uploadApiByItem(item: FileItem, path: string[] = []) {
+  async uploadApiByItem(item: FileItem) {
     try {
       this.setItemValue({ uuid: item.uuid, key: 'status', value: UploadResultStatus.UPLOADING });
       const writeChunkSize = 1024;
@@ -168,12 +168,13 @@ class netFileStore extends VuexModule {
       const session = await useSession();
       const object = {
         File: new Uint8Array(await item.file.arrayBuffer()),
-        FullName: [...path, item.name],
+        FullName: [...item.path, item.name],
         FileSize: item.size,
         UserId: localStorage.getItem('uid'),
         Space: 'PRIVATE',
         Description: item.desc || '',
       };
+      console.log(object)
       this.setItemValue({ uuid: item.uuid, key: 'status', value: UploadResultStatus.UPLOADING });
       const encoded: Uint8Array = encode(object);
       let buffer = new ArrayBuffer(4);
