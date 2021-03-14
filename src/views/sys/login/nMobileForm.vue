@@ -70,7 +70,8 @@
       async function handleLogin() {
         const data = await validForm();
         if (!data) return;
-        await SignIn({email:data.email,code:data.sms,password:""})
+        console.log(data)
+        // await SignIn({email:data.email,code:data.sms,password:""})
       }
       const {mutate:SendLoginCode}=useMutation(sendLoginCode)
       const {mutate:SignIn,onDone}=useMutation(signIn)

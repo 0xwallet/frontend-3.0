@@ -376,7 +376,7 @@ export class NetFile {
     return useApollo({
       mode: 'mutate',
       gql: NetGql.Basic.Delete,
-      variables: { id: this.id, space: this.space },
+      variables: { id: this.id, space: this.space.space },
     });
   }
   // 删除文件
