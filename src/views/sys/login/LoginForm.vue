@@ -129,7 +129,6 @@
       const { mutate: SignIn, onDone } = useMutation(signIn);
       useKeyPress(['enter'], (events) => {
         const keyCode = events.keyCode;
-
         if (keyCode === KeyCodeEnum.ENTER) {
           handleLogin();
         }
