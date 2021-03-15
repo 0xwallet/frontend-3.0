@@ -22,7 +22,7 @@
             <div class="mt-10 font-medium text-white -enter-x">
               <span class="mt-4 text-3xl inline-block"> {{ t('sys.login.signInTitle') }}</span>
             </div>
-            <div class="mt-5 text-md text-white font-normal dark:text-gray-500 -enter-x">
+            <div class="mt-5 text-md text-white font-normal dark:text-gray-500 -enter-x w-5/6">
               {{ t('sys.login.signInDesc') }}
             </div>
           </div>

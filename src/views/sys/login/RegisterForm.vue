@@ -10,7 +10,7 @@
         <CountdownInput
           size="large"
           v-model:value="formData.sms"
-          :placeholder="t('sys.login.smsCode')"
+          :placeholder="t('sys.login.verification')"
           :sendCodeApi="handleSendCode"
         />
       </FormItem>

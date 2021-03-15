@@ -42,10 +42,10 @@
     </FormItem>
     <ARow class="enter-x">
       <ACol :xs="24" :md="8">
-        <Button block @click="setLoginState(LoginStateEnum.QR_CODE)"> WebAuth登录 </Button>
+        <Button block @click="setLoginState(LoginStateEnum.QR_CODE)"> WebAuthn </Button>
       </ACol>
       <ACol :md="8" :xs="24" class="xs:my-2 md:my-0 xs:mx-0 md:mx-2">
-        <Button block @click="setLoginState(LoginStateEnum.nMOBILE)"> nMoblie登录 </Button>
+        <Button block @click="setLoginState(LoginStateEnum.nMOBILE)"> nMoblie </Button>
       </ACol>
       <ACol :md="7" :xs="24">
         <Button block @click="setLoginState(LoginStateEnum.REGISTER)">

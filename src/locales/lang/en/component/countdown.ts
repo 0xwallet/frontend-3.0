@@ -1,4 +1,4 @@
 export default {
-  normalText: 'Get SMS code',
+  normalText: 'Send',
   sendText: 'Reacquire in {0}s',
 };

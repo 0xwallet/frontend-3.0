@@ -8,7 +8,7 @@ export default {
   passwordLabel2: 'Confirm Password',
   //register
   seconds: 'seconds',
-  registerButton: 'Sign Up',
+  registerButton: 'Enter',
   registerSuccess: 'Register Success',
   verificationButton: 'Send Verification Code',
   send: 'Send',
@@ -18,16 +18,16 @@ export default {
   nknVerifyCode: 'NKN Verify Code',
   backSignIn: 'Back sign in',
   mobileSignInFormTitle: 'Mobile sign in',
-  nMobileSignInFormTitle: 'nMobile sign in',
+  nMobileSignInFormTitle: 'nMobile Sign In',
   qrSignInFormTitle: 'Qr code sign in',
-  signInFormTitle: 'Sign in',
-  signUpFormTitle: 'Sign up',
+  signInFormTitle: 'Sign In',
+  signUpFormTitle: 'Sign Up',
   forgetFormTitle: 'Reset password',
 
 
 
   signInTitle: 'The secure bitcoin solution for Web 3.0',
-  signInDesc: '0xWallet gives you secure access & issuance to all your tokens and assets. Collaborate with friends, companies, and customers from any device.',
+  signInDesc: `0xWallet gives you secure access & issuance to all your tokens and assets 🏦 💳 Collaborate with friends, companies, and customers from any device 🎉💰`,
   policy: 'I agree to the xxx Privacy Policy',
   scanSign: `scanning the code to complete the login`,
 
