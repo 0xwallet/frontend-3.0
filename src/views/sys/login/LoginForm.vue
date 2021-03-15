@@ -42,15 +42,27 @@
     </FormItem>
     <ARow class="enter-x">
       <ACol :xs="24" :md="8">
-        <Button block @click="setLoginState(LoginStateEnum.QR_CODE)"> WebAuthn </Button>
+        <Tooltip>
+          <template #title>{{t('sys.login.webAuthnTooltip')}}</template>
+          <Button block @click="setLoginState(LoginStateEnum.QR_CODE)"> WebAuthn </Button>
+        </Tooltip>
+
       </ACol>
       <ACol :md="8" :xs="24" class="xs:my-2 md:my-0 xs:mx-0 md:mx-2">
-        <Button block @click="setLoginState(LoginStateEnum.nMOBILE)"> nMoblie </Button>
+        <Tooltip>
+          <template #title>{{t('sys.login.nMoblieTooltip')}}</template>
+          <Button block @click="setLoginState(LoginStateEnum.nMOBILE)"> nMoblie </Button>
+        </Tooltip>
+
       </ACol>
       <ACol :md="7" :xs="24">
-        <Button block @click="setLoginState(LoginStateEnum.REGISTER)">
-          {{ t('sys.login.registerButton') }}
-        </Button>
+        <Tooltip>
+          <template #title>{{t('sys.login.registerTooltip')}}</template>
+          <Button block @click="setLoginState(LoginStateEnum.REGISTER)">
+            {{ t('sys.login.registerButton') }}
+          </Button>
+        </Tooltip>
+
       </ACol>
     </ARow>
 
@@ -76,7 +88,7 @@
 <script lang="ts">
   import { defineComponent, reactive, ref, unref, computed } from 'vue';
 
-  import { Checkbox, Form, Input, Row, Col, Button, Divider } from 'ant-design-vue';
+  import { Checkbox, Form, Input, Row, Col, Button, Divider,Tooltip } from 'ant-design-vue';
   import {
     GithubFilled,
     WechatFilled,
@@ -114,7 +126,7 @@
       WechatFilled,
       AlipayCircleFilled,
       GoogleCircleFilled,
-      TwitterCircleFilled,
+      TwitterCircleFilled,Tooltip
     },
     setup() {
       const { t } = useI18n();

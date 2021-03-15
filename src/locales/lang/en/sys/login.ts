@@ -55,4 +55,8 @@ export default {
   smsCode: 'SMS code',
   nMoblieCode: 'nMoblie Code',
   mobile: 'Mobile',
+
+  webAuthnTooltip:'account & device binded? click to login',
+  nMoblieTooltip:'account & nMobile binded? click to login',
+  registerTooltip:'no account? click to create an account',
 };

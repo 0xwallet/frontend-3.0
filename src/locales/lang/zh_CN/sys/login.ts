@@ -13,7 +13,7 @@ export default {
   scanSign: `扫码后点击"确认"，即可完成登录`,
 
   loginButton: '登录',
-  registerButton: '创建账户',
+  registerButton: '注册',
   rememberMe: '记住我',
   forgetPassword: '忘记密码?',
   otherSignIn: '其他登录方式',
@@ -51,5 +51,10 @@ export default {
   smsCode: '短信验证码',
   nMoblieCode: 'nMoblie验证码',
   mobile: '手机号码',
+
+  webAuthnTooltip:'账户与设备绑定? 点此登入',
+  nMoblieTooltip:'账户与nMobile绑定? 点此登入',
+  registerTooltip:'没有账户? 点此创建账户',
 };
+
 
