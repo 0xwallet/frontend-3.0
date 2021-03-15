@@ -8,7 +8,7 @@ const general: AppRouteModule = {
   component: LAYOUT,
   redirect: '/general/account',
   meta: {
-    icon: 'ant-design:home-outlined',
+    icon:'fa-solid:cubes',
     title: 'routes.menu.GENERAL',
   },
 
@@ -19,6 +19,7 @@ const general: AppRouteModule = {
       component: () => import('/@/views/general/account/index.vue'),
       meta: {
         title: 'routes.menu.account',
+        icon:'fa-solid:user',
       },
     },
     {
@@ -27,6 +28,7 @@ const general: AppRouteModule = {
       component: () => import('/@/views/general/security/index.vue'),
       meta: {
         title: 'routes.menu.security',
+        icon:'fa-solid:shield-alt',
       },
     },
     {
@@ -35,6 +37,7 @@ const general: AppRouteModule = {
       component: () => import('/@/views/general/metanet/index.vue'),
       meta: {
         title: 'routes.menu.metanet',
+        icon:'fa-brands:cloudversify',
       },
     },
     // {

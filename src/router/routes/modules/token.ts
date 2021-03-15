@@ -8,7 +8,7 @@ const account: AppRouteModule = {
   component: LAYOUT,
   redirect: '/token/issuer',
   meta: {
-    icon: 'ant-design:home-outlined',
+    icon: 'fa-brands:btc',
     title: 'routes.menu.token',
   },
 
@@ -19,6 +19,7 @@ const account: AppRouteModule = {
       component: () => import('/@/views/token/issuer/index.vue'),
       meta: {
         title: 'routes.menu.issuer',
+        icon:'fa-solid:certificate'
       },
     },
     {
@@ -27,6 +28,7 @@ const account: AppRouteModule = {
       component: () => import('/@/views/token/management/index.vue'),
       meta: {
         title: 'routes.menu.management',
+        icon:'fa-solid:stamp'
       },
     },
     {
@@ -35,6 +37,7 @@ const account: AppRouteModule = {
       component: () => import('/@/views/token/wallet/index.vue'),
       meta: {
         title: 'routes.menu.wallet',
+        icon:'fa-solid:wallet'
       },
     },
   ],

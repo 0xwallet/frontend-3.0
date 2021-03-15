@@ -8,7 +8,7 @@ const account: AppRouteModule = {
   component: LAYOUT,
   redirect: '/history/payment',
   meta: {
-    icon: 'ant-design:home-outlined',
+    icon: 'fa-solid:history',
     title: 'routes.menu.history',
   },
 
@@ -19,6 +19,7 @@ const account: AppRouteModule = {
       component: () => import('/@/views/history/payment/index.vue'),
       meta: {
         title: 'routes.menu.payment',
+        icon:'fa-solid:receipt'
       },
     },
     {
@@ -27,6 +28,7 @@ const account: AppRouteModule = {
       component: () => import('/@/views/history/settlement/index.vue'),
       meta: {
         title: 'routes.menu.settlement',
+        icon:'fa-solid:money-check-alt'
       },
     },
     {
@@ -35,6 +37,7 @@ const account: AppRouteModule = {
       component: () => import('/@/views/history/activity/index.vue'),
       meta: {
         title: 'routes.menu.settlement',
+        icon:'fa-solid:random'
       },
     },
   ],

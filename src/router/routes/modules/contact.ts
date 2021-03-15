@@ -8,7 +8,7 @@ const account: AppRouteModule = {
   component: LAYOUT,
   redirect: '/contact/organization',
   meta: {
-    icon: 'ant-design:home-outlined',
+    icon: 'fa-solid:address-book',
     title: 'routes.menu.contact',
   },
 
@@ -19,6 +19,7 @@ const account: AppRouteModule = {
       component: () => import('/@/views/contact/organization/index.vue'),
       meta: {
         title: 'routes.menu.organization',
+        icon:'fa-solid:sitemap'
       },
     },
     {
@@ -27,6 +28,7 @@ const account: AppRouteModule = {
       component: () => import('/@/views/contact/client/index.vue'),
       meta: {
         title: 'routes.menu.client',
+        icon:'fa-solid:address-card'
       },
     },
     {
@@ -35,6 +37,7 @@ const account: AppRouteModule = {
       component: () => import('/@/views/contact/general/index.vue'),
       meta: {
         title: 'routes.menu.general',
+        icon:'fa-solid:globe'
       },
     },
   ],
