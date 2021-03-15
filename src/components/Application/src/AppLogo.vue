@@ -8,7 +8,7 @@
     :class="[prefixCls, theme, { 'collapsed-show-title': getCollapsedShowTitle }]"
     @click="handleGoHome"
   >
-    <Svg :width="40" :height="40" />
+    <Svg :width="40" :height="40" :type="'white'"/>
     <div
       class="ml-2 truncate md:opacity-100"
       :class="[

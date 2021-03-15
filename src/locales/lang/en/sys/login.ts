@@ -26,8 +26,8 @@ export default {
 
 
 
-  signInTitle: 'Backstage management system',
-  signInDesc: 'Enter your personal details and get started!',
+  signInTitle: 'The secure bitcoin solution for Web 3.0',
+  signInDesc: '0xWallet gives you secure access & issuance to all your tokens and assets. Collaborate with friends, companies, and customers from any device.',
   policy: 'I agree to the xxx Privacy Policy',
   scanSign: `scanning the code to complete the login`,
 

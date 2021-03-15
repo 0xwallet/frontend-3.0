@@ -63,6 +63,14 @@
     <!--      <GoogleCircleFilled />-->
     <!--      <TwitterCircleFilled />-->
     <!--    </div>-->
+    <div class="grid grid-cols-1 gap-2">
+      <div class="rounded-md border-2 h-14 border-light-blue-500 grid justify-items-center">
+        <div class="text-light-blue-500 font-medium self-center"> Sign in</div>
+        </div>
+      <div class="rounded-md border-2 h-14 border-light-blue-500 grid justify-items-center">
+        <div class="text-light-blue-500 font-medium self-center"> Sign in</div>
+        </div>
+    </div>
   </Form>
 </template>
 <script lang="ts">

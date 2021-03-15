@@ -109,11 +109,11 @@ export class NetFile {
   token?: string;
   space: fileSpace;
   desc: string;
-  userId?: string;
-  isShared?: boolean;
-  shareInfo?: fileShare;
-  status?: fileStatus;
-  publishInfo?: filePublish;
+  userId: string;
+  isShared: boolean;
+  shareInfo: fileShare;
+  status: fileStatus;
+  publishInfo: filePublish;
   // public publishId?: number;
 
   constructor(params: fileParams) {
@@ -321,7 +321,7 @@ export class NetFile {
         console.log(this.shareInfo)
         return true;
       })
-      .catch((err) => {
+      .catch(() => {
         // console.log(err)
         // createErrorModal({
         //   title: t('general.metanet.failed'),
@@ -349,7 +349,7 @@ export class NetFile {
   }
 
   // 分享链接放出剪切板
-  copyShareUrl(mode: number, txid?: string) {
+  copyShareUrl(mode: number) {
 
     let temp = '';
     if (mode === 1 || mode === 3) {

@@ -227,7 +227,7 @@ class netFileStore extends VuexModule {
       }
       this.setItemValue({ uuid: item.uuid, key: 'status', value: UploadResultStatus.SUCCESS });
       createMessage.success(item.name + '上传成功', 2);
-      this.setRefetch(2);
+      this.setRefetch(1);
       return {
         success: true,
         error: null,
