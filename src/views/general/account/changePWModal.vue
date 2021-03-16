@@ -93,13 +93,11 @@
       async function changePassword() {
         try {
           const data = await validateFields();
-          const w=await useWallet(user.value.email)
           const res = await ResetPassword({
             email: user.value.email,
-            encryptedWallet: walletJson,
             newPassword: data.newPassword,
             oldPassword: data.oldPassword,
-            nknPublicKey: w.getPublicKey(),
+            nknPublicKey: '',
           });
           localStorage.setItem('token', res.data?.resetPassword?.token || '');
           createMessage.success(t('changeSuccess'));
@@ -110,6 +108,7 @@
         }
       }
       onDone(()=>{
+        localStorage.removeItem('walletJson')
         userStore.logout(true)
       })
 

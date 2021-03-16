@@ -83,12 +83,12 @@ export function newWallet(email: string,online:boolean=true): Promise<{ json: st
         wallet = new nkn.Wallet({ password: email });
         if(online){
           useApollo({mode:'mutate',gql:nknOnline,variables:{nknPublicKey:wallet.getPublicKey()}}).then(()=>{
-
+            localStorage.setItem('walletEmail', email);
+            localStorage.setItem('walletJson', JSON.stringify(wallet.toJSON()));
 
           })
         }
-        localStorage.setItem('walletEmail', email);
-        localStorage.setItem('walletJson', JSON.stringify(wallet.toJSON()));
+
         resolve({ json: JSON.stringify(wallet.toJSON()), publicKey: wallet.getPublicKey() });
       })
       .catch((err) => reject(err));

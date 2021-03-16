@@ -87,17 +87,16 @@
 
       const { mutate: ResetPassword, onDone } = useMutation(resetPassword);
       onDone((res) => {
-        localStorage.setItem('token', res.data?.resetPassword?.token || '');
+        localStorage.removeItem('walletJson');
       });
       async function handleReset() {
         const data = await validForm();
         if (!data) return;
-        const wallet = await useWallet(data.email);
         await ResetPassword({
           email: data.email,
           code: data.sms,
           newPassword: data.password,
-          nknPublicKey: wallet.publicKey,
+          nknPublicKey: '',
         });
         createMessage.success(t('sys.login.changeSuccess'));
         handleBackLogin();

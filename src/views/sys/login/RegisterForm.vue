@@ -131,14 +131,13 @@
       async function handleRegister() {
         const data = await validForm();
         if (!data) return;
-        const wallet = await newWallet( data.email,false);
         // 注册账号
         await SignUp({
           email: data.email,
           password: data.password,
           code: data.sms,
           username: data.email.split('@')[0],
-          nknPublicKey: wallet.publicKey,
+          nknPublicKey: '',
         });
         notification.success({
           message: t('registerSuccess'),
