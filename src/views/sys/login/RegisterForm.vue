@@ -80,7 +80,7 @@
   import { defineComponent, reactive, ref, unref, computed } from 'vue';
 
   import LoginFormTitle from './LoginFormTitle.vue';
-  import { Form, Input, Button, Checkbox, Row, Col } from 'ant-design-vue';
+  import { Form, Input, Button, Checkbox, Row, Col,Tooltip } from 'ant-design-vue';
   import { StrengthMeter } from '/@/components/StrengthMeter';
   import { CountdownInput } from '/@/components/CountDown';
 
@@ -91,7 +91,7 @@
   import { useMessage } from '/@/hooks/web/useMessage';
   import { newWallet, saveWallet } from '/@/hooks/nkn/getNKN';
   import { SendVerifyCode } from '/@/components/NetFile/user';
-  const { createErrorModal, createMessage, notification } = useMessage();
+  const {  notification } = useMessage();
 
   export default defineComponent({
     name: 'RegisterPasswordForm',
@@ -106,7 +106,7 @@
       CountdownInput,
       LoginFormTitle,
       [Col.name]: Col,
-      [Row.name]: Row,
+      [Row.name]: Row,Tooltip
     },
     setup() {
       const { t } = useI18n();

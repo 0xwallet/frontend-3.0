@@ -51,7 +51,7 @@
       <ACol :md="8" :xs="24" class="xs:my-2 md:my-0 xs:mx-0 md:mx-2">
         <Tooltip>
           <template #title>{{t('sys.login.nMobileTooltip')}}</template>
-          <Button block @click="setLoginState(LoginStateEnum.nMOBILE)"> nMobile </Button>
+          <Button block @click="setLoginState(LoginStateEnum.nMOBILE,formData.email)"> nMobile </Button>
         </Tooltip>
 
       </ACol>

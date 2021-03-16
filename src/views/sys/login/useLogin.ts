@@ -13,11 +13,10 @@ export enum LoginStateEnum {
 
 const currentState = ref(LoginStateEnum.LOGIN);
 const email=ref('')
-
 export function useLoginState() {
   function setLoginState(state: LoginStateEnum,e:string='') {
     currentState.value = state;
-
+    email.value=e
   }
 
   const getLoginState = computed(() => currentState.value);
@@ -26,7 +25,7 @@ export function useLoginState() {
     setLoginState(LoginStateEnum.LOGIN);
   }
 
-  return { setLoginState, getLoginState, handleBackLogin };
+  return { setLoginState, getLoginState, handleBackLogin,email };
 }
 
 export function useFormValid<T extends Object = any>(formRef: Ref<any>) {

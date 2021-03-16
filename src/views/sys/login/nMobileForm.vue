@@ -26,7 +26,7 @@
   </template>
 </template>
 <script lang="ts">
-  import { defineComponent, reactive, ref, computed, unref } from 'vue';
+import {defineComponent, reactive, ref, computed, unref,} from 'vue';
 
   import { Form, Input, Button } from 'ant-design-vue';
   import { CountdownInput } from '/@/components/CountDown';
@@ -39,6 +39,7 @@
   import {newWallet, saveWallet} from "/@/hooks/nkn/getNKN";
   import {userStore} from "/@/store/modules/user";
   import {useMessage} from "/@/hooks/web/useMessage";
+import {lowerFirst} from "lodash-es";
 
   export default defineComponent({
     name: 'nMobileForm',
@@ -52,7 +53,7 @@
     },
     setup() {
       const { t } = useI18n();
-      const { handleBackLogin, getLoginState } = useLoginState();
+      const { handleBackLogin, getLoginState,email } = useLoginState();
       const { getFormRules } = useFormRules();
       const{notification}=useMessage()
       const formRef = ref<any>(null);
@@ -62,6 +63,12 @@
         email: '',
         sms: '',
       });
+
+
+      formData.email=computed(()=>{
+        return email.value
+      })
+
 
       const { validForm } = useFormValid(formRef);
 
