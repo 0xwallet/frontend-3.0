@@ -2,13 +2,13 @@ export default {
   backSignIn: '返回',
   signInFormTitle: '登录',
   mobileSignInFormTitle: '手机登录',
-  nMobileSignInFormTitle: 'nMoblie',
+  nMobileSignInFormTitle: 'nMobile登录',
   qrSignInFormTitle: '二维码登录',
   signUpFormTitle: '注册',
   forgetFormTitle: '重置密码',
 
   signInTitle: '为 Web 3.0 而生的比特币钱包解决方案',
-  signInDesc: `0xWallet 钱包使您安全地发行及使用各类通证及数字资产🏦 💳 并且在任意设备上与朋友, 同事及客户智慧协作🎉💰`,
+  signInDesc: `0xWallet 钱包使您安全地发行和使用各类通证及数字资产🏦 💳 并且在任意设备上与朋友, 同事及客户智慧协作🎉💰`,
   policy: '我同意xxx隐私政策',
   scanSign: `扫码后点击"确认"，即可完成登录`,
 
@@ -39,7 +39,7 @@ export default {
   emailPlaceholder: '请输入邮箱',
   accountPlaceholder: '请输入账号',
   passwordPlaceholder: '请输入密码',
-  smsPlaceholder: '请输入验证码',
+  smsPlaceholder: '请输入邮箱验证码',
   mobilePlaceholder: '请输入手机号码',
   policyPlaceholder: '勾选后才能注册',
   diffPwd: '两次输入密码不一致',
@@ -49,12 +49,19 @@ export default {
   confirmPassword: '确认密码',
   email: '邮箱',
   smsCode: '短信验证码',
-  nMoblieCode: 'nMoblie验证码',
+  nMobileCode: 'nMobile验证码',
   mobile: '手机号码',
 
   webAuthnTooltip:'账户与设备绑定? 点此登入',
-  nMoblieTooltip:'账户与nMobile绑定? 点此登入',
+  nMobileTooltip:'账户与nMobile绑定? 点此登入',
   registerTooltip:'没有账户? 点此创建账户',
+
+
+  enterButton:'创建账户',
+  recoveryInfoButton:'恢复信息登录',
+  walletProviderButton:'其它钱包登录',
+  back:'返回'
+
 };
 
 

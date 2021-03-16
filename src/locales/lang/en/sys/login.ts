@@ -8,7 +8,7 @@ export default {
   passwordLabel2: 'Confirm Password',
   //register
   seconds: 'seconds',
-  registerButton: 'Enter',
+  registerButton: 'Sign Up',
   registerSuccess: 'Register Success',
   verificationButton: 'Send Verification Code',
   send: 'Send',
@@ -27,7 +27,7 @@ export default {
 
 
   signInTitle: 'The secure bitcoin solution for Web 3.0',
-  signInDesc: `0xWallet gives you secure access & issuance to all your tokens and assets 🏦 💳 Collaborate with friends, companies, and customers from any device 🎉💰`,
+  signInDesc: `0xWallet gives the secure access & issuance to all your tokens and assets 🏦 💳 Collaborate with friends, companies, and customers from any device 🎉💰`,
   policy: 'I agree to the xxx Privacy Policy',
   scanSign: `scanning the code to complete the login`,
 
@@ -40,11 +40,12 @@ export default {
   loginSuccessDesc: 'Welcome back',
 
   // placeholder
-  emailPlaceholder: 'Please Input Email',
+  emailPlaceholder: 'Please enter your Email',
   accountPlaceholder: 'Please Input Username',
-  passwordPlaceholder: 'Please Input Password',
-  smsPlaceholder: 'Please input sms code',
+  passwordPlaceholder: 'Please enter your Password',
+  smsPlaceholder: 'Please enter your Email Verification Code',
   mobilePlaceholder: 'Please input mobile',
+  nMobilePlaceholder: 'Please enter your nMobile Login Code',
   policyPlaceholder: 'Register after checking',
   diffPwd: 'The two passwords are inconsistent',
 
@@ -53,10 +54,15 @@ export default {
   confirmPassword: 'Confirm Password',
   email: 'Email',
   smsCode: 'SMS code',
-  nMoblieCode: 'nMoblie Code',
+  nMobileCode: 'nMobile Code',
   mobile: 'Mobile',
 
   webAuthnTooltip:'account & device binded? click to login',
-  nMoblieTooltip:'account & nMobile binded? click to login',
+  nMobileTooltip:'account & nMobile binded? click to login',
   registerTooltip:'no account? click to create an account',
+  enterButton:'Enter',
+  recoveryInfoButton:'Sign In With Recovery Info',
+  walletProviderButton:'Sign In With Wallet Provider',
+  back:'Back'
+
 };

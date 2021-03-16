@@ -12,10 +12,12 @@ export enum LoginStateEnum {
 }
 
 const currentState = ref(LoginStateEnum.LOGIN);
+const email=ref('')
 
 export function useLoginState() {
-  function setLoginState(state: LoginStateEnum) {
+  function setLoginState(state: LoginStateEnum,e:string='') {
     currentState.value = state;
+
   }
 
   const getLoginState = computed(() => currentState.value);
@@ -102,14 +104,14 @@ export function useFormRules(formData?: Recordable) {
           email: [
             {
               required: true,
-              message:'请输入邮箱',
+              message:t('sys.login.emailPlaceholder'),
               trigger: 'change',
             },
           ],
           sms: [
             {
               required: true,
-              message:'请输入'+t('sys.login.nMoblieCode'),
+              message:t('sys.login.nMobilePlaceholder'),
               trigger: 'change',
             },
           ],

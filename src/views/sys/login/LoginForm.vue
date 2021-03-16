@@ -2,7 +2,7 @@
   <LoginFormTitle v-show="getShow" class="enter-x" />
   <Form class="p-4 enter-x" :model="formData" :rules="getFormRules" ref="formRef" v-show="getShow">
     <FormItem name="email" class="enter-x">
-      <Input size="large" v-model:value="formData.email" :placeholder="t('sys.login.userName')" />
+      <Input size="large" v-model:value="formData.email" :placeholder="t('sys.login.email')" />
     </FormItem>
     <FormItem name="password" class="enter-x">
       <InputPassword
@@ -50,8 +50,8 @@
       </ACol>
       <ACol :md="8" :xs="24" class="xs:my-2 md:my-0 xs:mx-0 md:mx-2">
         <Tooltip>
-          <template #title>{{t('sys.login.nMoblieTooltip')}}</template>
-          <Button block @click="setLoginState(LoginStateEnum.nMOBILE)"> nMoblie </Button>
+          <template #title>{{t('sys.login.nMobileTooltip')}}</template>
+          <Button block @click="setLoginState(LoginStateEnum.nMOBILE)"> nMobile </Button>
         </Tooltip>
 
       </ACol>
@@ -77,10 +77,10 @@
     <!--    </div>-->
     <div class="grid grid-cols-1 gap-2">
       <div class="rounded-md border-2 h-14 border-light-blue-500 grid justify-items-center">
-        <div class="text-light-blue-500 font-medium self-center"> Sign in</div>
+        <div class="text-light-blue-500 font-medium self-center"> {{ t('sys.login.recoveryInfoButton') }}</div>
         </div>
       <div class="rounded-md border-2 h-14 border-light-blue-500 grid justify-items-center">
-        <div class="text-light-blue-500 font-medium self-center"> Sign in</div>
+        <div class="text-light-blue-500 font-medium self-center">{{t('sys.login.walletProviderButton') }}</div>
         </div>
     </div>
   </Form>

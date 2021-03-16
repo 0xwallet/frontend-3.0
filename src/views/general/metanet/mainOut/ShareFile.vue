@@ -200,13 +200,7 @@
       function clearSelect() {
         clearSelectedRowKeys();
       }
-      // onMounted(() => {
-      //   // nextTick(() => {
-      //   //   setTimeout(() => {
-      //   //     openModal(true, {}, true);
-      //   //   }, 1000);
-      //   // });
-      // });
+
       const { onResult: PreviewShare } = useQuery(NetGql.Share.Preview, params.value);
       PreviewShare((res) => {
         needCode.value = res.data?.drivePreviewShare.needCode;
@@ -215,6 +209,8 @@
           fileStore.fetchShareFile(params.value);
         }
       });
+
+
       async function fetchData() {
         const { code } = await validateFields();
         params.value.code = code;

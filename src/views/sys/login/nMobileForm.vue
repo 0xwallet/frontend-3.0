@@ -9,7 +9,7 @@
         <CountdownInput
           size="large"
           v-model:value="formData.sms"
-          :placeholder="t('sys.login.nMoblieCode')"
+          :placeholder="t('sys.login.nMobileCode')"
           :sendCodeApi="handleSendCode"
         />
       </FormItem>
@@ -19,7 +19,7 @@
           {{ t('sys.login.loginButton') }}
         </Button>
         <Button size="large" block class="mt-4" @click="handleBackLogin">
-          {{ t('sys.login.backSignIn') }}
+          {{ t('sys.login.back') }}
         </Button>
       </FormItem>
     </Form>

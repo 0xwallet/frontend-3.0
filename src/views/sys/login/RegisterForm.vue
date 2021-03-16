@@ -45,19 +45,27 @@
           @click="handleRegister"
           :loading="loading"
         >
-          {{ t('sys.login.registerButton') }}
+          {{ t('sys.login.enterButton') }}
         </Button>
       </FormItem>
       <ARow class="enter-x">
         <ACol :xs="24" :md="8">
-          <Button block @click="setLoginState(LoginStateEnum.QR_CODE)"> WebAuth登录 </Button>
+          <Tooltip>
+            <template #title>{{t('sys.login.webAuthnTooltip')}}</template>
+            <Button block @click="setLoginState(LoginStateEnum.QR_CODE)"> WebAuthn </Button>
+          </Tooltip>
+
         </ACol>
         <ACol :md="8" :xs="24" class="xs:my-2 md:my-0 xs:mx-0 md:mx-2">
-          <Button block @click="setLoginState(LoginStateEnum.MOBILE)"> nMoblie登录 </Button>
+          <Tooltip>
+            <template #title>{{t('sys.login.nMobileTooltip')}}</template>
+            <Button block @click="setLoginState(LoginStateEnum.nMOBILE)"> nMobile </Button>
+          </Tooltip>
+
         </ACol>
         <ACol :md="7" :xs="24">
           <Button block @click="handleBackLogin">
-            {{ t('sys.login.loginButton') }}
+            {{ t('sys.login.signInFormTitle') }}
           </Button>
         </ACol>
       </ARow>
