@@ -49,7 +49,6 @@ export const signUp = gql`
     $password: String!
     $code: String!
     $avatar: String
-    $nknEncryptedWallet: String!
     $nknPublicKey: String!
   ) {
     signup(
@@ -58,7 +57,6 @@ export const signUp = gql`
       code: $code
       username: $username
       avatar: $avatar
-      nknEncryptedWallet: $nknEncryptedWallet
       nknPublicKey: $nknPublicKey
     ) {
       token
@@ -141,6 +139,14 @@ export const resetPassword = gql`
       oldPassword: $oldPassword
     ) {
       token
+    }
+  }
+`;
+//绑定NKN device
+export const nknOnline = gql`
+  mutation nknOnline($nknPublicKey: String!) {
+    nknOnline(nknPublicKey: $nknPublicKey) {
+    id
     }
   }
 `;

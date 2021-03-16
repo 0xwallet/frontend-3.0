@@ -36,10 +36,9 @@ import {defineComponent, reactive, ref, computed, unref,} from 'vue';
   import { useLoginState, useFormRules, useFormValid, LoginStateEnum } from './useLogin';
   import {useMutation} from "@vue/apollo-composable";
   import {sendLoginCode,signIn} from "/@/hooks/apollo/gqlUser";
-  import {newWallet, saveWallet} from "/@/hooks/nkn/getNKN";
+  import {useWallet} from "/@/hooks/nkn/getNKN";
   import {userStore} from "/@/store/modules/user";
   import {useMessage} from "/@/hooks/web/useMessage";
-import {lowerFirst} from "lodash-es";
 
   export default defineComponent({
     name: 'nMobileForm',
@@ -78,26 +77,16 @@ import {lowerFirst} from "lodash-es";
         const data = await validForm();
         if (!data) return;
         console.log(data)
-        // await SignIn({email:data.email,code:data.sms,password:""})
+        await SignIn({email:data.email,code:data.sms,password:""})
       }
       const {mutate:SendLoginCode}=useMutation(sendLoginCode)
       const {mutate:SignIn,onDone}=useMutation(signIn)
 
       onDone(async (res) => {
         const data = await validForm();
-        // 保存wallet信息
-        const wallet = await newWallet({ email: data.email, password: '111' });
-        saveWallet({
-          email: data.email,
-          password: '111' ,
-          walletJson: wallet.json,
-        });
-
         localStorage.setItem('token', res.data?.signin?.token || '');
         localStorage.setItem('uid', res.data?.signin?.User?.id || 0);
-
-        // websocket调试;
-
+        await useWallet(data.email)
         notification.success({
           message: t('loginSuccessTitle'),
           description: `${t('loginSuccessDesc')}: ${res.data?.signin?.User?.email}`,

@@ -166,7 +166,7 @@
         avatar: '',
       });
       const spinning = ref(true);
-      const publicKey = ref('');
+      const publicKey = ref('')
       const visible = ref(false);
       const wallet = ref({});
       const edit = ref(false);
@@ -178,9 +178,15 @@
       const { createMessage, createErrorModal } = useMessage();
       const [registerPWModal, { openModal: openPwModal }] = useModal();
 
+      useWallet().then(w=>{
+        publicKey.value=w.getPublicKey()
+      })
+
+
       const { onResult: getMe, refetch } = useQuery(me, null, () => ({
         fetchPolicy: 'network-only',
       }));
+
       getMe((res) => {
         const { me } = res.data;
         userInfo.username = me.username;
@@ -199,9 +205,6 @@
           }
         });
         spinning.value = false;
-        useWallet().then((w) => {
-          publicKey.value = w.getPublicKey();
-        });
       });
 
       function openQr() {

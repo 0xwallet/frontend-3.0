@@ -30,13 +30,12 @@
   import { me, resetPassword } from '/@/hooks/apollo/gqlUser';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { useWallet, useNKN, saveWallet } from '/@/hooks/nkn/getNKN';
-  import CryptoJS from 'crypto-js';
   import { Divider, Row, Col } from 'ant-design-vue';
-
   import { useMutation, useQuery } from '@vue/apollo-composable';
   import { SendVerifyCode } from '/@/components/NetFile/user';
   import { CountdownInput } from '/@/components/CountDown';
+  import {userStore} from "/@/store/modules/user";
+  import {useWallet} from "/@/hooks/nkn/getNKN";
 
   const { t } = useI18n('general.account');
   const schemas: FormSchema[] = [
@@ -94,13 +93,7 @@
       async function changePassword() {
         try {
           const data = await validateFields();
-          const oldWallet = await useWallet();
-          const secret = CryptoJS.enc.Base64.stringify(
-            CryptoJS.HmacSHA512(user.value.email, data.newPassword)
-          );
-          const NKN = await useNKN();
-          let w = new NKN.Wallet({ seed: oldWallet.getSeed(), password: secret });
-          const walletJson = JSON.stringify(w.toJSON());
+          const w=await useWallet(user.value.email)
           const res = await ResetPassword({
             email: user.value.email,
             encryptedWallet: walletJson,
@@ -108,7 +101,6 @@
             oldPassword: data.oldPassword,
             nknPublicKey: w.getPublicKey(),
           });
-          saveWallet({ email: user.value.email, password: data.newPassword, walletJson });
           localStorage.setItem('token', res.data?.resetPassword?.token || '');
           createMessage.success(t('changeSuccess'));
         } catch (err) {
@@ -117,6 +109,9 @@
           closeModal();
         }
       }
+      onDone(()=>{
+        userStore.logout(true)
+      })
 
       async function handleSendCode() {
         const form = unref(formRef);

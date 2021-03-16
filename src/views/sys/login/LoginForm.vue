@@ -104,7 +104,7 @@
   import { LoginStateEnum, useLoginState, useFormRules, useFormValid } from './useLogin';
   import { useDesign } from '/@/hooks/web/useDesign';
   import { useMutation } from '@vue/apollo-composable';
-  import { useMClient, useWallet, saveWallet } from '/@/hooks/nkn/getNKN';
+  import { useMClient, useWallet } from '/@/hooks/nkn/getNKN';
   import { signIn } from '/@/hooks/apollo/gqlUser';
   import { useKeyPress } from '/@/hooks/event/useKeyPress';
   import { KeyCodeEnum } from '/@/enums/keyCodeEnum';
@@ -157,22 +157,16 @@
       const getShow = computed(() => unref(getLoginState) === LoginStateEnum.LOGIN);
       onDone(async (res) => {
         const data = await validForm();
-        useWallet();
-        // 保存wallet信息
-        saveWallet({
-          email: data.email,
-          password: data.password,
-          walletJson: res.data.signin.User.wallets.filter((v) => v.tags[0] === 'MESSAGE')[0].info
-            .encryptedWallet,
-        });
         localStorage.setItem('token', res.data?.signin?.token || '');
         localStorage.setItem('uid', res.data?.signin?.User?.id || 0);
-        // websocket调试;
+        await useWallet(data.email);
         notification.success({
-          message: t('loginSuccessTitle'),
-          description: `${t('loginSuccessDesc')}: ${res.data?.signin?.User?.email}`,
+          message: t('sys.login.loginSuccessTitle'),
+          description: `${t('sys.login.loginSuccessDesc')}: ${res.data?.signin?.User?.email}`,
           duration: 3,
         });
+        await useMClient();
+
         await userStore.login();
       });
       async function handleLogin() {
@@ -186,10 +180,6 @@
           console.log(err);
         } finally {
           loading.value = false;
-          useWallet().then(() => {
-            console.log('wallet ready');
-            useMClient();
-          });
         }
       }
 

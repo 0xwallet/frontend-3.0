@@ -53,7 +53,7 @@
   import { useMutation } from '@vue/apollo-composable';
   import { resetPassword } from '/@/hooks/apollo/gqlUser';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { newWallet, saveWallet } from '/@/hooks/nkn/getNKN';
+  import { useWallet } from '/@/hooks/nkn/getNKN';
   import { SendVerifyCode } from '/@/components/NetFile/user';
   const { createErrorModal, createMessage, notification } = useMessage();
   export default defineComponent({
@@ -92,15 +92,13 @@
       async function handleReset() {
         const data = await validForm();
         if (!data) return;
-        const wallet = await newWallet({ email: data.email, password: data.password });
+        const wallet = await useWallet(data.email);
         await ResetPassword({
           email: data.email,
           code: data.sms,
-          encryptedWallet: wallet.json,
           newPassword: data.password,
           nknPublicKey: wallet.publicKey,
         });
-        saveWallet({ email: data.email, password: data.password, walletJson: wallet.json });
         createMessage.success(t('sys.login.changeSuccess'));
         handleBackLogin();
       }

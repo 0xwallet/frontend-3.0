@@ -89,7 +89,7 @@
   import { signUp } from '/@/hooks/apollo/gqlUser';
   import { useMutation } from '@vue/apollo-composable';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { newWallet, saveWallet } from '/@/hooks/nkn/getNKN';
+  import { newWallet } from '/@/hooks/nkn/getNKN';
   import { SendVerifyCode } from '/@/components/NetFile/user';
   const {  notification } = useMessage();
 
@@ -131,17 +131,15 @@
       async function handleRegister() {
         const data = await validForm();
         if (!data) return;
-        const wallet = await newWallet({ email: data.email, password: data.password });
+        const wallet = await newWallet( data.email,false);
         // 注册账号
         await SignUp({
           email: data.email,
           password: data.password,
           code: data.sms,
           username: data.email.split('@')[0],
-          nknEncryptedWallet: wallet.json,
           nknPublicKey: wallet.publicKey,
         });
-        saveWallet({ email: data.email, password: data.password, walletJson: wallet.json });
         notification.success({
           message: t('registerSuccess'),
           duration: 3,
