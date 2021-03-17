@@ -25,7 +25,7 @@
     components: { Tooltip,CopyOutlined },
     props: {
       hash: propTypes.string,
-      mode:propTypes.string.def('md5')
+      mode:propTypes.string.def('sha256')
     },
     setup(props) {
       const hash = computed(() => {
@@ -33,8 +33,8 @@
       });
       const mode=computed(()=>{
         switch (props.mode){
-          case 'md5':
-            return 'MD5'
+          case 'sha256':
+            return 'SHA256'
           case 'txid':
             return "TxID"
           default:
