@@ -2,7 +2,6 @@ import { useScript } from '/@/hooks/web/useScript';
 import dayjs from 'dayjs';
 import {useApollo} from "/@/hooks/apollo/apollo";
 import {nknOnline} from "/@/hooks/apollo/gqlUser";
-import {userStore} from "/@/store/modules/user";
 export const getGlobal = (): any => (typeof window !== 'undefined' ? window : global);
 export let wallet: any = null;
 export let NknClient: [] = [];
@@ -43,7 +42,7 @@ export async function useSession(): Promise<any> {
     }, 1000);
 
     console.log('session ready');
-    console.log(session);
+    // console.log(session);
     return session;
   } catch (e) {
     console.log(e);
@@ -55,7 +54,7 @@ export function closeSession() {
   if (session && session.isClosed) session.close();
 }
 
-export function useWallet(email:string=''): Promise<any> {
+export function useWallet(email:string='',): Promise<any> {
   return new Promise((resolve,reject) => {
     if (wallet) resolve(wallet);
     const json = localStorage.getItem('walletJson');
@@ -68,7 +67,7 @@ export function useWallet(email:string=''): Promise<any> {
       return
     }
     if(email==''){
-      userStore.logout(true);
+      // userStore.logout(true);
       reject('no wallJson');
       return;
     }

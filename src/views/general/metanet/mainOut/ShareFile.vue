@@ -20,13 +20,8 @@
       </Col>
       <Col :xs="2" :sm="4" :md="6" :lg="8" :xl="9"></Col>
     </Row>
-    <ShareFileMobile
-      :uri="params.uri"
-      :needCode="needCode"
-      :user="userPreview"
-      v-if="mobile && form"
-    />
-    <Card v-if="!mobile && form">
+
+    <Card v-if=" form">
       <template #title
         ><Space
           ><Avatar :src="userPreview.avatar" /><span
@@ -82,7 +77,6 @@
   import { Hash, Icon, PdfDrawer, NetFile, NetGql,CollectModal } from '/@/components/NetFile';
   import { BasicForm, useForm } from '/@/components/Form';
   import { fileStore } from '/@/store/modules/netFile';
-  import ShareFileMobile from '/@/views/general/metanet/share/component/ShareFileMobile.vue';
   import { useQuery } from '@vue/apollo-composable';
   import router from '/@/router';
   import MarkdownModal from '../component/editor/Markdown.vue';
@@ -100,7 +94,6 @@
       CardMeta: Card.Meta,
       Space,
       BasicForm,
-      ShareFileMobile,
       Row,
       Col,
       Avatar,
@@ -122,25 +115,11 @@
         return unref(currentRoute).query;
       });
       const form = computed(() => {
-        return tableData.value.length > 0 || file.value !== null;
-      });
-      const mobile = computed(() => {
-        return (
-          navigator.userAgent.match(
-            /(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i
-          ) !== null
-        );
-      });
-      const file = computed(() => {
-        return fileStore.getShareFile.find((f) => f.uri === params.value.uri) || null;
+        return tableData.value.length > 0 ;
       });
       const tableData = computed(() => {
-        const temp: NetFile[] = [];
-        const f = fileStore.getShareFile.find((f) => f.uri === params.value.uri);
-        if (f) temp.push(f);
-        return temp;
+        return fileStore.getShareFile;
       });
-      // const tableData = ref([]);
       const needCode = ref(false);
       const userPreview = ref({});
       const [registerForm, { validateFields }] = useForm({
@@ -205,16 +184,19 @@
       PreviewShare((res) => {
         needCode.value = res.data?.drivePreviewShare.needCode;
         userPreview.value = res.data?.drivePreviewShare.UserPreview;
-        if (!res.data?.drivePreviewShare.needCode) {
-          fileStore.fetchShareFile(params.value);
-        }
+        fetchData(res.data?.drivePreviewShare.needCode)
       });
 
 
-      async function fetchData() {
-        const { code } = await validateFields();
-        params.value.code = code;
-        await fileStore.fetchShareFile(params.value);
+      async function fetchData(needCode:boolean) {
+        if(!needCode){
+          await fileStore.fetchShareFile(params.value);
+        }else {
+          const { code } = await validateFields();
+          params.value.code = code;
+          await fileStore.fetchShareFile(params.value);
+        }
+
       }
 
       function preview(file: NetFile) {
@@ -234,7 +216,12 @@
       }
       // 打开文件或者进入目录
       function openFile(f: NetFile) {
-        if (!f.isDir) {
+        if (f.isDir) {
+          if(f.id==='root'){
+            fileStore.fetchShareFile(params.value);
+            return;
+          }
+          fileStore.fetchShareFiles({token:f.shareInfo.token,dirId:f.id})
           return;
         }
         if (f.type === 'md') {
@@ -263,8 +250,6 @@
         openFile,
         preview,
         download,
-        file,
-        mobile,
         needCode,
         userPreview,
         t,

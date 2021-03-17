@@ -9,7 +9,7 @@ import { useSession } from '/@/hooks/nkn/getNKN';
 import { encode } from '@msgpack/msgpack';
 import { useMessage } from '/@/hooks/web/useMessage';
 import { dateUtil } from '/@/utils/dateUtil';
-import { NetFile, NetGql } from '/@/components/NetFile';
+import { NetFile, NetGql,getFileList } from '/@/components/NetFile';
 import { useApollo } from '/@/hooks/apollo/apollo';
 
 const { createMessage, createErrorModal } = useMessage();
@@ -102,8 +102,8 @@ class netFileStore extends VuexModule {
   }
 
   @Mutation
-  appendShareFile(file: NetFile): void {
-    this.shareFiles.push(file);
+  setShareFile(file: NetFile[]): void {
+    this.shareFiles=file;
   }
   @Mutation
   appendMarkdownFile(file: NetFile): void {
@@ -249,7 +249,18 @@ class netFileStore extends VuexModule {
         createErrorModal({ title: '错误', content: '分享文件信息错误' });
         return;
       }
-      this.appendShareFile(new NetFile(data));
+      this.setShareFile([new NetFile(data)]);
+    });
+  }
+  @Action
+  fetchShareFiles(params: { token: string,dirId:string}) {
+    useApollo({ mode: 'query', gql: NetGql.Basic.FileList, variables: params }).then((res) => {
+      const data = res.data?.driveListFiles;
+      if (!data) {
+        createErrorModal({ title: '错误', content: '分享文件信息错误' });
+        return;
+      }
+      this.setShareFile(getFileList(data,params.dirId,params.token));
     });
   }
 }

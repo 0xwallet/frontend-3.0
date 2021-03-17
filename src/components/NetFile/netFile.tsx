@@ -19,6 +19,53 @@ const { t } = useI18n();
 const { clipboardRef, copiedRef } = useCopyToClipboard();
 const { createMessage, createErrorModal, createConfirm } = useMessage();
 
+export function getFileList(list:any[],dirId:string,token:string=''):NetFile[] {
+
+  // 重置文件夹列表，文件列表
+  let temp: NetFile[] = [];
+  if (!list) {
+    return temp;
+  }
+  // 列表[1]存在为存在上级目录，存入dirId，fullName设置为...
+  if (list[1]) {
+    temp.push({
+      id: list[1].id,
+      fullName: list[1].fullName,
+      type: 'folder',
+      name: '...',
+      size: 0,
+      updatedAt: '',
+      hash: '',
+      space: list[1].space,
+      desc: '',
+      isDir: true,
+      token
+    });
+  }
+  // 遍历返回信息，组成表格信息
+  let p: NetFile[] = [];
+  let f: NetFile[] = [];
+  list.slice(1).forEach((v) => {
+    if (!v) return;
+    // 是目录
+    if (v.isDir) {
+      if (
+        dirId === v.id ||
+        v.id === 'root' ||
+        (temp.length > 0 && temp[0].id == v.id)
+      ) {
+        return;
+      }
+      p.push(new NetFile({ userFile: v }));
+    } else {
+      f.push(new NetFile({ userFile: v }));
+    }
+  });
+  return temp.concat(p).concat(f)
+}
+
+
+
 function CheckToken(): boolean {
   if (localStorage.getItem('token')) return true;
   Modal.confirm({

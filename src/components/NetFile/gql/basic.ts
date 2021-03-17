@@ -30,8 +30,8 @@ export const userFile = `
 // query
 // 文件列表
 const driveListFiles = gql`
-  query($dirId: String, $fullName: [String]) {
-    driveListFiles(dirId: $dirId, dirFullName: $fullName) {
+  query($dirId: String, $fullName: [String],$token:String) {
+    driveListFiles(dirId: $dirId, dirFullName: $fullName,token:$token) {
       fullName
       hash
       id

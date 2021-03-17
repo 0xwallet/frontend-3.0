@@ -10,7 +10,7 @@ import FileInfo from './components/FileInfo.vue';
 import FileTree from './components/FileTree.vue';
 import CollectModal from './components/CollectModal.vue';
 import { NetGql } from './gql/index';
-import { NetFile } from './netFile';
+import { NetFile,getFileList } from './netFile';
 import { NetUpload } from './upload';
 import MarkdownEditModal from './components/markdown/MarkdownEditModal.vue';
 
@@ -19,6 +19,7 @@ export {
   Icon,
   PdfDrawer,
   NetFile,
+  getFileList,
   MarkdownDrawer,
   MarkdownModal,
   RenameModal,
