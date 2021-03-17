@@ -17,7 +17,6 @@ export const User = `
   tags
   info{
   publicKey
-  encryptedWallet
   }
   }
   role
@@ -72,9 +71,6 @@ export const signIn = gql`
         id
         wallets {
           tags
-          info {
-            encryptedWallet
-          }
         }
       }
     }
@@ -84,14 +80,12 @@ export const signIn = gql`
 export const bindNknAddress = gql`
   mutation bindNknAddress(
     $code: String
-    $encryptedWallet: String
     $nknPublicKey: String
     $tag: WalletTag
     $password: String!
   ) {
     bindNknAddress(
       code: $code
-      encryptedWallet: $encryptedWallet
       nknPublicKey: $nknPublicKey
       tag: $tag
       password: $password
@@ -125,17 +119,13 @@ export const resetPassword = gql`
   mutation resetPassword(
     $code: String
     $email: String!
-    $encryptedWallet: String!
     $newPassword: String!
-    $nknPublicKey: String
     $oldPassword: String
   ) {
     resetPassword(
       code: $code
       email: $email
-      encryptedWallet: $encryptedWallet
       newPassword: $newPassword
-      nknPublicKey: $nknPublicKey
       oldPassword: $oldPassword
     ) {
       token
