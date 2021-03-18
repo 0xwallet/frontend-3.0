@@ -54,7 +54,7 @@
                 file.status.isShared ? t('shared') : t('unShared')
               }}</DescriptionsItem>
             <DescriptionsItem :label="t('modified')">{{ time(file.updatedAt) }}</DescriptionsItem>
-            <DescriptionsItem :label="t('opened')" v-if="!mode==='share'"></DescriptionsItem>
+            <DescriptionsItem :label="t('opened')" v-if="!(mode==='share')"></DescriptionsItem>
             <DescriptionsItem :label="t('created')">{{ time(file.createdAt) }}</DescriptionsItem>
 
           </Descriptions>
@@ -93,7 +93,6 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import { NetFile } from '/@/components/NetFile/netFile';
   import { byteTransfer } from '/@/utils/disk/file';
-  import { propTypes } from '/@/utils/propTypes';
   import { formatToDateTime } from '/@/utils/dateUtil';
   import { List } from 'ant-design-vue';
   import { Hash, Icon, NetGql } from '/@/components/NetFile';
@@ -124,10 +123,7 @@
       Hash,
       Drawer,
     },
-    props: {
-      info: propTypes.any.def({}),
-    },
-    setup(props) {
+       setup() {
 
       const file: NetFile = computed<NetFile>(() => {
         return fileStore.getFileInfo.file

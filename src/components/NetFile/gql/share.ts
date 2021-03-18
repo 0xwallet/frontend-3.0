@@ -12,6 +12,11 @@ const userFile = `
     space
     user{
     id
+    driveSetting {
+          availableSpace
+          totalSpace
+          usedSpace
+        }
     }
     info {
       size
