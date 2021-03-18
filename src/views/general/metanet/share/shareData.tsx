@@ -1,7 +1,8 @@
 import { BasicColumn } from '/@/components/Table';
-import GIcon from '/@/components/Icon';
+
 import { useI18n } from '/@/hooks/web/useI18n';
 import { formatToDate } from '/@/utils/dateUtil';
+import {Icon} from "/@/components/NetFile";
 
 const { t } = useI18n('general.metanet');
 export function getBasicColumns(): BasicColumn[] {
@@ -13,19 +14,12 @@ export function getBasicColumns(): BasicColumn[] {
       align: 'left',
       // slots: { customRender: 'name' },
       customRender: ({ record }) => {
-        if (record.name === 'deleted') {
-          return (
-            <span>
-              <GIcon icon="bx-bx-question-mark" size="30" />
-              {t('deleted')}
-            </span>
-          );
-        }
+
         return (
           <span>
-            <GIcon
-              icon={record.type === 'folder' ? 'bx-bx-folder' : 'bx-bxs-file-' + record.type}
-              size="30"
+            <Icon
+              type={record.type}
+
             />
             <a-button type="link">
               {record.name}
