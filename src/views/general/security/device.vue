@@ -49,15 +49,12 @@
       const { onResult: getMe, refetch } = useQuery(me,null,{fetchPolicy:'network-only'});
       getMe((res) => {
         deviceList.value = [];
-        deviceList.value.push({ publicKey: '', type: '新设备' });
         res.data?.me.wallets.forEach((v) => {
           if (v.tags[0] !== 'MESSAGE' && v.info.publicKey !== null) {
             deviceList.value.push({ publicKey: v.info.publicKey, type: 'NKN-nMobile' });
           }
         });
-        deviceList.value.push({ publicKey: '', type: 'Fido-USB' });
-        deviceList.value.push({ publicKey: '', type: 'Fido-Fingerprint' });
-        deviceList.value.push({ publicKey: '', type: 'Fido-Bluetooth' });
+
       });
       function openDeviceModal() {
         openModal(true);
