@@ -17,7 +17,7 @@ import { getFile } from '/@/api/general/metanet/file';
 
 const { t } = useI18n();
 const { clipboardRef, copiedRef } = useCopyToClipboard();
-const { createMessage, createErrorModal, createConfirm } = useMessage();
+const { createMessage,  createConfirm } = useMessage();
 
 export function getFileList(list:any[],dirId:string,token:string=''):NetFile[] {
 
@@ -28,6 +28,7 @@ export function getFileList(list:any[],dirId:string,token:string=''):NetFile[] {
   }
   // 列表[1]存在为存在上级目录，存入dirId，fullName设置为...
   if (list[1]) {
+    // @ts-ignore
     temp.push({
       id: list[1].id,
       fullName: list[1].fullName,
@@ -56,8 +57,10 @@ export function getFileList(list:any[],dirId:string,token:string=''):NetFile[] {
       ) {
         return;
       }
+      // @ts-ignore
       p.push(new NetFile({ userFile: v }));
     } else {
+      // @ts-ignore
       f.push(new NetFile({ userFile: v }));
     }
   });
@@ -99,7 +102,7 @@ interface fileParams {
 
 interface user {
   id: string;
-  driveSetting: fileSpace;
+  driveSetting?: fileSpace;
 }
 
 interface userFile {
@@ -178,9 +181,9 @@ export class NetFile {
     }
     this.space = {
       space: params.userFile.space,
-      totalSpace: params.userFile.user.driveSetting?.totalSpace || 1,
-      usedSpace: params.userFile.user.driveSetting?.usedSpace || 0,
-      availableSpace: params.userFile.user.driveSetting?.availableSpace || 0,
+      totalSpace: params.userFile.user?.driveSetting?.totalSpace || 1,
+      usedSpace: params.userFile.user?.driveSetting?.usedSpace || 0,
+      availableSpace: params.userFile.user?.driveSetting?.availableSpace || 0,
     };
     this.status = {
       isCollected: params.isCollected,

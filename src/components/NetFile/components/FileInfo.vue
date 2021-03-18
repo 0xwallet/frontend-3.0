@@ -5,7 +5,7 @@
     @close="closeInfo"
     :mask="false"
     :width="400"
-    :wrapClassName="'!mt-52'"
+    :wrapClassName="'!mt-52 !mr-10'"
   >
     <template #title v-if="visible">
       <span @click="copyUrl(4)">{{ file.fileName() }}</span>
@@ -130,7 +130,6 @@
     setup(props) {
 
       const file: NetFile = computed<NetFile>(() => {
-        dirSize.value = 0;
         return fileStore.getFileInfo.file
       });
 
@@ -178,14 +177,21 @@
       function closeInfo() {
         fileStore.setFileInfo({file:null, mode:'basic'})
       }
-      const dirSize = ref(0);
+      const dirSize = computed(()=>{
+        return fileStore.getFileSize[file.value.id]||0
+      })
+
+
       function getDirSize() {
         useApollo({
           mode: 'query',
           gql: NetGql.Basic.DirSize,
           variables: { dirId: file.value.id },
         }).then((res) => {
-          dirSize.value = res.data?.driveDirSize;
+          // dirSize.value = res.data?.driveDirSize;
+          fileStore.setFileSize({dirId:file.value.id,size:res.data?.driveDirSize})
+
+
         });
       }
       return {

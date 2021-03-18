@@ -275,7 +275,7 @@
         }),
         pagination: false,
         showTableSetting: false,
-        scroll: { x: 1000, y: window.innerHeight * 0.7 },
+        scroll: { x:null, y: window.innerHeight * 0.7 },
       });
 
       // 移动文件Modal
@@ -458,6 +458,9 @@
 
       // 路径面包屑跳转
       function goPath(p: []) {
+        if(p[0]===undefined){
+          fileStore.setFileInfo({file:new NetFile({userFile:{fullName:['Home'],isDir:true,info:{size:0}}}) ,mode:'basic'})
+        }
         variables.value = { fullName: p };
       }
       // 打开文件或者进入目录

@@ -11,7 +11,7 @@ export function getBasicColumns(): BasicColumn[] {
   return [
     {
       title: t('fileName'),
-      dataIndex: 'name',
+      dataIndex: 'id',
       width: 400,
       align: 'left',
       // slots: { customRender: 'name' },
@@ -27,14 +27,14 @@ export function getBasicColumns(): BasicColumn[] {
     },
     {
       title: 'Hash',
-      dataIndex: 'id',
+      dataIndex: 'hash',
       customRender: ({ record }) => {
         return <Hash hash={record.file?.hash} />;
       },
     },
     {
       title: t('type'),
-      dataIndex: 'id',
+      dataIndex: 'type',
       customRender: ({ record }) => {
         if (record.item.__typename === 'DriveShare') return t('shareButton');
         if (record.item.__typename === 'DrivePublish') return t('publication');
@@ -43,7 +43,7 @@ export function getBasicColumns(): BasicColumn[] {
     },
     {
       title: t('status'),
-      dataIndex: 'id',
+      dataIndex: 'file',
       customRender: ({ record }) => {
         if (record.item.__typename === 'DriveShare') {
           if (dayjs().isBefore(record.item.expiredAt)) {

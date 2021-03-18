@@ -28,6 +28,9 @@ interface fileInfo {
 
 
 
+
+
+
 @Module({ namespaced: true, name: NAME, dynamic: true, store })
 class netFileStore extends VuexModule {
   private uploadList: FileItem[] = [];
@@ -42,6 +45,7 @@ class netFileStore extends VuexModule {
 
   private markdownModalVisible: boolean = false;
 
+  private fileSize:object={}
   private Info:fileInfo={file:null,mode:'basic',button:false}
 
   get getUploadList(): FileItem[] {
@@ -64,6 +68,9 @@ class netFileStore extends VuexModule {
   }
   get getFileInfo(): fileInfo {
     return this.Info;
+  }
+  get getFileSize(): object {
+    return this.fileSize;
   }
   @Mutation
   setFileInfo(params:{file: NetFile, mode: string}): void {
@@ -99,6 +106,11 @@ class netFileStore extends VuexModule {
   @Mutation
   setRefetch(t: number = 0): void {
     this.refetch = t;
+  }
+  @Mutation
+  setFileSize(params:{dirId:string
+  ,size:number}): void {
+    this.fileSize[params.dirId]=params.size
   }
 
   @Mutation
