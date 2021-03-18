@@ -135,6 +135,7 @@ interface filePublish {
   id: number;
   txid: string;
   version: number;
+  history:any[]
 }
 interface fileStatus {
   isShared: boolean;
@@ -201,6 +202,7 @@ export class NetFile {
       id: 0,
       txid: params.txid || '',
       version: params.version,
+      history:[]
     };
 
     this.path = params.userFile.fullName.slice(0, params.userFile.fullName.length - 1);

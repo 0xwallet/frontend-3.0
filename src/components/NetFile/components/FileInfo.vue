@@ -81,6 +81,22 @@
           </template>
         </List></TabPane
       >
+      <TabPane key="version" :tab="t('version')" v-if="mode==='publish'">
+        <List item-layout="horizontal" :data-source="file.publishInfo.history">
+          <template #renderItem="{ item, index }">
+            <ListItem>
+              <template #actions>
+                <a-button @click="changeVersion(item.id)">{{ t('changeVersion') }}</a-button>
+              </template>
+              <ListItemMeta>
+                <template #title>
+                  <a href="https://www.antdv.com/">{{ item.id }}</a>
+                </template>
+              </ListItemMeta>
+            </ListItem>
+          </template>
+        </List></TabPane
+      >
     </Tabs>
   </Drawer
   >
@@ -126,6 +142,7 @@
        setup() {
 
       const file: NetFile = computed<NetFile>(() => {
+        console.log(fileStore.getFileInfo.file)
         return fileStore.getFileInfo.file
       });
 
@@ -137,23 +154,8 @@
         return fileStore.getFileInfo.button && fileStore.getFileInfo.file!==null;
       });
 
-      const key = ref('basic');
-
-      const tabList = [
-        {
-          key: 'basic',
-          tab: t('basic'),
-        },
-        {
-          key: 'dynamic',
-          tab: t('dynamic'),
-        },
-      ];
-
       const desc = ref('');
-      function onTabChange(k) {
-        key.value = k;
-      }
+
       function getLocation(dir: string[] = []) {
         if (dir.length == 1) {
           return '~';
@@ -186,16 +188,18 @@
         }).then((res) => {
           // dirSize.value = res.data?.driveDirSize;
           fileStore.setFileSize({dirId:file.value.id,size:res.data?.driveDirSize})
-
-
         });
       }
+         async function changeVersion(publishHistoryId) {
+           await PublishChangeVerison({
+             id: file.value.publishId,
+             publishHistoryId,
+           });
+         }
+
       return {
         t,
         file,
-        tabList,
-        key,
-        onTabChange,
         desc,
         byteTransfer,
         getLocation,
@@ -217,7 +221,7 @@
         visible,
         closeInfo,
         getDirSize,
-        dirSize,
+        dirSize,changeVersion
       };
     },
   });

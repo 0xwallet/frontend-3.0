@@ -118,6 +118,7 @@
         list.forEach((v: any) => {
           let f = new NetFile(v.current);
           f.publishInfo.id = v.id;
+          f.publishInfo.history=v.history
           temp.push({
             txid: v.current.txid,
             version: v.current.id,
