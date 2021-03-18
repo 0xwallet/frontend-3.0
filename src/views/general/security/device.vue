@@ -9,7 +9,8 @@
     <List :grid="{ gutter: 2, column: 4 }" :data-source="deviceList">
       <template #renderItem="{ item, index }">
         <ListItem>
-          <Card :title="item.type" class="ellipsis">{{ item.publicKey }} </Card>
+          <Card :title="item.type" class="h-50">
+            <p class="break-all ">{{ item.publicKey }}</p>  </Card>
         </ListItem>
       </template>
     </List>
@@ -45,7 +46,7 @@
       const [register, { openModal, setModalProps }] = useModal();
       const deviceList = ref([]);
 
-      const { onResult: getMe, refetch } = useQuery(me);
+      const { onResult: getMe, refetch } = useQuery(me,null,{fetchPolicy:'network-only'});
       getMe((res) => {
         deviceList.value = [];
         deviceList.value.push({ publicKey: '', type: '新设备' });

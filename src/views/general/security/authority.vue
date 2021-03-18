@@ -24,13 +24,11 @@
   import { Card, Divider } from 'ant-design-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { Description, useDescription } from '/@/components/Description';
-  import { userStore } from '/@/store/modules/user';
   import { useTable, BasicTable } from '/@/components/Table';
   import WebdavModal from './component/WebdavModal.vue';
   import { useModal } from '/@/components/Modal';
   import dayjs from 'dayjs';
 
-  console.log(userStore.getUserInfoState);
   export default defineComponent({
     components: {
       BasicTitle,
