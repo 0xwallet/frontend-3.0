@@ -7,7 +7,7 @@ import type { AppRouteModule } from '/@/router/types';
 import { LAYOUT } from '/@/router/constant';
 //调试
 function getRoute(mode: string): AppRouteModule {
-  const t = mode == 's' ? 'ShareFile' : 'PublishFile';
+  const t = mode == 's' ? 'newShareFile' : 'PublishFile';
   if (
     navigator.userAgent.match(
       /(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i

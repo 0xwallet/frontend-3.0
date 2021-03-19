@@ -9,11 +9,12 @@
         <template #title>
           <span
             >{{ userInfo.username }}
-            <span class="setRight"
-              ><a-button type="primary" shape="round" @click="openPWModal">
-                Change Password</a-button
-              ></span
-            >
+            <span class="float-right">
+              1 BSV = 195.58 USD
+              <!--              <a-button type="primary" shape="round" @click="openPWModal">-->
+              <!--                Change Password</a-button-->
+              <!--              >-->
+            </span>
           </span>
         </template>
 
@@ -23,69 +24,40 @@
       </CardMeta>
       <Divider />
 
-      <div class="grid grid-cols-1 gap-2">
+      <div>
         <div>
-          <div>
-            <BasicHelp text="提示" /> How
-            <a href="https://nkn.org/" target="_blank"><b>NKN</b></a> Works
-          </div>
-          <Card hoverable>
-            <template class="ant-card-actions" #actions> </template>
-            <CardMeta>
-              <template #title
-                >{{ t('publicKey') }}
-                <span class="setRight" @click="openQr" v-if="publicKey !== ''"
-                  ><QrcodeOutlined
-                /></span>
-              </template>
-              <template #description
-                >{{ publicKey }} <span class="setRight" @click="copyKey"><CopyOutlined /></span
-              ></template>
-            </CardMeta>
-            <Divider />
-
-            <Tag :color="status ? '#52c41a' : '#f50'">
-              <CheckCircleTwoTone v-if="status" twoToneColor="#52c41a" />
-              <QuestionCircleTwoTone v-if="!status" twoToneColor="#f50" />
-
-              {{ status ? t('connected') : t('connecting') }}
-              <Icon icon="fa-solid:signal" :size="15" />
-            </Tag>
-          </Card>
+          <BasicHelp text="提示" /> How
+          <a href="https://nkn.org/" target="_blank"><b>NKN</b></a> Works
         </div>
-        <div>
-          <div>
-            <BasicHelp text="提示" /> How
-            <a href="https://nkn.org/" target="_blank"><b>NKN</b></a> Works
-          </div>
-          <Card hoverable>
-            <template class="ant-card-actions" #actions> </template>
-            <CardMeta>
-              <template #title
-                >{{ t('publicKey') }}
-                <Tooltip
-                  ><template #title> {{ t('temporary') }}</template
-                  >⚠️</Tooltip
-                >
-                <span class="setRight" @click="openQr" v-if="publicKey !== ''"
-                  ><QrcodeOutlined
-                /></span>
-              </template>
-              <template #description
-                >{{ publicKey }} <span class="setRight" @click="copyKey"><CopyOutlined /></span
-              ></template>
-            </CardMeta>
-            <Divider />
+        <Card hoverable>
+          <template class="ant-card-actions" #actions> </template>
+          <CardMeta>
+            <template #title
+              >{{ t('publicKey') }}
+              <Tooltip v-if="publicKey !== '' && temp"
+                ><template #title> {{ t('temporary') }}</template
+                >⚠️</Tooltip
+              >
+              <span class="float-right" @click="openQr" v-if="publicKey !== '' && !temp"
+                ><QrcodeOutlined
+              /></span>
+            </template>
+            <template #description
+              >{{ publicKey }}
+              <span class="float-right" @click="copyKey" v-if="publicKey !== '' && !temp"
+                ><CopyOutlined /></span
+            ></template>
+          </CardMeta>
+          <Divider />
 
-            <Tag :color="status ? '#52c41a' : '#f50'">
-              <CheckCircleTwoTone v-if="status" twoToneColor="#52c41a" />
-              <QuestionCircleTwoTone v-if="!status" twoToneColor="#f50" />
+          <Tag :color="status ? '#52c41a' : '#f50'">
+            <CheckCircleTwoTone v-if="status" twoToneColor="#52c41a" />
+            <QuestionCircleTwoTone v-if="!status" twoToneColor="#f50" />
 
-              {{ status ? t('connected') : t('connecting') }}
-              <Icon icon="fa-solid:signal" :size="15" />
-            </Tag>
-          </Card>
-        </div>
+            {{ status ? t('connected') : t('connecting') }}
+            <Icon icon="fa-solid:signal" :size="15" />
+          </Tag>
+        </Card>
       </div>
       <Divider />
       <Row class="line" :gutter="15">
@@ -128,24 +100,68 @@
         </Col>
       </Row>
       <Divider />
-      <Row class="line strong" :gutter="15">
-        <Col :span="12">0xWallet ID</Col>
-      </Row>
-      <Row class="line" :gutter="15">
-        <Col :span="12">{{ userInfo.username }}</Col>
-      </Row>
-      <Row class="line" :gutter="15">
-        <Col :span="12"> <a-button type="primary" shape="round"> Change My ID</a-button></Col>
-      </Row>
+      <!--      <Row class="line strong" :gutter="15">-->
+      <!--        <Col :span="12">0xWallet ID</Col>-->
+      <!--      </Row>-->
+      <!--      <Row class="line" :gutter="15">-->
+      <!--        <Col :span="12">{{ userInfo.username }}</Col>-->
+      <!--      </Row>-->
+      <!--      <Row class="line" :gutter="15">-->
+      <!--        <Col :span="12"> <a-button type="primary" shape="round"> Change My ID</a-button></Col>-->
+      <!--      </Row>-->
+      <div>
+        <div>
+          <BasicHelp text="提示" /> How
+          <a href="https://id.owaf.org/" target="_blank"><b>0xWallet ID </b></a> Works
+        </div>
+        <Card hoverable>
+          <template class="ant-card-actions" #actions> </template>
+          <CardMeta>
+            <template #title
+              >0xID
+              <Tooltip v-if="publicKey !== '' && temp"
+                ><template #title> {{ t('temporary') }}</template
+                >⚠️</Tooltip
+              >
+              <span class="float-right" @click="openQr" v-if="publicKey !== '' && !temp"
+                ><QrcodeOutlined
+              /></span>
+            </template>
+            <template #description
+              >{{ publicKey }}
+              <span class="float-right" @click="copyKey" v-if="publicKey !== '' && !temp"
+                ><CopyOutlined /></span
+            ></template>
+          </CardMeta>
+          <Divider />
+          <div class="grid grid-col-2 grid-flow-col gap-4">
+            <div
+              ><div class="grid grid-col-2">
+                <div>{{ t('totalBalance') }}</div>
+                <div>$212.27 USD</div>
+                <div>1.085227 BSV </div>
+              </div></div
+            >
+            <div class="flex flex-row-reverse"
+              ><div class="rounded-full py-3 px-6 bg-red-500 text-white w-20 h-12 mr-4">{{
+                t('walletSend')
+              }}</div>
+              <div class="rounded-full py-3 px-6 bg-blue-700 text-white w-20 h-12 mr-4">{{
+                t('walletAdd')
+              }}</div></div
+            >
+          </div>
+        </Card>
+      </div>
     </Card>
   </Spin>
   <Modal v-model:visible="visible" :footer="null" centered>
-    <Row type="flex" justify="center">
-      <Col :span="12"><QrCode :value="publicKey" /></Col>
-    </Row>
-    <Row type="flex" justify="center">
-      <Col :span="12">{{ t('QrText') }}</Col>
-    </Row>
+    <template #title>{{ t('contactAddress') }}</template>
+    <div class="grid gird-col-1 gap-2 justify-items-center">
+      <div>{{ publicKey }}</div>
+      <div><QrCode :value="publicKey" /></div>
+      <div>{{ t('QrText') }}</div>
+    </div>
   </Modal>
   <PWModal @register="registerPWModal" />
 </template>
@@ -185,6 +201,7 @@
   import { editCurrentUser, me } from '/@/hooks/apollo/gqlUser';
   import { useMutation, useQuery } from '@vue/apollo-composable';
   import { Icon } from '/@/components/Icon';
+  import { Button } from '/@/components/Button';
 
   export default defineComponent({
     components: {
@@ -211,6 +228,7 @@
       Spin,
       Icon,
       Tooltip,
+      Button,
     },
 
     setup() {
@@ -233,6 +251,7 @@
         return userStore.userNKNstatus;
       });
       const token = localStorage.getItem('token');
+      const temp = ref(false);
       const { clipboardRef, copiedRef } = useCopyToClipboard();
       const { createMessage, createErrorModal } = useMessage();
       const [registerPWModal, { openModal: openPwModal }] = useModal();
@@ -314,6 +333,7 @@
         edit,
         editInfo,
         spinning,
+        temp,
       };
     },
   });

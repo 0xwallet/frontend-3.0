@@ -29,4 +29,9 @@ export default {
   assetTitle: '资产',
   addAsset: '添加资产',
   addApp: '添加应用',
+  contactAddress: '联系地址',
+
+  totalBalance: '账户资产折合 (BSV)',
+  walletAdd: '充值',
+  walletSend: '提现',
 };

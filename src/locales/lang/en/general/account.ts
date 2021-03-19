@@ -30,4 +30,9 @@ export default {
   assetTitle: 'Assets',
   addAsset: 'Add new asset',
   addApp: 'Create new app',
+  contactAddress: 'Contact Address',
+
+  totalBalance: 'TOTAL BALANCE (BSV)',
+  walletAdd: 'Add',
+  walletSend: 'Send',
 };
