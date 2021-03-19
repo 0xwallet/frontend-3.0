@@ -155,7 +155,6 @@
         columns: getBasicColumns(),
         rowKey: 'id',
         showIndexColumn: false,
-
         scroll: { x: 1000, y: 800 },
       });
       const [registerPdfDrawer, { openDrawer: openPdfDrawer }] = useDrawer();
@@ -184,12 +183,12 @@
       PreviewShare((res) => {
         needCode.value = res.data?.drivePreviewShare.needCode;
         userPreview.value = res.data?.drivePreviewShare.UserPreview;
-        fetchData(res.data?.drivePreviewShare.needCode)
+        fetchData()
       });
 
 
-      async function fetchData(needCode:boolean) {
-        if(!needCode){
+      async function fetchData() {
+        if(!needCode.value){
           await fileStore.fetchShareFile(params.value);
         }else {
           const { code } = await validateFields();

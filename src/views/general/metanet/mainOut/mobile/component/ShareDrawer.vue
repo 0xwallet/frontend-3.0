@@ -41,14 +41,12 @@
   import { PageEnum } from '/@/enums/pageEnum';
   import {useModal} from "/@/components/Modal";
   import {CollectModal,NetFile} from "/@/components/NetFile";
+  import {propTypes} from "/@/utils/propTypes";
   const { t } = useI18n('general.metanet');
   export default defineComponent({
     components: { BasicDrawer, Space, Button,CollectModal },
     props: {
-      file: {
-        type: Object,
-        default: null,
-      },
+      file: propTypes.object.def({}),
     },
     setup(props) {
       const file: NetFile = computed(() => {

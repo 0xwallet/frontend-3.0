@@ -12,12 +12,12 @@
     ></template>
 
     <BasicForm @register="registerForm" layout="vertical" v-if="needCode && file == null" />
-    <div v-if="file" class="row">
+    <div v-if="!isDir">
       <Space direction="vertical" align="center">
         <div><Icon :type="file.type" :size="100" /></div>
         <div>{{ file.fullName.slice(-1)[0] }}</div>
         <div>{{ file.byteTransfer() }}</div>
-        <div><Hash :hash="file.hash" /></div>
+        <div><Hash :hash="file.hash" v-if="file.hash" /></div>
         <div
           ><Button type="primary" @click="preview(file)">{{ t('previewButton') }}</Button></div
         >
@@ -36,8 +36,7 @@
   import { computed, defineComponent, ref, unref } from 'vue';
   import { useRouter } from 'vue-router';
   import { useQuery } from '@vue/apollo-composable';
-  import { useMessage } from '/@/hooks/web/useMessage';
-  import { Hash, Icon, PdfDrawer, NetFile, NetGql, } from '/@/components/NetFile';
+  import { Hash, Icon, PdfDrawer, NetFile, NetGql } from '/@/components/NetFile';
   import { Card, Space, Row, Col, Button } from 'ant-design-vue';
   import { Svg } from '/@/components/Svg';
   import { fileStore } from '/@/store/modules/netFile';
@@ -47,7 +46,7 @@
   import ShareDrawer from './component/ShareDrawer.vue';
   import MarkdownDrawer from './component/MarkdownDrawer.vue';
   import { MoreOutlined } from '@ant-design/icons-vue';
-  import {useModal} from "/@/components/Modal";
+  import { useModal } from '/@/components/Modal';
   const { t } = useI18n('general.metanet');
 
   export default defineComponent({
@@ -71,14 +70,14 @@
     setup() {
       const { currentRoute } = useRouter();
 
-      const { createErrorModal } = useMessage();
       const params = computed(() => {
         return unref(currentRoute).query;
       });
       const needCode = ref(false);
       const userPreview = ref({});
-      const file = computed(() => {
-        return fileStore.getShareFile.find((f) => f.uri === params.value.uri) || null;
+      const isDir = ref(false);
+      const file = computed<NetFile>(() => {
+        return fileStore.getShareFile[0];
       });
       const [registerForm, { validateFields }] = useForm({
         schemas: [
@@ -110,14 +109,16 @@
       PreviewShare((res) => {
         needCode.value = res.data?.drivePreviewShare.needCode;
         userPreview.value = res.data?.drivePreviewShare.UserPreview;
-        if (!res.data?.drivePreviewShare.needCode) {
-          fileStore.fetchShareFile(params.value);
-        }
+        fetchData();
       });
       async function fetchData() {
-        const { code } = await validateFields();
-        params.value.code = code;
-        await fileStore.fetchShareFile(params.value);
+        if (!needCode.value) {
+          await fileStore.fetchShareFile(params.value);
+        } else {
+          const { code } = await validateFields();
+          params.value.code = code;
+          await fileStore.fetchShareFile(params.value);
+        }
       }
       async function preview(f: NetFile) {
         switch (f.type) {
@@ -132,7 +133,7 @@
         }
       }
       function openShareDrawer() {
-        openDrawer(true,{code:params.value.code});
+        openDrawer(true, { code: params.value.code });
       }
       async function comment(f: NetFile) {
         await f.comment();
@@ -149,16 +150,8 @@
         registerPdfDrawer,
         registerMarkdownDrawer,
         comment,
+        isDir,
       };
     },
   });
 </script>
-<style scoped lang="less">
-  .row {
-    width: 100%;
-    margin: 5px;
-    display: flex;
-    display: -webkit-flex; /* Safari */
-    justify-content: center;
-  }
-</style>
