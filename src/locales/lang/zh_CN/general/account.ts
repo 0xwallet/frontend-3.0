@@ -28,4 +28,5 @@ export default {
   temporary: '临时地址, 请点击备份',
   assetTitle: '资产',
   addAsset: '添加资产',
+  addApp: '添加应用',
 };

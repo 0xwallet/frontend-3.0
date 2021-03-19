@@ -1,16 +1,21 @@
 <template>
-  <Card hoverable>
-    <template #title>
-      <BasicTitle>{{ t('appsTitle') }}</BasicTitle>
-    </template>
-    <List :grid="{ gutter: 16, column: 4 }" :data-source="data">
-      <template #renderItem="{ item, index }">
-        <ListItem>
-          <Card :title="item.title"> Card content </Card>
-        </ListItem>
+  <div>
+    <Card hoverable>
+      <template #title>
+        <BasicTitle>{{ t('appsTitle') }}</BasicTitle>
       </template>
-    </List>
-  </Card>
+      <template #extra
+        ><Button type="link" @click="openAddAppModal">{{ t('addApp') }}</Button></template
+      >
+      <List :grid="{ gutter: 16, column: 4 }" :data-source="data">
+        <template #renderItem="{ item, index }">
+          <ListItem>
+            <Card :title="item.title"> Card content </Card>
+          </ListItem>
+        </template>
+      </List> </Card
+    ><addAppModal @register="registerModal" />
+  </div>
 </template>
 
 <script lang="ts">
@@ -19,6 +24,10 @@
   import { Card, Tag, List } from 'ant-design-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
+  import addAppModal from '/@/views/general/account/component/addAppModal.vue';
+  import { useModal } from '/@/components/Modal';
+  import { Button } from '/@/components/Button';
+
   const data = [
     {
       title: 'app 1',
@@ -44,16 +53,24 @@
       CardMeta: Card.Meta,
       List,
       ListItem: List.Item,
+      addAppModal,
+      Button,
     },
     setup() {
       const { t } = useI18n('general.account');
       const { createMessage } = useMessage();
-
+      const [registerModal, { openModal }] = useModal();
+      function openAddAppModal() {
+        openModal(true);
+      }
       function handleSubmit() {}
       return {
         t,
         handleSubmit,
+        registerModal,
+        openModal,
         data,
+        openAddAppModal,
       };
     },
   });

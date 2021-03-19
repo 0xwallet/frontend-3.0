@@ -29,4 +29,5 @@ export default {
   temporary: 'Temporary Address, please click to backup',
   assetTitle: 'Assets',
   addAsset: 'Add new asset',
+  addApp: 'Create new app',
 };
