@@ -13,11 +13,15 @@ export function getAllParentPath<T = Recordable>(treeData: T[], path: string) {
 function joinParentPath(menus: Menu[], parentPath = '') {
   for (let index = 0; index < menus.length; index++) {
     const menu = menus[index];
-    const p = menu.path.startsWith('/') ? menu.path : `/${menu.path}`;
-    const parent = isUrl(menu.path) ? menu.path : `${parentPath}${p}`;
-    menus[index].path = parent;
+    // https://next.router.vuejs.org/guide/essentials/nested-routes.html
+    // Note that nested paths that start with / will be treated as a root path.
+    // This allows you to leverage the component nesting without having to use a nested URL.
+    if (!(menu.path.startsWith('/') || isUrl(menu.path))) {
+      // path doesn't start with /, nor is it a url, join parent path
+      menu.path = `${parentPath}/${menu.path}`;
+    }
     if (menu?.children?.length) {
-      joinParentPath(menu.children, parent);
+      joinParentPath(menu.children, menu.path);
     }
   }
 }
@@ -47,13 +51,15 @@ export function transformRouteToMenu(routeModList: AppRouteModule[]) {
   const list = treeMap(routeList, {
     conversion: (node: AppRouteRecordRaw) => {
       const { meta: { title, hideMenu = false } = {} } = node;
+
       return {
         ...(node.meta || {}),
         name: title,
         hideMenu,
+        path: node.path,
       };
     },
   });
   joinParentPath(list);
-  return list;
+  return cloneDeep(list);
 }
