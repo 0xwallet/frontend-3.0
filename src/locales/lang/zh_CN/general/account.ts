@@ -11,7 +11,6 @@ export default {
   connected: '已连接 ',
   connecting: '连接中... ',
   cardNumber: '信用卡号',
-  creditCardTitle: '信用卡',
   appsTitle: '应用',
   QrText: '扫一扫二维码，添加到联系人',
   oldPassword: '旧密码',
@@ -25,4 +24,8 @@ export default {
   forget: '忘记密码',
   verificationPlaceholder: '输入验证码',
   seconds: '秒',
+  publicKey: '公钥',
+  temporary: '临时地址, 请点击备份',
+  assetTitle: '资产',
+  addAsset: '添加资产',
 };

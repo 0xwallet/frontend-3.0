@@ -11,7 +11,7 @@ export default {
   connected: 'Connected ',
   connecting: 'Connecting... ',
   cardNumber: 'Credit Card Number',
-  creditCardTitle: 'Credit Card',
+
   appsTitle: 'Apps',
   QrText: 'Scan QR code and add to contact',
   oldPassword: 'Old Password',
@@ -25,4 +25,8 @@ export default {
   forget: 'Forget Password',
   verificationPlaceholder: 'Please input Verification code',
   seconds: 'seconds',
+  publicKey: 'Public Key',
+  temporary: 'Temporary Address, please click to backup',
+  assetTitle: 'Assets',
+  addAsset: 'Add new asset',
 };

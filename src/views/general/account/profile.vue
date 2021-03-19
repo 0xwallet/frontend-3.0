@@ -22,27 +22,71 @@
         </template>
       </CardMeta>
       <Divider />
-      <div> <BasicHelp text="提示" /> How <b>D-Chat</b> Works </div>
-      <Card hoverable>
-        <template class="ant-card-actions" #actions> </template>
-        <CardMeta>
-          <template #title
-            >Public Key
-            <span class="setRight" @click="openQr" v-if="publicKey !== ''"><QrcodeOutlined /></span>
-          </template>
-          <template #description
-            >{{ publicKey }} <span class="setRight" @click="copyKey"><CopyOutlined /></span
-          ></template>
-        </CardMeta>
-        <Divider />
 
-        <Tag :color="status ? '#52c41a' : '#f50'">
-          <CheckCircleTwoTone v-if="status" twoToneColor="#52c41a" />
-          <QuestionCircleTwoTone v-if="!status" twoToneColor="#f50" />
+      <div class="grid grid-cols-1 gap-2">
+        <div>
+          <div>
+            <BasicHelp text="提示" /> How
+            <a href="https://nkn.org/" target="_blank"><b>NKN</b></a> Works
+          </div>
+          <Card hoverable>
+            <template class="ant-card-actions" #actions> </template>
+            <CardMeta>
+              <template #title
+                >{{ t('publicKey') }}
+                <span class="setRight" @click="openQr" v-if="publicKey !== ''"
+                  ><QrcodeOutlined
+                /></span>
+              </template>
+              <template #description
+                >{{ publicKey }} <span class="setRight" @click="copyKey"><CopyOutlined /></span
+              ></template>
+            </CardMeta>
+            <Divider />
 
-          {{ status ? t('connected') : t('connecting') }} Primary NKN Public Address
-        </Tag>
-      </Card>
+            <Tag :color="status ? '#52c41a' : '#f50'">
+              <CheckCircleTwoTone v-if="status" twoToneColor="#52c41a" />
+              <QuestionCircleTwoTone v-if="!status" twoToneColor="#f50" />
+
+              {{ status ? t('connected') : t('connecting') }}
+              <Icon icon="fa-solid:signal" :size="15" />
+            </Tag>
+          </Card>
+        </div>
+        <div>
+          <div>
+            <BasicHelp text="提示" /> How
+            <a href="https://nkn.org/" target="_blank"><b>NKN</b></a> Works
+          </div>
+          <Card hoverable>
+            <template class="ant-card-actions" #actions> </template>
+            <CardMeta>
+              <template #title
+                >{{ t('publicKey') }}
+                <Tooltip
+                  ><template #title> {{ t('temporary') }}</template
+                  >⚠️</Tooltip
+                >
+                <span class="setRight" @click="openQr" v-if="publicKey !== ''"
+                  ><QrcodeOutlined
+                /></span>
+              </template>
+              <template #description
+                >{{ publicKey }} <span class="setRight" @click="copyKey"><CopyOutlined /></span
+              ></template>
+            </CardMeta>
+            <Divider />
+
+            <Tag :color="status ? '#52c41a' : '#f50'">
+              <CheckCircleTwoTone v-if="status" twoToneColor="#52c41a" />
+              <QuestionCircleTwoTone v-if="!status" twoToneColor="#f50" />
+
+              {{ status ? t('connected') : t('connecting') }}
+              <Icon icon="fa-solid:signal" :size="15" />
+            </Tag>
+          </Card>
+        </div>
+      </div>
       <Divider />
       <Row class="line" :gutter="15">
         <Col :span="8">{{ t('email') }}</Col>
@@ -109,7 +153,19 @@
 <script lang="ts">
   import { defineComponent, ref, unref, computed, reactive } from 'vue';
   import { BasicTitle, BasicHelp } from '/@/components/Basic';
-  import { Card, Avatar, Divider, Modal, Tag, Row, Col, Switch, Input, Spin } from 'ant-design-vue';
+  import {
+    Card,
+    Avatar,
+    Divider,
+    Modal,
+    Tag,
+    Row,
+    Col,
+    Switch,
+    Input,
+    Spin,
+    Tooltip,
+  } from 'ant-design-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useWallet } from '/@/hooks/nkn/getNKN';
   import {
@@ -128,6 +184,7 @@
   import { userStore } from '/@/store/modules/user';
   import { editCurrentUser, me } from '/@/hooks/apollo/gqlUser';
   import { useMutation, useQuery } from '@vue/apollo-composable';
+  import { Icon } from '/@/components/Icon';
 
   export default defineComponent({
     components: {
@@ -152,6 +209,8 @@
       Switch,
       Input,
       Spin,
+      Icon,
+      Tooltip,
     },
 
     setup() {
@@ -166,7 +225,7 @@
         avatar: '',
       });
       const spinning = ref(true);
-      const publicKey = ref('')
+      const publicKey = ref('');
       const visible = ref(false);
       const wallet = ref({});
       const edit = ref(false);
@@ -178,10 +237,9 @@
       const { createMessage, createErrorModal } = useMessage();
       const [registerPWModal, { openModal: openPwModal }] = useModal();
 
-      useWallet().then(w=>{
-        publicKey.value=w.getPublicKey()
-      })
-
+      useWallet().then((w) => {
+        publicKey.value = w.getPublicKey();
+      });
 
       const { onResult: getMe, refetch } = useQuery(me, null, () => ({
         fetchPolicy: 'network-only',
