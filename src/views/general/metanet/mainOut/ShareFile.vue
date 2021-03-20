@@ -21,7 +21,7 @@
       <Col :xs="2" :sm="4" :md="6" :lg="8" :xl="9"></Col>
     </Row>
 
-    <Card v-if=" form">
+    <Card v-if="form">
       <template #title
         ><Space
           ><Avatar :src="userPreview.avatar" /><span
@@ -74,7 +74,7 @@
   import { useTable, BasicTable } from '/@/components/Table';
   import { getBasicColumns } from './tableData';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import { Hash, Icon, PdfDrawer, NetFile, NetGql,CollectModal } from '/@/components/NetFile';
+  import { Hash, Icon, PdfDrawer, NetFile, NetGql, CollectModal } from '/@/components/NetFile';
   import { BasicForm, useForm } from '/@/components/Form';
   import { fileStore } from '/@/store/modules/netFile';
   import { useQuery } from '@vue/apollo-composable';
@@ -99,7 +99,8 @@
       Avatar,
       PdfDrawer,
       MarkdownModal,
-      Icon,CollectModal
+      Icon,
+      CollectModal,
     },
     setup() {
       const { currentRoute } = useRouter();
@@ -115,7 +116,7 @@
         return unref(currentRoute).query;
       });
       const form = computed(() => {
-        return tableData.value.length > 0 ;
+        return tableData.value.length > 0;
       });
       const tableData = computed(() => {
         return fileStore.getShareFile;
@@ -183,19 +184,17 @@
       PreviewShare((res) => {
         needCode.value = res.data?.drivePreviewShare.needCode;
         userPreview.value = res.data?.drivePreviewShare.UserPreview;
-        fetchData()
+        fetchData();
       });
 
-
       async function fetchData() {
-        if(!needCode.value){
+        if (!needCode.value) {
           await fileStore.fetchShareFile(params.value);
-        }else {
+        } else {
           const { code } = await validateFields();
           params.value.code = code;
           await fileStore.fetchShareFile(params.value);
         }
-
       }
 
       function preview(file: NetFile) {
@@ -216,11 +215,11 @@
       // 打开文件或者进入目录
       function openFile(f: NetFile) {
         if (f.isDir) {
-          if(f.id==='root'){
+          if (f.name === '...') {
             fileStore.fetchShareFile(params.value);
             return;
           }
-          fileStore.fetchShareFiles({token:f.shareInfo.token,dirId:f.id})
+          fileStore.fetchShareFiles({ token: f.shareInfo.token, dirId: f.id });
           return;
         }
         if (f.type === 'md') {
@@ -235,7 +234,7 @@
         await f.save();
       }
       async function collection(f: NetFile) {
-        openCollectModal(true,{mode:'share',id:f.shareInfo.id,code:params.code})
+        openCollectModal(true, { mode: 'share', id: f.shareInfo.id, code: params.code });
       }
 
       async function comment(f: NetFile) {
@@ -260,7 +259,8 @@
         registerMarkdownModal,
         save,
         collection,
-        comment,registerCollectModal
+        comment,
+        registerCollectModal,
       };
     },
   });

@@ -1,21 +1,20 @@
 <template>
-  <Card>
-    <template #title>
-      <Space
-        ><Svg :width="30" :height="30" />
-        <span>{{ userPreview.username }} 给你{{ needCode ? '加密' : '' }}分享了文件 </span></Space
-      ></template
-    >
-    <template #extra v-if="file"
-      ><Button type="link" @click="openShareDrawer"
-        ><MoreOutlined :style="{ fontSize: '26px' }" /></Button
-    ></template>
+  <div>
+    <Card>
+      <template #title>
+        <Space
+          ><Svg :width="30" :height="30" />
+          <span>{{ userPreview.username }} 给你{{ needCode ? '加密' : '' }}分享了文件 </span></Space
+        ></template
+      >
+      <template #extra v-if="file"
+        ><Button type="link" @click="openShareDrawer"
+          ><MoreOutlined :style="{ fontSize: '26px' }" /></Button
+      ></template>
 
-    <BasicForm @register="registerForm" layout="vertical" v-if="needCode && file == null" />
-    <div v-if="!isDir">
-      <Space direction="vertical" align="center">
+      <div v-if="!isDir" class="grid grid-col-1 gap-2 place-items-center">
         <div><Icon :type="file.type" :size="100" /></div>
-        <div>{{ file.fullName.slice(-1)[0] }}</div>
+        <div>{{ file.fileName() }}</div>
         <div>{{ file.byteTransfer() }}</div>
         <div><Hash :hash="file.hash" v-if="file.hash" /></div>
         <div
@@ -23,21 +22,38 @@
         >
         <div
           ><Button @click="comment(file)">{{ t('comment') }}</Button></div
-        ></Space
-      >
-    </div>
+        >
+      </div>
+      <div v-if="isDir">
+        <List item-layout="horizontal" :data-source="files">
+          <template #renderItem="{ item }">
+            <ListItem>
+              <ListItemMeta @click="openFile(item)">
+                <template #title>
+                  {{ item.fileName() }}
+                </template>
+                <template #avatar>
+                  <Icon :type="item.type" />
+                </template>
+              </ListItemMeta>
+            </ListItem>
+          </template>
+        </List>
+      </div>
 
-    <ShareDrawer @register="registerDrawer" :file="file" />
-    <PdfDrawer @register="registerPdfDrawer" :file="file" :scale="0.5" />
-    <MarkdownDrawer @register="registerMarkdownDrawer" :file="file" />
-  </Card>
+      <!--      <ShareDrawer @register="registerDrawer" :file="file" />-->
+      <!--      <PdfDrawer @register="registerPdfDrawer" :file="file" :scale="0.5" />-->
+      <!--      <MarkdownDrawer @register="registerMarkdownDrawer" :file="file" />-->
+    </Card>
+    <BasicForm @register="registerForm" layout="vertical" v-if="needCode && file == null" />
+  </div>
 </template>
 <script lang="ts">
   import { computed, defineComponent, ref, unref } from 'vue';
   import { useRouter } from 'vue-router';
   import { useQuery } from '@vue/apollo-composable';
   import { Hash, Icon, PdfDrawer, NetFile, NetGql } from '/@/components/NetFile';
-  import { Card, Space, Row, Col, Button } from 'ant-design-vue';
+  import { Card, Space, Row, Col, Button, List } from 'ant-design-vue';
   import { Svg } from '/@/components/Svg';
   import { fileStore } from '/@/store/modules/netFile';
   import { BasicForm, useForm } from '/@/components/Form';
@@ -66,6 +82,9 @@
       Icon,
       Hash,
       MarkdownDrawer,
+      List,
+      ListItem: List.Item,
+      ListItemMeta: List.Item.Meta,
     },
     setup() {
       const { currentRoute } = useRouter();
@@ -75,9 +94,14 @@
       });
       const needCode = ref(false);
       const userPreview = ref({});
-      const isDir = ref(false);
-      const file = computed<NetFile>(() => {
-        return fileStore.getShareFile[0];
+      const isDir = ref(true);
+      const file = ref<NetFile>({});
+      const files = computed<NetFile[]>(() => {
+        if (fileStore.getShareFile[0]) {
+          isDir.value = fileStore.getShareFile[0]?.isDir;
+          file.value = fileStore.getShareFile[0];
+        }
+        return fileStore.getShareFile;
       });
       const [registerForm, { validateFields }] = useForm({
         schemas: [
@@ -138,6 +162,18 @@
       async function comment(f: NetFile) {
         await f.comment();
       }
+
+      function openFile(f: NetFile) {
+        console.log(f);
+        if (f.isDir) {
+          if (f.name === '...') {
+            fetchData();
+            return;
+          }
+          fileStore.fetchShareFiles({ token: f.shareInfo.token, dirId: f.id });
+          return;
+        }
+      }
       return {
         file,
         registerForm,
@@ -151,6 +187,8 @@
         registerMarkdownDrawer,
         comment,
         isDir,
+        files,
+        openFile,
       };
     },
   });

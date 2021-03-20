@@ -17,10 +17,9 @@ import { getFile } from '/@/api/general/metanet/file';
 
 const { t } = useI18n();
 const { clipboardRef, copiedRef } = useCopyToClipboard();
-const { createMessage,  createConfirm } = useMessage();
+const { createMessage, createConfirm } = useMessage();
 
-export function getFileList(list:any[],dirId:string,token:string=''):NetFile[] {
-
+export function getFileList(list: any[], dirId: string, token: string = ''): NetFile[] {
   // 重置文件夹列表，文件列表
   let temp: NetFile[] = [];
   if (!list) {
@@ -28,20 +27,33 @@ export function getFileList(list:any[],dirId:string,token:string=''):NetFile[] {
   }
   // 列表[1]存在为存在上级目录，存入dirId，fullName设置为...
   if (list[1]) {
-    // @ts-ignore
-    temp.push({
-      id: list[1].id,
-      fullName: list[1].fullName,
-      type: 'folder',
-      name: '...',
-      size: 0,
-      updatedAt: '',
-      hash: '',
-      space: list[1].space,
-      desc: '',
-      isDir: true,
-      token
-    });
+    temp.push(
+      new NetFile({
+        userFile: {
+          id: list[1].id,
+          fullName: ['...'],
+          isDir: true,
+          space: list[1].space,
+          info: { size: '0', description: '' },
+        },
+        token,
+      })
+    );
+    console.log(temp);
+    // // @ts-ignore
+    // temp.push({
+    //   id: list[1].id,
+    //   fullName: list[1].fullName,
+    //   type: 'folder',
+    //   name: '...',
+    //   size: 0,
+    //   updatedAt: '',
+    //   hash: '',
+    //   space: list[1].space,
+    //   desc: '',
+    //   isDir: true,
+    //   token,
+    // });
   }
   // 遍历返回信息，组成表格信息
   let p: NetFile[] = [];
@@ -50,11 +62,7 @@ export function getFileList(list:any[],dirId:string,token:string=''):NetFile[] {
     if (!v) return;
     // 是目录
     if (v.isDir) {
-      if (
-        dirId === v.id ||
-        v.id === 'root' ||
-        (temp.length > 0 && temp[0].id == v.id)
-      ) {
+      if (dirId === v.id || v.id === 'root' || (temp.length > 0 && temp[0].id == v.id)) {
         return;
       }
       // @ts-ignore
@@ -64,10 +72,8 @@ export function getFileList(list:any[],dirId:string,token:string=''):NetFile[] {
       f.push(new NetFile({ userFile: v }));
     }
   });
-  return temp.concat(p).concat(f)
+  return temp.concat(p).concat(f);
 }
-
-
 
 function CheckToken(): boolean {
   if (localStorage.getItem('token')) return true;
@@ -135,7 +141,7 @@ interface filePublish {
   id: number;
   txid: string;
   version: number;
-  history:any[]
+  history: any[];
 }
 interface fileStatus {
   isShared: boolean;
@@ -202,7 +208,7 @@ export class NetFile {
       id: 0,
       txid: params.txid || '',
       version: params.version,
-      history:[]
+      history: [],
     };
 
     this.path = params.userFile.fullName.slice(0, params.userFile.fullName.length - 1);
@@ -220,13 +226,13 @@ export class NetFile {
     this.isShared = params.userFile.isShared;
   }
   fileName(): string {
-    return this.fullName.slice(-1)[0]||"none";
+    return this.fullName.slice(-1)[0] || 'none';
   }
   getToken(): Promise<string> {
     return new Promise<string>((resolve) => {
       if (this.shareInfo?.token !== '') {
-        resolve(this.shareInfo?.token || '')
-        return
+        resolve(this.shareInfo?.token || '');
+        return;
       }
       useApollo({
         mode: 'mutate',
@@ -366,11 +372,11 @@ export class NetFile {
       variables: { userFileId: this.id, ...params },
     })
       .then((res) => {
-        console.log(res)
+        console.log(res);
         this.shareInfo.uri = res.data?.driveCreateShare.uri;
         this.shareInfo.code = res.data?.driveCreateShare.code;
         this.shareInfo.token = res.data?.driveCreateShare.token;
-        console.log(this.shareInfo)
+        console.log(this.shareInfo);
         return true;
       })
       .catch(() => {
@@ -402,7 +408,6 @@ export class NetFile {
 
   // 分享链接放出剪切板
   copyShareUrl(mode: number) {
-
     let temp = '';
     if (mode === 1 || mode === 3) {
       temp += `${t('general.metanet.shareUrl')}:${window.location.origin}/#/s/file?uri=${
