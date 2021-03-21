@@ -20,7 +20,7 @@ import { errorStore } from '/@/store/modules/error';
 import { errorResult } from './const';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { createNow, formatRequestDate } from './helper';
-
+import { userStore } from '/@/store/modules/user';
 const globSetting = useGlobSetting();
 const prefix = globSetting.urlPrefix;
 const { createMessage, createErrorModal } = useMessage();
@@ -89,7 +89,7 @@ const transform: AxiosTransform = {
         content: timeoutMsg,
       });
       Promise.reject(new Error(timeoutMsg));
-      userStore.loginOut(true);
+      userStore.logout(true);
       return errorResult;
     }
     return errorResult;

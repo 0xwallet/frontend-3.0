@@ -29,6 +29,7 @@ export function getFileList(list: any[], dirId: string, token: string = ''): Net
   if (list[1]) {
     temp.push(
       new NetFile({
+        // @ts-ignore
         userFile: {
           id: list[1].id,
           fullName: ['...'],
@@ -39,7 +40,7 @@ export function getFileList(list: any[], dirId: string, token: string = ''): Net
         token,
       })
     );
-    console.log(temp);
+    // console.log(temp);
     // // @ts-ignore
     // temp.push({
     //   id: list[1].id,

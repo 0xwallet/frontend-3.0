@@ -223,8 +223,9 @@
           return;
         }
         if (f.type === 'md') {
-          // openMDModal(f);
-        } else if (f.type === 'png') {
+          openMarkdownModal(true, f, true);
+        }
+        if (f.type === 'png' || f.type === 'jpg') {
           f.preview();
         }
         return;

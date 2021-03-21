@@ -41,9 +41,9 @@
         </List>
       </div>
 
-      <!--      <ShareDrawer @register="registerDrawer" :file="file" />-->
-      <!--      <PdfDrawer @register="registerPdfDrawer" :file="file" :scale="0.5" />-->
-      <!--      <MarkdownDrawer @register="registerMarkdownDrawer" :file="file" />-->
+      <ShareDrawer @register="registerDrawer" :file="file" />
+      <PdfDrawer @register="registerPdfDrawer" :file="file" :scale="0.5" />
+      <MarkdownDrawer @register="registerMarkdownDrawer" :file="file" />
     </Card>
     <BasicForm @register="registerForm" layout="vertical" v-if="needCode && file == null" />
   </div>
@@ -164,7 +164,6 @@
       }
 
       function openFile(f: NetFile) {
-        console.log(f);
         if (f.isDir) {
           if (f.name === '...') {
             fetchData();
@@ -173,6 +172,8 @@
           fileStore.fetchShareFiles({ token: f.shareInfo.token, dirId: f.id });
           return;
         }
+        file.value = f;
+        preview(f);
       }
       return {
         file,

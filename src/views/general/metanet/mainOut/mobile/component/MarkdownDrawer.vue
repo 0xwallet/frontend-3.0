@@ -36,7 +36,7 @@
         return props.file;
       });
       const title = computed(() => {
-        return file.value?.fullName.slice(-1)[0] || 'PDF';
+        return file.value.fullName?.slice(-1)[0] || 'PDF';
       });
       const [register] = useDrawerInner(async () => {
         const url = await file.value.preview();
