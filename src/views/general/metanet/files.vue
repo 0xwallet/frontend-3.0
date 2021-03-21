@@ -277,7 +277,8 @@
         }),
         pagination: false,
         showTableSetting: false,
-        scroll: { x: null, y: window.innerHeight * 0.7 },
+        // scroll: { x: null, y: window.innerHeight * 0.7 },
+        scroll: { x: null, y: null },
       });
 
       // 移动文件Modal
