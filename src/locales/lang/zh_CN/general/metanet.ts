@@ -106,4 +106,5 @@ export default {
   invalid: '无效',
   accessible: '有效',
   publication: '发布',
+  buyStorage: '购买存储空间',
 };

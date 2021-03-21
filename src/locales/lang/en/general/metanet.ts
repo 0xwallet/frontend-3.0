@@ -106,4 +106,5 @@ export default {
   invalid: 'Invalid',
   accessible: 'Accessible',
   publication: 'Publication',
+  buyStorage: 'Buy storage',
 };

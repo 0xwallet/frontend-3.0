@@ -9,7 +9,7 @@ import { useSession } from '/@/hooks/nkn/getNKN';
 import { encode } from '@msgpack/msgpack';
 import { useMessage } from '/@/hooks/web/useMessage';
 import { dateUtil } from '/@/utils/dateUtil';
-import { NetFile, NetGql,getFileList } from '/@/components/NetFile';
+import { NetFile, NetGql, getFileList } from '/@/components/NetFile';
 import { useApollo } from '/@/hooks/apollo/apollo';
 
 const { createMessage, createErrorModal } = useMessage();
@@ -20,16 +20,10 @@ interface uploadSpeed {
   speed: number;
 }
 interface fileInfo {
-  file:NetFile|null
-  mode:string
-  button:boolean
-
+  file: NetFile | null;
+  mode: string;
+  button: boolean;
 }
-
-
-
-
-
 
 @Module({ namespaced: true, name: NAME, dynamic: true, store })
 class netFileStore extends VuexModule {
@@ -45,8 +39,11 @@ class netFileStore extends VuexModule {
 
   private markdownModalVisible: boolean = false;
 
-  private fileSize:object={}
-  private Info:fileInfo={file:null,mode:'basic',button:false}
+  private fileSize: object = {};
+
+  private Info: fileInfo = { file: null, mode: 'basic', button: false };
+
+  private space: { total: number; used: number } = { total: 1, used: 0 };
 
   get getUploadList(): FileItem[] {
     return this.uploadList || [];
@@ -72,23 +69,26 @@ class netFileStore extends VuexModule {
   get getFileSize(): object {
     return this.fileSize;
   }
+  get getSpace(): object {
+    return this.space;
+  }
   @Mutation
-  setFileInfo(params:{file: NetFile, mode: string}): void {
-    this.Info.mode = params.mode
-    if(!params.file){
-      this.Info.file=null
-    return;
-    }
-    if (this.Info.file&&this.Info.file.id == params.file.id && this.Info.button) {
+  setFileInfo(params: { file: NetFile; mode: string }): void {
+    this.Info.mode = params.mode;
+    if (!params.file) {
       this.Info.file = null;
       return;
     }
-    this.Info.file=params.file;
+    if (this.Info.file && this.Info.file.id == params.file.id && this.Info.button) {
+      this.Info.file = null;
+      return;
+    }
+    this.Info.file = params.file;
   }
 
   @Mutation
   changeButton(): void {
-    this.Info.button=!this.Info.button;
+    this.Info.button = !this.Info.button;
   }
 
   @Mutation
@@ -108,14 +108,13 @@ class netFileStore extends VuexModule {
     this.refetch = t;
   }
   @Mutation
-  setFileSize(params:{dirId:string
-  ,size:number}): void {
-    this.fileSize[params.dirId]=params.size
+  setFileSize(params: { dirId: string; size: number }): void {
+    this.fileSize[params.dirId] = params.size;
   }
 
   @Mutation
   setShareFile(file: NetFile[]): void {
-    this.shareFiles=file;
+    this.shareFiles = file;
   }
   @Mutation
   appendMarkdownFile(file: NetFile): void {
@@ -159,6 +158,10 @@ class netFileStore extends VuexModule {
       }
     });
   }
+  @Mutation
+  setSpace(params: { total: number; used: number }): void {
+    this.space = params;
+  }
 
   @Action
   addSpeed(s: number): void {
@@ -186,7 +189,7 @@ class netFileStore extends VuexModule {
         Space: 'PRIVATE',
         Description: item.desc || '',
       };
-      console.log(object)
+      console.log(object);
       this.setItemValue({ uuid: item.uuid, key: 'status', value: UploadResultStatus.UPLOADING });
       const encoded: Uint8Array = encode(object);
       let buffer = new ArrayBuffer(4);
@@ -265,14 +268,14 @@ class netFileStore extends VuexModule {
     });
   }
   @Action
-  fetchShareFiles(params: { token: string,dirId:string}) {
+  fetchShareFiles(params: { token: string; dirId: string }) {
     useApollo({ mode: 'query', gql: NetGql.Basic.FileList, variables: params }).then((res) => {
       const data = res.data?.driveListFiles;
       if (!data) {
         createErrorModal({ title: '错误', content: '分享文件信息错误' });
         return;
       }
-      this.setShareFile(getFileList(data,params.dirId,params.token));
+      this.setShareFile(getFileList(data, params.dirId, params.token));
     });
   }
 }

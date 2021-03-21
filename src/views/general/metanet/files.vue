@@ -141,7 +141,6 @@
       Space,
       Row,
       Col,
-
       PublishModal,
       CreateButton,
       UploadButton,
@@ -179,8 +178,7 @@
 
       const currentPath = ref<string[]>([]);
 
-      const infoButton=computed(()=>fileStore.getFileInfo.button)
-
+      const infoButton = computed(() => fileStore.getFileInfo.button);
 
       const searchValue = ref('');
 
@@ -212,6 +210,10 @@
           return;
         }
         currentPath.value = list[0].fullName;
+        fileStore.setSpace({
+          total: list[0].user.driveSetting.totalSpace,
+          used: list[0].user.driveSetting.usedSpace,
+        });
         // 列表[1]存在为存在上级目录，存入dirId，fullName设置为...
         if (list[1]) {
           temp.push({
@@ -270,12 +272,12 @@
         },
         customRow: (record) => ({
           onClick: () => {
-            fileStore.setFileInfo({file:record,mode:'basic'})
+            fileStore.setFileInfo({ file: record, mode: 'basic' });
           },
         }),
         pagination: false,
         showTableSetting: false,
-        scroll: { x:null, y: window.innerHeight * 0.7 },
+        scroll: { x: null, y: window.innerHeight * 0.7 },
       });
 
       // 移动文件Modal
@@ -458,8 +460,11 @@
 
       // 路径面包屑跳转
       function goPath(p: []) {
-        if(p[0]===undefined){
-          fileStore.setFileInfo({file:new NetFile({userFile:{fullName:['Home'],isDir:true,info:{size:0}}}) ,mode:'basic'})
+        if (p[0] === undefined) {
+          fileStore.setFileInfo({
+            file: new NetFile({ userFile: { fullName: ['Home'], isDir: true, info: { size: 0 } } }),
+            mode: 'home',
+          });
         }
         variables.value = { fullName: p };
       }
@@ -536,7 +541,7 @@
         getSelectRowKeys,
         t,
         refetch,
-         registerPublishModal,
+        registerPublishModal,
         openPublishModal,
         searchValue,
         openUploadModal,
@@ -549,7 +554,7 @@
         openCopy,
         currentPath,
         infoButton,
-        changeButton:fileStore.changeButton,
+        changeButton: fileStore.changeButton,
       };
     },
   });
