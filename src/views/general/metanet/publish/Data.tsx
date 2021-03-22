@@ -6,7 +6,7 @@ import { Icon } from '/@/components/NetFile';
 export function getBasicColumns(): BasicColumn[] {
   return [
     {
-      title: t('fileName'),
+      title: t('name'),
       dataIndex: 'name',
       width: 400,
       align: 'left',
@@ -33,7 +33,7 @@ export function getBasicColumns(): BasicColumn[] {
       },
     },
     {
-      title: t('publishAt'),
+      title: t('createDate'),
       width: 200,
       dataIndex: 'createdAt',
       customRender: ({ text }) => {
@@ -42,7 +42,7 @@ export function getBasicColumns(): BasicColumn[] {
       },
     },
     {
-      title: t('publishVersion'),
+      title: t('version'),
       width: 200,
       dataIndex: 'version',
     },
@@ -52,7 +52,7 @@ export function getBasicColumns(): BasicColumn[] {
     //   slots: { customRender: 'uri' },
     // },
     {
-      title: t('status'),
+      title: t('state'),
       dataIndex: 'status',
     },
     {
