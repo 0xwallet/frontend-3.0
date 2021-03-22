@@ -43,26 +43,25 @@
     <ARow class="enter-x">
       <ACol :xs="24" :md="8">
         <Tooltip>
-          <template #title>{{t('sys.login.webAuthnTooltip')}}</template>
+          <template #title>{{ t('sys.login.webAuthnTooltip') }}</template>
           <Button block @click="setLoginState(LoginStateEnum.QR_CODE)"> WebAuthn </Button>
         </Tooltip>
-
       </ACol>
       <ACol :md="8" :xs="24" class="xs:my-2 md:my-0 xs:mx-0 md:mx-2">
         <Tooltip>
-          <template #title>{{t('sys.login.nMobileTooltip')}}</template>
-          <Button block @click="setLoginState(LoginStateEnum.nMOBILE,formData.email)"> nMobile </Button>
+          <template #title>{{ t('sys.login.nMobileTooltip') }}</template>
+          <Button block @click="setLoginState(LoginStateEnum.nMOBILE, formData.email)">
+            nMobile
+          </Button>
         </Tooltip>
-
       </ACol>
       <ACol :md="7" :xs="24">
         <Tooltip>
-          <template #title>{{t('sys.login.registerTooltip')}}</template>
+          <template #title>{{ t('sys.login.registerTooltip') }}</template>
           <Button block @click="setLoginState(LoginStateEnum.REGISTER)">
             {{ t('sys.login.registerButton') }}
           </Button>
         </Tooltip>
-
       </ACol>
     </ARow>
 
@@ -77,18 +76,22 @@
     <!--    </div>-->
     <div class="grid grid-cols-1 gap-2">
       <div class="rounded-md border-2 h-14 border-light-blue-500 grid justify-items-center">
-        <div class="text-light-blue-500 font-medium self-center"> {{ t('sys.login.recoveryInfoButton') }}</div>
-        </div>
+        <div class="text-light-blue-500 font-medium self-center">
+          {{ t('sys.login.recoveryInfoButton') }}</div
+        >
+      </div>
       <div class="rounded-md border-2 h-14 border-light-blue-500 grid justify-items-center">
-        <div class="text-light-blue-500 font-medium self-center">{{t('sys.login.walletProviderButton') }}</div>
-        </div>
+        <div class="text-light-blue-500 font-medium self-center">{{
+          t('sys.login.walletProviderButton')
+        }}</div>
+      </div>
     </div>
   </Form>
 </template>
 <script lang="ts">
   import { defineComponent, reactive, ref, unref, computed } from 'vue';
 
-  import { Checkbox, Form, Input, Row, Col, Button, Divider,Tooltip } from 'ant-design-vue';
+  import { Checkbox, Form, Input, Row, Col, Button, Divider, Tooltip } from 'ant-design-vue';
   import {
     GithubFilled,
     WechatFilled,
@@ -126,7 +129,8 @@
       WechatFilled,
       AlipayCircleFilled,
       GoogleCircleFilled,
-      TwitterCircleFilled,Tooltip
+      TwitterCircleFilled,
+      Tooltip,
     },
     setup() {
       const { t } = useI18n();
@@ -160,9 +164,10 @@
         localStorage.setItem('token', res.data?.signin?.token || '');
         localStorage.setItem('uid', res.data?.signin?.User?.id || 0);
         await useWallet(data.email);
+        console.log(res);
         notification.success({
           message: t('sys.login.loginSuccessTitle'),
-          description: `${t('sys.login.loginSuccessDesc')}: ${res.data?.signin?.User?.email}`,
+          description: `${t('sys.login.loginSuccessDesc')}: ${res.data?.signin?.User?.username}`,
           duration: 3,
         });
         await useMClient();

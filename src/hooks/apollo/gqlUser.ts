@@ -72,6 +72,7 @@ export const signIn = gql`
         wallets {
           tags
         }
+        username
       }
     }
   }
@@ -84,12 +85,7 @@ export const bindNknAddress = gql`
     $tag: WalletTag
     $password: String!
   ) {
-    bindNknAddress(
-      code: $code
-      nknPublicKey: $nknPublicKey
-      tag: $tag
-      password: $password
-    ) {
+    bindNknAddress(code: $code, nknPublicKey: $nknPublicKey, tag: $tag, password: $password) {
       id
     }
   }
@@ -136,7 +132,7 @@ export const resetPassword = gql`
 export const nknOnline = gql`
   mutation nknOnline($nknPublicKey: String!) {
     nknOnline(nknPublicKey: $nknPublicKey) {
-    id
+      id
     }
   }
 `;

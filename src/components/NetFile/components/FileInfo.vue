@@ -73,9 +73,12 @@
             }}</DescriptionsItem>
           </Descriptions>
         </Space>
-        <div class="w-2/3 grid grid-col-1 gap-2">
+        <div class="w-2/3 grid grid-col-1 gap-2" v-if="mode === 'home'">
           <div
-            ><Progress :percent="((space.used / space.total) * 100).toFixed(2)" size="small"
+            ><Progress
+              :percent="space.used / space.total"
+              size="small"
+              :format="(percent) => `${(percent * 100).toFixed(2)}%`"
           /></div>
           <div>
             {{ byteTransfer(space.used).value }} {{ byteTransfer(space.used).unit }} /
