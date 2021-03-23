@@ -10,7 +10,7 @@
       </template>
       <BasicTable @register="registerTable">
         <template #tableTitle
-          ><a-button type="primary" @click="addWebdav">{{ t('addApp') }}</a-button></template
+          ><Button type="primary" @click="addWebdav">{{ t('addApp') }}</Button></template
         >
       </BasicTable>
     </Card>
@@ -28,6 +28,7 @@
   import WebdavModal from './component/WebdavModal.vue';
   import { useModal } from '/@/components/Modal';
   import dayjs from 'dayjs';
+  import { Button } from '/@/components/Button';
 
   export default defineComponent({
     components: {
@@ -38,6 +39,7 @@
       Description,
       BasicTable,
       WebdavModal,
+      Button,
     },
     setup() {
       const { t } = useI18n('general.security');

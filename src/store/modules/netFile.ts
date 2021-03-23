@@ -280,19 +280,17 @@ class netFileStore extends VuexModule {
     });
   }
   @Action
-  async uploadAvatar(item: FileItem) {
+  async uploadAvatar(file: File) {
     try {
-      this.setItemValue({ uuid: item.uuid, key: 'status', value: UploadResultStatus.UPLOADING });
       const writeChunkSize = 1024;
       // 获取client session
       const session = await useSession();
       const object = {
-        File: new Uint8Array(await item.file.arrayBuffer()),
-        FullName: [item.name],
+        File: new Uint8Array(await file.arrayBuffer()),
+        FullName: [file.name],
         Action: 'avatar',
       };
       console.log(object);
-      this.setItemValue({ uuid: item.uuid, key: 'status', value: UploadResultStatus.UPLOADING });
       const encoded: Uint8Array = encode(object);
       let buffer = new ArrayBuffer(4);
       let dv = new DataView(buffer);
@@ -311,16 +309,8 @@ class netFileStore extends VuexModule {
           Math.floor(((n + buf.length) * 10) / encoded.length) !==
           Math.floor((n * 10) / encoded.length)
         ) {
-          this.setItemValue({
-            uuid: item.uuid,
-            key: 'percent',
-            // @ts-ignore
-            value: (((n + buf.length) / item.size) * 100) | 0,
-          });
-          this.addSpeed(((n + buf.length) / (1 << 20) / (Date.now() - timeStart)) * 1000);
           let speed: number | string =
             ((n + buf.length) / (1 << 20) / (Date.now() - timeStart)) * 1000;
-          this.setItemValue({ uuid: item.uuid, key: 'speed', value: speed });
           if (speed > 0.9) {
             speed = speed.toFixed(2) + ' MB/s';
           } else if (speed * 1000 > 0.9) {
@@ -329,7 +319,6 @@ class netFileStore extends VuexModule {
             speed = (speed * 1000 * 1000).toFixed(2) + 'B/s';
           }
           // item.status = speed;
-          this.setItemValue({ uuid: item.uuid, key: 'status', value: speed });
           console.log(
             session.localAddr,
             'sent',
@@ -342,15 +331,13 @@ class netFileStore extends VuexModule {
 
         // c
       }
-      this.setItemValue({ uuid: item.uuid, key: 'status', value: UploadResultStatus.SUCCESS });
-      createMessage.success(item.name + '上传成功', 2);
+      createMessage.success('上传成功', 2);
       return {
         success: true,
         error: null,
       };
     } catch (e) {
       console.log(e);
-      this.setItemValue({ uuid: item.uuid, key: 'status', value: UploadResultStatus.ERROR });
       return {
         success: false,
         error: e,

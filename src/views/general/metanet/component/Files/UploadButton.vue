@@ -1,11 +1,11 @@
 <template>
   <span>
     <Dropdown :trigger="['click']">
-      <a-button type="primary"> {{ t('uploadButton') }}<DownOutlined /> </a-button>
+      <Button type="primary"> {{ t('uploadButton') }}<DownOutlined /> </Button>
       <template #overlay>
         <Menu>
           <MenuItem>
-            <Upload :beforeUpload="beforeUpload"  :showUploadList="false">
+            <Upload :beforeUpload="beforeUpload" :showUploadList="false">
               <Button type="link">{{ t('file') }}</Button></Upload
             >
           </MenuItem>

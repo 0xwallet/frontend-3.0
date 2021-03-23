@@ -1,7 +1,7 @@
 export default {
-  authorityTitle: 'Authority',
-  deviceTitle: 'Device',
-  deviceModalTitle: 'Add New Device',
+  authorityTitle: 'Authorization',
+  deviceTitle: 'Security Devices',
+  deviceModalTitle: 'Add new device',
   sendVerifyCode: 'Send Verify Code',
   noEmail: 'Not Entered Email',
   emailFormat: 'The Email Format is Incorrect',

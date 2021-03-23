@@ -19,7 +19,15 @@
         </template>
 
         <template #avatar>
-          <Avatar :src="userInfo.avatar" />
+          <div v-if="edit">
+            <Upload
+              :beforeUpload="beforeUpload"
+              :showUploadList="false"
+              accept="image/png, image/jpeg"
+            >
+              <Avatar :src="`https://drive-s.owaf.io/${avatar}`" /></Upload
+          ></div>
+          <div v-else><Avatar :src="`https://drive-s.owaf.io/${avatar}`" /></div>
         </template>
       </CardMeta>
       <Divider />
@@ -181,6 +189,7 @@
     Input,
     Spin,
     Tooltip,
+    Upload,
   } from 'ant-design-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useWallet } from '/@/hooks/nkn/getNKN';
@@ -202,6 +211,7 @@
   import { useMutation, useQuery } from '@vue/apollo-composable';
   import { Icon } from '/@/components/Icon';
   import { Button } from '/@/components/Button';
+  import { fileStore } from '/@/store/modules/netFile';
 
   export default defineComponent({
     components: {
@@ -229,10 +239,12 @@
       Icon,
       Tooltip,
       Button,
+      Upload,
     },
 
     setup() {
       const { t } = useI18n('general.account');
+      const avatar = ref('');
       const userInfo = reactive({
         username: '',
         email: '',
@@ -267,7 +279,7 @@
       getMe((res) => {
         const { me } = res.data;
         userInfo.username = me.username;
-        userInfo.avatar = me.avatar;
+        avatar.value = me.avatar;
         userInfo.email = me.email;
         userInfo.bio = me.bio;
         userInfo.country = me.personalInfo?.country || 'UnKnow';
@@ -318,6 +330,19 @@
           spinning.value = false;
         }
       }
+      async function changeAvatar() {
+        if (!edit.value) return;
+      }
+      async function beforeUpload(file) {
+        await fileStore.uploadAvatar(file);
+        setTimeout(() => {
+          console.log('刷新');
+          refetch();
+        }, 3000);
+
+        return false;
+        // await NetUpload.checkFile(file, path, true);
+      }
 
       return {
         t,
@@ -334,6 +359,9 @@
         editInfo,
         spinning,
         temp,
+        changeAvatar,
+        beforeUpload,
+        avatar,
       };
     },
   });
