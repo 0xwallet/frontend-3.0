@@ -41,6 +41,7 @@ export default {
   passwordPlaceholder: '请输入密码',
   smsPlaceholder: '请输入邮箱验证码',
   mobilePlaceholder: '请输入手机号码',
+  nMobilePlaceholder: '请输入nMobile验证码',
   policyPlaceholder: '勾选后才能注册',
   diffPwd: '两次输入密码不一致',
 
@@ -52,16 +53,12 @@ export default {
   nMobileCode: 'nMobile验证码',
   mobile: '手机号码',
 
-  webAuthnTooltip:'账户与设备绑定? 点此登入',
-  nMobileTooltip:'账户与nMobile绑定? 点此登入',
-  registerTooltip:'没有账户? 点此创建账户',
+  webAuthnTooltip: '账户与设备绑定? 点此登入',
+  nMobileTooltip: '账户与nMobile绑定? 点此登入',
+  registerTooltip: '没有账户? 点此创建账户',
 
-
-  enterButton:'创建账户',
-  recoveryInfoButton:'恢复信息登录',
-  walletProviderButton:'其它钱包登录',
-  back:'返回'
-
+  enterButton: '创建账户',
+  recoveryInfoButton: '恢复信息登录',
+  walletProviderButton: '其它钱包登录',
+  back: '返回',
 };
-
-
