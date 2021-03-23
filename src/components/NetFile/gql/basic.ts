@@ -134,6 +134,15 @@ const driveCopyFile = gql`
     driveCopyFile(fromId: $fromId, toId: $toId)
   }
 `;
+
+// 复制文件
+const driveFileUploaded = gql`
+  subscription($userId: ID!) {
+    driveFileUploaded(userId: $userId) {
+      id
+    }
+  }
+`;
 export const Basic = {
   FileList: driveListFiles,
   MakeDir: driveMakeDir,
@@ -147,4 +156,5 @@ export const Basic = {
   Rename: driveRenameFile,
   Copy: driveCopyFile,
   DirSize: driveDirSize,
+  Uploaded: driveFileUploaded,
 };

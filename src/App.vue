@@ -32,10 +32,12 @@
       initApollo();
       //加载外部JS
       initJS();
+
       useWallet().then(() => {
         console.log('wallet ready');
         useMClient();
       });
+
       userStore.checkNKN();
 
       // Create a lock screen monitor

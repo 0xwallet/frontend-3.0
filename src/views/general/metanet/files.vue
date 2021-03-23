@@ -107,10 +107,11 @@
     NetGql,
     MarkdownModal,
   } from '/@/components/NetFile';
-  import { useMutation, useQuery } from '@vue/apollo-composable';
+  import { useMutation, useQuery, useSubscription } from '@vue/apollo-composable';
   import { Button } from '/@/components/Button';
   import { useDrawer } from '/@/components/Drawer';
   import { fileStore } from '/@/store/modules/netFile';
+  import { log } from 'vditor/dist/ts/util/log';
   const { t } = useI18n('general.metanet');
 
   export default defineComponent({
@@ -511,7 +512,15 @@
         refetch();
         file.value = {};
       }
-
+      const { onResult: sub, onError } = useSubscription(NetGql.Basic.Uploaded, {
+        userId: 28,
+      });
+      sub((result) => {
+        console.log(result.data);
+      });
+      onError((error) => {
+        console.log(error);
+      });
       return {
         registerTable,
         setSelectedRowKeyList,

@@ -7,12 +7,14 @@ import { ApolloClients } from '@vue/apollo-composable';
 import { ApolloLink, HttpLink } from '@apollo/client/core';
 import { onError } from '@apollo/client/link/error';
 
+import { split } from 'apollo-link';
+import { getMainDefinition } from 'apollo-utilities';
 // @ts-ignore
-// import { Socket as PhoenixSocket } from 'phoenix/assets/js/phoenix';
+import { Socket as PhoenixSocket } from 'phoenix';
 // @ts-ignore
-// import { createAbsintheSocketLink } from '@absinthe/socket-apollo-link';
+import { createAbsintheSocketLink } from '@absinthe/socket-apollo-link';
 // @ts-ignore
-// import * as AbsintheSocket from '@absinthe/socket';
+import * as AbsintheSocket from '@absinthe/socket';
 // import { getMainDefinition } from '@apollo/client/utilities';
 // 与 API 的 HTTP 连接
 const { createErrorModal } = useMessage();
@@ -22,24 +24,27 @@ export function initApollo(): ApolloClient<any> | null {
   const httpLink = new HttpLink({
     uri: 'https://owaf.io/api',
   });
-  // const wsLink = createAbsintheSocketLink(
-  //   AbsintheSocket.create(
-  //     new PhoenixSocket('wss://owaf.io/socket', {
-  //       params: () => {
-  //         return { Authorization: 'Bearer ' + localStorage.getItem('token') };
-  //       },
-  //     })
-  //   )
-  // );
-  // const link = split(
-  //   // 根据操作类型拆分
-  //   ({ query }) => {
-  //     const definition = getMainDefinition(query);
-  //     return definition.kind === 'OperationDefinition' && definition.operation === 'subscription';
-  //   },
-  //   wsLink,
-  //   httpLink
-  // );
+  const wsLink = createAbsintheSocketLink(
+    AbsintheSocket.create(
+      new PhoenixSocket('wss://owaf.io/socket', {
+        params: () => {
+          return { Authorization: 'Bearer ' + localStorage.getItem('token') };
+        },
+      })
+    )
+  );
+
+  const link = split(
+    // 根据操作类型拆分
+    ({ query }) => {
+      const definition = getMainDefinition(query);
+      return definition.kind === 'OperationDefinition' && definition.operation === 'subscription';
+    },
+    wsLink,
+    // @ts-ignore
+    httpLink
+  );
+  // console.log(link);
   // split based on operation type
   // REMOVE authLink FOR HTTPONLY_TOKEN
   const middlewareLink = new ApolloLink((operation, forward) => {
@@ -78,8 +83,10 @@ export function initApollo(): ApolloClient<any> | null {
   const cache = new InMemoryCache();
 
   // 创建 apollo 客户端
+
   const apolloClient = new ApolloClient({
-    link: ApolloLink.from([middlewareLink, error, httpLink]),
+    // @ts-ignore
+    link: ApolloLink.from([middlewareLink, error, link]),
     cache,
     connectToDevTools: true,
   });
