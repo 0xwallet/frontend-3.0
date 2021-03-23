@@ -65,9 +65,8 @@ export function getBasicColumns(): BasicColumn[] {
 export function getPublishColumns(): BasicColumn[] {
   return [
     {
-      title: t('fileName'),
-      dataIndex: 'file',
-      align: 'left',
+      title: t('name'),
+      dataIndex: 'name',
       width: 100,
       slots: { customRender: 'name' },
     },
@@ -118,7 +117,6 @@ export function getPublishColumns(): BasicColumn[] {
     {
       title: t('action'),
       fixed: 'right',
-      dataIndex: 'file',
       width: 250,
       slots: { customRender: 'action' },
     },

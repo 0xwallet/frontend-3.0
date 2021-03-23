@@ -3,8 +3,8 @@
     <Card>
       <BasicTable @register="registerTable">
         <template #name="{ record }">
-          <a-button type="link" @click="openFile(record.file)"
-            ><Icon :type="record.file.type" />{{ record.file.fullName.slice(-1)[0] }}</a-button
+          <Button type="link" @click="openFile(record.file)"
+            ><Icon :type="record.file.type" />{{ record.file.fullName.slice(-1)[0] }}</Button
           >
         </template>
 
@@ -17,8 +17,8 @@
             <!--          <a-button type="link">复制路径</a-button>-->
             <!--            <a-button type="link" @click="download(record)">{{ t('downloadButton') }}</a-button>-->
 
-            <a-button type="link" @click="collection(text)">{{ t('collectionButton') }}</a-button>
-            <a-button type="link" @click="comment(record)">{{ t('comment') }}</a-button></div
+            <Button type="link" @click="collection(text)">{{ t('collectionButton') }}</Button>
+            <Button type="link" @click="comment(record)">{{ t('comment') }}</Button></div
           >
         </template>
       </BasicTable>
@@ -35,13 +35,14 @@
   import { useTable, BasicTable } from '/@/components/Table';
   import { getPublishColumns } from './tableData';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import { Hash, Icon, PdfDrawer, NetFile, NetGql,CollectModal } from '/@/components/NetFile';
+  import { Hash, Icon, PdfDrawer, NetFile, NetGql, CollectModal } from '/@/components/NetFile';
   import { useQuery } from '@vue/apollo-composable';
   import router from '/@/router';
   import MarkdownModal from '../component/editor/Markdown.vue';
   import { useDrawer } from '/@/components/Drawer';
   import { useModal } from '/@/components/Modal';
   import { useMessage } from '/@/hooks/web/useMessage';
+  import { Button } from '/@/components/Button';
   const { t } = useI18n('general.metanet');
 
   export default defineComponent({
@@ -57,7 +58,9 @@
       Avatar,
       PdfDrawer,
       MarkdownModal,
-      Icon,CollectModal
+      Icon,
+      CollectModal,
+      Button,
     },
     setup() {
       const { currentRoute } = useRouter();
@@ -73,11 +76,11 @@
       const params = computed(() => {
         return unref(currentRoute).query.txid;
       });
-      const tableData = ref([]);
+      const tableData = ref<{ id: number; file: NetFile }[]>([]);
 
       const [registerTable] = useTable({
         canResize: false,
-        title: '文件列表',
+        title: t('file'),
         dataSource: tableData.value,
         columns: getPublishColumns(),
         rowKey: 'id',
@@ -88,7 +91,9 @@
       const [registerCollectModal, { openModal: openCollectModal }] = useModal();
       const { onResult: PublishFind } = useQuery(NetGql.Publish.Find, { txid: params.value });
       PublishFind((res) => {
+        console.log(res);
         const data = res.data?.driveFindPublish;
+        console.log(data);
         const f = new NetFile(data.current);
         f.publishInfo.id = data.id;
         tableData.value.push({ id: data.id, file: f });
@@ -128,7 +133,7 @@
       }
 
       async function collection(f: NetFile) {
-        openCollectModal(true,{mode:'publish',id:f.publishInfo.id})
+        openCollectModal(true, { mode: 'publish', id: f.publishInfo.id });
       }
 
       async function comment(f: NetFile) {
@@ -144,7 +149,8 @@
         registerPdfDrawer,
         registerMarkdownModal,
         collection,
-        comment,registerCollectModal
+        comment,
+        registerCollectModal,
       };
     },
   });
