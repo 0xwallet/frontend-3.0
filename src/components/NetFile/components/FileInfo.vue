@@ -15,7 +15,7 @@
         <Space direction="vertical">
           <div class="info_header">
             <Icon :type="file.type" :size="100" />
-            <p v-if="mode"
+            <p v-if="mode === 'home'"
               >{{ byteTransfer(space.used).value }} {{ byteTransfer(space.used).unit }} /
               <span>{{ ((space.used / space.total) * 100).toFixed(2) }}%</span>
             </p>
@@ -26,6 +26,7 @@
               </p>
               <p v-else>
                 <Button @click="getDirSize" v-if="dirSize === 0">查询</Button>
+
                 <span v-else
                   >{{ byteTransfer(dirSize).value }} {{ byteTransfer(dirSize).unit }} /
                   {{ ((dirSize / space.total) * 100).toFixed(2) }}%</span

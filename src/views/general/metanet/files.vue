@@ -4,18 +4,16 @@
       <template #tableTitle>
         <Space>
           <CreateButton :path="path" v-if="!choose" />
-          <a-button type="primary" @click="openMoveModal" v-if="choose">{{
-            t('moveButton')
-          }}</a-button>
+          <Button type="primary" @click="openMoveModal" v-if="choose">{{ t('moveButton') }}</Button>
           <UploadButton ref="uploadRef" :path="path" v-if="!choose" />
-          <a-button type="primary" v-if="choose" @click="openCopy">{{ t('copyButton') }}</a-button>
+          <Button type="primary" v-if="choose" @click="openCopy">{{ t('copyButton') }}</Button>
           <BreadCrumb :path="currentPath" @jump="goPath" />
         </Space>
       </template>
       <template #name="{ record }">
-        <a-button type="link" @click="openFile(record)">
+        <Button type="link" @click="openFile(record)">
           <Icon :type="record.type" />
-          {{ record.name }}{{ record.type === 'folder' ? '' : '.' + record.type }}</a-button
+          {{ record.name }}{{ record.type === 'folder' ? '' : '.' + record.type }}</Button
         > </template
       ><template #hash="{ text }">
         <Hash :hash="text" v-if="text" />
@@ -26,41 +24,35 @@
           <template #overlay>
             <Menu>
               <MenuItem>
-                <a-button type="link" @click="openShareModal(record)">{{
-                  t('shareButton')
-                }}</a-button>
+                <Button type="link" @click="openShareModal(record)">{{ t('shareButton') }}</Button>
               </MenuItem>
               <MenuItem>
-                <a-button type="link" @click="openPublishModal(record)">{{
-                  t('publish')
-                }}</a-button>
+                <Button type="link" @click="openPublishModal(record)">{{ t('publish') }}</Button>
               </MenuItem>
 
               <MenuItem>
-                <a-button type="link">{{ t('send') }}</a-button>
+                <Button type="link">{{ t('send') }}</Button>
               </MenuItem>
               <MenuItem>
-                <a-button type="link" @click="download(record)">{{ t('downloadButton') }}</a-button>
+                <Button type="link" @click="download(record)">{{ t('downloadButton') }}</Button>
               </MenuItem>
               <MenuItem>
-                <a-button type="link" @click="openMoveModal(record)">{{
+                <Button type="link" @click="openMoveModal(record)">{{
                   t('moveButton')
-                }}</a-button></MenuItem
+                }}</Button></MenuItem
               >
               <MenuItem>
-                <a-button type="link" @click="openCopy(record)">{{
+                <Button type="link" @click="openCopy(record)">{{
                   t('copyButton')
-                }}</a-button></MenuItem
+                }}</Button></MenuItem
               >
               <MenuItem>
-                <a-button type="link" @click="openRename(record)">{{
-                  t('rename')
-                }}</a-button></MenuItem
+                <Button type="link" @click="openRename(record)">{{ t('rename') }}</Button></MenuItem
               >
               <MenuItem>
-                <a-button type="link" color="error" @click="delFile(record)">{{
+                <Button type="link" color="error" @click="delFile(record)">{{
                   t('delButton')
-                }}</a-button></MenuItem
+                }}</Button></MenuItem
               >
             </Menu>
           </template>
@@ -375,9 +367,6 @@
         });
       }
 
-      function openMDModal(record) {
-        openMarkdownModal(true, record, true);
-      }
       // 文件预览
       function preview(f: NetFile) {
         f.preview();

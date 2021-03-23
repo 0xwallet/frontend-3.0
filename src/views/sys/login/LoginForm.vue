@@ -164,7 +164,6 @@
         localStorage.setItem('token', res.data?.signin?.token || '');
         localStorage.setItem('uid', res.data?.signin?.User?.id || 0);
         await useWallet(data.email);
-        console.log(res);
         notification.success({
           message: t('sys.login.loginSuccessTitle'),
           description: `${t('sys.login.loginSuccessDesc')}: ${res.data?.signin?.User?.username}`,

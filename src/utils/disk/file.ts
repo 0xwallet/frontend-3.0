@@ -3,7 +3,7 @@
  * @param {number} byte
  */
 export function byteTransfer(byte: number): { value: string; unit: string } {
-  if (byte === 0) {
+  if (byte == 0) {
     return { value: '0', unit: 'B' };
   }
   const k: number = 1024;
