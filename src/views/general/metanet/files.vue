@@ -111,7 +111,6 @@
   import { Button } from '/@/components/Button';
   import { useDrawer } from '/@/components/Drawer';
   import { fileStore } from '/@/store/modules/netFile';
-  import { log } from 'vditor/dist/ts/util/log';
   const { t } = useI18n('general.metanet');
 
   export default defineComponent({
