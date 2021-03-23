@@ -6,14 +6,14 @@ const { t } = useI18n('general.metanet');
 export function getBasicColumns(): BasicColumn[] {
   return [
     {
-      title: t('fileName'),
+      title: t('name'),
       dataIndex: 'fullName',
       width: 400,
       align: 'left',
       slots: { customRender: 'name' },
     },
     {
-      title: t('time'),
+      title: t('data'),
       width: 200,
       dataIndex: 'updatedAt',
       customRender: ({ text }) => {

@@ -55,21 +55,21 @@
               ><Hash :hash="file.hash"
             /></DescriptionsItem>
             <DescriptionsItem :label="t('type')">{{ file.type }}</DescriptionsItem>
-            <DescriptionsItem :label="'Owner'" v-if="mode === 'home'">Me </DescriptionsItem>
+            <DescriptionsItem :label="t('owner')" v-if="mode === 'home'">Me </DescriptionsItem>
             <DescriptionsItem :label="t('location')" v-if="mode !== 'home'">
               <span v-for="(v, i) in file.Location()" :key="i">{{ v }}/</span>
             </DescriptionsItem>
-            <DescriptionsItem :label="t('status')" v-if="mode === 'basic'">{{
+            <DescriptionsItem :label="t('state')" v-if="mode === 'basic'">{{
               file.status.isShared ? t('shared') : t('unShared')
             }}</DescriptionsItem>
-            <DescriptionsItem :label="t('modified')" v-if="mode !== 'home'">{{
+            <DescriptionsItem :label="t('modifiedDate')" v-if="mode !== 'home'">{{
               time(file.updatedAt)
             }}</DescriptionsItem>
-            <DescriptionsItem
-              :label="t('opened')"
-              v-if="!(mode === 'share') && mode !== 'home'"
-            ></DescriptionsItem>
-            <DescriptionsItem :label="t('created')" v-if="mode !== 'home'">{{
+            <!--            <DescriptionsItem-->
+            <!--              :label="t('opened')"-->
+            <!--              v-if="!(mode === 'share') && mode !== 'home'"-->
+            <!--            ></DescriptionsItem>-->
+            <DescriptionsItem :label="t('createDate')" v-if="mode !== 'home'">{{
               time(file.createdAt)
             }}</DescriptionsItem>
           </Descriptions>
@@ -204,9 +204,13 @@
       }
 
       function copyUrl(mode: number) {
-        if (mode.value === 'basic') return;
-        console.log(mode);
-        file.value.copyShareUrl(mode);
+        switch (mode.value) {
+          case 'share':
+            file.value.copyShareUrl(mode);
+            return;
+          default:
+            return;
+        }
       }
       function closeInfo() {
         fileStore.setFileInfo({ file: null, mode: 'basic' });

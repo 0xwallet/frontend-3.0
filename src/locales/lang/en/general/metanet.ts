@@ -20,7 +20,7 @@ export default {
   root: 'Root',
   fileName: 'File Name',
   folderName: 'Folder Name',
-  action: 'Actions',
+  action: 'Action',
   size: 'Size',
   time: 'Time',
   failed: 'Failed',
@@ -110,4 +110,9 @@ export default {
   name: 'Name',
   createDate: 'Created Date',
   state: 'State',
+  data: 'Date',
+  modifiedDate: 'Modified Date',
+  owner: 'Owner',
+  validTime: 'Valid Time',
+  accessCode: 'Access Code',
 };

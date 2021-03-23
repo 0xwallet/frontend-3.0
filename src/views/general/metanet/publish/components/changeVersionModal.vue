@@ -10,7 +10,7 @@
 
   import { useMessage } from '/@/hooks/web/useMessage';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import { useMutation, useQuery } from '@vue/apollo-composable';
+  import { useMutation } from '@vue/apollo-composable';
   import { NetGql } from '/@/components/NetFile';
   const { t } = useI18n('general.metanet');
   export default defineComponent({

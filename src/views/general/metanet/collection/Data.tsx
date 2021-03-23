@@ -10,7 +10,7 @@ const { t } = useI18n('general.metanet');
 export function getBasicColumns(): BasicColumn[] {
   return [
     {
-      title: t('fileName'),
+      title: t('name'),
       dataIndex: 'id',
       width: 400,
       align: 'left',

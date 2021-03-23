@@ -107,4 +107,12 @@ export default {
   accessible: '有效',
   publication: '发布',
   buyStorage: '购买存储空间',
+  name: '名称',
+  createDate: '创建时间',
+  state: '状态',
+  data: '时间',
+  modifiedDate: '修改时间',
+  owner: '所有者',
+  validTime: '有效期',
+  accessCode: '访问码',
 };
