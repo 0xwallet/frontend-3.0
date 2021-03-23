@@ -110,22 +110,22 @@
           </template>
         </List></TabPane
       >
-<!--      <TabPane key="version" :tab="t('version')" v-if="mode === 'publish'">-->
-<!--        <List item-layout="horizontal" :data-source="file.publishInfo.history">-->
-<!--          <template #renderItem="{ item, index }">-->
-<!--            <ListItem>-->
-<!--              <template #actions>-->
-<!--                <a-button @click="changeVersion(item.id)">{{ t('changeVersion') }}</a-button>-->
-<!--              </template>-->
-<!--              <ListItemMeta>-->
-<!--                <template #title>-->
-<!--                  <a href="https://www.antdv.com/">{{ item.id }}</a>-->
-<!--                </template>-->
-<!--              </ListItemMeta>-->
-<!--            </ListItem>-->
-<!--          </template>-->
-<!--        </List></TabPane-->
-<!--      >-->
+      <!--      <TabPane key="version" :tab="t('version')" v-if="mode === 'publish'">-->
+      <!--        <List item-layout="horizontal" :data-source="file.publishInfo.history">-->
+      <!--          <template #renderItem="{ item, index }">-->
+      <!--            <ListItem>-->
+      <!--              <template #actions>-->
+      <!--                <a-button @click="changeVersion(item.id)">{{ t('changeVersion') }}</a-button>-->
+      <!--              </template>-->
+      <!--              <ListItemMeta>-->
+      <!--                <template #title>-->
+      <!--                  <a href="https://www.antdv.com/">{{ item.id }}</a>-->
+      <!--                </template>-->
+      <!--              </ListItemMeta>-->
+      <!--            </ListItem>-->
+      <!--          </template>-->
+      <!--        </List></TabPane-->
+      <!--      >-->
     </Tabs>
   </Drawer>
 </template>
@@ -225,12 +225,6 @@
           fileStore.setFileSize({ dirId: file.value.id, size: res.data?.driveDirSize });
         });
       }
-      async function changeVersion(publishHistoryId) {
-        await PublishChangeVerison({
-          id: file.value.publishId,
-          publishHistoryId,
-        });
-      }
 
       return {
         t,
@@ -257,7 +251,6 @@
         closeInfo,
         getDirSize,
         dirSize,
-        changeVersion,
         space,
       };
     },
