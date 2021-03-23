@@ -45,6 +45,7 @@ export function getBasicColumns(): BasicColumn[] {
       title: t('version'),
       width: 200,
       dataIndex: 'version',
+      slots: { customRender: 'version' },
     },
     // {
     //   title: t('publishLink'),

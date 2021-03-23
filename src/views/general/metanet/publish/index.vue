@@ -9,8 +9,11 @@
       </template>
       <template #uri="{ record, text }">
         <Tooltip :title="t('copy')"
-          ><a-button type="link" @click="copyUrl(text)"> {{ text }}</a-button></Tooltip
+          ><Button type="link" @click="copyUrl(text)"> {{ text }}</Button></Tooltip
         >
+      </template>
+      <template #version="{ record, text }">
+        <Button type="link" @click="openVersionModal(record)">{{ text }}</Button>
       </template>
       <template #action="{ record }">
         <Dropdown>
@@ -18,21 +21,21 @@
           <template #overlay>
             <Menu>
               <MenuItem>
-                <a-button type="link" @click="openUpdateModal(record.publishId)">{{
+                <Button type="link" @click="openUpdateModal(record.publishId)">{{
                   t('publishUpdate')
-                }}</a-button></MenuItem
+                }}</Button></MenuItem
               >
               <MenuItem v-if="record.name !== 'deleted'">
-                <a-button
+                <Button
                   type="link"
                   color="error"
                   :pop="{ title: t('delButton') + ' ' + record.fullName + '?' }"
                   @click="del(record.publishId)"
-                  >{{ t('delButton') }}</a-button
+                  >{{ t('delButton') }}</Button
                 ></MenuItem
               >
               <MenuItem>
-                <a-button type="link">{{ t('setting') }}</a-button></MenuItem
+                <Button type="link">{{ t('setting') }}</Button></MenuItem
               >
             </Menu>
           </template>
@@ -47,25 +50,28 @@
       </template>
     </BasicTable>
     <UpdatePublishModal @register="registerUpdatePublishModal" />
+    <ChangeVersionModal @register="registerChangeVersionModal" />
   </div>
 </template>
 <script lang="ts">
-  import { defineComponent, computed, ref, unref } from 'vue';
+  import { computed, defineComponent, ref, unref } from 'vue';
   import { BasicTable, useTable } from '/@/components/Table';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { getBasicColumns } from './Data';
   import { BasicHelp } from '/@/components/Basic';
 
   import { useI18n } from '/@/hooks/web/useI18n';
-  import { Tooltip, Dropdown, Menu } from 'ant-design-vue';
+  import { Dropdown, Menu, Tooltip } from 'ant-design-vue';
   import { ExclamationCircleTwoTone } from '@ant-design/icons-vue';
   import { useMutation, useQuery } from '@vue/apollo-composable';
   import { useModal } from '/@/components/Modal';
-  import UpdatePublishModal from './UpdatePublishModal.vue';
-  import { NetGql, NetFile, Icon } from '/@/components/NetFile';
+  import UpdatePublishModal from './components/UpdatePublishModal.vue';
+  import ChangeVersionModal from './components/changeVersionModal.vue';
+  import { Icon, NetFile, NetGql } from '/@/components/NetFile';
   import { useCopyToClipboard } from '/@/hooks/web/useCopyToClipboard';
   import { Button } from '/@/components/Button';
   import { fileStore } from '/@/store/modules/netFile';
+
   const { clipboardRef, copiedRef } = useCopyToClipboard();
   const { t } = useI18n('general.metanet');
   export default defineComponent({
@@ -80,6 +86,7 @@
       ExclamationCircleTwoTone,
       Dropdown,
       UpdatePublishModal,
+      ChangeVersionModal,
       Button,
     },
     setup() {
@@ -107,6 +114,10 @@
         scroll: { x: 1000, y: 1000 },
       });
       const [registerUpdatePublishModal, { openModal, setModalProps }] = useModal();
+      const [
+        registerChangeVersionModal,
+        { openModal: openChangeVersionModal, setModalProps: setChangeVersionModal },
+      ] = useModal();
 
       const { onResult: Publishs, refetch } = useQuery(NetGql.Publish.List, null, () => ({
         fetchPolicy: 'network-only',
@@ -158,8 +169,7 @@
         clearSelectedRowKeys();
       }
       function copyUrl(txid: string) {
-        let temp = `${window.location.origin}/#/p/file?txid=${txid}`;
-        clipboardRef.value = temp;
+        clipboardRef.value = `${window.location.origin}/#/p/file?txid=${txid}`;
         if (unref(copiedRef)) {
           createMessage.success(t('general.metanet.copySuccess'));
         }
@@ -172,8 +182,16 @@
         setModalProps({
           destroyOnClose: true,
           canFullscreen: false,
-          minHeight: 500,
-
+          afterClose: () => {
+            refetch();
+          },
+        });
+      }
+      function openVersionModal(f: NetFile) {
+        openChangeVersionModal(true, f, true);
+        setChangeVersionModal({
+          destroyOnClose: true,
+          canFullscreen: false,
           afterClose: () => {
             refetch();
           },
@@ -194,6 +212,8 @@
         registerUpdatePublishModal,
         infoButton,
         changeButton: fileStore.changeButton,
+        registerChangeVersionModal,
+        openVersionModal,
       };
     },
   });
