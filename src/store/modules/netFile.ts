@@ -188,6 +188,7 @@ class netFileStore extends VuexModule {
         UserId: localStorage.getItem('uid'),
         Space: 'PRIVATE',
         Description: item.desc || '',
+        Action: 'drive',
       };
       console.log(object);
       this.setItemValue({ uuid: item.uuid, key: 'status', value: UploadResultStatus.UPLOADING });
@@ -277,6 +278,84 @@ class netFileStore extends VuexModule {
       }
       this.setShareFile(getFileList(data, params.dirId, params.token));
     });
+  }
+  @Action
+  async uploadAvatar(item: FileItem) {
+    try {
+      this.setItemValue({ uuid: item.uuid, key: 'status', value: UploadResultStatus.UPLOADING });
+      const writeChunkSize = 1024;
+      // 获取client session
+      const session = await useSession();
+      const object = {
+        File: new Uint8Array(await item.file.arrayBuffer()),
+        FullName: [item.name],
+        Action: 'avatar',
+      };
+      console.log(object);
+      this.setItemValue({ uuid: item.uuid, key: 'status', value: UploadResultStatus.UPLOADING });
+      const encoded: Uint8Array = encode(object);
+      let buffer = new ArrayBuffer(4);
+      let dv = new DataView(buffer);
+      dv.setUint32(0, encoded.length, true);
+      await session.write(new Uint8Array(buffer));
+      let buf!: Uint8Array;
+      let timeStart = Date.now();
+      for (let n = 0; n < encoded.length; n += buf.length) {
+        buf = new Uint8Array(Math.min(encoded.length - n, writeChunkSize));
+        for (let i = 0; i < buf.length; i++) {
+          buf[i] = encoded[i + n];
+        }
+        await session.write(buf);
+
+        if (
+          Math.floor(((n + buf.length) * 10) / encoded.length) !==
+          Math.floor((n * 10) / encoded.length)
+        ) {
+          this.setItemValue({
+            uuid: item.uuid,
+            key: 'percent',
+            // @ts-ignore
+            value: (((n + buf.length) / item.size) * 100) | 0,
+          });
+          this.addSpeed(((n + buf.length) / (1 << 20) / (Date.now() - timeStart)) * 1000);
+          let speed: number | string =
+            ((n + buf.length) / (1 << 20) / (Date.now() - timeStart)) * 1000;
+          this.setItemValue({ uuid: item.uuid, key: 'speed', value: speed });
+          if (speed > 0.9) {
+            speed = speed.toFixed(2) + ' MB/s';
+          } else if (speed * 1000 > 0.9) {
+            speed = (speed * 1000).toFixed(2) + 'KB/s';
+          } else {
+            speed = (speed * 1000 * 1000).toFixed(2) + 'B/s';
+          }
+          // item.status = speed;
+          this.setItemValue({ uuid: item.uuid, key: 'status', value: speed });
+          console.log(
+            session.localAddr,
+            'sent',
+            n + buf.length,
+            'bytes',
+            ((n + buf.length) / (1 << 20) / (Date.now() - timeStart)) * 1000000000,
+            'B/s'
+          );
+        }
+
+        // c
+      }
+      this.setItemValue({ uuid: item.uuid, key: 'status', value: UploadResultStatus.SUCCESS });
+      createMessage.success(item.name + '上传成功', 2);
+      return {
+        success: true,
+        error: null,
+      };
+    } catch (e) {
+      console.log(e);
+      this.setItemValue({ uuid: item.uuid, key: 'status', value: UploadResultStatus.ERROR });
+      return {
+        success: false,
+        error: e,
+      };
+    }
   }
 }
 export const fileStore = getModule<netFileStore>(netFileStore);

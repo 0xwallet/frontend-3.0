@@ -44,8 +44,8 @@
             :style="{ fontSize: '20px' }"
             :twoToneColor="`#${infoButton ? '2E2EFE' : '6E6E6E'}`" />{{
         }}</Button>
-      </template> </BasicTable
-    >
+      </template>
+    </BasicTable>
     <UpdatePublishModal @register="registerUpdatePublishModal" />
   </div>
 </template>
@@ -65,7 +65,7 @@
   import { NetGql, NetFile, Icon } from '/@/components/NetFile';
   import { useCopyToClipboard } from '/@/hooks/web/useCopyToClipboard';
   import { Button } from '/@/components/Button';
-  import {fileStore} from "/@/store/modules/netFile";
+  import { fileStore } from '/@/store/modules/netFile';
   const { clipboardRef, copiedRef } = useCopyToClipboard();
   const { t } = useI18n('general.metanet');
   export default defineComponent({
@@ -86,7 +86,7 @@
       const { createMessage, createErrorModal } = useMessage();
       const path = ref([]);
       const tableData = ref([]);
-      const infoButton=computed(()=>fileStore.getFileInfo.button)
+      const infoButton = computed(() => fileStore.getFileInfo.button);
 
       const [
         registerTable,
@@ -95,7 +95,7 @@
         canResize: false,
         customRow: (record) => ({
           onClick: () => {
-            fileStore.setFileInfo({file:record.file, mode:'publish'})
+            fileStore.setFileInfo({ file: record.file, mode: 'publish' });
           },
         }),
         pagination: false,
@@ -118,10 +118,10 @@
         list.forEach((v: any) => {
           let f = new NetFile(v.current);
           f.publishInfo.id = v.id;
-          f.publishInfo.history=v.history
+          f.publishInfo.history = v.history;
           temp.push({
             txid: v.current.txid,
-            version: v.current.id,
+            version: v.current.version,
             history: v.history,
             publishId: v.id,
             file: f,
@@ -193,7 +193,7 @@
         openUpdateModal,
         registerUpdatePublishModal,
         infoButton,
-        changeButton:fileStore.changeButton,
+        changeButton: fileStore.changeButton,
       };
     },
   });
