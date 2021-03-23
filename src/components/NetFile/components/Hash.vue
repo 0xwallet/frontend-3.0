@@ -4,8 +4,8 @@
       >{{ hash.slice(0, 2)
       }}<span v-for="v in list" :style="'background-color:#' + v">&nbsp;&nbsp;&nbsp;</span
       >{{ hash.slice(hash.length - 2, hash.length) }}</span
-    >   <CopyOutlined class="ml-4 "/>
-
+    >
+    <CopyOutlined class="ml-4" @click="copy" />
   </Tooltip>
 </template>
 
@@ -22,26 +22,25 @@
   const { createMessage } = useMessage();
   const { t } = useI18n('general.metanet');
   export default defineComponent({
-    components: { Tooltip,CopyOutlined },
+    components: { Tooltip, CopyOutlined },
     props: {
       hash: propTypes.string,
-      mode:propTypes.string.def('sha256')
+      mode: propTypes.string.def('sha256'),
     },
     setup(props) {
       const hash = computed(() => {
         return props.hash;
       });
-      const mode=computed(()=>{
-        switch (props.mode){
+      const mode = computed(() => {
+        switch (props.mode) {
           case 'sha256':
-            return 'SHA256'
+            return 'SHA256';
           case 'txid':
-            return "TxID"
+            return 'TxID';
           default:
-            return 'mode'
+            return 'mode';
         }
-
-      })
+      });
       const list = computed(() => {
         if (props.hash === '') return '';
         let temp = [];
@@ -52,7 +51,11 @@
       });
 
       function copy() {
-        clipboardRef.value = hash.value;
+        if (props.mode === 'txid') {
+          clipboardRef.value = `${window.location.origin}/#/p?txid=${props.hash}`;
+        } else {
+          clipboardRef.value = hash.value;
+        }
         if (unref(copiedRef)) {
           createMessage.warning(t('copySuccess'));
         }
@@ -61,7 +64,8 @@
         t,
         copy,
         hash,
-        list,mode
+        list,
+        mode,
       };
     },
   });
