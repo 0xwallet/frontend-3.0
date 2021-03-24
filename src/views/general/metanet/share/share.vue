@@ -1,15 +1,9 @@
 <template>
   <div>
     <BasicTable @register="registerTable">
-      <template #urlTitle>
-        <span>
-          {{ t('url') }}
-          <BasicHelp class="ml-2" :text="t('copyShare')" />
-        </span>
-      </template>
       <template #uri="{ record, text }">
         <Tooltip :title="t('copy')"
-          ><a-button type="link" @click="copyUrl(record)"> {{ text }}</a-button></Tooltip
+          ><Button type="link" @click="copyUrl(record)"> {{ text }}</Button></Tooltip
         >
       </template>
       <template #expire="{ record, text }">
@@ -24,9 +18,9 @@
           <template #overlay>
             <Menu>
               <MenuItem v-if="record.name !== 'deleted'">
-                <a-button type="link" color="error" @click="del(record)">{{
+                <Button type="link" color="error" @click="del(record)">{{
                   t('delButton')
-                }}</a-button></MenuItem
+                }}</Button></MenuItem
               >
             </Menu>
           </template>
@@ -72,7 +66,7 @@
   import { Button } from '/@/components/Button';
   import { dateUtil } from '/@/utils/dateUtil';
   import { BasicForm } from '/@/components/Form';
-  import {fileStore} from "/@/store/modules/netFile";
+  import { fileStore } from '/@/store/modules/netFile';
 
   const { t } = useI18n('general.metanet');
   export default defineComponent({
@@ -95,16 +89,15 @@
       const { createMessage, createErrorModal } = useMessage();
       const path = ref([]);
       const tableData = ref([]);
-      const infoButton=computed(()=>fileStore.getFileInfo.button)
+      const infoButton = computed(() => fileStore.getFileInfo.button);
 
       const [
         registerTable,
         { getSelectRowKeys, setSelectedRowKeys, clearSelectedRowKeys, getDataSource },
       ] = useTable({
-        canResize: false,
         customRow: (record) => ({
           onClick: () => {
-            fileStore.setFileInfo({file:record, mode:'share'})
+            fileStore.setFileInfo({ file: record, mode: 'share' });
           },
         }),
         pagination: false,
@@ -240,7 +233,7 @@
         editCode,
         modal,
         infoButton,
-        changeButton:fileStore.changeButton,
+        changeButton: fileStore.changeButton,
         handleSubmit,
         closeModal,
         formRef,

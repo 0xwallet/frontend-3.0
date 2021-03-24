@@ -81,21 +81,19 @@
           const file = new File([''], data.fullName, { type: 'text/plain' });
           let wordArray = CryptoJS.lib.WordArray.create(await file.arrayBuffer());
           let hash = CryptoJS.SHA256(wordArray).toString();
-          await fileStore.uploadApiByItem(
-            {
-              uuid: buildUUID(),
-              file,
-              size: file.size,
-              name: data.fullName,
-              hash,
-              percent: 0,
-              type: data.type,
-              status: '',
-              thumbUrl: '',
-              desc: data.desc,
-            },
-            path
-          );
+          await fileStore.uploadApiByItem({
+            uuid: buildUUID(),
+            file,
+            size: file.size,
+            name: data.fullName,
+            hash,
+            percent: 0,
+            type: data.type,
+            status: '',
+            thumbUrl: '',
+            desc: data.desc,
+            path: path.value,
+          });
         } catch (e) {
           console.log(e);
           createErrorModal({ content: e });

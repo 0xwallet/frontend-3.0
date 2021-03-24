@@ -250,7 +250,6 @@
         registerTable,
         { getSelectRowKeys, setSelectedRowKeys, clearSelectedRowKeys, getDataSource },
       ] = useTable({
-        canResize: false,
         dataSource: tableData,
         columns: getBasicColumns(),
         rowKey: 'id',
@@ -269,8 +268,8 @@
         }),
         pagination: false,
         showTableSetting: false,
-        // scroll: { x: null, y: window.innerHeight * 0.7 },
-        scroll: { x: null, y: null },
+        scroll: { x: 1000, y: window.innerHeight * 0.7 },
+        // scroll: { x: null, y: null },
       });
 
       // 移动文件Modal
@@ -507,10 +506,6 @@
       function openUploadModal() {
         uploadRef.value.openUploadModal();
       }
-      function infoRefetch() {
-        refetch();
-        file.value = {};
-      }
       const { onResult: sub, onError } = useSubscription(NetGql.Basic.Uploaded, {
         userId: 28,
       });
@@ -544,7 +539,6 @@
         searchValue,
         openUploadModal,
         uploadRef,
-        infoRefetch,
         registerPdfDrawer,
         registerRenameModal,
         openRename,
