@@ -34,6 +34,12 @@ interface uploadItem {
   Action: string;
   UseFileId?: string;
 }
+export interface markdownFile {
+  title: string;
+  file: NetFile;
+  key: string;
+  edited: boolean;
+}
 
 @Module({ namespaced: true, name: NAME, dynamic: true, store })
 class netFileStore extends VuexModule {
@@ -45,7 +51,7 @@ class netFileStore extends VuexModule {
 
   private refetch: number = 0;
 
-  private markdownFiles: any[] = [];
+  private markdownFiles: markdownFile[] = [];
 
   private markdownModalVisible: boolean = false;
 
@@ -64,7 +70,7 @@ class netFileStore extends VuexModule {
   get getUploadSpeed(): uploadSpeed {
     return this.uploadSpeed;
   }
-  get getMarkdownFiles(): any[] {
+  get getMarkdownFiles(): markdownFile[] {
     return this.markdownFiles;
   }
   get getMarkdownVisible(): boolean {
@@ -133,6 +139,7 @@ class netFileStore extends VuexModule {
         title: file.fileName(),
         file,
         key: file.id,
+        edited: false,
       });
     }
     this.markdownModalVisible = true;
@@ -146,6 +153,10 @@ class netFileStore extends VuexModule {
   @Mutation
   setMarkdownVisible(v: boolean): void {
     this.markdownModalVisible = v;
+  }
+  @Mutation
+  setMarkdownEdited(params: { index: number; v: boolean }): void {
+    this.markdownFiles[params.index].edited = params.v;
   }
 
   @Mutation
@@ -299,15 +310,15 @@ class netFileStore extends VuexModule {
     }
   }
   @Action
-  async newUploadItem(params: { content: string; id: string }) {
-    const item: uploadItem = {
-      File: new TextEncoder().encode(params.content),
-      FileSize: new Blob([params.content]).size,
-      UseFileId: params.id,
-      Space: 'PRIVATE',
-      Action: 'update',
-    };
+  async editFile(params: { content: string; id: string }) {
     try {
+      const item: uploadItem = {
+        File: new TextEncoder().encode(params.content),
+        FileSize: new Blob([params.content]).size,
+        UseFileId: params.id,
+        Space: 'PRIVATE',
+        Action: 'update',
+      };
       await this.uploadItem(item);
     } catch (e) {
       console.log(e);

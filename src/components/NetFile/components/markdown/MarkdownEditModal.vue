@@ -14,12 +14,8 @@
       </div>
       <div class="col-span-10">
         <Tabs v-model:activeKey="activeKey" hide-add type="editable-card" @edit="onEdit">
-          <TabPane
-            v-for="(pane, index) in panes"
-            :key="pane.key"
-            :tab="pane.title"
-            :closable="pane.closable"
-          >
+          <TabPane v-for="(pane, index) in panes" :key="pane.key" :closable="pane.closable">
+            <template #tab><EditOutlined v-if="pane.edited" />{{ pane.title }}</template>
             <div :ref="setRef(index)" :id="pane.key" />
             <div class="float-right"><Button type="primary" @click="save(index)">保存</Button></div>
           </TabPane>
@@ -34,17 +30,17 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import { Tabs, Modal } from 'ant-design-vue';
   import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
-  import { fileStore } from '/@/store/modules/netFile';
+  import { fileStore, markdownFile } from '/@/store/modules/netFile';
   import Vditor from 'vditor';
   import 'vditor/dist/index.css';
   import { FileTree } from '/@/components/NetFile';
   import { Button } from '/@/components/Button';
   import { useMessage } from '/@/hooks/web/useMessage';
-
+  import { EditOutlined } from '@ant-design/icons-vue';
   const { t } = useI18n('general.metanet');
 
   export default defineComponent({
-    components: { BasicModal, Tabs, TabPane: Tabs.TabPane, FileTree, Button },
+    components: { BasicModal, Tabs, TabPane: Tabs.TabPane, FileTree, Button, EditOutlined },
     setup() {
       const { createMessage } = useMessage();
       const refs = ref<HTMLElement[]>([]);
@@ -52,7 +48,7 @@
         refs.value[index] = el;
       };
       const vditorRefs = ref<Nullable<Vditor>[]>([]);
-      const panes = ref([]);
+      const panes = ref<markdownFile[]>([]);
       const activeKey = ref('');
       // const vditorRef = ref<Nullable<Vditor>>(null);
       watch(
@@ -69,7 +65,7 @@
 
       const height = computed(() => document.body.clientHeight - 300);
 
-      const [register, { closeModal }] = useModalInner();
+      const [register] = useModalInner();
       async function init(index: number) {
         const value = await panes.value[index].file.raw();
         const wrapEl = refs.value[index];
@@ -86,28 +82,32 @@
           },
           height: height.value - 90,
           input: () => {
-            edited.value = true;
+            fileStore.setMarkdownEdited({ index, v: true });
           },
         });
         vditorRefs.value.push(vditor);
         // initedRef.value = true;
       }
+      const close = ref(false);
+      function handleCloseFunc() {
+        if (close.value) return true;
+        if (fileStore.getMarkdownFiles.some((v) => v.edited)) {
+          Modal.confirm({
+            title: t('error'),
+            icon: createVNode(ExclamationCircleOutlined),
+            content: '文件内容有变化，不保存吗?',
+            centered: true,
+            okText: t('yes'),
+            cancelText: t('cancelAll'),
+            onOk() {
+              close.value = true;
+              // closeModal();
+            },
+          });
+          return false;
+        }
 
-      const edited = ref(false);
-      async function handleCloseFunc() {
-        if (!edited.value) return true;
-        Modal.confirm({
-          title: t('error'),
-          icon: createVNode(ExclamationCircleOutlined),
-          content: '文件内容有变化，不保存吗?',
-          centered: true,
-          okText: t('yes'),
-          cancelText: t('cancelAll'),
-          onOk() {
-            closeModal();
-          },
-        });
-        return false;
+        return true;
       }
 
       const onEdit = async (targetKey: string) => {
@@ -118,7 +118,8 @@
       async function save(index) {
         const vditor = vditorRefs.value[index];
         if (!vditor) return;
-        await fileStore.newUploadItem({ content: vditor.getValue(), id: panes.value[index].key });
+        await fileStore.editFile({ content: vditor.getValue(), id: panes.value[index].key });
+        fileStore.setMarkdownEdited({ index, v: false });
         createMessage.success('保存成功');
       }
       return {

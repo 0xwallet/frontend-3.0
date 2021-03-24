@@ -28,7 +28,7 @@
         () => fileStore.getMarkdownVisible,
         (v) => {
           if (v) {
-            openModal(true);
+            openModal(true, {});
             fileStore.setMarkdownVisible(false);
           }
         },
