@@ -65,7 +65,12 @@
         const list = res.data.driveListPublishs;
 
         list.forEach((v) => {
-          select.value.push({ label: v.id, value: v.id, key: v.id });
+          // console.log(v.current?.userFile.fullName.slice(-1)[0]);
+          select.value.push({
+            label: v.current?.userFile.fullName.slice(-1)[0] || v.id,
+            value: v.id,
+            key: v.id,
+          });
         });
       });
       async function publishFile() {
