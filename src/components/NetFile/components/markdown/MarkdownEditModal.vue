@@ -67,7 +67,8 @@
 
       const [register, { closeModal }] = useModalInner();
       async function init(index: number) {
-        const value = await panes.value[index].file.raw();
+        if (vditorRefs.value[index]) return;
+        let value = await panes.value[index].file.raw();
         const wrapEl = refs.value[index];
         if (!wrapEl) return;
         let vditor = new Vditor(wrapEl, {
