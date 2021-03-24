@@ -20,9 +20,11 @@
             :tab="pane.title"
             :closable="pane.closable"
           >
-            <div :ref="setRef(index)" :id="pane.key"></div>
-          </TabPane> </Tabs
-      ></div>
+            <div :ref="setRef(index)" :id="pane.key" />
+            <div class="float-right"><Button type="primary" @click="save(index)">保存</Button></div>
+          </TabPane>
+        </Tabs></div
+      >
     </div>
   </BasicModal>
 </template>
@@ -30,27 +32,29 @@
   import { computed, createVNode, defineComponent, nextTick, ref, watch } from 'vue';
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import { NetFile } from '/@/components/NetFile/netFile';
-
   import { Tabs, Modal } from 'ant-design-vue';
   import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
   import { fileStore } from '/@/store/modules/netFile';
   import Vditor from 'vditor';
   import 'vditor/dist/index.css';
   import { FileTree } from '/@/components/NetFile';
+  import { Button } from '/@/components/Button';
+  import { useMessage } from '/@/hooks/web/useMessage';
 
   const { t } = useI18n('general.metanet');
 
   export default defineComponent({
-    components: { BasicModal, Tabs, TabPane: Tabs.TabPane, FileTree },
+    components: { BasicModal, Tabs, TabPane: Tabs.TabPane, FileTree, Button },
     setup() {
+      const { createMessage } = useMessage();
       const refs = ref<HTMLElement[]>([]);
       const setRef = (index: number) => (el: HTMLElement) => {
         refs.value[index] = el;
       };
+      const vditorRefs = ref<Nullable<Vditor>[]>([]);
       const panes = ref([]);
       const activeKey = ref('');
-      const vditorRef = ref<Nullable<Vditor>>(null);
+      // const vditorRef = ref<Nullable<Vditor>>(null);
       watch(
         () => fileStore.getMarkdownFiles,
         (v) => {
@@ -70,7 +74,7 @@
         const value = await panes.value[index].file.raw();
         const wrapEl = refs.value[index];
         if (!wrapEl) return;
-        vditorRef.value = new Vditor(wrapEl, {
+        let vditor = new Vditor(wrapEl, {
           lang: 'zh_CN',
           value,
           mode: 'ir',
@@ -80,13 +84,15 @@
           cache: {
             enable: false,
           },
-          height: height.value - 60,
+          height: height.value - 90,
           input: () => {
             edited.value = true;
           },
         });
+        vditorRefs.value.push(vditor);
         // initedRef.value = true;
       }
+
       const edited = ref(false);
       async function handleCloseFunc() {
         if (!edited.value) return true;
@@ -107,8 +113,14 @@
       const onEdit = async (targetKey: string) => {
         const index = await fileStore.delMarkdownFile(targetKey);
         refs.value.splice(index, 1);
+        vditorRefs.value.splice(index, 1);
       };
-
+      async function save(index) {
+        const vditor = vditorRefs.value[index];
+        if (!vditor) return;
+        await fileStore.newUploadItem({ content: vditor.getValue(), id: panes.value[index].key });
+        createMessage.success('保存成功');
+      }
       return {
         handleCloseFunc,
         register,
@@ -118,6 +130,7 @@
         panes,
         onEdit,
         setRef,
+        save,
       };
     },
   });

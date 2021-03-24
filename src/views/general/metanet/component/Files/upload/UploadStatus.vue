@@ -31,24 +31,24 @@
     setup(_, { emit }) {
       const bottom = ref(10);
       const per = computed(() => {
-        if (fileStore.getUploadList.length > 0) {
-          const total = fileStore.getUploadList.reduce((total, v) => {
+        const list = fileStore.getUploadList.filter((v) => v.status !== 'success');
+        if (list.length > 0) {
+          const total = list.reduce((total, v) => {
             return total + v.percent;
           }, 0);
-          return Number((total / fileStore.getUploadList.length).toFixed(2));
+          return Number((total / list.length).toFixed(2));
         }
         return 0;
       });
       const status = computed(() => {
-        if (fileStore.getUploadList.length > 0) {
-          max.value = fileStore.getUploadList.length - 1;
-
-          return fileStore.getUploadList[now.value];
+        const list = fileStore.getUploadList.filter((v) => v.status !== 'success');
+        if (list.length > 0) {
+          max.value = list.length - 1;
+          return list[now.value];
         }
         return false;
       });
       const speed = computed(() => {
-        console.log(fileStore.getUploadSpeed);
         const { speed } = fileStore.getUploadSpeed;
         if (speed > 0.9) {
           return speed.toFixed(2) + ' MB/s';
@@ -70,10 +70,8 @@
         }
         now.value = 0;
       }, 2500);
-      const mitt = new Mitt();
       function openUploadModal() {
         emit('openUploadModal');
-        mitt.emit('foo', { a: 'b' });
       }
 
       return { bottom, per, status, openUploadModal, show, speed, clients };

@@ -24,6 +24,16 @@ interface fileInfo {
   mode: string;
   button: boolean;
 }
+interface uploadItem {
+  File: Uint8Array;
+  FullName?: string[];
+  FileSize?: string | number;
+  UserId?: string | null;
+  Space?: string;
+  Description?: string;
+  Action: string;
+  UseFileId?: string;
+}
 
 @Module({ namespaced: true, name: NAME, dynamic: true, store })
 class netFileStore extends VuexModule {
@@ -149,7 +159,7 @@ class netFileStore extends VuexModule {
   }
 
   @Mutation
-  setItemValue(params: { uuid: string; key: string; value: any }): void {
+  setItemValue(params: { uuid: string | undefined; key: string; value: any }): void {
     const { uuid, key, value } = params;
     this.uploadList.forEach((v) => {
       if (v.uuid === uuid) {
@@ -177,11 +187,9 @@ class netFileStore extends VuexModule {
   @Action
   async uploadApiByItem(item: FileItem) {
     try {
-      this.setItemValue({ uuid: item.uuid, key: 'status', value: UploadResultStatus.UPLOADING });
-      const writeChunkSize = 1024;
       // 获取client session
-      const session = await useSession();
-      const object = {
+      this.setItemValue({ uuid: item.uuid, key: 'status', value: UploadResultStatus.UPLOADING });
+      const object: uploadItem = {
         File: new Uint8Array(await item.file.arrayBuffer()),
         FullName: [...item.path, item.name],
         FileSize: item.size,
@@ -191,56 +199,7 @@ class netFileStore extends VuexModule {
         Action: 'drive',
       };
       console.log(object);
-      this.setItemValue({ uuid: item.uuid, key: 'status', value: UploadResultStatus.UPLOADING });
-      const encoded: Uint8Array = encode(object);
-      let buffer = new ArrayBuffer(4);
-      let dv = new DataView(buffer);
-      dv.setUint32(0, encoded.length, true);
-      await session.write(new Uint8Array(buffer));
-      let buf!: Uint8Array;
-      let timeStart = Date.now();
-      for (let n = 0; n < encoded.length; n += buf.length) {
-        buf = new Uint8Array(Math.min(encoded.length - n, writeChunkSize));
-        for (let i = 0; i < buf.length; i++) {
-          buf[i] = encoded[i + n];
-        }
-        await session.write(buf);
-
-        if (
-          Math.floor(((n + buf.length) * 10) / encoded.length) !==
-          Math.floor((n * 10) / encoded.length)
-        ) {
-          this.setItemValue({
-            uuid: item.uuid,
-            key: 'percent',
-            // @ts-ignore
-            value: (((n + buf.length) / item.size) * 100) | 0,
-          });
-          this.addSpeed(((n + buf.length) / (1 << 20) / (Date.now() - timeStart)) * 1000);
-          let speed: number | string =
-            ((n + buf.length) / (1 << 20) / (Date.now() - timeStart)) * 1000;
-          this.setItemValue({ uuid: item.uuid, key: 'speed', value: speed });
-          if (speed > 0.9) {
-            speed = speed.toFixed(2) + ' MB/s';
-          } else if (speed * 1000 > 0.9) {
-            speed = (speed * 1000).toFixed(2) + 'KB/s';
-          } else {
-            speed = (speed * 1000 * 1000).toFixed(2) + 'B/s';
-          }
-          // item.status = speed;
-          this.setItemValue({ uuid: item.uuid, key: 'status', value: speed });
-          console.log(
-            session.localAddr,
-            'sent',
-            n + buf.length,
-            'bytes',
-            ((n + buf.length) / (1 << 20) / (Date.now() - timeStart)) * 1000000000,
-            'B/s'
-          );
-        }
-
-        // c
-      }
+      await this.uploadItem(object, item.uuid);
       this.setItemValue({ uuid: item.uuid, key: 'status', value: UploadResultStatus.SUCCESS });
       createMessage.success(item.name + '上传成功', 2);
       this.setRefetch(1);
@@ -279,19 +238,13 @@ class netFileStore extends VuexModule {
       this.setShareFile(getFileList(data, params.dirId, params.token));
     });
   }
+
   @Action
-  async uploadAvatar(file: File) {
+  async uploadItem(f: uploadItem, uuid?: string) {
     try {
-      const writeChunkSize = 1024;
-      // 获取client session
       const session = await useSession();
-      const object = {
-        File: new Uint8Array(await file.arrayBuffer()),
-        FullName: [file.name],
-        Action: 'avatar',
-      };
-      console.log(object);
-      const encoded: Uint8Array = encode(object);
+      const writeChunkSize = 1024;
+      const encoded: Uint8Array = encode(f);
       let buffer = new ArrayBuffer(4);
       let dv = new DataView(buffer);
       dv.setUint32(0, encoded.length, true);
@@ -309,8 +262,18 @@ class netFileStore extends VuexModule {
           Math.floor(((n + buf.length) * 10) / encoded.length) !==
           Math.floor((n * 10) / encoded.length)
         ) {
+          if (uuid) {
+            this.setItemValue({
+              uuid: uuid,
+              key: 'percent',
+              value: (((n + buf.length) / Number(f.FileSize)) * 100) | 0,
+            });
+          }
+
+          this.addSpeed(((n + buf.length) / (1 << 20) / (Date.now() - timeStart)) * 1000);
           let speed: number | string =
             ((n + buf.length) / (1 << 20) / (Date.now() - timeStart)) * 1000;
+          if (uuid) this.setItemValue({ uuid: uuid, key: 'speed', value: speed });
           if (speed > 0.9) {
             speed = speed.toFixed(2) + ' MB/s';
           } else if (speed * 1000 > 0.9) {
@@ -319,6 +282,7 @@ class netFileStore extends VuexModule {
             speed = (speed * 1000 * 1000).toFixed(2) + 'B/s';
           }
           // item.status = speed;
+          if (uuid) this.setItemValue({ uuid: uuid, key: 'status', value: speed });
           console.log(
             session.localAddr,
             'sent',
@@ -328,14 +292,39 @@ class netFileStore extends VuexModule {
             'B/s'
           );
         }
-
-        // c
       }
-      createMessage.success('上传成功', 2);
-      return {
-        success: true,
-        error: null,
+      console.log('done');
+    } catch (e) {
+      this.setItemValue({ uuid: uuid, key: 'status', value: UploadResultStatus.ERROR });
+    }
+  }
+  @Action
+  async newUploadItem(params: { content: string; id: string }) {
+    const item: uploadItem = {
+      File: new TextEncoder().encode(params.content),
+      FileSize: new Blob([params.content]).size,
+      UseFileId: params.id,
+      Space: 'PRIVATE',
+      Action: 'update',
+    };
+    try {
+      await this.uploadItem(item);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  @Action
+  async uploadAvatar(file: File) {
+    try {
+      // 获取client session
+      const object: uploadItem = {
+        File: new Uint8Array(await file.arrayBuffer()),
+        FullName: [file.name],
+        Action: 'avatar',
       };
+      await this.uploadItem(object);
+      createMessage.success('上传成功', 2);
     } catch (e) {
       console.log(e);
       return {
