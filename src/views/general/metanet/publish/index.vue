@@ -20,11 +20,11 @@
           <a class="ant-dropdown-link"> ... </a>
           <template #overlay>
             <Menu>
-              <MenuItem>
-                <Button type="link" @click="openUpdateModal(record.publishId)">{{
-                  t('publishUpdate')
-                }}</Button></MenuItem
-              >
+              <!--              <MenuItem>-->
+              <!--                <Button type="link" @click="openUpdateModal(record.publishId)">{{-->
+              <!--                  t('publishUpdate')-->
+              <!--                }}</Button></MenuItem-->
+              <!--              >-->
               <MenuItem v-if="record.name !== 'deleted'">
                 <Button
                   type="link"
@@ -33,9 +33,6 @@
                   @click="del(record.publishId)"
                   >{{ t('delButton') }}</Button
                 ></MenuItem
-              >
-              <MenuItem>
-                <Button type="link">{{ t('setting') }}</Button></MenuItem
               >
             </Menu>
           </template>
