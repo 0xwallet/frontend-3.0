@@ -65,7 +65,7 @@
 
       const height = computed(() => document.body.clientHeight - 300);
 
-      const [register] = useModalInner();
+      const [register, { closeModal }] = useModalInner();
       async function init(index: number) {
         const value = await panes.value[index].file.raw();
         const wrapEl = refs.value[index];
@@ -88,9 +88,7 @@
         vditorRefs.value.push(vditor);
         // initedRef.value = true;
       }
-      const close = ref(false);
       function handleCloseFunc() {
-        if (close.value) return true;
         if (fileStore.getMarkdownFiles.some((v) => v.edited)) {
           Modal.confirm({
             title: t('error'),
@@ -100,8 +98,7 @@
             okText: t('yes'),
             cancelText: t('cancelAll'),
             onOk() {
-              close.value = true;
-              // closeModal();
+              closeModal();
             },
           });
           return false;
