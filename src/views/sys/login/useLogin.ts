@@ -12,11 +12,11 @@ export enum LoginStateEnum {
 }
 
 const currentState = ref(LoginStateEnum.LOGIN);
-const email=ref('')
+const email = ref('');
 export function useLoginState() {
-  function setLoginState(state: LoginStateEnum,e:string='') {
+  function setLoginState(state: LoginStateEnum, e: string = '') {
     currentState.value = state;
-    email.value=e
+    email.value = e;
   }
 
   const getLoginState = computed(() => currentState.value);
@@ -25,7 +25,7 @@ export function useLoginState() {
     setLoginState(LoginStateEnum.LOGIN);
   }
 
-  return { setLoginState, getLoginState, handleBackLogin,email };
+  return { setLoginState, getLoginState, handleBackLogin, email };
 }
 
 export function useFormValid<T extends Object = any>(formRef: Ref<any>) {
@@ -103,18 +103,18 @@ export function useFormRules(formData?: Recordable) {
           email: [
             {
               required: true,
-              message:t('sys.login.emailPlaceholder'),
+              message: t('sys.login.emailPlaceholder'),
               trigger: 'change',
             },
           ],
           sms: [
             {
               required: true,
-              message:t('sys.login.nMobilePlaceholder'),
+              message: t('sys.login.nMobilePlaceholder'),
               trigger: 'change',
             },
           ],
-        }
+        };
       default:
         return {
           email: accountFormRule,
