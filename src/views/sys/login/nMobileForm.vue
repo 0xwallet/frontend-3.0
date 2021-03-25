@@ -71,10 +71,15 @@
       });
 
       async function handleLogin() {
-        const data = await validForm();
-        if (!data) return;
-        console.log(data);
-        await SignIn({ email: data.email, code: data.sms, password: '' });
+        loading.value = true;
+        try {
+          const data = await validForm();
+          if (!data) return;
+          console.log(data);
+          await SignIn({ email: data.email, code: data.sms, password: '' });
+        } finally {
+          loading.value = false;
+        }
       }
       const { mutate: SendLoginCode } = useMutation(sendLoginCode);
       const { mutate: SignIn, onDone } = useMutation(signIn);
