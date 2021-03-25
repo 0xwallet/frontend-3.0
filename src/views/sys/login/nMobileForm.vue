@@ -75,7 +75,6 @@
         try {
           const data = await validForm();
           if (!data) return;
-          console.log(data);
           await SignIn({ email: data.email, code: data.sms, password: '' });
         } finally {
           loading.value = false;

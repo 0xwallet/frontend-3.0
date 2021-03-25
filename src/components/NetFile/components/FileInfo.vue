@@ -178,16 +178,16 @@
     },
     setup() {
       const file: NetFile = computed<NetFile>(() => {
-        console.log(fileStore.getFileInfo.file);
+        // console.log(fileStore.getFileInfo.file);
         return fileStore.getFileInfo.file;
       });
 
       const mode = computed(() => fileStore.getFileInfo.mode);
       const collection = computed(() => fileStore.getFileInfo.collection);
       const space = computed(() => fileStore.getSpace);
-      const visible = computed(() => {
-        return fileStore.getFileInfo.button && fileStore.getFileInfo.file !== null;
-      });
+      const visible = computed(
+        () => fileStore.getFileInfo.button && fileStore.getFileInfo.file !== null
+      );
 
       const desc = ref('');
 

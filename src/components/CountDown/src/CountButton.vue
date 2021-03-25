@@ -46,7 +46,6 @@
           loading.value = true;
           try {
             const canStart = await beforeStartFunc();
-            console.log(canStart);
             canStart && start();
           } finally {
             loading.value = false;
