@@ -23,8 +23,6 @@
         }}</Button>
       </template>
     </BasicTable>
-
-
   </div>
 </template>
 <script lang="ts">
@@ -38,7 +36,7 @@
   import { ExclamationCircleOutlined, ExclamationCircleTwoTone } from '@ant-design/icons-vue';
   import { NetGql, NetFile } from '/@/components/NetFile';
   import { Button } from '/@/components/Button';
-  import {fileStore} from "/@/store/modules/netFile";
+  import { fileStore } from '/@/store/modules/netFile';
 
   const { t } = useI18n('general.metanet');
   export default defineComponent({
@@ -59,12 +57,16 @@
       const tableData = computed(() => shareData.value.concat(publishData.value));
       const shareData = ref([]);
       const publishData = ref([]);
-      const infoButton=computed(()=>fileStore.getFileInfo.button)
+      const infoButton = computed(() => fileStore.getFileInfo.button);
       const [registerTable] = useTable({
         canResize: false,
         customRow: (record) => ({
           onClick: () => {
-            fileStore.setFileInfo({file:record.file, mode:'share'})
+            fileStore.setFileInfo({
+              file: record.file,
+              mode: record.item.__typename === 'DriveShare' ? 'share' : 'publish',
+              collection: true,
+            });
           },
         }),
         pagination: false,
@@ -152,7 +154,7 @@
         refetch,
         t,
         infoButton,
-        changeButton:fileStore.changeButton,
+        changeButton: fileStore.changeButton,
         tableData,
       };
     },

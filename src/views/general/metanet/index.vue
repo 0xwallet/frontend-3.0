@@ -73,7 +73,11 @@
       ];
       const tabKey = ref('basic');
       function onTabChange(key) {
-        fileStore.setFileInfo({ file: fileStore.getFileInfo.file, mode: key });
+        fileStore.setFileInfo({
+          file: fileStore.getFileInfo.file,
+          mode: key,
+          collection: key === 'collection',
+        });
         tabKey.value = key;
       }
       const value = ref('');

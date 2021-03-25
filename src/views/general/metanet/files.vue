@@ -263,7 +263,7 @@
         },
         customRow: (record) => ({
           onClick: () => {
-            fileStore.setFileInfo({ file: record, mode: 'basic' });
+            fileStore.setFileInfo({ file: record, mode: 'basic', collection: false });
           },
         }),
         pagination: false,
@@ -453,6 +453,7 @@
           fileStore.setFileInfo({
             file: new NetFile({ userFile: { fullName: ['Home'], isDir: true, info: { size: 0 } } }),
             mode: 'home',
+            collection: false,
           });
         }
         variables.value = { fullName: p };

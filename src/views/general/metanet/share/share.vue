@@ -97,7 +97,7 @@
       ] = useTable({
         customRow: (record) => ({
           onClick: () => {
-            fileStore.setFileInfo({ file: record, mode: 'share' });
+            fileStore.setFileInfo({ file: record, mode: 'share', collection: false });
           },
         }),
         pagination: false,

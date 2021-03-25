@@ -24,6 +24,8 @@ const driveListCollections = gql`
            current{
            id
            ${userFile}
+           txid
+           version
            }
         }
       }

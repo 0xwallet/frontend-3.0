@@ -23,6 +23,7 @@ interface fileInfo {
   file: NetFile | null;
   mode: string;
   button: boolean;
+  collection: boolean;
 }
 interface uploadItem {
   File: Uint8Array;
@@ -57,7 +58,7 @@ class netFileStore extends VuexModule {
 
   private fileSize: object = {};
 
-  private Info: fileInfo = { file: null, mode: 'basic', button: false };
+  private Info: fileInfo = { file: null, mode: 'basic', button: false, collection: false };
 
   private space: { total: number; used: number } = { total: 1, used: 0 };
 
@@ -89,8 +90,9 @@ class netFileStore extends VuexModule {
     return this.space;
   }
   @Mutation
-  setFileInfo(params: { file: NetFile; mode: string }): void {
+  setFileInfo(params: { file: NetFile; mode: string; collection: boolean }): void {
     this.Info.mode = params.mode;
+    this.Info.collection = params.collection;
     if (!params.file) {
       this.Info.file = null;
       return;

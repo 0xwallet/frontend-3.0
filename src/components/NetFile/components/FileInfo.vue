@@ -35,13 +35,10 @@
               <p v-if="mode === 'share' && file.status.isCollected"
                 >被收藏数：{{ file.status.collectedCount }}</p
               >
-              <!--            <p-->
-              <!--              >{{ byteTransfer(info.space.totalSpace).value }}-->
-              <!--              {{ byteTransfer(info.space.totalSpace).unit }}({{ info.size }} Bytes)</p-->
-              <!--            >-->
             </div>
           </div>
           <Divider type="horizontal" />
+          {{ collection }}{{ mode }}
           <Descriptions :column="1">
             <DescriptionsItem :label="t('url')" v-if="mode === 'share'"
               ><Button type="link" @click="copyUrl(3)">{{ file.uri }}</Button>
@@ -56,21 +53,33 @@
             /></DescriptionsItem>
             <DescriptionsItem :label="t('type')">{{ file.type }}</DescriptionsItem>
             <DescriptionsItem :label="t('owner')" v-if="mode === 'home'">Me </DescriptionsItem>
-            <DescriptionsItem :label="t('location')" v-if="mode !== 'home'">
+            <DescriptionsItem :label="t('location')" v-if="mode !== 'home' && !collection">
               <span v-for="(v, i) in file.Location()" :key="i">{{ v }}/</span>
             </DescriptionsItem>
             <DescriptionsItem :label="t('state')" v-if="mode === 'basic'">{{
               file.status.isShared ? t('shared') : t('unShared')
             }}</DescriptionsItem>
-            <DescriptionsItem :label="t('modifiedDate')" v-if="mode !== 'home'">{{
+            <DescriptionsItem :label="t('modifiedDate')" v-if="mode !== 'home' && !collection">{{
               time(file.updatedAt)
             }}</DescriptionsItem>
             <!--            <DescriptionsItem-->
             <!--              :label="t('opened')"-->
             <!--              v-if="!(mode === 'share') && mode !== 'home'"-->
             <!--            ></DescriptionsItem>-->
-            <DescriptionsItem :label="t('createDate')" v-if="mode !== 'home'">{{
+            <DescriptionsItem :label="t('createDate')" v-if="mode !== 'home' && !collection">{{
               time(file.createdAt)
+            }}</DescriptionsItem>
+            <DescriptionsItem :label="t('expiredAt')" v-if="mode === 'share' && collection">{{
+              time(file.shareInfo.expiredAt)
+            }}</DescriptionsItem>
+            <DescriptionsItem :label="t('accessCode')" v-if="mode === 'share' && collection">{{
+              file.shareInfo.code
+            }}</DescriptionsItem>
+            <DescriptionsItem :label="t('version')" v-if="mode === 'publish' && collection">{{
+              file.publishInfo.version
+            }}</DescriptionsItem>
+            <DescriptionsItem :label="t('status')" v-if="collection">{{
+              file.status
             }}</DescriptionsItem>
           </Descriptions>
         </Space>
@@ -91,7 +100,12 @@
             ><Button type="primary">{{ t('buyStorage') }}</Button></div
           >
         </div>
-        <Desc :desc="file.desc" :id="file.id" :share="mode === 'share'" v-if="mode !== 'home'" />
+        <Desc
+          :desc="file.desc"
+          :id="file.id"
+          :share="mode === 'share' || mode === 'publish'"
+          v-if="mode !== 'home'"
+        />
       </TabPane>
       <TabPane key="dynamic" :tab="t('dynamic')">
         <List item-layout="horizontal" :data-source="data">
@@ -169,6 +183,7 @@
       });
 
       const mode = computed(() => fileStore.getFileInfo.mode);
+      const collection = computed(() => fileStore.getFileInfo.collection);
       const space = computed(() => fileStore.getSpace);
       const visible = computed(() => {
         return fileStore.getFileInfo.button && fileStore.getFileInfo.file !== null;
@@ -197,7 +212,7 @@
         }
       }
       function closeInfo() {
-        fileStore.setFileInfo({ file: null, mode: 'basic' });
+        fileStore.setFileInfo({ file: null, mode: 'basic', collection: false });
       }
       const dirSize = computed(() => {
         return fileStore.getFileSize[file.value.id] || 0;
@@ -240,6 +255,7 @@
         getDirSize,
         dirSize,
         space,
+        collection,
       };
     },
   });
