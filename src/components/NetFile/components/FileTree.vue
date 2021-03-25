@@ -7,7 +7,8 @@
       :loadData="onLoadData"
       :showIcon="true"
       @select="select"
-    />
+      search
+    ></BasicTree>
   </div>
 </template>
 <script lang="ts">
