@@ -17,7 +17,7 @@
             <!--          <a-button type="link">复制路径</a-button>-->
             <!--            <a-button type="link" @click="download(record)">{{ t('downloadButton') }}</a-button>-->
 
-            <Button type="link" @click="collection(text)">{{ t('collectionButton') }}</Button>
+            <Button type="link" @click="collection(text.id)">{{ t('collectionButton') }}</Button>
             <Button type="link" @click="comment(record)">{{ t('comment') }}</Button></div
           >
         </template>
@@ -132,8 +132,8 @@
         // return;
       }
 
-      async function collection(f: NetFile) {
-        openCollectModal(true, { mode: 'publish', id: f.publishInfo.id });
+      async function collection(id: number) {
+        openCollectModal(true, { mode: 'publish', id });
       }
 
       async function comment(f: NetFile) {
