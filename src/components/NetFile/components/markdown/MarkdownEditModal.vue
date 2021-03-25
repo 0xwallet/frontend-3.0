@@ -10,17 +10,17 @@
 
     <div class="grid grid-cols-12 gap-2">
       <div class="col-span-2">
-        <FileTree />
+        <FileTree :filters="['md', 'txt']" />
       </div>
       <div class="col-span-10">
         <Tabs v-model:activeKey="activeKey" hide-add type="editable-card" @edit="onEdit">
           <TabPane v-for="(pane, index) in panes" :key="pane.key" :closable="pane.closable">
-            <template #tab><EditOutlined v-if="pane.edited" />{{ pane.title }}</template>
+            <template #tab
+              ><EditOutlined v-if="pane.edited" @click="save(index)" />{{ pane.title }}</template
+            >
             <div :ref="setRef(index)" :id="pane.key" />
-            <div class="float-right"><Button type="primary" @click="save(index)">保存</Button></div>
-          </TabPane>
-        </Tabs></div
-      >
+          </TabPane> </Tabs
+      ></div>
     </div>
   </BasicModal>
 </template>
@@ -81,7 +81,7 @@
           cache: {
             enable: false,
           },
-          height: height.value - 90,
+          height: height.value - 80,
           input: () => {
             fileStore.setMarkdownEdited({ index, v: true });
           },

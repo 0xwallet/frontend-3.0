@@ -23,6 +23,7 @@
     components: { BasicTree },
     props: {
       path: propTypes.string.def(''),
+      filters: propTypes.array.def([]),
     },
     setup(props) {
       const treeRef = ref<Nullable<TreeActionType>>(null);
@@ -48,6 +49,7 @@
         useApollo({ mode: 'query', gql: NetGql.Basic.FileList, variables }).then((res) => {
           const data = res.data?.driveListFiles;
           let files: TreeDataItem[] = [];
+
           data.slice(2).forEach((v) => {
             if (v.isDir) {
               getTree().insertNodeByKey({
@@ -60,6 +62,7 @@
                 },
               });
             } else {
+              if (!props.filters.includes(v.fullName.slice(-1)[0].split('.').slice(-1)[0])) return;
               files.push({
                 key: v.id,
                 value: new NetFile({ userFile: v }),
