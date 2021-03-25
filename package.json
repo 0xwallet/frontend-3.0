@@ -28,7 +28,7 @@
     "reinstall": "rimraf yarn.lock && rimraf package.lock.json && rimraf node_modules && npm run bootstrap",
     "postinstall": "node scripts/vue-apollo-patch.js",
     "install:husky": "is-ci || husky install",
-    "gen:icon": "esno ./build/generate/icon/index.ts",
+    "gen:icon": "esno ./build/generate/icon/index.ts"
   },
   "dependencies": {
     "@absinthe/socket": "^0.2.1",

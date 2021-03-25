@@ -1,10 +1,10 @@
 <template>
   <Dropdown placement="bottomLeft" :overlayClassName="`${prefixCls}-dropdown-overlay`">
     <span :class="[prefixCls, `${prefixCls}--${theme}`]" class="flex">
-      <img :class="`${prefixCls}__header`" :src="headerImg" />
-      <span :class="`${prefixCls}__info hidden md:block`">
+      <Avatar :src="`https://drive-s.owaf.io/${userInfo.avatar}`" :size="'small'" />
+      <span :class="`${prefixCls}__info hidden md:block m-2`">
         <span :class="`${prefixCls}__name  `" class="truncate">
-          {{ getUserInfo.realName }}
+          {{ userInfo.username }}
         </span>
       </span>
     </span>
@@ -35,9 +35,9 @@
 </template>
 <script lang="ts">
   // components
-  import { Dropdown, Menu } from 'ant-design-vue';
+  import { Dropdown, Menu, Avatar } from 'ant-design-vue';
 
-  import { defineComponent, computed } from 'vue';
+  import { defineComponent, ref } from 'vue';
 
   import { DOC_URL } from '/@/settings/siteSetting';
 
@@ -47,11 +47,12 @@
   import { useDesign } from '/@/hooks/web/useDesign';
   import { useModal } from '/@/components/Modal';
 
-  import headerImg from '/@/assets/images/header.jpg';
   import { propTypes } from '/@/utils/propTypes';
   import { openWindow } from '/@/utils';
 
   import { createAsyncComponent } from '/@/utils/factory/createAsyncComponent';
+  import { useQuery } from '@vue/apollo-composable';
+  import { me } from '/@/hooks/apollo/gqlUser';
 
   type MenuEvent = 'logout' | 'doc' | 'lock';
 
@@ -63,6 +64,7 @@
       MenuItem: createAsyncComponent(() => import('./DropMenuItem.vue')),
       MenuDivider: Menu.Divider,
       LockAction: createAsyncComponent(() => import('../lock/LockModal.vue')),
+      Avatar,
     },
     props: {
       theme: propTypes.oneOf(['dark', 'light']),
@@ -72,9 +74,11 @@
       const { t } = useI18n();
       const { getShowDoc } = useHeaderSetting();
 
-      const getUserInfo = computed(() => {
-        const { realName = '', desc } = userStore.getUserInfoState || {};
-        return { realName, desc };
+      const userInfo = ref({});
+
+      const { onResult } = useQuery(me);
+      onResult((res) => {
+        userInfo.value = res.data?.me;
       });
 
       const [register, { openModal }] = useModal();
@@ -110,10 +114,9 @@
       return {
         prefixCls,
         t,
-        getUserInfo,
+        userInfo,
         handleMenuClick,
         getShowDoc,
-        headerImg,
         register,
       };
     },

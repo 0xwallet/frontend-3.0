@@ -81,7 +81,6 @@
     LayoutBreadcrumb,
     FullScreen,
     Notify,
-    LockItem,
     ErrorAction,
     HeaderRouter,
     RightMenuDrawer,
@@ -89,8 +88,6 @@
   import { useAppInject } from '/@/hooks/web/useAppInject';
   import { useDesign } from '/@/hooks/web/useDesign';
   import { useDrawer } from '/@/components/Drawer';
-
-  import { createAsyncComponent } from '/@/utils/factory/createAsyncComponent';
   import { useLocale } from '/@/locales/useLocale';
 
   export default defineComponent({
