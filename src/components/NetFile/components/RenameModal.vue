@@ -19,11 +19,10 @@
       const space = ref('');
       const { createMessage, createErrorModal } = useMessage();
       const [register, { closeModal }] = useModalInner((data) => {
-        const f: NetFile = data.file;
-
-        id.value = f.id;
-        space.value = f.space;
-        setFieldsValue({ newName: f.fileName() });
+        const { file }: NetFile = data;
+        id.value = file.id;
+        space.value = file.space.space;
+        setFieldsValue({ newName: file.fileName() });
       });
 
       const { mutate: RenameFile } = useMutation(NetGql.Basic.Rename);
