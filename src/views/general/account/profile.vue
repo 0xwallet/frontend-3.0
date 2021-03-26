@@ -25,9 +25,13 @@
               :showUploadList="false"
               accept="image/png, image/jpeg"
             >
-              <Avatar :src="`https://drive-s.owaf.io/${avatar}`" /></Upload
-          ></div>
-          <div v-else><Avatar :src="`https://drive-s.owaf.io/${avatar}`" /></div>
+              <div class="relative">
+                <Avatar :src="`https://drive-s.owaf.io/${avatar}`" :size="64" />
+                <p class="absolute bottom-0 left-5 text-white">{{ t('edit') }}</p>
+              </div>
+            </Upload></div
+          >
+          <div v-else><Avatar :src="`https://drive-s.owaf.io/${avatar}`" :size="64" /></div>
         </template>
       </CardMeta>
       <Divider />

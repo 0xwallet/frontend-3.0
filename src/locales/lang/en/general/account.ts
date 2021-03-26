@@ -35,4 +35,5 @@ export default {
   totalBalance: 'TOTAL BALANCE (BSV)',
   walletAdd: 'Add',
   walletSend: 'Send',
+  edit: 'Edit',
 };

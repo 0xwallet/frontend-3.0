@@ -34,4 +34,5 @@ export default {
   totalBalance: '账户资产折合 (BSV)',
   walletAdd: '充值',
   walletSend: '提现',
+  edit: '编辑',
 };
