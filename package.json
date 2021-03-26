@@ -35,7 +35,7 @@
     "@absinthe/socket-apollo-link": "^0.2.1",
     "@apollo/client": "^3.3.6",
     "@iconify/iconify": "^2.0.0-rc.6",
-    "@msgpack/msgpack": "^2.3.0",
+    "@msgpack/msgpack": "^2.5.1",
     "@vue/apollo-composable": "^4.0.0-alpha.12",
     "@vueuse/core": "^4.4.1",
     "@zxcvbn-ts/core": "^0.3.0",
