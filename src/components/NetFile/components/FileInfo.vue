@@ -38,7 +38,6 @@
             </div>
           </div>
           <Divider type="horizontal" />
-          {{ collection }}{{ mode }}
           <Descriptions :column="1">
             <DescriptionsItem :label="t('url')" v-if="mode === 'share'"
               ><Button type="link" @click="copyUrl(3)">{{ file.uri }}</Button>
@@ -202,10 +201,10 @@
         return formatToDateTime(t, 'YYYY-MM-DD HH:mm:ss');
       }
 
-      function copyUrl(mode: number) {
+      function copyUrl(m: number) {
         switch (mode.value) {
           case 'share':
-            file.value.copyShareUrl(mode);
+            file.value.copyShareUrl(m);
             return;
           default:
             return;
