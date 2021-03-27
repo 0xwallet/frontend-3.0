@@ -1,17 +1,18 @@
 <template>
   <Card hoverable>
     <template #title>
-      <BasicTitle>{{ t('deviceTitle') }}</BasicTitle>
+      <BasicTitle>{{ t('recoveryTitle') }}</BasicTitle>
     </template>
     <template #extra>
-      <Button type="link" @click="openDeviceModal">{{ t('deviceModalTitle') }}</Button>
+      <Button type="link" @click="openDeviceModal">{{ t('addRecoveryInfo') }}</Button>
+      <Button type="link" @click="openDeviceModal">{{ t('changePassword') }}</Button>
     </template>
-    <List :grid="{ gutter: 2, column: 3 }" :data-source="deviceList">
+    <List :grid="{ gutter: 2, column: 2 }" :data-source="deviceList">
       <template #renderItem="{ item, index }">
         <ListItem>
           <Card class="h-50">
-            <template #title>
-              <Icon :icon="item.icon" /><span class="m-2">{{ item.name }}</span>
+            <template #title
+              ><Icon :icon="item.icon" /><span class="m-2">{{ item.name }}</span>
             </template>
             <div class="h-12">
               <Select
@@ -73,25 +74,15 @@
       const [register, { openModal, setModalProps }] = useModal();
       const deviceList = ref([
         {
-          name: 'nMobile',
-          type: 'nMobile',
-          icon: 'fa-solid:comment-dots',
+          name: t('recoveryEmail'),
+          icon: 'fa-solid:at',
           list: [],
         },
         {
-          name: 'WebAuthn USB',
-          type: 'usb',
-          icon: 'fa-brands:usb',
-          list: [],
-        },
-        {
-          name: t('fingerprint'),
-          type: 'fingerprint',
-          icon: 'fa-solid:fingerprint',
+          name: 'usb',
           list: [],
         },
       ]);
-
       const value = ref({
         nMobile: '',
       });

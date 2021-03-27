@@ -15,6 +15,7 @@ import { useApollo } from '/@/hooks/apollo/apollo';
 const { createMessage, createErrorModal } = useMessage();
 const NAME = 'netFileStore';
 hotModuleUnregisterModule(NAME);
+
 interface uploadSpeed {
   time: number;
   speed: number;

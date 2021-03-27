@@ -1,6 +1,7 @@
 export default {
   authorityTitle: '权限',
   deviceTitle: '安全设备',
+  recoveryTitle: '恢复信息',
   deviceModalTitle: '添加新设备',
   sendVerifyCode: '发送验证码',
   noEmail: '没有邮箱',
@@ -18,4 +19,8 @@ export default {
   addr: '服务器地址',
   account: '账户',
   authorityTime: '授权时间',
+  fingerprint: '指纹',
+  addRecoveryInfo: '添加信息',
+  changePassword: '修改密码',
+  recoveryEmail: '恢复信息卡片',
 };
