@@ -49,7 +49,7 @@
   import { useMultipleTabSetting } from '/@/hooks/setting/useMultipleTabSetting';
 
   import { REDIRECT_NAME } from '/@/router/constant';
-  import { listenerLastChangeTab } from '/@/logics/mitt/tabChange';
+  import { listenerRouteChange } from '/@/logics/mitt/routeChange';
 
   import router from '/@/router';
 
@@ -88,7 +88,7 @@
         ];
       });
 
-      listenerLastChangeTab((route) => {
+      listenerRouteChange((route) => {
         const { name } = route;
         if (name === REDIRECT_NAME || !route || !userStore.getTokenState) return;
 
