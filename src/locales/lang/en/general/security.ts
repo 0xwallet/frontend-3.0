@@ -24,4 +24,5 @@ export default {
   addRecoveryInfo: 'Add recovery info',
   changePassword: 'Change password',
   recoveryEmail: 'Recovery Email',
+  mobileNumber: 'Mobile Number',
 };

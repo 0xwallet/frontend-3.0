@@ -40,17 +40,16 @@
 </template>
 
 <script lang="ts">
-  import { defineComponent, ref } from 'vue';
+  import { defineComponent, ref, watch } from 'vue';
   import { BasicTitle } from '/@/components/Basic';
   import { Card, List, Tag, Select } from 'ant-design-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
   import DeviceModal from './deviceModal.vue';
   import { useModal } from '/@/components/Modal';
-  import { useQuery } from '@vue/apollo-composable';
-  import { me } from '/@/hooks/apollo/gqlUser';
   import { Icon } from '/@/components/Icon';
   import { Button } from '/@/components/Button';
+  import { propTypes } from '/@/utils/propTypes';
 
   export default defineComponent({
     components: {
@@ -67,10 +66,30 @@
       SelectOption: Select.Option,
       Button,
     },
-    setup() {
+    props: {
+      list: propTypes.array.def([]),
+    },
+    setup(props) {
       const { t } = useI18n('general.security');
       const { createMessage } = useMessage();
       const [register, { openModal, setModalProps }] = useModal();
+      watch(
+        () => props.list,
+        (list) => {
+          deviceList.value[0].list = [];
+          list.forEach((v) => {
+            // console.log(v);
+            if (v.tags[0] !== 'MESSAGE' && v.info.publicKey !== null) {
+              value.value.nMobile = deviceList.value[0].list.length;
+              deviceList.value[0].list.push({
+                value: v.info.publicKey,
+                title: v.info.publicKey,
+                status: true,
+              });
+            }
+          });
+        }
+      );
       const deviceList = ref([
         {
           name: 'nMobile',
@@ -95,26 +114,7 @@
       const value = ref({
         nMobile: '',
       });
-      const { onResult: getMe, refetch } = useQuery(me, null, { fetchPolicy: 'network-only' });
-      getMe((res) => {
-        res.data?.me.wallets.forEach((v) => {
-          // console.log(v);
-          if (v.tags[0] !== 'MESSAGE' && v.info.publicKey !== null) {
-            deviceList.value[0].list = [];
-            value.value.nMobile = deviceList.value[0].list.length;
-            deviceList.value[0].list.push({
-              value: v.info.publicKey,
-              title: v.info.publicKey,
-              status: true,
-            });
-          }
-        });
-        deviceList.value[0].list.push({
-          value: '111',
-          title: '222',
-          status: false,
-        });
-      });
+
       function openDeviceModal() {
         openModal(true);
         setModalProps({
@@ -135,7 +135,6 @@
         register,
         openDeviceModal,
         deviceList,
-        Select,
         value,
         changeNMobile,
       };

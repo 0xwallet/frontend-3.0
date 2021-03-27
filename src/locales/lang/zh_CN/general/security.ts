@@ -22,5 +22,6 @@ export default {
   fingerprint: '指纹',
   addRecoveryInfo: '添加信息',
   changePassword: '修改密码',
-  recoveryEmail: '恢复信息卡片',
+  recoveryEmail: '恢复邮箱',
+  mobileNumber: '恢复手机',
 };
