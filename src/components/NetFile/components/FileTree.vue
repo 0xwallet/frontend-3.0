@@ -23,7 +23,7 @@
   export default defineComponent({
     components: { BasicTree },
     props: {
-      path: propTypes.string.def(''),
+      path: propTypes.string.def('root'),
       filters: propTypes.array.def([]),
     },
     setup(props) {
@@ -37,6 +37,7 @@
         },
         { immediate: true }
       );
+      const dirId = computed(() => props.path);
       const treeData: TreeDataItem[] = [
         {
           title: '~',
@@ -47,7 +48,11 @@
       ];
       function fetchData(variables: { dirId: string }, parentKey?: string) {
         console.log(parentKey, variables);
-        useApollo({ mode: 'query', gql: NetGql.Basic.FileList, variables }).then((res) => {
+        useApollo({
+          mode: 'query',
+          gql: NetGql.Basic.FileList,
+          variables,
+        }).then((res) => {
           const data = res.data?.driveListFiles;
           let files: TreeDataItem[] = [];
 

@@ -5,14 +5,20 @@
     :minHeight="height"
     width="80%"
     :closeFunc="handleCloseFunc"
+    :footer="null"
   >
     <template #title></template>
 
-    <div class="grid grid-cols-12 gap-2">
-      <div class="col-span-2">
-        <FileTree :filters="['md', 'txt']" />
+    <div class="flex">
+      <div class="flex-none w-1/5 m-1">
+        <FileTree :filters="['md', 'txt']" :path="path.dirId" />
+        <div class="grid grid-cols-3 gap-1">
+          <div>1</div>
+          <div>{{ path.title }}</div>
+          <div>3</div>
+        </div>
       </div>
-      <div class="col-span-10">
+      <div class="flex-grow">
         <Tabs v-model:activeKey="activeKey" hide-add type="editable-card" @edit="onEdit">
           <TabPane v-for="(pane, index) in panes" :key="pane.key" :closable="pane.closable">
             <template #tab
@@ -50,6 +56,7 @@
       const vditorRefs = ref<Nullable<Vditor>[]>([]);
       const panes = ref<markdownFile[]>([]);
       const activeKey = ref('');
+      const path = ref({ dirId: 'root', title: 'Home' });
       // const vditorRef = ref<Nullable<Vditor>>(null);
       watch(
         () => fileStore.getMarkdownFiles,
@@ -64,16 +71,16 @@
       );
 
       const height = computed(() => document.body.clientHeight - 300);
-
+      const text = ref(false);
       const [register, { closeModal }] = useModalInner();
       async function init(index: number) {
         if (vditorRefs.value[index]) return;
-        let value = await panes.value[index].file.raw();
+
         const wrapEl = refs.value[index];
         if (!wrapEl) return;
         let vditor = new Vditor(wrapEl, {
           lang: 'zh_CN',
-          value,
+          value: '',
           mode: 'ir',
           preview: {
             actions: [],
@@ -81,14 +88,28 @@
           cache: {
             enable: false,
           },
-          height: height.value - 80,
+          height: height.value - 70,
           input: () => {
             fileStore.setMarkdownEdited({ index, v: true });
           },
+          outline: { enable: false },
         });
+
         vditorRefs.value.push(vditor);
+        const value = await panes.value[index].file.raw();
+        vditor.setValue(value);
+        openOutLine(index, true);
+        // console.log((a[0].style.display = 'block'));
+        console.log(a);
         // initedRef.value = true;
       }
+
+      function openOutLine(index: number, open: boolean) {
+        document.getElementsByClassName('vditor-outline')[index].style.display = open
+          ? 'block'
+          : 'none';
+      }
+
       function handleCloseFunc() {
         if (fileStore.getMarkdownFiles.some((v) => v.edited)) {
           Modal.confirm({
@@ -130,6 +151,7 @@
         onEdit,
         setRef,
         save,
+        path,
       };
     },
   });

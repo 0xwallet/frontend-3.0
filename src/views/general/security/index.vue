@@ -2,7 +2,7 @@
   <div class="bg">
     <Row :gutter="[10, 10]">
       <Col :span="12"><Authority /></Col>
-      <Col :span="12"><Device /><Data /></Col>
+      <Col :span="12"><Device /><Recovery /></Col>
     </Row>
   </div>
 </template>
@@ -12,7 +12,7 @@
   import { Row, Col } from 'ant-design-vue';
   import Authority from './authority.vue';
   import Device from './device.vue';
-  import Data from './data.vue';
+  import Recovery from './recovery.vue';
 
   export default defineComponent({
     components: {
@@ -20,7 +20,7 @@
       Col,
       Authority,
       Device,
-      Data,
+      Recovery,
     },
     setup() {
       return {};
