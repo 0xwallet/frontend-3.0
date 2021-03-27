@@ -2,13 +2,13 @@
   <div class="scroll-wrap">
     <BasicTree
       :treeData="treeData"
-      :title="'文件夹'"
       ref="treeRef"
       :loadData="onLoadData"
       :showIcon="true"
       @select="select"
       search
-    ></BasicTree>
+      ><template #headerTitle>111</template>
+    </BasicTree>
   </div>
 </template>
 <script lang="ts">
