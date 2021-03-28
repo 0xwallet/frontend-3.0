@@ -55,6 +55,8 @@ class netFileStore extends VuexModule {
 
   private markdownFiles: markdownFile[] = [];
 
+  private editorVisible: boolean = false;
+
   private markdownModalVisible: boolean = false;
 
   private fileSize: object = {};
@@ -90,6 +92,18 @@ class netFileStore extends VuexModule {
   get getSpace(): object {
     return this.space;
   }
+  get getEditorVisible(): boolean {
+    return this.editorVisible;
+  }
+  @Mutation
+  setEditorVisible(v?: boolean) {
+    if (v === undefined) {
+      this.editorVisible = !this.editorVisible;
+      return;
+    }
+    this.editorVisible = v;
+  }
+
   @Mutation
   setFileInfo(params: { file: NetFile; mode: string; collection: boolean }): void {
     this.Info.mode = params.mode;

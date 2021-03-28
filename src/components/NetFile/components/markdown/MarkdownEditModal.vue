@@ -4,8 +4,10 @@
     @register="register"
     :minHeight="height"
     width="80%"
+    :visible="visible"
     :closeFunc="handleCloseFunc"
     :footer="null"
+    @visibleChange="visibleChange"
   >
     <template #title></template>
 
@@ -57,6 +59,8 @@
       const panes = ref<markdownFile[]>([]);
       const activeKey = ref('');
       const path = ref({ dirId: 'root', title: 'Home' });
+      const visible = computed(() => fileStore.getEditorVisible);
+
       // const vditorRef = ref<Nullable<Vditor>>(null);
       watch(
         () => fileStore.getMarkdownFiles,
@@ -141,6 +145,9 @@
         fileStore.setMarkdownEdited({ index, v: false });
         createMessage.success('保存成功');
       }
+      function visibleChange(v) {
+        fileStore.setEditorVisible(v);
+      }
       return {
         handleCloseFunc,
         register,
@@ -152,6 +159,8 @@
         setRef,
         save,
         path,
+        visible,
+        visibleChange,
       };
     },
   });
