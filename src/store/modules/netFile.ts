@@ -56,6 +56,7 @@ class netFileStore extends VuexModule {
   private markdownFiles: markdownFile[] = [];
 
   private editorVisible: boolean = false;
+  private editorOutlineVisible: boolean = false;
 
   private markdownModalVisible: boolean = false;
 
@@ -94,6 +95,9 @@ class netFileStore extends VuexModule {
   }
   get getEditorVisible(): boolean {
     return this.editorVisible;
+  }
+  get getEditorOutlineVisible(): boolean {
+    return this.editorOutlineVisible;
   }
   @Mutation
   setEditorVisible(v?: boolean) {
@@ -170,6 +174,10 @@ class netFileStore extends VuexModule {
   @Mutation
   setMarkdownVisible(v: boolean): void {
     this.markdownModalVisible = v;
+  }
+  @Mutation
+  setEditorOutlineVisible(): void {
+    this.editorOutlineVisible = !this.editorOutlineVisible;
   }
   @Mutation
   setMarkdownEdited(params: { index: number; v: boolean }): void {

@@ -7,7 +7,7 @@
       :showIcon="true"
       @select="select"
       search
-      ><template #headerTitle>111</template>
+      ><template #headerTitle><Button @click="changeOutline">切换</Button></template>
     </BasicTree>
   </div>
 </template>
@@ -20,8 +20,10 @@
   import { NetFile, NetGql } from '/@/components/NetFile';
   import type { TreeDataItem } from 'ant-design-vue/es/tree/Tree';
   import { fileStore } from '/@/store/modules/netFile';
+  import { Button } from '/@/components/Button';
+
   export default defineComponent({
-    components: { BasicTree },
+    components: { BasicTree, Button },
     props: {
       path: propTypes.string.def('root'),
       filters: propTypes.array.def([]),
@@ -104,6 +106,9 @@
           fileStore.appendMarkdownFile(node.value);
         }
       }
+      function changeOutline() {
+        fileStore.setEditorOutlineVisible();
+      }
 
       return {
         treeData,
@@ -111,6 +116,7 @@
         onLoadData,
         select,
         height,
+        changeOutline,
       };
     },
   });

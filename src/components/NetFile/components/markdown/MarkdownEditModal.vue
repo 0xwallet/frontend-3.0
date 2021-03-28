@@ -12,7 +12,7 @@
     <template #title></template>
 
     <div class="flex">
-      <div class="flex-none w-1/5 m-1">
+      <div class="flex-none w-1/5 m-1" v-if="treeVisible">
         <FileTree :filters="['md', 'txt']" :path="path.dirId" />
         <div class="grid grid-cols-3 gap-1">
           <div>1</div>
@@ -20,6 +20,7 @@
           <div>3</div>
         </div>
       </div>
+      <div v-if="!treeVisible" class="w-10 m-1"> <Button @click="changeOutline">切换</Button> </div>
       <div class="flex-grow">
         <Tabs v-model:activeKey="activeKey" hide-add type="editable-card" @edit="onEdit">
           <TabPane v-for="(pane, index) in panes" :key="pane.key" :closable="pane.closable">
@@ -63,6 +64,15 @@
       const path = ref({ dirId: 'root', title: 'Home' });
       const visible = computed(() => fileStore.getEditorVisible);
       const spinning = ref(true);
+      const treeVisible = ref(true);
+      watch(
+        () => fileStore.getEditorOutlineVisible,
+        (v) => {
+          console.log(v);
+          treeVisible.value = !v;
+          openOutLine();
+        }
+      );
       // const vditorRef = ref<Nullable<Vditor>>(null);
       watch(
         () => fileStore.getMarkdownFiles,
@@ -106,16 +116,22 @@
         const value = await panes.value[index].file.raw();
         vditor.setValue(value);
         spinning.value = false;
-        openOutLine(index, true);
+        openOutLine(true);
         // console.log((a[0].style.display = 'block'));
-        console.log(a);
+
         // initedRef.value = true;
       }
 
-      function openOutLine(index: number, open: boolean) {
-        document.getElementsByClassName('vditor-outline')[index].style.display = open
-          ? 'block'
-          : 'none';
+      function openOutLine(open: boolean) {
+        const status = treeVisible.value ? 'none' : 'block';
+        const list = document.getElementsByClassName('vditor-outline');
+        console.log(list.length);
+        for (let i = 0; i < list.length; i++) {
+          list[i].style.display = status;
+        }
+        // document
+        //   .getElementsByClassName('vditor-outline')
+        //   .forEach((v) => (v.style.display = status));
       }
 
       function handleCloseFunc() {
@@ -158,6 +174,9 @@
       function visibleChange(v) {
         fileStore.setEditorVisible(v);
       }
+      function changeOutline() {
+        fileStore.setEditorOutlineVisible();
+      }
       return {
         handleCloseFunc,
         register,
@@ -172,6 +191,8 @@
         visible,
         visibleChange,
         spinning,
+        treeVisible,
+        changeOutline,
       };
     },
   });
