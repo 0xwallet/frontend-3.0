@@ -26,7 +26,9 @@
             <template #tab
               ><EditOutlined v-if="pane.edited" @click="save(index)" />{{ pane.title }}</template
             >
-            <div :ref="setRef(index)" :id="pane.key" />
+            <Spin :spinning="spinning">
+              <div :ref="setRef(index)" :id="pane.key" />
+            </Spin>
           </TabPane> </Tabs
       ></div>
     </div>
@@ -36,7 +38,7 @@
   import { computed, createVNode, defineComponent, nextTick, ref, watch } from 'vue';
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import { Tabs, Modal } from 'ant-design-vue';
+  import { Tabs, Modal, Spin } from 'ant-design-vue';
   import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
   import { fileStore, markdownFile } from '/@/store/modules/netFile';
   import Vditor from 'vditor';
@@ -48,7 +50,7 @@
   const { t } = useI18n('general.metanet');
 
   export default defineComponent({
-    components: { BasicModal, Tabs, TabPane: Tabs.TabPane, FileTree, Button, EditOutlined },
+    components: { BasicModal, Tabs, TabPane: Tabs.TabPane, FileTree, Button, EditOutlined, Spin },
     setup() {
       const { createMessage } = useMessage();
       const refs = ref<HTMLElement[]>([]);
@@ -60,7 +62,7 @@
       const activeKey = ref('');
       const path = ref({ dirId: 'root', title: 'Home' });
       const visible = computed(() => fileStore.getEditorVisible);
-
+      const spinning = ref(true);
       // const vditorRef = ref<Nullable<Vditor>>(null);
       watch(
         () => fileStore.getMarkdownFiles,
@@ -100,8 +102,10 @@
         });
 
         vditorRefs.value.push(vditor);
+        spinning.value = true;
         const value = await panes.value[index].file.raw();
         vditor.setValue(value);
+        spinning.value = false;
         openOutLine(index, true);
         // console.log((a[0].style.display = 'block'));
         console.log(a);
@@ -139,11 +143,17 @@
         vditorRefs.value.splice(index, 1);
       };
       async function save(index) {
-        const vditor = vditorRefs.value[index];
-        if (!vditor) return;
-        await fileStore.editFile({ content: vditor.getValue(), id: panes.value[index].key });
-        fileStore.setMarkdownEdited({ index, v: false });
-        createMessage.success('保存成功');
+        spinning.value = true;
+        try {
+          const vditor = vditorRefs.value[index];
+          if (!vditor) return;
+
+          await fileStore.editFile({ content: vditor.getValue(), id: panes.value[index].key });
+          fileStore.setMarkdownEdited({ index, v: false });
+          createMessage.success('保存成功');
+        } finally {
+          spinning.value = false;
+        }
       }
       function visibleChange(v) {
         fileStore.setEditorVisible(v);
@@ -161,6 +171,7 @@
         path,
         visible,
         visibleChange,
+        spinning,
       };
     },
   });

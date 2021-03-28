@@ -159,7 +159,7 @@ class netFileStore extends VuexModule {
         edited: false,
       });
     }
-    this.markdownModalVisible = true;
+    this.editorVisible = true;
   }
   @Mutation
   delMarkdownFile(id: string): number {
