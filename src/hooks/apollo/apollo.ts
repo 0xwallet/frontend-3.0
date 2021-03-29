@@ -2,19 +2,18 @@ import { useMessage } from '/@/hooks/web/useMessage';
 import { userStore } from '/@/store/modules/user';
 import { provide } from 'vue';
 
-import { ApolloClient, InMemoryCache } from '@apollo/client';
+import { ApolloClient, InMemoryCache, split } from '@apollo/client';
 import { ApolloClients } from '@vue/apollo-composable';
 import { ApolloLink, HttpLink } from '@apollo/client/core';
 import { onError } from '@apollo/client/link/error';
 
-// import { split } from 'apollo-link';
-// import { getMainDefinition } from 'apollo-utilities';
-// // @ts-ignore
-// import { Socket as PhoenixSocket } from 'phoenix';
-// // @ts-ignore
-// import { createAbsintheSocketLink } from '@absinthe/socket-apollo-link';
-// // @ts-ignore
-// import * as AbsintheSocket from '@absinthe/socket';
+import { getMainDefinition } from '@apollo/client/utilities';
+// @ts-ignore
+import { Socket as PhoenixSocket } from 'phoenix';
+// @ts-ignore
+import { createAbsintheSocketLink } from '@absinthe/socket-apollo-link';
+// @ts-ignore
+import * as AbsintheSocket from '@absinthe/socket';
 // 与 API 的 HTTP 连接
 const { createErrorModal } = useMessage();
 let Client: ApolloClient<any>;
@@ -23,27 +22,28 @@ export function initApollo(): ApolloClient<any> | null {
   const httpLink = new HttpLink({
     uri: 'https://owaf.io/api',
   });
-  // const wsLink = createAbsintheSocketLink(
-  //   AbsintheSocket.create(
-  //     new PhoenixSocket('wss://owaf.io/socket', {
-  //       params: () => {
-  //         return { Authorization: 'Bearer ' + localStorage.getItem('token') };
-  //       },
-  //     })
-  //   )
-  // );
 
-  // const link = split(
-  //   // 根据操作类型拆分
-  //   ({ query }) => {
-  //     const definition = getMainDefinition(query);
-  //     return definition.kind === 'OperationDefinition' && definition.operation === 'subscription';
-  //   },
-  //   wsLink,
-  //   // @ts-ignore
-  //   httpLink
-  // );
-  // console.log(link);
+  const wsLink = createAbsintheSocketLink(
+    AbsintheSocket.create(
+      new PhoenixSocket('wss://owaf.io/socket', {
+        params: () => {
+          return { Authorization: 'Bearer ' + localStorage.getItem('token') };
+        },
+      })
+    )
+  );
+
+  const link = split(
+    // 根据操作类型拆分
+    ({ query }) => {
+      const definition = getMainDefinition(query);
+      return definition.kind === 'OperationDefinition' && definition.operation === 'subscription';
+    },
+    wsLink,
+    // @ts-ignore
+    httpLink
+  );
+
   // split based on operation type
   // REMOVE authLink FOR HTTPONLY_TOKEN
   const middlewareLink = new ApolloLink((operation, forward) => {
@@ -85,7 +85,7 @@ export function initApollo(): ApolloClient<any> | null {
 
   const apolloClient = new ApolloClient({
     // @ts-ignore
-    link: ApolloLink.from([middlewareLink, error, httpLink]),
+    link: ApolloLink.from([middlewareLink, error, link]),
     cache,
     connectToDevTools: true,
   });
