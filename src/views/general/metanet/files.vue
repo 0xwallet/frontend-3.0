@@ -507,15 +507,15 @@
       function openUploadModal() {
         uploadRef.value.openUploadModal();
       }
-      const { onResult: sub, onError } = useSubscription(NetGql.Basic.Uploaded, {
-        userId: 28,
-      });
-      sub((result) => {
-        console.log(result.data);
-      });
-      onError((error) => {
-        console.log(error);
-      });
+      // const { onResult: sub, onError } = useSubscription(NetGql.Basic.Uploaded, {
+      //   userId: 28,
+      // });
+      // sub((result) => {
+      //   console.log(result.data);
+      // });
+      // onError((error) => {
+      //   console.log(error);
+      // });
       return {
         registerTable,
         setSelectedRowKeyList,

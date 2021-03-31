@@ -38,9 +38,10 @@ interface uploadItem {
 }
 export interface markdownFile {
   title: string;
-  file: NetFile;
+  file: NetFile | null;
   key: string;
   edited: boolean;
+  content: string | undefined;
 }
 
 @Module({ namespaced: true, name: NAME, dynamic: true, store })
@@ -154,13 +155,22 @@ class netFileStore extends VuexModule {
     this.shareFiles = file;
   }
   @Mutation
-  appendMarkdownFile(file: NetFile): void {
-    if (!this.markdownFiles.some((v) => v.key === file.id)) {
+  appendMarkdownFile(file?: NetFile): void {
+    if (file && !this.markdownFiles.some((v) => v.key === file.id)) {
       this.markdownFiles.push({
         title: file.fileName(),
         file,
         key: file.id,
         edited: false,
+        content: undefined,
+      });
+    } else {
+      this.markdownFiles.push({
+        title: 'new',
+        file: null,
+        key: dateUtil().toString(),
+        edited: false,
+        content: '',
       });
     }
     this.editorVisible = true;
@@ -180,8 +190,9 @@ class netFileStore extends VuexModule {
     this.editorOutlineVisible = !this.editorOutlineVisible;
   }
   @Mutation
-  setMarkdownEdited(params: { index: number; v: boolean }): void {
-    this.markdownFiles[params.index].edited = params.v;
+  setMarkdownEdited(params: { index: number; edited: boolean; title?: string }): void {
+    this.markdownFiles[params.index].edited = params.edited;
+    if (params.title) this.markdownFiles[params.index].title = params.title;
   }
 
   @Mutation
@@ -250,6 +261,26 @@ class netFileStore extends VuexModule {
         success: false,
         error: e,
       };
+    }
+  }
+  @Action
+  async newMarkdownFile(params: { content: string; name: string; desc: string }) {
+    try {
+      // 获取client session
+      const object: uploadItem = {
+        File: new TextEncoder().encode(params.content),
+        FullName: [params.name],
+        FileSize: new Blob([params.content]).size,
+        UserId: localStorage.getItem('uid'),
+        Space: 'PRIVATE',
+        Description: params.desc || '',
+        Action: 'drive',
+      };
+      console.log(object);
+      await this.uploadItem(object);
+      createMessage.success(params.name + '上传成功', 2);
+    } catch (e) {
+      console.log(e);
     }
   }
   @Action
