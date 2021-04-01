@@ -31,8 +31,6 @@
     "gen:icon": "esno ./build/generate/icon/index.ts"
   },
   "dependencies": {
-    "@absinthe/socket": "^0.2.1",
-    "@absinthe/socket-apollo-link": "^0.2.1",
     "@apollo/client": "^3.3.6",
     "@iconify/iconify": "^2.0.0-rc.6",
     "@msgpack/msgpack": "^2.5.1",
@@ -46,6 +44,7 @@
     "crypto-js": "^4.0.0",
     "dayjs": "^1.10.4",
     "echarts": "^5.0.2",
+    "graphql": "^15.5.0",
     "lodash-es": "^4.17.21",
     "mockjs": "^1.1.0",
     "nprogress": "^0.2.0",
@@ -56,10 +55,10 @@
     "qrcode": "^1.4.4",
     "react": "^17.0.1",
     "sortablejs": "^1.13.0",
+    "subscriptions-transport-ws": "^0.9.18",
     "tinymce": "^5.7.1",
     "vditor": "^3.8.4",
     "vue": "3.0.10",
-    "subscriptions-transport-ws": "^0.9.18",
     "vue-i18n": "^9.0.0",
     "vue-router": "^4.0.5",
     "vue-types": "^3.0.2",

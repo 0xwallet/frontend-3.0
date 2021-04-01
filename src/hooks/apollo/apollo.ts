@@ -7,14 +7,10 @@ import { ApolloClients } from '@vue/apollo-composable';
 import { ApolloLink, HttpLink } from '@apollo/client/core';
 import { onError } from '@apollo/client/link/error';
 
-// import { split } from 'apollo-link';
-// import { getMainDefinition } from 'apollo-utilities';
+import { getMainDefinition } from '@apollo/client/utilities';
 // // @ts-ignore
 // import { Socket as PhoenixSocket } from 'phoenix';
-// // @ts-ignore
-// import { createAbsintheSocketLink } from '@absinthe/socket-apollo-link';
-// // @ts-ignore
-// import * as AbsintheSocket from '@absinthe/socket';
+
 // 与 API 的 HTTP 连接
 const { createErrorModal } = useMessage();
 let Client: ApolloClient<any>;
@@ -23,27 +19,25 @@ export function initApollo(): ApolloClient<any> | null {
   const httpLink = new HttpLink({
     uri: 'https://owaf.io/api',
   });
-  // const wsLink = createAbsintheSocketLink(
-  //   AbsintheSocket.create(
-  //     new PhoenixSocket('wss://owaf.io/socket', {
-  //       params: () => {
-  //         return { Authorization: 'Bearer ' + localStorage.getItem('token') };
-  //       },
-  //     })
-  //   )
-  // );
 
-  // const link = split(
-  //   // 根据操作类型拆分
-  //   ({ query }) => {
-  //     const definition = getMainDefinition(query);
-  //     return definition.kind === 'OperationDefinition' && definition.operation === 'subscription';
+  // const phoenix_socket = new PhoenixSocket('wss://owaf.io/socket', {
+  //   params: () => {
+  //     return { Authorization: 'Bearer ' + localStorage.getItem('token') };
   //   },
-  //   wsLink,
-  //   // @ts-ignore
-  //   httpLink
-  // );
-  // console.log(link);
+  // })
+
+  // phoenix_socket.connect()
+
+  // // Now that you are connected, you can join channels with a topic:
+  // let user_id = user_id
+  // let channel = phoenix_socket.channel(`drive:user_${user_id}`, {})
+  // // event when file uploaded
+  // channel.on("file_uploaded", file => console.log("file uploaded:", file))
+  // // join channel
+  // channel.join()
+  //   .receive("ok", resp => { console.log("Joined successfully", resp) })
+  //   .receive("error", resp => { console.log("Unable to join", resp) })
+
   // split based on operation type
   // REMOVE authLink FOR HTTPONLY_TOKEN
   const middlewareLink = new ApolloLink((operation, forward) => {
