@@ -1,7 +1,7 @@
 <template>
   <Dropdown placement="bottomLeft" :overlayClassName="`${prefixCls}-dropdown-overlay`">
     <span :class="[prefixCls, `${prefixCls}--${theme}`]" class="flex">
-      <Avatar :src="`https://drive-s.owaf.io/${userInfo.avatar}`" :size="'small'" />
+      <Avatar :src="`https://drive-s.owaf.io/${avatar}`" :size="'small'" v-if="avatar !== ''" />
       <span :class="`${prefixCls}__info hidden md:block m-2`">
         <span :class="`${prefixCls}__name  `" class="truncate">
           {{ userInfo.username }}
@@ -73,12 +73,13 @@
       const { prefixCls } = useDesign('header-user-dropdown');
       const { t } = useI18n();
       const { getShowDoc } = useHeaderSetting();
-
+      const avatar = ref('');
       const userInfo = ref({});
 
       const { onResult } = useQuery(me);
       onResult((res) => {
         userInfo.value = res.data?.me;
+        avatar.value = res.data?.me.avatar;
       });
 
       const [register, { openModal }] = useModal();
@@ -118,6 +119,7 @@
         handleMenuClick,
         getShowDoc,
         register,
+        avatar,
       };
     },
   });

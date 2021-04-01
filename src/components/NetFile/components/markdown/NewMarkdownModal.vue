@@ -9,7 +9,6 @@
   import { useMessage } from '/@/hooks/web/useMessage';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useForm, BasicForm } from '/@/components/Form';
-  import { NetFile, NetGql } from '/@/components/NetFile';
   import { fileStore } from '/@/store/modules/netFile';
   const { t } = useI18n('general.metanet');
   export default defineComponent({
@@ -22,7 +21,6 @@
         index.value = data.index;
         content.value = data.content;
         console.log(index.value);
-        // setFieldsValue({ newName: f.fileName() });
       });
 
       const [registerForm, { validateFields }] = useForm({
@@ -47,10 +45,8 @@
 
       async function createMarkdown() {
         if (!fileStore.getMarkdownFiles[index.value]) return;
-        console.log(fileStore.getMarkdownFiles[index.value]);
         try {
           const data = await validateFields();
-          console.log(data);
           await fileStore.newMarkdownFile({
             content: content.value,
             name: data.name + '.md',
