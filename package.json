@@ -44,6 +44,7 @@
     "crypto-js": "^4.0.0",
     "dayjs": "^1.10.4",
     "echarts": "^5.0.2",
+    "graphql": "^15.5.0",
     "lodash-es": "^4.17.21",
     "mockjs": "^1.1.0",
     "nprogress": "^0.2.0",
