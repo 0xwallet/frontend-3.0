@@ -1,12 +1,6 @@
 <template>
   <div>
     <BasicTable @register="registerTable">
-      <template #urlTitle>
-        <span>
-          {{ t('url') }}
-          <BasicHelp class="ml-2" :text="t('copyShare')" />
-        </span>
-      </template>
       <template #uri="{ record, text }">
         <Tooltip :title="t('copy')"
           ><Button type="link" @click="copyUrl(text)"> {{ text }}</Button></Tooltip
@@ -187,7 +181,7 @@
       function openVersionModal(f: NetFile) {
         openChangeVersionModal(true, f, true);
         setChangeVersionModal({
-          destroyOnClose: true,
+          // destroyOnClose: true,
           canFullscreen: false,
           afterClose: () => {
             refetch();

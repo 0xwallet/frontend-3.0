@@ -17,17 +17,20 @@
   import { initApollo } from '/@/hooks/apollo/apollo';
   import { initJS, useMClient, useWallet } from '/@/hooks/nkn/getNKN';
   import { userStore } from '/@/store/modules/user';
+  import { useTitle } from '/@/hooks/web/useTitle';
   import { useLocale } from '/@/locales/useLocale';
 
   export default defineComponent({
     name: 'App',
     components: { ConfigProvider, AppProvider },
     setup() {
-      // support Multi-language
-      const { getAntdLocale } = useLocale();
-
       // Initialize vuex internal system configuration
       initAppConfigStore();
+
+      useTitle();
+
+      // support Multi-language
+      const { getAntdLocale } = useLocale();
 
       initApollo();
       //加载外部JS

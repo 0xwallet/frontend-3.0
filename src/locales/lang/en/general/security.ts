@@ -1,6 +1,7 @@
 export default {
   authorityTitle: 'Authorization',
   deviceTitle: 'Security Devices',
+  recoveryTitle: 'Recovery Info',
   deviceModalTitle: 'Add new device',
   sendVerifyCode: 'Send Verify Code',
   noEmail: 'Not Entered Email',
@@ -18,4 +19,10 @@ export default {
   addr: 'Address',
   account: 'Account',
   authorityTime: 'Authority Time',
+
+  fingerprint: 'WebAuthn Fingerprint',
+  addRecoveryInfo: 'Add recovery info',
+  changePassword: 'Change password',
+  recoveryEmail: 'Recovery Email',
+  mobileNumber: 'Mobile Number',
 };

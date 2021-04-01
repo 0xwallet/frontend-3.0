@@ -2,13 +2,13 @@
   <div class="scroll-wrap">
     <BasicTree
       :treeData="treeData"
-      :title="'文件夹'"
       ref="treeRef"
       :loadData="onLoadData"
       :showIcon="true"
       @select="select"
       search
-    ></BasicTree>
+      ><template #headerTitle><Button @click="changeOutline">切换</Button></template>
+    </BasicTree>
   </div>
 </template>
 <script lang="ts">
@@ -20,10 +20,12 @@
   import { NetFile, NetGql } from '/@/components/NetFile';
   import type { TreeDataItem } from 'ant-design-vue/es/tree/Tree';
   import { fileStore } from '/@/store/modules/netFile';
+  import { Button } from '/@/components/Button';
+
   export default defineComponent({
-    components: { BasicTree },
+    components: { BasicTree, Button },
     props: {
-      path: propTypes.string.def(''),
+      path: propTypes.string.def('root'),
       filters: propTypes.array.def([]),
     },
     setup(props) {
@@ -37,6 +39,7 @@
         },
         { immediate: true }
       );
+      const dirId = computed(() => props.path);
       const treeData: TreeDataItem[] = [
         {
           title: '~',
@@ -47,7 +50,11 @@
       ];
       function fetchData(variables: { dirId: string }, parentKey?: string) {
         console.log(parentKey, variables);
-        useApollo({ mode: 'query', gql: NetGql.Basic.FileList, variables }).then((res) => {
+        useApollo({
+          mode: 'query',
+          gql: NetGql.Basic.FileList,
+          variables,
+        }).then((res) => {
           const data = res.data?.driveListFiles;
           let files: TreeDataItem[] = [];
 
@@ -99,6 +106,9 @@
           fileStore.appendMarkdownFile(node.value);
         }
       }
+      function changeOutline() {
+        fileStore.setEditorOutlineVisible();
+      }
 
       return {
         treeData,
@@ -106,6 +116,7 @@
         onLoadData,
         select,
         height,
+        changeOutline,
       };
     },
   });

@@ -36,7 +36,7 @@
 <script lang="ts">
   import type { BasicTableProps, TableActionType, SizeType } from './types/table';
 
-  import { defineComponent, ref, computed, unref } from 'vue';
+  import { defineComponent, ref, computed, unref, toRaw } from 'vue';
   import { Table } from 'ant-design-vue';
   import { BasicForm, useForm } from '/@/components/Form/index';
   import expandIcon from './components/ExpandIcon';
@@ -186,8 +186,10 @@
       } = useTableForm(getProps, slots, fetch);
 
       const getBindValues = computed(() => {
+        const dataSource = toRaw(unref(getDataSourceRef));
         let propsData: Recordable = {
           size: 'middle',
+          // ...(dataSource.length === 0 ? { getPopupContainer: () => document.body } : {}),
           ...attrs,
           customRow,
           expandIcon: expandIcon(),
@@ -198,9 +200,9 @@
           tableLayout: 'fixed',
           rowSelection: unref(getRowSelectionRef),
           rowKey: unref(getRowKey),
-          columns: unref(getViewColumns),
-          pagination: unref(getPaginationInfo),
-          dataSource: unref(getDataSourceRef),
+          columns: toRaw(unref(getViewColumns)),
+          pagination: toRaw(unref(getPaginationInfo)),
+          dataSource,
           footer: unref(getFooterProps),
           ...unref(getExpandOption),
         };
@@ -209,7 +211,6 @@
         }
 
         propsData = omit(propsData, 'class');
-
         return propsData;
       });
 

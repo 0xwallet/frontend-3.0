@@ -15,6 +15,7 @@ import { useApollo } from '/@/hooks/apollo/apollo';
 const { createMessage, createErrorModal } = useMessage();
 const NAME = 'netFileStore';
 hotModuleUnregisterModule(NAME);
+
 interface uploadSpeed {
   time: number;
   speed: number;
@@ -37,9 +38,10 @@ interface uploadItem {
 }
 export interface markdownFile {
   title: string;
-  file: NetFile;
+  file: NetFile | null;
   key: string;
   edited: boolean;
+  content: string | undefined;
 }
 
 @Module({ namespaced: true, name: NAME, dynamic: true, store })
@@ -53,6 +55,9 @@ class netFileStore extends VuexModule {
   private refetch: number = 0;
 
   private markdownFiles: markdownFile[] = [];
+
+  private editorVisible: boolean = false;
+  private editorOutlineVisible: boolean = false;
 
   private markdownModalVisible: boolean = false;
 
@@ -89,6 +94,21 @@ class netFileStore extends VuexModule {
   get getSpace(): object {
     return this.space;
   }
+  get getEditorVisible(): boolean {
+    return this.editorVisible;
+  }
+  get getEditorOutlineVisible(): boolean {
+    return this.editorOutlineVisible;
+  }
+  @Mutation
+  setEditorVisible(v?: boolean) {
+    if (v === undefined) {
+      this.editorVisible = !this.editorVisible;
+      return;
+    }
+    this.editorVisible = v;
+  }
+
   @Mutation
   setFileInfo(params: { file: NetFile; mode: string; collection: boolean }): void {
     this.Info.mode = params.mode;
@@ -135,16 +155,25 @@ class netFileStore extends VuexModule {
     this.shareFiles = file;
   }
   @Mutation
-  appendMarkdownFile(file: NetFile): void {
-    if (!this.markdownFiles.some((v) => v.key === file.id)) {
+  appendMarkdownFile(file?: NetFile): void {
+    if (file && !this.markdownFiles.some((v) => v.key === file.id)) {
       this.markdownFiles.push({
         title: file.fileName(),
         file,
         key: file.id,
         edited: false,
+        content: undefined,
+      });
+    } else {
+      this.markdownFiles.push({
+        title: 'new',
+        file: null,
+        key: dateUtil().toString(),
+        edited: false,
+        content: '',
       });
     }
-    this.markdownModalVisible = true;
+    this.editorVisible = true;
   }
   @Mutation
   delMarkdownFile(id: string): number {
@@ -157,8 +186,13 @@ class netFileStore extends VuexModule {
     this.markdownModalVisible = v;
   }
   @Mutation
-  setMarkdownEdited(params: { index: number; v: boolean }): void {
-    this.markdownFiles[params.index].edited = params.v;
+  setEditorOutlineVisible(): void {
+    this.editorOutlineVisible = !this.editorOutlineVisible;
+  }
+  @Mutation
+  setMarkdownEdited(params: { index: number; edited: boolean; title?: string }): void {
+    this.markdownFiles[params.index].edited = params.edited;
+    if (params.title) this.markdownFiles[params.index].title = params.title;
   }
 
   @Mutation
@@ -227,6 +261,26 @@ class netFileStore extends VuexModule {
         success: false,
         error: e,
       };
+    }
+  }
+  @Action
+  async newMarkdownFile(params: { content: string; name: string; desc: string }) {
+    try {
+      // 获取client session
+      const object: uploadItem = {
+        File: new TextEncoder().encode(params.content),
+        FullName: [params.name],
+        FileSize: new Blob([params.content]).size,
+        UserId: localStorage.getItem('uid'),
+        Space: 'PRIVATE',
+        Description: params.desc || '',
+        Action: 'drive',
+      };
+      console.log(object);
+      await this.uploadItem(object);
+      createMessage.success(params.name + '上传成功', 2);
+    } catch (e) {
+      console.log(e);
     }
   }
   @Action
