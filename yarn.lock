@@ -2,31 +2,6 @@
 # yarn lockfile v1
 
 
-"@absinthe/socket-apollo-link@^0.2.1":
-  version "0.2.1"
-  resolved "https://registry.npm.taobao.org/@absinthe/socket-apollo-link/download/@absinthe/socket-apollo-link-0.2.1.tgz#449c93109c903403b948abb8e911d9847cca9125"
-  integrity sha1-RJyTEJyQNAO5SKu46RHZhHzKkSU=
-  dependencies:
-    "@absinthe/socket" "0.2.1"
-    "@babel/runtime" "7.2.0"
-    apollo-link "1.2.5"
-    core-js "2.6.0"
-    flow-static-land "0.2.8"
-    graphql "14.0.2"
-    zen-observable "0.8.11"
-
-"@absinthe/socket@0.2.1", "@absinthe/socket@^0.2.1":
-  version "0.2.1"
-  resolved "https://registry.npm.taobao.org/@absinthe/socket/download/@absinthe/socket-0.2.1.tgz#dd0d7bfc8e149f8376429c7fc2e87ac958578b91"
-  integrity sha1-3Q17/I4Un4N2Qpx/wuh6yVhXi5E=
-  dependencies:
-    "@babel/runtime" "7.2.0"
-    "@jumpn/utils-array" "0.3.4"
-    "@jumpn/utils-composite" "0.7.0"
-    "@jumpn/utils-graphql" "0.6.0"
-    core-js "2.6.0"
-    zen-observable "0.8.11"
-
 "@ant-design-vue/use@^0.0.1-0":
   version "0.0.1-alpha.9"
   resolved "https://registry.npm.taobao.org/@ant-design-vue/use/download/@ant-design-vue/use-0.0.1-alpha.9.tgz#b7df26150469391383ba1c2dd4ba250267a58411"
@@ -1689,6 +1664,18 @@
     "@nodelib/fs.scandir" "2.1.4"
     fastq "^1.6.0"
 
+"@owaf/absinthe-socket@^10.0.1":
+  version "10.0.1"
+  resolved "https://registry.npmjs.org/@owaf/absinthe-socket/-/absinthe-socket-10.0.1.tgz#32f29dcc5483d7a8bd89aa64fb256ba86e2b816d"
+  integrity sha512-dGlYrDuPfYTbEvPTbgFsStfXPGw6bG4QdJeSTAyUprWchNjmFy0+7JHoKhNUv6cmPkNgScyaka+HzvZ+wUM+8A==
+  dependencies:
+    "@babel/runtime" "7.2.0"
+    "@jumpn/utils-array" "0.3.4"
+    "@jumpn/utils-composite" "0.7.0"
+    "@jumpn/utils-graphql" "0.6.0"
+    core-js "2.6.0"
+    zen-observable "0.8.11"
+
 "@purge-icons/core@^0.7.0":
   version "0.7.0"
   resolved "https://registry.npmjs.org/@purge-icons/core/-/core-0.7.0.tgz#097ba8d4d8b7e8d662df687bd2391eb8b83caba0"
@@ -2512,13 +2499,6 @@
   dependencies:
     tslib "^1.14.1"
 
-"@wry/equality@^0.1.2":
-  version "0.1.11"
-  resolved "https://registry.npm.taobao.org/@wry/equality/download/@wry/equality-0.1.11.tgz?cache=0&sync_timestamp=1608144114313&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40wry%2Fequality%2Fdownload%2F%40wry%2Fequality-0.1.11.tgz#35cb156e4a96695aa81a9ecc4d03787bc17f1790"
-  integrity sha1-NcsVbkqWaVqoGp7MTQN4e8F/F5A=
-  dependencies:
-    tslib "^1.9.3"
-
 "@wry/equality@^0.3.0":
   version "0.3.1"
   resolved "https://registry.npm.taobao.org/@wry/equality/download/@wry/equality-0.3.1.tgz?cache=0&sync_timestamp=1608144114313&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40wry%2Fequality%2Fdownload%2F%40wry%2Fequality-0.3.1.tgz#81080cdc2e0d8265cd303faa0c64b38a77884e06"
@@ -2731,24 +2711,6 @@ apexcharts@^3.26.0:
     svg.pathmorphing.js "^0.1.3"
     svg.resize.js "^1.4.3"
     svg.select.js "^3.0.1"
-
-apollo-link@1.2.5:
-  version "1.2.5"
-  resolved "https://registry.npm.taobao.org/apollo-link/download/apollo-link-1.2.5.tgz#f54932d6b8f1412a35e088bc199a116bce3f1f16"
-  integrity sha1-9Uky1rjxQSo14Ii8GZoRa84/HxY=
-  dependencies:
-    apollo-utilities "^1.0.0"
-    zen-observable-ts "^0.8.12"
-
-apollo-utilities@^1.0.0:
-  version "1.3.4"
-  resolved "https://registry.npm.taobao.org/apollo-utilities/download/apollo-utilities-1.3.4.tgz#6129e438e8be201b6c55b0f13ce49d2c7175c9cf"
-  integrity sha1-YSnkOOi+IBtsVbDxPOSdLHF1yc8=
-  dependencies:
-    "@wry/equality" "^0.1.2"
-    fast-json-stable-stringify "^2.0.0"
-    ts-invariant "^0.4.0"
-    tslib "^1.10.0"
 
 app-module-path@^2.2.0:
   version "2.2.0"
@@ -11548,13 +11510,6 @@ ts-interface-checker@^0.1.9:
   resolved "https://registry.npmjs.org/ts-interface-checker/-/ts-interface-checker-0.1.13.tgz#784fd3d679722bc103b1b4b8030bcddb5db2a699"
   integrity sha512-Y/arvbn+rrz3JCKl9C4kVNfTfSm2/mEp5FSz5EsZSANGPSlQrpRI5M4PKF+mJnE52jOO90PnPSc3Ur3bTQw0gA==
 
-ts-invariant@^0.4.0:
-  version "0.4.4"
-  resolved "https://registry.npm.taobao.org/ts-invariant/download/ts-invariant-0.4.4.tgz?cache=0&sync_timestamp=1607096502847&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fts-invariant%2Fdownload%2Fts-invariant-0.4.4.tgz#97a523518688f93aafad01b0e80eb803eb2abd86"
-  integrity sha1-l6UjUYaI+TqvrQGw6A64A+sqvYY=
-  dependencies:
-    tslib "^1.9.3"
-
 ts-invariant@^0.6.0:
   version "0.6.0"
   resolved "https://registry.npm.taobao.org/ts-invariant/download/ts-invariant-0.6.0.tgz?cache=0&sync_timestamp=1607096502847&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fts-invariant%2Fdownload%2Fts-invariant-0.6.0.tgz#44066ecfeb7a806ff1c3b0b283408a337a885412"
@@ -12703,20 +12658,12 @@ yocto-queue@^0.1.0:
   resolved "https://registry.npm.taobao.org/yocto-queue/download/yocto-queue-0.1.0.tgz?cache=0&sync_timestamp=1606290282107&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fyocto-queue%2Fdownload%2Fyocto-queue-0.1.0.tgz#0294eb3dee05028d31ee1a5fa2c556a6aaf10a1b"
   integrity sha1-ApTrPe4FAo0x7hpfosVWpqrxChs=
 
-zen-observable-ts@^0.8.12:
-  version "0.8.21"
-  resolved "https://registry.npm.taobao.org/zen-observable-ts/download/zen-observable-ts-0.8.21.tgz#85d0031fbbde1eba3cd07d3ba90da241215f421d"
-  integrity sha1-hdADH7veHro80H07qQ2iQSFfQh0=
-  dependencies:
-    tslib "^1.9.3"
-    zen-observable "^0.8.0"
-
 zen-observable@0.8.11:
   version "0.8.11"
   resolved "https://registry.npm.taobao.org/zen-observable/download/zen-observable-0.8.11.tgz#d3415885eeeb42ee5abb9821c95bb518fcd6d199"
   integrity sha1-00FYhe7rQu5au5ghyVu1GPzW0Zk=
 
-zen-observable@^0.8.0, zen-observable@^0.8.14:
+zen-observable@^0.8.14:
   version "0.8.15"
   resolved "https://registry.npm.taobao.org/zen-observable/download/zen-observable-0.8.15.tgz#96415c512d8e3ffd920afd3889604e30b9eaac15"
   integrity sha1-lkFcUS2OP/2SCv04iWBOMLnqrBU=

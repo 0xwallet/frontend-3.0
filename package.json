@@ -31,8 +31,6 @@
     "gen:icon": "esno ./build/generate/icon/index.ts"
   },
   "dependencies": {
-    "@absinthe/socket": "^0.2.1",
-    "@absinthe/socket-apollo-link": "^0.2.1",
     "@apollo/client": "^3.3.6",
     "@iconify/iconify": "^2.0.0-rc.6",
     "@msgpack/msgpack": "^2.5.1",
