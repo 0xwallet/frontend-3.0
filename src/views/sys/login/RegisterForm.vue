@@ -112,7 +112,7 @@
       const { t } = useI18n();
       const { handleBackLogin, getLoginState, setLoginState } = useLoginState();
 
-      const formRef = ref<any>(null);
+      const formRef = ref();
       const loading = ref(false);
 
       const formData = reactive({
