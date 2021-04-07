@@ -13,7 +13,7 @@
 
     <div class="flex">
       <div class="flex-none w-1/5 m-1" v-if="treeVisible">
-        <FileTree :filters="['md', 'txt']" :path="path.dirId" />
+        <FileTree :filters="['md', 'txt', 'json']" :path="path.dirId" />
         <div class="grid grid-cols-3 gap-1">
           <div><Button @click="newMarkdown">new</Button> </div>
           <div>{{ path.title }}</div>

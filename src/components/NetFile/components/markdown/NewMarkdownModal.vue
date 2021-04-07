@@ -33,6 +33,29 @@
             required: true,
           },
           {
+            field: 'type',
+            component: 'RadioButtonGroup',
+            defaultValue: 'md',
+            label: t('type'),
+            componentProps: {
+              options: [
+                {
+                  label: 'Markdown',
+                  value: 'md',
+                },
+                {
+                  label: 'Txt',
+                  value: 'txt',
+                },
+                {
+                  label: 'Json',
+                  value: 'json',
+                },
+              ],
+            },
+            required: true,
+          },
+          {
             field: 'desc',
             component: 'Input',
             defaultValue: '',
@@ -49,13 +72,13 @@
           const data = await validateFields();
           await fileStore.newMarkdownFile({
             content: content.value,
-            name: data.name + '.md',
+            name: `${data.name}.${data.type}`,
             desc: data.desc,
           });
           fileStore.setMarkdownEdited({
             index: index.value,
             edited: false,
-            title: data.name + '.md',
+            title: `${data.name}.${data.type}`,
           });
         } finally {
           closeModal();

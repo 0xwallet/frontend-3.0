@@ -489,10 +489,11 @@
           f.preview();
           return;
         }
+        if (['md', 'txt', 'json'].includes(f.type)) {
+          fileStore.appendMarkdownFile(f);
+          return;
+        }
         switch (f.type) {
-          case 'md':
-            fileStore.appendMarkdownFile(f);
-            break;
           case 'pdf':
             openPdfDrawer(true, { file: f }, true);
             break;
@@ -507,15 +508,7 @@
       function openUploadModal() {
         uploadRef.value.openUploadModal();
       }
-      // const { onResult: sub, onError } = useSubscription(NetGql.Basic.Uploaded, {
-      //   userId: 28,
-      // });
-      // sub((result) => {
-      //   console.log(result.data);
-      // });
-      // onError((error) => {
-      //   console.log(error);
-      // });
+
       return {
         registerTable,
         setSelectedRowKeyList,
