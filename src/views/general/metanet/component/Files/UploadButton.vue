@@ -50,11 +50,6 @@
 
       function openUploadModal() {
         openModal(true);
-        setModalProps({
-          afterClose: () => {
-            fileStore.setRefetch(2);
-          },
-        });
       }
       async function beforeUpload(file) {
         const path = props.path.map((v) => {

@@ -150,12 +150,10 @@
       watch(
         () => fileStore.getRefetch,
         (v) => {
-          if (fileStore.getRefetch == 0) return;
-          setTimeout(() => {
-            refetch();
-            console.log('刷新', v);
-            fileStore.setRefetch(0);
-          }, v * 1000);
+          if (!v) return;
+          refetch();
+          fileStore.setRefetch(false);
+          console.log('Refetch');
         }
       );
       // 文件路径面包屑

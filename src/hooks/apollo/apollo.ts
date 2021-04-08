@@ -10,6 +10,7 @@ import { onError } from '@apollo/client/link/error';
 // import { getMainDefinition } from '@apollo/client/utilities';
 // // @ts-ignore
 import { Socket as PhoenixSocket } from 'phoenix';
+import { fileStore } from '/@/store/modules/netFile';
 
 // 与 API 的 HTTP 连接
 const { createErrorModal } = useMessage();
@@ -115,7 +116,10 @@ export function useWs(): any {
   WsChannel = phoenix_socket.channel(`drive:user_${user_id}`, {});
   console.log('ws就绪');
   // event when file uploaded
-  WsChannel.on('file_uploaded', (file) => console.log('file uploaded:', file));
+  WsChannel.on('file_uploaded', (file) => {
+    console.log('file uploaded:', file);
+    fileStore.setRefetch();
+  });
   // join channel
   WsChannel.join()
     .receive('ok', (resp) => {

@@ -52,7 +52,7 @@ class netFileStore extends VuexModule {
 
   private uploadSpeed: uploadSpeed = { time: 0, speed: 0 };
 
-  private refetch: number = 0;
+  private refetch: boolean = false;
 
   private markdownFiles: markdownFile[] = [];
 
@@ -82,7 +82,7 @@ class netFileStore extends VuexModule {
   get getMarkdownVisible(): boolean {
     return this.markdownModalVisible;
   }
-  get getRefetch(): number {
+  get getRefetch(): boolean {
     return this.refetch;
   }
   get getFileInfo(): fileInfo {
@@ -142,7 +142,7 @@ class netFileStore extends VuexModule {
     this.uploadList = [];
   }
   @Mutation
-  setRefetch(t: number = 0): void {
+  setRefetch(t: boolean = true): void {
     this.refetch = t;
   }
   @Mutation
@@ -249,7 +249,6 @@ class netFileStore extends VuexModule {
       await this.uploadItem(object, item.uuid);
       this.setItemValue({ uuid: item.uuid, key: 'status', value: UploadResultStatus.SUCCESS });
       createMessage.success(item.name + '上传成功', 2);
-      this.setRefetch(1);
       return {
         success: true,
         error: null,
