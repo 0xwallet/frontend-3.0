@@ -299,6 +299,26 @@
 
   @prefix-cls: ~'@{namespace}-basic-table';
 
+  html[data-theme='light'] {
+    .@{prefix-cls} {
+      &-row__striped {
+        td {
+          background: #fafafa;
+        }
+      }
+    }
+  }
+
+  html[data-theme='dark'] {
+    .@{prefix-cls} {
+      &-row__striped {
+        td {
+          background: rgb(255 255 255 / 4%);
+        }
+      }
+    }
+  }
+
   .@{prefix-cls} {
     &-form-container {
       padding: 16px;
@@ -306,14 +326,8 @@
       .ant-form {
         padding: 12px 10px 6px 10px;
         margin-bottom: 16px;
-        background: #fff;
+        background: @component-background;
         border-radius: 4px;
-      }
-    }
-
-    &-row__striped {
-      td {
-        background: #fafafa;
       }
     }
 
@@ -329,7 +343,7 @@
 
     .ant-table-wrapper {
       padding: 6px;
-      background: #fff;
+      background: @component-background;
       border-radius: 2px;
 
       .ant-table-title {
@@ -341,7 +355,6 @@
       }
     }
 
-    //
     .ant-table {
       width: 100%;
       overflow-x: hidden;

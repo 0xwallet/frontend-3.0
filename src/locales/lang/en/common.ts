@@ -15,4 +15,7 @@ export default {
   redo: 'Refresh',
   back: 'Back',
   markdown: 'Markdown Edit',
+
+  light: 'Light',
+  dark: 'Dark',
 };
