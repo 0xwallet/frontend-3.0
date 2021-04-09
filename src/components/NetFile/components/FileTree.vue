@@ -7,7 +7,10 @@
       :showIcon="true"
       @select="select"
       search
-      ><template #headerTitle><Button @click="changeOutline">切换</Button></template>
+      ><template #headerTitle
+        ><Button @click="changeOutline" type="link"
+          ><Icon :icon="'fa-solid:list-ol'" v-if="treeVisible" /></Button
+      ></template>
     </BasicTree>
   </div>
 </template>
@@ -21,9 +24,9 @@
   import type { TreeDataItem } from 'ant-design-vue/es/tree/Tree';
   import { fileStore } from '/@/store/modules/netFile';
   import { Button } from '/@/components/Button';
-
+  import { Icon } from '/@/components/Icon';
   export default defineComponent({
-    components: { BasicTree, Button },
+    components: { BasicTree, Button, Icon },
     props: {
       path: propTypes.string.def('root'),
       filters: propTypes.array.def([]),
@@ -39,6 +42,9 @@
         },
         { immediate: true }
       );
+      const treeVisible = computed(() => {
+        return !fileStore.getEditorOutlineVisible;
+      });
       const dirId = computed(() => props.path);
       const treeData: TreeDataItem[] = [
         {
@@ -117,6 +123,7 @@
         select,
         height,
         changeOutline,
+        treeVisible,
       };
     },
   });

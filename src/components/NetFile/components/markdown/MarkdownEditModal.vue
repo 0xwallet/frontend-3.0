@@ -15,18 +15,34 @@
       <div class="flex-none w-1/5 m-1" v-if="treeVisible">
         <FileTree :filters="['md', 'txt', 'json']" :path="path.dirId" />
         <div class="grid grid-cols-3 gap-1">
-          <div><Button @click="newMarkdown">new</Button> </div>
+          <div
+            ><Button @click="newMarkdown" type="link"><Icon :icon="`fa:plus`" /></Button>
+          </div>
           <div>{{ path.title }}</div>
-          <div>3</div>
+          <div
+            ><Button type="link"><Icon :icon="`fa:list`" /></Button
+          ></div>
         </div>
       </div>
-      <div v-if="!treeVisible" class="w-10 m-1"> <Button @click="changeOutline">切换</Button> </div>
+      <div v-if="!treeVisible" class="w-10 m-1">
+        <Button @click="changeOutline" type="link"
+          ><Icon :icon="'clarity:tree-view-line'"
+        /></Button>
+      </div>
       <div class="flex-grow">
         <Tabs v-model:activeKey="activeKey" hide-add type="editable-card" @edit="onEdit">
           <TabPane v-for="(pane, index) in panes" :key="pane.key" :closable="pane.closable">
-            <template #tab
-              ><EditOutlined v-if="pane.edited" @click="save(index)" />{{ pane.title }}</template
-            >
+            <template #tab>
+              <div>
+                <EditOutlined v-if="pane.edited" @click="save(index)" />
+                <TypographyText
+                  :content="pane.title"
+                  :ellipsis="{ tooltip: `${pane.title}` }"
+                  :style="{ width: '80px' }"
+                />
+                {{ pane.title.split('.').slice(-1)[0] }}
+              </div>
+            </template>
             <Spin :spinning="spinning">
               <div :ref="setRef(index)" :id="pane.key" />
             </Spin>
@@ -40,9 +56,10 @@
   import { computed, createVNode, defineComponent, nextTick, ref, watch } from 'vue';
   import { BasicModal, useModalInner, useModal } from '/@/components/Modal';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import { Tabs, Modal, Spin } from 'ant-design-vue';
+  import { Tabs, Modal, Spin, Typography } from 'ant-design-vue';
   import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
   import { fileStore, markdownFile } from '/@/store/modules/netFile';
+  Icon;
   import Vditor from 'vditor';
   import 'vditor/dist/index.css';
   import { FileTree } from '/@/components/NetFile';
@@ -50,6 +67,7 @@
   import { useMessage } from '/@/hooks/web/useMessage';
   import { EditOutlined } from '@ant-design/icons-vue';
   import NewMarkdownModal from './NewMarkdownModal.vue';
+  import { Icon } from '/@/components/Icon';
   const { t } = useI18n('general.metanet');
 
   export default defineComponent({
@@ -62,6 +80,8 @@
       EditOutlined,
       Spin,
       NewMarkdownModal,
+      Icon,
+      TypographyText: Typography.Text,
     },
     setup() {
       const { createMessage } = useMessage();
@@ -146,7 +166,7 @@
       }
 
       function openOutLine(open: boolean) {
-        const status = treeVisible.value ? 'none' : 'block';
+        const status = !fileStore.getEditorOutlineVisible ? 'none' : 'block';
         const list = document.getElementsByClassName('vditor-outline');
         // console.log(list.length);
         for (let i = 0; i < list.length; i++) {
