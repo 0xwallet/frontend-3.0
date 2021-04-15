@@ -52,6 +52,7 @@ interface netFileState {
   markdownModalVisible: boolean;
   fileSize: object;
   Info: fileInfo;
+  editorPath: { name: string; dirId: string };
   space: { total: number; used: number };
 }
 
@@ -65,8 +66,10 @@ export const useNetFileStore = defineStore({
     markdownFiles: [],
     editorVisible: false,
     editorOutlineVisible: false,
+    editorPath: { name: 'Home', dirId: 'root' },
     markdownModalVisible: false,
     fileSize: {},
+
     Info: { file: null, mode: 'basic', button: false, collection: false },
     space: { total: 1, used: 0 },
   }),
@@ -74,6 +77,7 @@ export const useNetFileStore = defineStore({
     getUploadList(): FileItem[] {
       return this.uploadList || [];
     },
+
     getShareFile(): NetFile[] {
       return this.shareFiles;
     },
@@ -103,6 +107,9 @@ export const useNetFileStore = defineStore({
     },
     getEditorOutlineVisible(): boolean {
       return this.editorOutlineVisible;
+    },
+    getEditorPath() {
+      return this.editorPath;
     },
   },
   actions: {
@@ -147,7 +154,13 @@ export const useNetFileStore = defineStore({
     setShareFile(file: NetFile[]): void {
       this.shareFiles = file;
     },
-    appendMarkdownFile(file?: NetFile): void {
+    appendMarkdownFile(
+      file?: NetFile,
+      changePath: boolean = false,
+      path?: { name: string; dirId: string }
+    ): void {
+      if (changePath) this.editorPath = path || { name: 'Home', dirId: 'root' };
+
       if (file && !this.markdownFiles.some((v) => v.key === file.id)) {
         this.markdownFiles.push({
           title: file.fileName(),
@@ -156,16 +169,18 @@ export const useNetFileStore = defineStore({
           edited: false,
           content: undefined,
         });
-      } else {
-        this.markdownFiles.push({
-          title: 'new',
-          file: null,
-          key: dateUtil().toString(),
-          edited: false,
-          content: '',
-        });
       }
+
       this.editorVisible = true;
+    },
+    createMarkdownFile() {
+      this.markdownFiles.push({
+        title: 'new',
+        file: null,
+        key: dateUtil().toString(),
+        edited: false,
+        content: '',
+      });
     },
     delMarkdownFile(id: string): number {
       const index = this.markdownFiles.findIndex((v) => v.key == id);

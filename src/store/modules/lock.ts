@@ -38,13 +38,8 @@ export const useLockStore = defineStore({
       }
       const tryLogin = async () => {
         try {
-          const username = userStore.getUserInfo?.username;
-          const res = await userStore.login({
-            username,
-            password: password!,
-            goHome: false,
-            mode: 'none',
-          });
+          // const username = userStore.getUserInfo?.username;
+          const res = await userStore.login();
           if (res) {
             this.resetLockInfo();
           }

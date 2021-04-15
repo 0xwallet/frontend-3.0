@@ -7,6 +7,7 @@
       :showIcon="true"
       @select="select"
       search
+      v-if="show"
       ><template #headerTitle
         ><Button @click="changeOutline" type="link"
           ><Icon :icon="'fa-solid:list-ol'" v-if="treeVisible" /></Button
@@ -29,7 +30,7 @@
   export default defineComponent({
     components: { BasicTree, Button, Icon },
     props: {
-      path: propTypes.string.def('root'),
+      path: propTypes.object,
       filters: propTypes.array.def([]),
     },
     setup(props) {
@@ -37,10 +38,25 @@
       const treeRef = ref<Nullable<TreeActionType>>(null);
       const height = computed(() => document.body.clientHeight - 500);
       const { createMessage } = useMessage();
+      const show = ref(true);
+      const treeData = ref<TreeDataItem[]>([]);
       watch(
         () => props.path,
         (v) => {
-          console.log(v);
+          console.log(treeData.value);
+          show.value = false;
+          if (treeData.value.length > 0 && treeData.value[0].value == v.dirId) return;
+          treeData.value = [
+            {
+              title: v.name,
+              value: v.dirId,
+              key: v.dirId,
+              icon: 'bx-bx-folder',
+            },
+          ];
+          setTimeout(() => {
+            show.value = true;
+          }, 50);
         },
         { immediate: true }
       );
@@ -48,14 +64,7 @@
         return !fileStore.getEditorOutlineVisible;
       });
       const dirId = computed(() => props.path);
-      const treeData: TreeDataItem[] = [
-        {
-          title: '~',
-          value: 'root',
-          key: 'root',
-          icon: 'bx-bx-folder',
-        },
-      ];
+
       function fetchData(variables: { dirId: string }, parentKey?: string) {
         console.log(parentKey, variables);
         useApollo({
@@ -110,8 +119,8 @@
       }
       function select(selectedKeys, { node }) {
         console.log(node.value);
-        if (node.value.type === 'md') {
-          fileStore.appendMarkdownFile(node.value);
+        if (props.filters.includes(node.value.type)) {
+          fileStore.appendMarkdownFile(node.value, false);
         }
       }
       function changeOutline() {
@@ -126,6 +135,7 @@
         height,
         changeOutline,
         treeVisible,
+        show,
       };
     },
   });

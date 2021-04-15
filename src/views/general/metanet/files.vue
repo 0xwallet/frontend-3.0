@@ -455,6 +455,10 @@
             collection: false,
           });
         }
+        console.log(p);
+        if (p.length == 0) {
+          path.value = [];
+        }
         variables.value = { fullName: p };
       }
       // 打开文件或者进入目录
@@ -489,7 +493,7 @@
           return;
         }
         if (['md', 'txt', 'json'].includes(f.type)) {
-          fileStore.appendMarkdownFile(f);
+          fileStore.appendMarkdownFile(f, true, path.value.slice(-1)[0]);
           return;
         }
         switch (f.type) {

@@ -9,13 +9,17 @@ import { onError } from '@apollo/client/link/error';
 // import { getMainDefinition } from '@apollo/client/utilities';
 // // @ts-ignore
 import { Socket as PhoenixSocket } from 'phoenix';
+import router from '/@/router';
+import { PageEnum } from '/@/enums/pageEnum';
 // import { fileStore } from '/@/store/modules/netFile';
 
 // 与 API 的 HTTP 连接
 const { createErrorModal } = useMessage();
 let Client: ApolloClient<any>;
 let WsChannel: any = null;
+
 export function initApollo(): ApolloClient<any> | null {
+  if (Client) return Client;
   const httpLink = new HttpLink({
     uri: 'https://owaf.io/api',
   });
@@ -41,6 +45,7 @@ export function initApollo(): ApolloClient<any> | null {
       graphQLErrors.map(({ message, locations, path }) => {
         switch (message) {
           case 'Please sign in first!':
+            router.push(PageEnum.BASE_LOGIN);
             break;
           case 'file hash not found':
             break;
@@ -77,6 +82,7 @@ export function initApollo(): ApolloClient<any> | null {
 export function useApollo(params: { mode: string; gql: any; variables?: any }): Promise<any> {
   return new Promise((resolve, reject) => {
     const { mode, gql, variables } = params;
+    if (!Client) initApollo();
     let r: Promise<any>;
     switch (mode) {
       case 'query':

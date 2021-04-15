@@ -12,7 +12,7 @@ import { NetGql } from '/@/components/NetFile/gql';
 const { createMessage } = useMessage();
 const maxSize = 20;
 const accept: string[] = [];
-const fileStore = useNetFileStoreWidthOut();
+
 async function checkFile(file: File, path: string[] = [], immediately: boolean = false) {
   // 设置类型,则判断
   const { size, name } = file;
@@ -65,6 +65,7 @@ async function checkFile(file: File, path: string[] = [], immediately: boolean =
       //     commonItem.thumbUrl = thumbUrl;
       //   });
       // }
+      const fileStore = useNetFileStoreWidthOut();
       fileStore.appendItem(commonItem);
       if (immediately) fileStore.uploadApiByItem(commonItem);
     });

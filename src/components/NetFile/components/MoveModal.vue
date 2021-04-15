@@ -32,9 +32,10 @@
         total.value = data.folder.length;
         path.value = [data.path[data.path.length - 1]];
       });
+      const { mutate: MoveFile } = useMutation(NetGql.Basic.Move);
       const variables = ref({});
       const { onResult } = useQuery(NetGql.Basic.FileList, variables);
-      const { mutate: MoveFile } = useMutation(NetGql.Basic.Move);
+
       let tree = null;
 
       onResult((res) => {

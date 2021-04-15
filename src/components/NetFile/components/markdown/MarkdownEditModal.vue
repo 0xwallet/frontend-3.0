@@ -13,12 +13,12 @@
 
     <div class="flex">
       <div class="flex-none w-1/5 m-1" v-if="treeVisible">
-        <FileTree :filters="['md', 'txt', 'json']" :path="path.dirId" />
+        <FileTree :filters="['md', 'txt', 'json']" :path="path" />
         <div class="grid grid-cols-3 gap-1">
           <div
             ><Button @click="newMarkdown" type="link"><Icon :icon="`fa:plus`" /></Button>
           </div>
-          <div>{{ path.title }}</div>
+          <div>{{ path.name }}</div>
           <div
             ><Button type="link"><Icon :icon="`fa:list`" /></Button
           ></div>
@@ -40,7 +40,7 @@
                   :ellipsis="{ tooltip: `${pane.title}` }"
                   :style="{ width: '80px' }"
                 />
-                {{ pane.title.split('.').slice(-1)[0] }}
+                <span v-if="pane.title.length > 10">{{ pane.title.split('.').slice(-1)[0] }}</span>
               </div>
             </template>
             <Spin :spinning="spinning">
@@ -92,22 +92,14 @@
       const vditorRefs = ref<Nullable<Vditor>[]>([]);
       const panes = ref<markdownFile[]>([]);
       const activeKey = ref('');
-      const path = ref({ dirId: 'root', title: 'Home' });
       const visible = computed(() => fileStore.getEditorVisible);
       const spinning = ref(true);
       const treeVisible = computed(() => {
         openOutLine();
         return !fileStore.getEditorOutlineVisible;
       });
-      // watch(
-      //   () => fileStore.getEditorOutlineVisible,
-      //   (v) => {
-      //     console.log(v);
-      //     treeVisible.value = !v;
-      //     openOutLine();
-      //   }
-      // );
-      // const vditorRef = ref<Nullable<Vditor>>(null);
+      const path = computed(() => fileStore.getEditorPath);
+
       watch(
         () => fileStore.getMarkdownFiles,
         (v) => {
@@ -123,7 +115,6 @@
       const [registerNewMarkdownModal, { openModal }] = useModal();
 
       const height = computed(() => document.body.clientHeight - 300);
-      const text = ref(false);
       const [register, { closeModal }] = useModalInner();
       async function init(index: number) {
         spinning.value = true;
@@ -156,7 +147,6 @@
             vditor.setValue(value);
           }
 
-          openOutLine(true);
           // console.log((a[0].style.display = 'block'));
 
           // initedRef.value = true;
@@ -228,7 +218,7 @@
         fileStore.setEditorOutlineVisible();
       }
       function newMarkdown() {
-        fileStore.appendMarkdownFile();
+        fileStore.createMarkdownFile();
       }
       return {
         handleCloseFunc,
