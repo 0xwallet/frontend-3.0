@@ -118,7 +118,7 @@ export function useWs(): any {
   // event when file uploaded
   WsChannel.on('file_uploaded', (file) => {
     console.log('file uploaded:', file);
-    fileStore.setRefetch();
+    // fileStore.setRefetch();
   });
   // join channel
   WsChannel.join()
