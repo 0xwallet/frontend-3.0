@@ -36,7 +36,7 @@
   import { ExclamationCircleOutlined, ExclamationCircleTwoTone } from '@ant-design/icons-vue';
   import { NetGql, NetFile } from '/@/components/NetFile';
   import { Button } from '/@/components/Button';
-  import { fileStore } from '/@/store/modules/netFile';
+  import { useNetFileStore } from '/@/store/modules/netFile';
 
   const { t } = useI18n('general.metanet');
   export default defineComponent({
@@ -52,6 +52,7 @@
       Button,
     },
     setup() {
+      const fileStore = useNetFileStore();
       const { createMessage, createErrorModal } = useMessage();
       const path = ref([]);
       const tableData = computed(() => shareData.value.concat(publishData.value));

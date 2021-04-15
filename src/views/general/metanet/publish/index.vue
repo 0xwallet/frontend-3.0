@@ -61,7 +61,7 @@
   import { Icon, NetFile, NetGql } from '/@/components/NetFile';
   import { useCopyToClipboard } from '/@/hooks/web/useCopyToClipboard';
   import { Button } from '/@/components/Button';
-  import { fileStore } from '/@/store/modules/netFile';
+  import { useNetFileStore } from '/@/store/modules/netFile';
 
   const { clipboardRef, copiedRef } = useCopyToClipboard();
   const { t } = useI18n('general.metanet');
@@ -81,6 +81,7 @@
       Button,
     },
     setup() {
+      const fileStore = useNetFileStore();
       const { createMessage, createErrorModal } = useMessage();
       const path = ref([]);
       const tableData = ref([]);

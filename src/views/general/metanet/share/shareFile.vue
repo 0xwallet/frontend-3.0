@@ -86,7 +86,7 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import { Hash, Icon, PdfDrawer, NetFile, NetGql } from '/@/components/NetFile';
   import { BasicForm, useForm } from '/@/components/Form';
-  import { fileStore } from '/@/store/modules/netFile';
+  import { useNetFileStore } from '/@/store/modules/netFile';
   import ShareFileMobile from '/@/views/general/metanet/share/component/ShareFileMobile.vue';
   import { useQuery } from '@vue/apollo-composable';
   import router from '/@/router';
@@ -113,6 +113,7 @@
       Icon,
     },
     setup() {
+      const fileStore = useNetFileStore();
       const { currentRoute } = useRouter();
       if (
         navigator.userAgent.match(

@@ -55,7 +55,7 @@
   import { Hash, Icon, PdfDrawer, NetFile, NetGql } from '/@/components/NetFile';
   import { Card, Space, Row, Col, Button, List } from 'ant-design-vue';
   import { Svg } from '/@/components/Svg';
-  import { fileStore } from '/@/store/modules/netFile';
+  import { useNetFileStore } from '/@/store/modules/netFile';
   import { BasicForm, useForm } from '/@/components/Form';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useDrawer } from '/@/components/Drawer';
@@ -87,6 +87,7 @@
       ListItemMeta: List.Item.Meta,
     },
     setup() {
+      const fileStore = useNetFileStore();
       const { currentRoute } = useRouter();
 
       const params = computed(() => {

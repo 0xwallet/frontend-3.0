@@ -21,11 +21,11 @@ import { useErrorLogStoreWithOut } from '/@/store/modules/errorLog';
 import { errorResult } from './const';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { createNow, formatRequestDate } from './helper';
-import { userStore } from '/@/store/modules/user';
+import { useUserStoreWidthOut } from '/@/store/modules/user';
 const globSetting = useGlobSetting();
 const prefix = globSetting.urlPrefix;
 const { createMessage, createErrorModal } = useMessage();
-
+const userStore = useUserStoreWidthOut();
 /**
  * @description: 数据处理，方便区分多种处理方式
  */

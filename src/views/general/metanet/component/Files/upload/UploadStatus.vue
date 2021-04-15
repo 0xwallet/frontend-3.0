@@ -17,8 +17,8 @@
   import { computed, defineComponent, ref } from 'vue';
   import { Affix, Progress } from 'ant-design-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import { fileStore } from '/@/store/modules/netFile';
-  import Mitt from '/@/utils/mitt';
+  import { useNetFileStore } from '/@/store/modules/netFile';
+
   import { NknClient } from '/@/hooks/nkn/getNKN';
 
   const { t } = useI18n('general.metanet');
@@ -29,6 +29,7 @@
     },
     emits: ['openUploadModal'],
     setup(_, { emit }) {
+      const fileStore = useNetFileStore();
       const bottom = ref(10);
       const per = computed(() => {
         const list = fileStore.getUploadList.filter((v) => v.status !== 'success');

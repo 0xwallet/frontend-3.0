@@ -37,7 +37,7 @@
   import { useMutation } from '@vue/apollo-composable';
   import { sendLoginCode, signIn } from '/@/hooks/apollo/gqlUser';
   import { useWallet } from '/@/hooks/nkn/getNKN';
-  import { userStore } from '/@/store/modules/user';
+  import { useUserStore } from '/@/store/modules/user';
   import { useMessage } from '/@/hooks/web/useMessage';
 
   export default defineComponent({
@@ -51,6 +51,7 @@
       LoginFormTitle,
     },
     setup() {
+      const userStore = useUserStore();
       const { t } = useI18n();
       const { handleBackLogin, getLoginState, email } = useLoginState();
       const { getFormRules } = useFormRules();

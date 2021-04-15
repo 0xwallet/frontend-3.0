@@ -149,7 +149,8 @@
   import { Hash, Icon, NetGql } from '/@/components/NetFile';
   import Desc from './Desc.vue';
   import { useApollo } from '/@/hooks/apollo/apollo';
-  import { fileStore } from '/@/store/modules/netFile';
+  import { useNetFileStore } from '/@/store/modules/netFile';
+
   const { t } = useI18n('general.metanet');
   export default defineComponent({
     name: 'FileInfo',
@@ -176,6 +177,7 @@
       Progress,
     },
     setup() {
+      const fileStore = useNetFileStore();
       const file: NetFile = computed<NetFile>(() => {
         // console.log(fileStore.getFileInfo.file);
         return fileStore.getFileInfo.file;

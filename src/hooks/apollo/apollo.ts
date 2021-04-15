@@ -1,5 +1,4 @@
 import { useMessage } from '/@/hooks/web/useMessage';
-import { userStore } from '/@/store/modules/user';
 import { provide } from 'vue';
 
 import { ApolloClient, InMemoryCache } from '@apollo/client';
@@ -10,7 +9,7 @@ import { onError } from '@apollo/client/link/error';
 // import { getMainDefinition } from '@apollo/client/utilities';
 // // @ts-ignore
 import { Socket as PhoenixSocket } from 'phoenix';
-import { fileStore } from '/@/store/modules/netFile';
+// import { fileStore } from '/@/store/modules/netFile';
 
 // 与 API 的 HTTP 连接
 const { createErrorModal } = useMessage();
@@ -42,7 +41,6 @@ export function initApollo(): ApolloClient<any> | null {
       graphQLErrors.map(({ message, locations, path }) => {
         switch (message) {
           case 'Please sign in first!':
-            userStore.logout(true);
             break;
           case 'file hash not found':
             break;
@@ -128,14 +126,4 @@ export function useWs(): any {
     .receive('error', (resp) => {
       console.log('Unable to join', resp);
     });
-}
-
-export function handleApolloError(err: any) {
-  if (err.message === 'Please sign in first!') {
-    userStore.logout(true);
-  }
-  createErrorModal({
-    title: '错误',
-    content: err.message,
-  });
 }

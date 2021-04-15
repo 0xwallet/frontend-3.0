@@ -13,13 +13,14 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import { Input, Space } from 'ant-design-vue';
   import { NetGql } from '/@/components/NetFile';
-  import { fileStore } from '/@/store/modules/netFile';
+  import { useNetFileStore } from '/@/store/modules/netFile';
 
   const { t } = useI18n('general.metanet');
 
   export default defineComponent({
     components: { BasicModal, BasicForm, Input, Space },
     setup() {
+      const fileStore = useNetFileStore();
       const pathList = ref([
         { value: '~', id: 'root' },
         { value: '*', id: '' },

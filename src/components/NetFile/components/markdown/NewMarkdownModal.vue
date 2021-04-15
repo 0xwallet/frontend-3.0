@@ -9,11 +9,13 @@
   import { useMessage } from '/@/hooks/web/useMessage';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useForm, BasicForm } from '/@/components/Form';
-  import { fileStore } from '/@/store/modules/netFile';
+  import { useNetFileStore } from '/@/store/modules/netFile';
   const { t } = useI18n('general.metanet');
+
   export default defineComponent({
     components: { BasicModal, BasicForm },
     setup() {
+      const fileStore = useNetFileStore();
       const { createMessage, createErrorModal } = useMessage();
       const index = ref(0);
       const content = ref('');

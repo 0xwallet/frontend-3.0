@@ -70,7 +70,7 @@
   //Apollo
   import { InboxOutlined, MinusOutlined } from '@ant-design/icons-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import { fileStore } from '/@/store/modules/netFile';
+  import { useNetFileStore } from '/@/store/modules/netFile';
   import { useMutation } from '@vue/apollo-composable';
   import { NetGql, NetUpload } from '/@/components/NetFile';
 
@@ -88,6 +88,7 @@
     props: basicProps,
     setup(props, { emit }) {
       //   是否正在上传
+      const fileStore = useNetFileStore();
       const isUploadingRef = ref(false);
       const fileListRef = ref<FileItem[]>([]);
       const fileList = computed(() => {

@@ -32,7 +32,8 @@
   import { NetFile } from '/@/components/NetFile/netFile';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { propTypes } from '/@/utils/propTypes';
-  import { fileStore } from '/@/store/modules/netFile';
+  import { useNetFileStore } from '/@/store/modules/netFile';
+
   const { t } = useI18n('general.metanet');
   import { Svg } from '/@/components/Svg';
   export default defineComponent({
@@ -43,6 +44,7 @@
       needCode: propTypes.bool,
     },
     setup(props) {
+      const fileStore = useNetFileStore();
       const file = computed(() => {
         return fileStore.getShareFile.find((f) => f.uri === props.uri) || null;
       });

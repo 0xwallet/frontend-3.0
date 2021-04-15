@@ -11,8 +11,9 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import CryptoJS from 'crypto-js';
   import { buildUUID } from '/@/utils/uuid';
-  import { fileStore } from '/@/store/modules/netFile';
+  import { useNetFileStore } from '/@/store/modules/netFile';
   const { t } = useI18n('general.metanet');
+
   const schemas: FormSchema[] = [
     {
       field: 'type',
@@ -53,6 +54,7 @@
   export default defineComponent({
     components: { BasicModal, BasicForm },
     setup() {
+      const fileStore = useNetFileStore();
       const modelRef = ref({});
       const path = ref([]);
       const [registerForm, { validateFields }] = useForm({

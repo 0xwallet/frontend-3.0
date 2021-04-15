@@ -107,10 +107,10 @@
     NetGql,
     MarkdownModal,
   } from '/@/components/NetFile';
-  import { useMutation, useQuery, useSubscription } from '@vue/apollo-composable';
+  import { useMutation, useQuery } from '@vue/apollo-composable';
   import { Button } from '/@/components/Button';
   import { useDrawer } from '/@/components/Drawer';
-  import { fileStore } from '/@/store/modules/netFile';
+  import { useNetFileStore } from '/@/store/modules/netFile';
   const { t } = useI18n('general.metanet');
 
   export default defineComponent({
@@ -145,6 +145,7 @@
       CopyModal,
     },
     setup() {
+      const fileStore = useNetFileStore();
       // 信息框
       const { createMessage, createErrorModal, notification } = useMessage();
       watch(

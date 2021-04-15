@@ -1,8 +1,4 @@
-import {
-  checkFileType,
-  // checkImgType,
-  // getBase64WithFile,
-} from '/@/views/general/metanet/component/Files/upload/utils';
+import { checkFileType } from '/@/views/general/metanet/component/Files/upload/utils';
 import { useMessage } from '/@/hooks/web/useMessage';
 import CryptoJS from 'crypto-js';
 import {
@@ -10,13 +6,13 @@ import {
   UploadResultStatus,
 } from '/@/views/general/metanet/component/Files/upload/types';
 import { buildUUID } from '/@/utils/uuid';
-import { fileStore } from '/@/store/modules/netFile';
+import { useNetFileStoreWidthOut } from '/@/store/modules/netFile';
 import { useApollo } from '/@/hooks/apollo/apollo';
 import { NetGql } from '/@/components/NetFile/gql';
 const { createMessage } = useMessage();
 const maxSize = 20;
 const accept: string[] = [];
-
+const fileStore = useNetFileStoreWidthOut();
 async function checkFile(file: File, path: string[] = [], immediately: boolean = false) {
   // 设置类型,则判断
   const { size, name } = file;
@@ -59,8 +55,7 @@ async function checkFile(file: File, path: string[] = [], immediately: boolean =
         type: name.split('.').pop(),
         status,
         thumbUrl: '',
-        path
-
+        path,
       };
       // // 生成图片缩略图
       // if (checkImgType(file)) {

@@ -22,9 +22,10 @@
   import { propTypes } from '/@/utils/propTypes';
   import { NetFile, NetGql } from '/@/components/NetFile';
   import type { TreeDataItem } from 'ant-design-vue/es/tree/Tree';
-  import { fileStore } from '/@/store/modules/netFile';
+  import { useNetFileStore } from '/@/store/modules/netFile';
   import { Button } from '/@/components/Button';
   import { Icon } from '/@/components/Icon';
+
   export default defineComponent({
     components: { BasicTree, Button, Icon },
     props: {
@@ -32,6 +33,7 @@
       filters: propTypes.array.def([]),
     },
     setup(props) {
+      const fileStore = useNetFileStore();
       const treeRef = ref<Nullable<TreeActionType>>(null);
       const height = computed(() => document.body.clientHeight - 500);
       const { createMessage } = useMessage();

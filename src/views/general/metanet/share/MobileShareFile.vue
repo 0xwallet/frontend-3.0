@@ -40,7 +40,7 @@
   import { Hash, Icon, PdfDrawer, NetFile, NetGql } from '/@/components/NetFile';
   import { Card, Space, Row, Col, Button } from 'ant-design-vue';
   import { Svg } from '/@/components/Svg';
-  import { fileStore } from '/@/store/modules/netFile';
+  import { useNetFileStore } from '/@/store/modules/netFile';
   import { BasicForm, useForm } from '/@/components/Form';
   import { useI18n } from '/@/hooks/web/useI18n';
   const { t } = useI18n('general.metanet');
@@ -48,6 +48,7 @@
   import ShareDrawer from './component/ShareDrawer.vue';
   import MarkdownDrawer from './component/MarkdownDrawer.vue';
   import { MoreOutlined } from '@ant-design/icons-vue';
+
   export default defineComponent({
     name: 'ReleaseFile',
     components: {
@@ -67,6 +68,7 @@
       MarkdownDrawer,
     },
     setup() {
+      const fileStore = useNetFileStore();
       const { currentRoute } = useRouter();
 
       const { createErrorModal } = useMessage();

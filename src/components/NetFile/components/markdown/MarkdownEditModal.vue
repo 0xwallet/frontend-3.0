@@ -58,8 +58,7 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import { Tabs, Modal, Spin, Typography } from 'ant-design-vue';
   import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
-  import { fileStore, markdownFile } from '/@/store/modules/netFile';
-  Icon;
+  import { markdownFile, useNetFileStore } from '/@/store/modules/netFile';
   import Vditor from 'vditor';
   import 'vditor/dist/index.css';
   import { FileTree } from '/@/components/NetFile';
@@ -84,6 +83,7 @@
       TypographyText: Typography.Text,
     },
     setup() {
+      const fileStore = useNetFileStore();
       const { createMessage } = useMessage();
       const refs = ref<HTMLElement[]>([]);
       const setRef = (index: number) => (el: HTMLElement) => {

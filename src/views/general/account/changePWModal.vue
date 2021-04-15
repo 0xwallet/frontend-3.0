@@ -34,8 +34,8 @@
   import { useMutation, useQuery } from '@vue/apollo-composable';
   import { SendVerifyCode } from '/@/components/NetFile/user';
   import { CountdownInput } from '/@/components/CountDown';
-  import {userStore} from "/@/store/modules/user";
-  import {useWallet} from "/@/hooks/nkn/getNKN";
+  import { useUserStore } from '/@/store/modules/user';
+  import { useWallet } from '/@/hooks/nkn/getNKN';
 
   const { t } = useI18n('general.account');
   const schemas: FormSchema[] = [
@@ -70,6 +70,7 @@
   export default defineComponent({
     components: { BasicModal, BasicForm, Divider, Row, Col, CountdownInput },
     setup() {
+      const userStore = useUserStore();
       const modelRef = ref({});
       const [registerForm, { validateFields, appendSchemaByField, updateSchema }] = useForm({
         labelWidth: 180,
@@ -107,10 +108,10 @@
           closeModal();
         }
       }
-      onDone(()=>{
-        localStorage.removeItem('walletJson')
-        userStore.logout(true)
-      })
+      onDone(() => {
+        localStorage.removeItem('walletJson');
+        userStore.logout(true);
+      });
 
       async function handleSendCode() {
         const form = unref(formRef);

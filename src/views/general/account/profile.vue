@@ -210,12 +210,12 @@
   import { useMessage } from '/@/hooks/web/useMessage';
   import PWModal from './changePWModal.vue';
   import { useModal } from '/@/components/Modal';
-  import { userStore } from '/@/store/modules/user';
+  import { useUserStore } from '/@/store/modules/user';
   import { editCurrentUser, me } from '/@/hooks/apollo/gqlUser';
   import { useMutation, useQuery } from '@vue/apollo-composable';
   import { Icon } from '/@/components/Icon';
   import { Button } from '/@/components/Button';
-  import { fileStore } from '/@/store/modules/netFile';
+  import { useNetFileStore } from '/@/store/modules/netFile';
 
   export default defineComponent({
     components: {
@@ -247,6 +247,8 @@
     },
 
     setup() {
+      const userStore = useUserStore();
+      const fileStore = useNetFileStore();
       const { t } = useI18n('general.account');
       const avatar = ref('');
       const userInfo = reactive({

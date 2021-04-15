@@ -23,7 +23,7 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useModal } from '/@/components/Modal';
   import { MarkdownEditModal } from '/@/components/NetFile';
-  import { fileStore } from '/@/store/modules/netFile';
+  import { useNetFileStore } from '/@/store/modules/netFile';
 
   import markdown from '/@/assets/svg/markdown.svg';
   import { Icon } from '/@/components/Icon';
@@ -32,6 +32,7 @@
     components: { RedoOutlined, Tooltip, MarkdownEditModal, Icon },
 
     setup() {
+      const fileStore = useNetFileStore();
       const loading = ref(false);
       const { prefixCls } = useDesign('multiple-tabs-content');
       const { t } = useI18n();

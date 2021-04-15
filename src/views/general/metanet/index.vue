@@ -33,8 +33,9 @@
   import Collection from './collection/index.vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { FileInfo } from '/@/components/NetFile';
-  import { fileStore } from '/@/store/modules/netFile';
+  import { useNetFileStore } from '/@/store/modules/netFile';
   const { t } = useI18n('general.metanet');
+
   export default defineComponent({
     components: {
       FileInfo,
@@ -49,6 +50,7 @@
       Collection,
     },
     setup() {
+      const fileStore = useNetFileStore();
       const tabList = [
         {
           key: 'basic',

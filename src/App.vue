@@ -14,7 +14,7 @@
   import { useLockPage } from '/@/hooks/web/useLockPage';
   import { initApollo } from '/@/hooks/apollo/apollo';
   import { initJS, useMClient, useWallet } from '/@/hooks/nkn/getNKN';
-  import { userStore } from '/@/store/modules/user';
+  import { useUserStore } from '/@/store/modules/user';
   import { useTitle } from '/@/hooks/web/useTitle';
   import { useLocale } from '/@/locales/useLocale';
 
@@ -22,6 +22,7 @@
     name: 'App',
     components: { ConfigProvider, AppProvider },
     setup() {
+      const userStore = useUserStore();
       useTitle();
 
       // support Multi-language

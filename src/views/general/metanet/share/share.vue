@@ -66,7 +66,7 @@
   import { Button } from '/@/components/Button';
   import { dateUtil } from '/@/utils/dateUtil';
   import { BasicForm } from '/@/components/Form';
-  import { fileStore } from '/@/store/modules/netFile';
+  import { useNetFileStore } from '/@/store/modules/netFile';
 
   const { t } = useI18n('general.metanet');
   export default defineComponent({
@@ -86,6 +86,7 @@
       Modal,
     },
     setup() {
+      const fileStore = useNetFileStore();
       const { createMessage, createErrorModal } = useMessage();
       const path = ref([]);
       const tableData = ref([]);

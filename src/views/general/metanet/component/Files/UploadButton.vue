@@ -28,7 +28,7 @@
   import { NetUpload } from '/@/components/NetFile';
   import { propTypes } from '/@/utils/propTypes';
   import { Button } from '/@/components/Button';
-  import { fileStore } from '/@/store/modules/netFile';
+  import { useNetFileStore } from '/@/store/modules/netFile';
 
   const { t } = useI18n('general.metanet');
   export default defineComponent({
@@ -46,6 +46,7 @@
     },
 
     setup(props) {
+      const fileStore = useNetFileStore();
       const [registerUploadModal, { openModal, setModalProps }] = useModal();
 
       function openUploadModal() {
