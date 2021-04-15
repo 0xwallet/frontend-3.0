@@ -399,10 +399,10 @@ export class NetFile {
   }
   // 拼接分享链接
   shareUrl(): string {
-    if (this.uri === '') {
+    if (this.shareInfo.uri === '') {
       return '';
     }
-    const url = `${window.location.origin}/#/s/file?uri=${this.uri}`;
+    const url = `${window.location.origin}/#/s/file?uri=${this.shareInfo.uri}`;
     this.copyShareUrl(1);
     return url;
   }
@@ -412,14 +412,14 @@ export class NetFile {
     let temp = '';
     if (mode === 1 || mode === 3) {
       temp += `${t('general.metanet.shareUrl')}:${window.location.origin}/#/s/file?uri=${
-        this.uri
+        this.shareInfo.uri
       }   `;
     }
     if ((mode === 2 || mode === 3) && this.code) {
-      temp += `${t('general.metanet.code')}:${this.code}`;
+      temp += `${t('general.metanet.code')}:${this.shareInfo.code}`;
     }
     if (mode === 4) {
-      temp = `${window.location.origin}/#/s/file?uri=${this.uri}`;
+      temp = `${window.location.origin}/#/s/file?uri=${this.shareInfo.uri}`;
     }
     if (mode === 5) {
       temp = `${window.location.origin}/#/p?txid=${this.publishInfo?.txid}`;
