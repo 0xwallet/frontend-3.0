@@ -103,14 +103,14 @@
 
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { userStore } from '/@/store/modules/user';
+
+  import { useUserStore } from '/@/store/modules/user';
   import { LoginStateEnum, useLoginState, useFormRules, useFormValid } from './useLogin';
   import { useDesign } from '/@/hooks/web/useDesign';
   import { useMutation } from '@vue/apollo-composable';
   import { useMClient, useWallet } from '/@/hooks/nkn/getNKN';
   import { signIn } from '/@/hooks/apollo/gqlUser';
-  import { useKeyPress } from '/@/hooks/event/useKeyPress';
-  import { KeyCodeEnum } from '/@/enums/keyCodeEnum';
+  import { onKeyStroke } from '@vueuse/core';
 
   export default defineComponent({
     name: 'LoginForm',
@@ -136,6 +136,7 @@
       const { t } = useI18n();
       const { notification } = useMessage();
       const { prefixCls } = useDesign('login');
+      const userStore = useUserStore();
 
       const { setLoginState, getLoginState } = useLoginState();
       const { getFormRules } = useFormRules();
@@ -151,12 +152,9 @@
 
       const { validForm } = useFormValid(formRef);
       const { mutate: SignIn, onDone } = useMutation(signIn);
-      useKeyPress(['enter'], (events) => {
-        const keyCode = events.keyCode;
-        if (keyCode === KeyCodeEnum.ENTER) {
-          handleLogin();
-        }
-      });
+
+
+      onKeyStroke('Enter', handleLogin);
 
       const getShow = computed(() => unref(getLoginState) === LoginStateEnum.LOGIN);
       onDone(async (res) => {

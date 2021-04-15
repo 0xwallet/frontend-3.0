@@ -41,7 +41,7 @@
 
   import { DOC_URL } from '/@/settings/siteSetting';
 
-  import { userStore } from '/@/store/modules/user';
+  import { useUserStore } from '/@/store/modules/user';
   import { useHeaderSetting } from '/@/hooks/setting/useHeaderSetting';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useDesign } from '/@/hooks/web/useDesign';
@@ -75,6 +75,7 @@
       const { getShowDoc } = useHeaderSetting();
       const avatar = ref('');
       const userInfo = ref({});
+      const userStore = useUserStore();
 
       const { onResult } = useQuery(me);
       onResult((res) => {
@@ -152,7 +153,7 @@
 
     &--dark {
       &:hover {
-        background: @header-dark-bg-hover-color;
+        background-color: @header-dark-bg-hover-color;
       }
     }
 

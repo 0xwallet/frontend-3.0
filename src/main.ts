@@ -1,18 +1,16 @@
 import '/@/design/index.less';
-import '@virtual/windi.css';
+import 'virtual:windi.css';
 
 import { createApp } from 'vue';
 import App from './App.vue';
-
+import { initAppConfigStore } from '/@/logics/initAppConfig';
 import router, { setupRouter } from '/@/router';
+import { setupRouterGuard } from '/@/router/guard';
 import { setupStore } from '/@/store';
 import { setupErrorHandle } from '/@/logics/error-handle';
 import { setupGlobDirectives } from '/@/directives';
 import { setupI18n } from '/@/locales/setupI18n';
 import { registerGlobComp } from '/@/components/registerGlobComp';
-
-// router-guard
-import '/@/router/guard';
 
 // Register icon Sprite
 import 'vite-plugin-svg-icons/register';
@@ -27,6 +25,13 @@ if (import.meta.env.DEV) {
 
 (async () => {
   const app = createApp(App);
+
+  // Configure vuex store
+  setupStore(app);
+
+  // Initialize internal system configuration
+  initAppConfigStore();
+
   // Register global components
   registerGlobComp(app);
 
@@ -36,8 +41,8 @@ if (import.meta.env.DEV) {
   // Configure routing
   setupRouter(app);
 
-  // Configure vuex store
-  setupStore(app);
+  // router-guard
+  setupRouterGuard();
 
   // Register global directive
   setupGlobDirectives(app);

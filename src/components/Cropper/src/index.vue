@@ -57,21 +57,22 @@
         default: '360px',
       },
       crossorigin: {
-        type: String,
+        type: String as PropType<'' | 'anonymous' | 'use-credentials' | undefined>,
         default: undefined,
       },
       imageStyle: {
         type: Object as PropType<CSSProperties>,
-        default: {},
+        default: () => {},
       },
       options: {
         type: Object as PropType<Options>,
-        default: {},
+        default: () => {},
       },
     },
-    setup(props) {
+    emits: ['cropperedInfo'],
+    setup(props, ctx) {
       const imgElRef = ref<ElRef<HTMLImageElement>>(null);
-      const cropper = ref<Nullable<Cropper>>(null);
+      const cropper: any = ref<Nullable<Cropper>>(null);
 
       const isReady = ref(false);
 
@@ -106,9 +107,24 @@
         });
       }
 
+      // event: return base64 and width and height information after cropping
+      const croppered = (): void => {
+        let imgInfo = cropper.value.getData();
+        cropper.value.getCroppedCanvas().toBlob((blob) => {
+          let fileReader: FileReader = new FileReader();
+          fileReader.onloadend = (e: any) => {
+            ctx.emit('cropperedInfo', {
+              imgBase64: e.target.result,
+              imgInfo,
+            });
+          };
+          fileReader.readAsDataURL(blob);
+        }, 'image/jpeg');
+      };
+
       onMounted(init);
 
-      return { imgElRef, getWrapperStyle, getImageStyle, isReady };
+      return { imgElRef, getWrapperStyle, getImageStyle, isReady, croppered };
     },
   });
 </script>
