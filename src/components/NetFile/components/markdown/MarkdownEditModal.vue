@@ -43,7 +43,7 @@
                 <span v-if="pane.title.length > 10">{{ pane.title.split('.').slice(-1)[0] }}</span>
               </div>
             </template>
-            <Spin :spinning="spinning">
+            <Spin :spinning="pane.waiting">
               <div :ref="setRef(index)" :id="pane.key" />
             </Spin>
           </TabPane> </Tabs
@@ -99,7 +99,13 @@
         return !fileStore.getEditorOutlineVisible;
       });
       const path = computed(() => fileStore.getEditorPath);
-
+      watch(
+        () => fileStore.getWaitingList,
+        (v) => {
+          console.log(v);
+        },
+        { deep: true }
+      );
       watch(
         () => fileStore.getMarkdownFiles,
         (v) => {
@@ -117,7 +123,6 @@
       const height = computed(() => document.body.clientHeight - 300);
       const [register, { closeModal }] = useModalInner();
       async function init(index: number) {
-        spinning.value = true;
         try {
           if (vditorRefs.value[index]) return;
 
@@ -135,7 +140,7 @@
             },
             height: height.value - 70,
             input: () => {
-              fileStore.setMarkdownEdited({ index, edited: true });
+              fileStore.setMarkdownEdited(index, true);
             },
             outline: { enable: false },
           });
@@ -145,13 +150,13 @@
           if (panes.value[index].content === undefined) {
             const value = await panes.value[index].file.raw();
             vditor.setValue(value);
+            fileStore.setWaiting(index, false);
           }
 
           // console.log((a[0].style.display = 'block'));
 
           // initedRef.value = true;
         } finally {
-          spinning.value = false;
         }
       }
 
@@ -199,16 +204,12 @@
           return;
         }
 
-        spinning.value = true;
         try {
           const vditor = vditorRefs.value[index];
           if (!vditor) return;
 
-          await fileStore.editFile({ content: vditor.getValue(), id: panes.value[index].key });
-          fileStore.setMarkdownEdited({ index, edited: false });
-          createMessage.success('保存成功');
+          await fileStore.editFile(vditor.getValue(), panes.value[index].key, index);
         } finally {
-          spinning.value = false;
         }
       }
       function visibleChange(v) {

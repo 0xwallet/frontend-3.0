@@ -77,11 +77,7 @@
             name: `${data.name}.${data.type}`,
             desc: data.desc,
           });
-          fileStore.setMarkdownEdited({
-            index: index.value,
-            edited: false,
-            title: `${data.name}.${data.type}`,
-          });
+          fileStore.setMarkdownEdited(index.value, false, `${data.name}.${data.type}`);
         } finally {
           closeModal();
         }

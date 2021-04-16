@@ -8,23 +8,18 @@ import { onError } from '@apollo/client/link/error';
 
 // import { getMainDefinition } from '@apollo/client/utilities';
 // // @ts-ignore
-import { Socket as PhoenixSocket } from 'phoenix';
 import router from '/@/router';
 import { PageEnum } from '/@/enums/pageEnum';
-// import { fileStore } from '/@/store/modules/netFile';
 
 // 与 API 的 HTTP 连接
 const { createErrorModal } = useMessage();
 let Client: ApolloClient<any>;
-let WsChannel: any = null;
 
 export function initApollo(): ApolloClient<any> | null {
   if (Client) return Client;
   const httpLink = new HttpLink({
     uri: 'https://owaf.io/api',
   });
-
-  useWs();
 
   // split based on operation type
   // REMOVE authLink FOR HTTPONLY_TOKEN
@@ -101,35 +96,4 @@ export function useApollo(params: { mode: string; gql: any; variables?: any }): 
       reject(err);
     });
   });
-}
-
-export function useWs(): any {
-  if (WsChannel) return WsChannel;
-  const phoenix_socket = new PhoenixSocket('wss://owaf.io/socket', {
-    params: () => {
-      return { Authorization: 'Bearer ' + localStorage.getItem('token') };
-    },
-  });
-  const user_id = localStorage.getItem('uid');
-  if (!user_id) return;
-  phoenix_socket.connect();
-
-  // Now that you are connected, you can join channels with a topic:
-  // let user_id = localStorage.getItem('uid');
-
-  WsChannel = phoenix_socket.channel(`drive:user_${user_id}`, {});
-  console.log('ws就绪');
-  // event when file uploaded
-  WsChannel.on('file_uploaded', (file) => {
-    console.log('file uploaded:', file);
-    // fileStore.setRefetch();
-  });
-  // join channel
-  WsChannel.join()
-    .receive('ok', (resp) => {
-      console.log('Joined successfully', resp);
-    })
-    .receive('error', (resp) => {
-      console.log('Unable to join', resp);
-    });
 }

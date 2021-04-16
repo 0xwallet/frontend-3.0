@@ -13,6 +13,9 @@ import { useApollo } from '/@/hooks/apollo/apollo';
 
 const { createMessage, createErrorModal } = useMessage();
 
+import { Socket as PhoenixSocket } from 'phoenix';
+let WsChannel: any = null;
+
 interface uploadSpeed {
   time: number;
   speed: number;
@@ -39,6 +42,7 @@ export interface markdownFile {
   key: string;
   edited: boolean;
   content: string | undefined;
+  waiting: boolean;
 }
 
 interface netFileState {
@@ -54,6 +58,7 @@ interface netFileState {
   Info: fileInfo;
   editorPath: { name: string; dirId: string };
   space: { total: number; used: number };
+  waitingList: { id: string | undefined }[];
 }
 
 export const useNetFileStore = defineStore({
@@ -69,9 +74,9 @@ export const useNetFileStore = defineStore({
     editorPath: { name: 'Home', dirId: 'root' },
     markdownModalVisible: false,
     fileSize: {},
-
     Info: { file: null, mode: 'basic', button: false, collection: false },
     space: { total: 1, used: 0 },
+    waitingList: [],
   }),
   getters: {
     getUploadList(): FileItem[] {
@@ -110,6 +115,9 @@ export const useNetFileStore = defineStore({
     },
     getEditorPath() {
       return this.editorPath;
+    },
+    getWaitingList() {
+      return this.waitingList;
     },
   },
   actions: {
@@ -168,6 +176,7 @@ export const useNetFileStore = defineStore({
           key: file.id,
           edited: false,
           content: undefined,
+          waiting: true,
         });
       }
 
@@ -180,6 +189,7 @@ export const useNetFileStore = defineStore({
         key: dateUtil().toString(),
         edited: false,
         content: '',
+        waiting: false,
       });
     },
     delMarkdownFile(id: string): number {
@@ -193,9 +203,9 @@ export const useNetFileStore = defineStore({
     setEditorOutlineVisible(): void {
       this.editorOutlineVisible = !this.editorOutlineVisible;
     },
-    setMarkdownEdited(params: { index: number; edited: boolean; title?: string }): void {
-      this.markdownFiles[params.index].edited = params.edited;
-      if (params.title) this.markdownFiles[params.index].title = params.title;
+    setMarkdownEdited(index: number, edited: boolean, title?: string): void {
+      this.markdownFiles[index].edited = edited;
+      if (title) this.markdownFiles[index].title = title;
     },
     setSpeed(s: number): void {
       if (dateUtil().unix() === this.uploadSpeed.time) {
@@ -296,6 +306,8 @@ export const useNetFileStore = defineStore({
       });
     },
     async uploadItem(f: uploadItem, uuid?: string) {
+      this.useWs();
+
       try {
         const session = await useSession();
         const writeChunkSize = 1024;
@@ -353,16 +365,17 @@ export const useNetFileStore = defineStore({
         this.setItemValue({ uuid: uuid, key: 'status', value: UploadResultStatus.ERROR });
       }
     },
-    async editFile(params: { content: string; id: string }) {
+    async editFile(content: string, id: string, index: number) {
       try {
         const item: uploadItem = {
-          File: new TextEncoder().encode(params.content),
-          FileSize: new Blob([params.content]).size,
-          UseFileId: params.id,
+          File: new TextEncoder().encode(content),
+          FileSize: new Blob([content]).size,
+          UseFileId: id,
           Space: 'PRIVATE',
           Action: 'update',
         };
-        await this.uploadItem(item);
+        this.markdownFiles[index].waiting = true;
+        await this.uploadItem(item, undefined);
       } catch (e) {
         console.log(e);
       }
@@ -384,6 +397,48 @@ export const useNetFileStore = defineStore({
           error: e,
         };
       }
+    },
+    setWaiting(index: number, waiting: boolean) {
+      this.markdownFiles[index].waiting = waiting;
+    },
+    uploaded(id: string) {
+      const index = this.markdownFiles.findIndex((v) => v.key == id);
+      console.log(index);
+      this.markdownFiles[index].waiting = false;
+      this.markdownFiles[index].edited = false;
+    },
+    useWs(): any {
+      if (WsChannel) return WsChannel;
+      const phoenix_socket = new PhoenixSocket('wss://owaf.io/socket', {
+        params: () => {
+          return { Authorization: 'Bearer ' + localStorage.getItem('token') };
+        },
+      });
+      const user_id = localStorage.getItem('uid');
+      if (!user_id) return;
+      phoenix_socket.connect();
+
+      // Now that you are connected, you can join channels with a topic:
+      // let user_id = localStorage.getItem('uid');
+
+      WsChannel = phoenix_socket.channel(`drive:user_${user_id}`, {});
+
+      WsChannel.on('file_uploaded', (file) => {
+        this.refetch = true;
+        this.uploaded(file.id);
+
+        console.log('file uploaded:', file);
+      });
+      // join channel
+      WsChannel.join()
+        .receive('ok', (resp) => {
+          console.log('Joined successfully', resp);
+        })
+        .receive('error', (resp) => {
+          console.log('Unable to join', resp);
+        });
+      console.log('ws就绪');
+      // this.waitingList.push({ id: f.UseFileId });
     },
   },
 });

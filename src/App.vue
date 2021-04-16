@@ -17,7 +17,6 @@
   import { useUserStore } from '/@/store/modules/user';
   import { useTitle } from '/@/hooks/web/useTitle';
   import { useLocale } from '/@/locales/useLocale';
-
   export default defineComponent({
     name: 'App',
     components: { ConfigProvider, AppProvider },
