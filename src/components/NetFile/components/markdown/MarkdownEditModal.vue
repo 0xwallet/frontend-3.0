@@ -160,16 +160,13 @@
         }
       }
 
-      function openOutLine(open: boolean) {
+      function openOutLine() {
         const status = !fileStore.getEditorOutlineVisible ? 'none' : 'block';
         const list = document.getElementsByClassName('vditor-outline');
-        // console.log(list.length);
+
         for (let i = 0; i < list.length; i++) {
           list[i].style.display = status;
         }
-        // document
-        //   .getElementsByClassName('vditor-outline')
-        //   .forEach((v) => (v.style.display = status));
       }
 
       function handleCloseFunc() {
