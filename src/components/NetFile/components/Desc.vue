@@ -5,7 +5,14 @@
         <span v-if="!checkTag(v)">{{ v }} &nbsp;</span>
         <Tag v-if="checkTag(v)" color="#f50">{{ v.replace(/#/g, '') }}</Tag>
       </template>
-      <InputTextArea v-model:value="desc" v-if="editable" />
+      <div v-if="editable">
+        <InputTextArea v-model:value="desc" @change="input" />
+        <div class="flex m-1"
+          ><Tag v-for="tag in tagList" color="#f50" @click="pushTag(tag)" class="flex-initial">{{
+            tag.replace(/#/g, '')
+          }}</Tag>
+        </div>
+      </div>
     </div>
     <div class=""
       ><Button type="link" @click="openEdit" v-if="!editable && !share"><EditOutlined /></Button>
@@ -97,6 +104,19 @@
       function checkTag(v) {
         return v.match(/#(.*)#/);
       }
+      let tags = ['tag1', 'tag2', 'tag3', 'tag4'];
+      const tagList = ref(tags);
+
+      function input() {
+        console.log(desc.value.slice(-1)[0]);
+        if (desc.value.slice(-1)[0] != ' ') {
+          tagList.value = tags.filter((v) => v.indexOf(desc.value.slice(-1)[0]) > -1);
+        }
+      }
+
+      function pushTag(tag: string) {
+        desc.value += ` #${tag}#`;
+      }
       return {
         t,
         descFormat,
@@ -107,6 +127,9 @@
         changeDesc,
         checkTag,
         share,
+        input,
+        tagList,
+        pushTag,
       };
     },
   });

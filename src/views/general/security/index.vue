@@ -1,5 +1,5 @@
 <template>
-  <div class="bg">
+  <div class="m-2">
     <Row :gutter="[10, 10]">
       <Col :span="12"><Authority /></Col>
       <Col :span="12"><Device :list="deviceList" /><Recovery /></Col>
@@ -60,8 +60,5 @@
     /deep/ .ant-tabs-tab-active {
       background-color: #e6f7ff;
     }
-  }
-  .bg {
-    margin: 10px;
   }
 </style>

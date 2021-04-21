@@ -1203,17 +1203,20 @@
   resolved "https://registry.npmjs.org/@intlify/shared/-/shared-9.0.0.tgz#d85b3b5f9033f377c5cf2202cf2459aa49948f36"
   integrity sha512-0r4v7dnY8g/Jfx2swUWy2GyfH/WvIpWvkU4OIupvxDTWiE8RhcpbOCVvqpVh/xGi0proHQ/r2Dhc0QSItUsfDQ==
 
-"@logicflow/core@^0.3.0":
-  version "0.3.0"
-  resolved "https://registry.npmjs.org/@logicflow/core/-/core-0.3.0.tgz#910ca7865487fbe6c45a450d13627875c6965bf4"
-  integrity sha512-FPRTuj0y6Yny+YDZ+faTzA8pZyouEWX1Vr6rH91wJR0J3NOHgb7pV/TJoHSosavFuyyw87nLw9UsyUUgHKVV+A==
-
-"@logicflow/extension@^0.3.0":
-  version "0.3.0"
-  resolved "https://registry.npmjs.org/@logicflow/extension/-/extension-0.3.0.tgz#cea4470de3a8e4b7da69b17d7507b2d8edd76b50"
-  integrity sha512-vMmYT8H53oFhOpNftCYQMbNYbTiXqQUxOOKlPcrKkZb0FsXSiEZ/MUKBF3mAarvFlzdMaB5xJjakMfy07/bdvw==
+"@logicflow/core@^0.3.1", "@logicflow/core@^0.3.2":
+  version "0.3.2"
+  resolved "https://registry.npmjs.org/@logicflow/core/-/core-0.3.2.tgz#27d3b77dcee9247eedd6d1aecf9dd3cbd37d0b73"
+  integrity sha512-lKe/N+w1u32wUnTdT1gzW+skPSOo6UDrXsT7Ar3d0iN6XK5i5KVAkEjGUGhvTtd7GgdAvTXpNVLQFSX/9B3EtQ==
   dependencies:
-    "@logicflow/core" "^0.3.0"
+    mousetrap "^1.6.5"
+    preact "^10.4.8"
+
+"@logicflow/extension@^0.3.1":
+  version "0.3.2"
+  resolved "https://registry.npmjs.org/@logicflow/extension/-/extension-0.3.2.tgz#4db20996902f1e67d64fff8370cdcb6924e84f7a"
+  integrity sha512-4CPIzSy7LN4rD+hgdc/6nn6ZcrERIrgH8+LWWKPE3MF+xd2LedsZAMeLPYkJ7x+wie7fOKyKDfW/XL50imMzaQ==
+  dependencies:
+    "@logicflow/core" "^0.3.2"
     ids "^1.0.0"
 
 "@msgpack/msgpack@^2.5.1":
@@ -1360,10 +1363,22 @@
   resolved "https://registry.npmjs.org/@trysound/sax/-/sax-0.1.1.tgz#3348564048e7a2d7398c935d466c0414ebb6a669"
   integrity sha512-Z6DoceYb/1xSg5+e+ZlPZ9v0N16ZvZ+wYMraFue4HYrE4ttONKtsvruIRf6t9TBR0YvSOfi1hUU0fJfBLCDYow==
 
+"@types/codemirror@^0.0.109":
+  version "0.0.109"
+  resolved "https://registry.npmjs.org/@types/codemirror/-/codemirror-0.0.109.tgz#89d575ff1c7b462c4c3b8654f8bb38e5622e9036"
+  integrity sha512-cSdiHeeLjvGn649lRTNeYrVCDOgDrtP+bDDSFDd1TF+i0jKGPDRozno2NOJ9lTniso+taiv4kiVS8dgM8Jm5lg==
+  dependencies:
+    "@types/tern" "*"
+
 "@types/crypto-js@^4.0.1":
   version "4.0.1"
   resolved "https://registry.npmjs.org/@types/crypto-js/-/crypto-js-4.0.1.tgz#3a4bd24518b0e6c5940da4e2659eeb2ef0806963"
   integrity sha512-6+OPzqhKX/cx5xh+yO8Cqg3u3alrkhoxhE5ZOdSEv0DOzJ13lwJ6laqGU0Kv6+XDMFmlnGId04LtY22PsFLQUw==
+
+"@types/estree@*":
+  version "0.0.47"
+  resolved "https://registry.npmjs.org/@types/estree/-/estree-0.0.47.tgz#d7a51db20f0650efec24cd04994f523d93172ed4"
+  integrity sha512-c5ciR06jK8u9BstrmJyO97m+klJrrhCf9u3rLu3DEAJBirxRqSCvDQoYKmxuYwQI5SZChAWu+tq9oVlGRuzPAg==
 
 "@types/estree@0.0.39":
   version "0.0.39"
@@ -1540,6 +1555,13 @@
   version "1.3.5"
   resolved "https://registry.npmjs.org/@types/svgo/-/svgo-1.3.5.tgz#18a0166fbcdfbfc7f17d0491da2ea07ee397d3f9"
   integrity sha512-y9Pw8IK50OqFRDpdI9Is29KlWiENVW9FDvlTmGHelvTfR2brYFJbsClvulZfeq6YKacFrDsG9a39w0kJZdHLaw==
+
+"@types/tern@*":
+  version "0.23.3"
+  resolved "https://registry.npmjs.org/@types/tern/-/tern-0.23.3.tgz#4b54538f04a88c9ff79de1f6f94f575a7f339460"
+  integrity sha512-imDtS4TAoTcXk0g7u4kkWqedB3E4qpjXzCpD2LU5M5NAXHzCDsypyvXSaG7mM8DKYkCRa7tFp4tS/lp/Wo7Q3w==
+  dependencies:
+    "@types/estree" "*"
 
 "@types/through@*":
   version "0.0.30"
@@ -1819,25 +1841,25 @@
   resolved "https://registry.npmjs.org/@vue/shared/-/shared-3.0.11.tgz#20d22dd0da7d358bb21c17f9bde8628152642c77"
   integrity sha512-b+zB8A2so8eCE0JsxjL24J7vdGl8rzPQ09hZNhystm+KqSbKcAej1A+Hbva1rCMmTTqA+hFnUSDc5kouEo0JzA==
 
-"@vueuse/core@^4.8.1":
-  version "4.8.1"
-  resolved "https://registry.npmjs.org/@vueuse/core/-/core-4.8.1.tgz#d7a7fb2e72610d1962ecb9244bd93dacb96d921c"
-  integrity sha512-oXFEDaKNU69Rj20/Hd7ZlmTpEtA2M19cRkZaL4A0Nl0w5Wb5In/8aK+0vtdi1VyMUXXbq6h1OGKCJcIhg5cziA==
+"@vueuse/core@^4.8.2":
+  version "4.8.4"
+  resolved "https://registry.npmjs.org/@vueuse/core/-/core-4.8.4.tgz#aed42b1d4e058869ff403be64a06e1b31dc3758d"
+  integrity sha512-qo5xWC93MxJqHuT19XfFqOUCHppU988yZWoPko3jy/oBDaZRzZakibahpCuPmiZSAWViJCcNGTqH3gAHeH5c4w==
   dependencies:
-    "@vueuse/shared" "4.8.1"
+    "@vueuse/shared" "4.8.4"
     vue-demi latest
 
-"@vueuse/shared@4.8.1":
-  version "4.8.1"
-  resolved "https://registry.npmjs.org/@vueuse/shared/-/shared-4.8.1.tgz#45fd5f64bf4e8944db42a5b72fa2705cfc74608a"
-  integrity sha512-ONKJoIvZPrGCA8loK7dX+ZcjgZLikI+vPiz1lWlXs6+jZiQiZSLkmvg1NjV6Cfb6OqbDCfEScTWLbZHB7EwrRw==
+"@vueuse/shared@4.8.4":
+  version "4.8.4"
+  resolved "https://registry.npmjs.org/@vueuse/shared/-/shared-4.8.4.tgz#bc2b034dcf9805b620f9ff304a6d3728cea93b2b"
+  integrity sha512-dN5qZnC3hTJppUL8fFqkfJvgcfKT5agyYtr8nyO47kWTdNKYq7S/yXUvcA1W/OBY95erdpo4s2vlcy0aV2CdgA==
   dependencies:
     vue-demi latest
 
-"@windicss/plugin-utils@0.14.5":
-  version "0.14.5"
-  resolved "https://registry.npmjs.org/@windicss/plugin-utils/-/plugin-utils-0.14.5.tgz#f41889c866ca9163981276ab9f2903b8bea091e8"
-  integrity sha512-5BFPFGFskNBm9JudAlWJSgk0Pq5H9fmbhY2O2WZzvy0eZCJ9fY3f9lJrUxZElLSP9Tp72r08kV+9x/39X63bsQ==
+"@windicss/plugin-utils@0.14.6":
+  version "0.14.6"
+  resolved "https://registry.npmjs.org/@windicss/plugin-utils/-/plugin-utils-0.14.6.tgz#25d3fdda3a8b0a560f3daed6588abd0a4fbef195"
+  integrity sha512-jF+dJ6D4/UqVHSbH5kCdSoPnklLTZDf+seck4unICI0qyzmyPsrO15nmSS/gIvnmCedUfBrQj1MfYOX0tccFjQ==
   dependencies:
     debug "^4.3.2"
     fast-glob "^3.2.5"
@@ -2765,6 +2787,11 @@ coa@^2.0.2:
     "@types/q" "^1.5.1"
     chalk "^2.4.1"
     q "^1.1.2"
+
+codemirror@^5.60.0:
+  version "5.61.0"
+  resolved "https://registry.npmjs.org/codemirror/-/codemirror-5.61.0.tgz#318e5b034a707207948b92ffc2862195e8fdb08e"
+  integrity sha512-D3wYH90tYY1BsKlUe0oNj2JAhQ9TepkD51auk3N7q+4uz7A/cgJ5JsWHreT0PqieW1QhOuqxQ2reCXV1YXzecg==
 
 codepage@~1.14.0:
   version "1.14.0"
@@ -6436,6 +6463,11 @@ moment@^2.27.0:
   resolved "https://registry.npmjs.org/moment/-/moment-2.29.1.tgz#b2be769fa31940be9eeea6469c075e35006fa3d3"
   integrity sha512-kHmoybcPV8Sqy59DwNDY3Jefr64lK/by/da0ViFcuA4DH0vQg5Q6Ze5VimxkfQNSC+Mls/Kx53s7TjP1RhFEDQ==
 
+mousetrap@^1.6.5:
+  version "1.6.5"
+  resolved "https://registry.npmjs.org/mousetrap/-/mousetrap-1.6.5.tgz#8a766d8c272b08393d5f56074e0b5ec183485bf9"
+  integrity sha512-QNo4kEepaIBwiT8CDhP98umTetp+JNfQYBWvC1pc6/OAibuXtRcxZ58Qz8skvEHYvURne/7R8T5VoOI7rDsEUA==
+
 mozjpeg@^7.0.0:
   version "7.0.0"
   resolved "https://registry.npmjs.org/mozjpeg/-/mozjpeg-7.0.0.tgz#c20f67a538fcaaa388d325875c53c0e7bc432f7d"
@@ -7405,6 +7437,11 @@ posthtml@^0.9.2:
     posthtml-parser "^0.2.0"
     posthtml-render "^1.0.5"
 
+preact@^10.4.8:
+  version "10.5.13"
+  resolved "https://registry.npmjs.org/preact/-/preact-10.5.13.tgz#85f6c9197ecd736ce8e3bec044d08fd1330fa019"
+  integrity sha512-q/vlKIGNwzTLu+jCcvywgGrt+H/1P/oIRSD6mV4ln3hmlC+Aa34C7yfPI4+5bzW8pONyVXYS7SvXosy2dKKtWQ==
+
 prelude-ls@^1.2.1:
   version "1.2.1"
   resolved "https://registry.npmjs.org/prelude-ls/-/prelude-ls-1.2.1.tgz#debc6489d7a6e6b0e7611888cec880337d316396"
@@ -7922,10 +7959,10 @@ rollup-plugin-terser@^7.0.0:
     serialize-javascript "^4.0.0"
     terser "^5.0.0"
 
-rollup-plugin-visualizer@5.3.6:
-  version "5.3.6"
-  resolved "https://registry.npmjs.org/rollup-plugin-visualizer/-/rollup-plugin-visualizer-5.3.6.tgz#df6317b242f4aa58b6a03261335dbc64ea6fe0df"
-  integrity sha512-USIyYkzRuvIJZyUoFWSvejy/c8F9jm9mHbyB+01oE7m0Vc0Ll67HlZgRsY59IqU/j/qF1adPsXKSDkEXS6tzfg==
+rollup-plugin-visualizer@5.3.4:
+  version "5.3.4"
+  resolved "https://registry.npmjs.org/rollup-plugin-visualizer/-/rollup-plugin-visualizer-5.3.4.tgz#216300acca6e31b139be92eed98280c5662a5818"
+  integrity sha512-n3wYwKrZ3nhYJj8apzFuxmiu4y+ygDNJYLqQCOxludg3Pnhkql9WYc8iupgsMI+jGREA0dFsfDlzDAKcmXZIMQ==
   dependencies:
     nanoid "^3.1.22"
     open "^7.4.2"
@@ -9492,12 +9529,12 @@ vite-plugin-theme@^0.7.1:
     esbuild-plugin-alias "^0.1.2"
     tinycolor2 "^1.4.2"
 
-vite-plugin-windicss@0.14.5:
-  version "0.14.5"
-  resolved "https://registry.npmjs.org/vite-plugin-windicss/-/vite-plugin-windicss-0.14.5.tgz#399cbe8964595f02ba9d6d66dc3503f4cf983de0"
-  integrity sha512-TOYb4Bz5FpWfJavzAtvjuhGew6tJnjx1ZxRmEBOG7RUFFdclWG0CRcHXSVvwpigYHl2TaNwkpHmpM8dyhN6Scw==
+vite-plugin-windicss@0.14.6:
+  version "0.14.6"
+  resolved "https://registry.npmjs.org/vite-plugin-windicss/-/vite-plugin-windicss-0.14.6.tgz#c17b66b5f35a3b1ffdfc3e969ce28a528305716e"
+  integrity sha512-bFyKfvnsa3nAab9LgrFInzdQhsIJyeNdCczgjrYMxjO8WlgiQuIFyJ1RTYQnYmQRlbvU9jpOL5XDxsFUMKRLUg==
   dependencies:
-    "@windicss/plugin-utils" "0.14.5"
+    "@windicss/plugin-utils" "0.14.6"
     chalk "^4.1.0"
     debug "^4.3.2"
     windicss "^2.5.14"
