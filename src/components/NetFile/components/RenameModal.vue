@@ -11,10 +11,12 @@
   import { useMutation } from '@vue/apollo-composable';
   import { useForm, BasicForm } from '/@/components/Form';
   import { NetFile, NetGql } from '/@/components/NetFile';
+  import { useNetFileStore } from '/@/store/modules/netFile';
   const { t } = useI18n('general.metanet');
   export default defineComponent({
     components: { BasicModal, BasicForm },
     setup() {
+      const fileStore = useNetFileStore();
       const id = ref('');
       const space = ref('');
       const { createMessage, createErrorModal } = useMessage();
@@ -51,6 +53,7 @@
           createErrorModal({ title: t('error'), content: err.message });
         } finally {
           createMessage.success(`${t('success')} ${t('rename')}`);
+          fileStore.setRefetch();
           closeModal();
         }
       }

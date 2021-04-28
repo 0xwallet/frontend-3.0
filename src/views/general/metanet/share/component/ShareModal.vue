@@ -42,6 +42,7 @@
   import { Card, Space } from 'ant-design-vue';
   import { NetFile } from '/@/components/NetFile';
   import { useI18n } from '/@/hooks/web/useI18n';
+  import { useNetFileStore } from '/@/store/modules/netFile';
   const { t } = useI18n('general.metanet');
   function randomString(len) {
     len = len || 32;
@@ -103,11 +104,11 @@
   export default defineComponent({
     components: { BasicModal, BasicForm, Card, Space },
     setup() {
+      const fileStore = useNetFileStore();
       const modelRef = ref({});
       const file = ref<NetFile>({});
       const radio = ref(0);
       const shareUrl = computed(() => {
-
         if (!file.value.shareInfo?.uri) return '';
         return `${window.location.origin}/#/s/file?uri=${file.value.shareInfo.uri}`;
       });
@@ -138,8 +139,8 @@
           const params = await validateFields();
           await file.value.share(params);
         } catch (e) {
-          console.log(err)
-        }finally {
+          console.log(err);
+        } finally {
           setModalProps({ showOkBtn: false });
         }
       }
@@ -162,9 +163,3 @@
     },
   });
 </script>
-
-<style>
-  .title {
-    font-size: 25px;
-  }
-</style>

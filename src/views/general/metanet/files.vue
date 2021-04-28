@@ -77,7 +77,16 @@
   </div>
 </template>
 <script lang="ts">
-  import { defineComponent, computed, ref, nextTick, unref, createVNode, watch } from 'vue';
+  import {
+    defineComponent,
+    computed,
+    ref,
+    nextTick,
+    unref,
+    createVNode,
+    watch,
+    onMounted,
+  } from 'vue';
   import { BasicTable, useTable } from '/@/components/Table';
   import { getBasicColumns } from './tableData';
   import { useMessage } from '/@/hooks/web/useMessage';
@@ -157,6 +166,7 @@
           console.log('Refetch');
         }
       );
+
       // 文件路径面包屑
       // 储存本级目录所有文件夹名
       let folder = ref([]);
@@ -175,9 +185,7 @@
 
       // 表格数据
       // 文件列表
-      const tableData = computed(() => {
-        return folder.value.concat(files.value);
-      });
+      const tableData = computed<NetFile[]>(() => fileStore.getFiles);
 
       //当前是否有选择文件
       const choose = computed(() => {
@@ -188,13 +196,15 @@
       const variables = ref({
         dirId: 'root',
       });
+
       const { onResult, refetch } = useQuery(NetGql.Basic.FileList, variables, () => ({
         fetchPolicy: 'network-only',
       }));
 
-      onResult((res) => {
+      onResult(({ data }) => {
+        console.log(22);
         // 取得返回值
-        let list = res.data?.driveListFiles;
+        let list = data?.driveListFiles;
         // 重置文件夹列表，文件列表
         let temp: NetFile[] = [];
         if (!list) {
@@ -240,8 +250,8 @@
           }
         });
         folder.value = temp.concat(p);
-
         files.value = f;
+        fileStore.setFiles(temp.concat(p).concat(f));
       });
 
       // 文件列表表格
@@ -291,7 +301,7 @@
       ] = useModal();
       const [registerPdfDrawer, { openDrawer: openPdfDrawer }] = useDrawer();
       // 打开新建文件夹modal
-      // 打开移动窗口
+      // 打开复制窗口
       function openCopy(f: NetFile) {
         openCopyModal(true, { file: [f.id, ...getSelectRowKeys()] }, true);
         nextTick(() => {
@@ -301,7 +311,6 @@
             destroyOnClose: true,
             afterClose: () => {
               clearSelectedRowKeys();
-              refetch();
             },
           });
         });
@@ -315,7 +324,6 @@
             destroyOnClose: true,
             afterClose: () => {
               clearSelectedRowKeys();
-              refetch();
             },
           });
         });
@@ -330,7 +338,6 @@
             destroyOnClose: true,
             afterClose: () => {
               clearSelectedRowKeys();
-              refetch();
             },
           });
         });
@@ -343,9 +350,6 @@
             canFullscreen: false,
             destroyOnClose: true,
             width: '50%',
-            afterClose: () => {
-              refetch();
-            },
           });
         });
       }
@@ -359,7 +363,7 @@
             width: '50%',
             destroyOnClose: true,
             afterClose: () => {
-              refetch();
+              fileStore.setRefetch();
             },
           });
         });
@@ -389,7 +393,7 @@
                 createMessage.success('删除成功');
               })
               .finally(() => {
-                refetch();
+                fileStore.setRefetch();
               });
           },
         });
@@ -426,7 +430,7 @@
                 createMessage.error({ content: err, key: 'deleteModal', duration: 2 });
               })
               .finally(() => {
-                refetch();
+                fileStore.setRefetch();
               });
           },
           onCancel() {},
@@ -530,7 +534,6 @@
         delFiles,
         getSelectRowKeys,
         t,
-        refetch,
         registerPublishModal,
         openPublishModal,
         searchValue,

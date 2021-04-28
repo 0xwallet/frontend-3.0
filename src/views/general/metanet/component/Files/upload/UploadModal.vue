@@ -12,8 +12,6 @@
     wrapClassName="upload-modal"
     :showOkBtn="false"
     :showCancelBtn="false"
-    :okButtonProps="getOkButtonProps"
-    :cancelButtonProps="{ disabled: isUploadingRef }"
   >
     <template #closeIcon><MinusOutlined /></template>
     <template #centerFooter>

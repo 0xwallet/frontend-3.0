@@ -11,11 +11,13 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMutation, useQuery } from '@vue/apollo-composable';
   import { NetGql } from '/@/components/NetFile';
+  import { useNetFileStore } from '/@/store/modules/netFile';
   const { t } = useI18n('general.metanet');
 
   export default defineComponent({
     components: { BasicModal, BasicForm },
     setup() {
+      const fileStore = useNetFileStore();
       const select = ref([
         {
           label: '新发布',
@@ -85,6 +87,8 @@
         } catch (e) {
           createErrorModal({ content: e });
         } finally {
+          fileStore.setRefetch();
+
           closeModal();
         }
       }

@@ -16,10 +16,12 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMutation, useQuery } from '@vue/apollo-composable';
   import { NetGql } from '/@/components/NetFile';
+  import { useNetFileStore } from '/@/store/modules/netFile';
   const { t } = useI18n('general.metanet');
   export default defineComponent({
     components: { BasicModal, Tree, Progress, Row, Col },
     setup() {
+      const fileStore = useNetFileStore();
       const { createMessage, createErrorModal } = useMessage();
       let file: string[] = [];
       const path = ref([]);
@@ -79,6 +81,7 @@
           createErrorModal({ title: t('error'), content: err.message });
         } finally {
           createMessage.success(`${t('success')} ${t('copyButton')}`);
+          fileStore.setRefetch();
           closeModal();
         }
       }

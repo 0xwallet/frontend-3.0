@@ -16,10 +16,12 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMutation, useQuery } from '@vue/apollo-composable';
   import { NetGql } from '/@/components/NetFile';
+  import { useNetFileStore } from '/@/store/modules/netFile';
   const { t } = useI18n('general.metanet');
   export default defineComponent({
     components: { BasicModal, Tree, Progress, Row, Col },
     setup() {
+      const fileStore = useNetFileStore();
       const { createMessage, createErrorModal } = useMessage();
       let folder: string[] = [];
       const total = ref(0);
@@ -82,6 +84,7 @@
           console.log(err);
           createErrorModal({ title: t('error'), content: err.message });
         } finally {
+          fileStore.setRefetch();
           createMessage.success(`${t('success')} ${t('moveButton')}` + now.value + t('file'));
           closeModal();
         }

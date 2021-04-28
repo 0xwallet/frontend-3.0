@@ -1,14 +1,16 @@
 <template>
   <div>
     <Card :tab-list="tabList" :active-tab-key="tabKey" @tabChange="(key) => onTabChange(key)">
-      <template #tabBarExtraContent
-        ><InputSearch
-          v-model:value="value"
-          placeholder="input search text"
-          enter-button
-          @search="onSearch"
-          class="search"
-        />
+      <template #tabBarExtraContent>
+        <div class="m-2">
+          <InputSearch
+            v-model:value="value"
+            placeholder="input search text"
+            enter-button
+            @search="onSearch"
+            :loading="loading"
+            allow-clear
+        /></div>
       </template>
       <div class="tabsHeight">
         <template v-if="tabKey === 'basic'"><Files /></template>
@@ -83,18 +85,25 @@
         tabKey.value = key;
       }
       const value = ref('');
-      function onSearch() {}
+      const loading = ref(false);
+      async function onSearch(v) {
+        if (!v) return;
+        loading.value = true;
+        try {
+          await fileStore.searchFile(v);
+        } catch (e) {
+          console.log(e);
+        } finally {
+          loading.value = false;
+        }
+      }
 
-      return { t, tabList, tabKey, onTabChange, onSearch, value };
+      return { t, tabList, tabKey, onTabChange, onSearch, value, loading };
     },
   });
 </script>
 <style>
   .tabsHeight {
     height: 74vh;
-  }
-
-  .search {
-    margin: 10px;
   }
 </style>

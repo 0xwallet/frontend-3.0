@@ -49,6 +49,26 @@ const driveListFiles = gql`
   }
 `;
 
+const driveSearch = gql`
+  query($keywords: String!, $space:DriveSpace ) {
+    driveSearch(keywords: $keywords, space: $space) {
+      fullName
+      hash
+      id
+      isDir
+      isShared
+      insertedAt
+      updatedAt
+      space
+      ${user}
+      info {
+        size
+        description
+      }
+    }
+  }
+`;
+
 const driveDirSize = gql`
   query($dirId: String!) {
     driveDirSize(dirId: $dirId)
@@ -145,6 +165,7 @@ const driveFileUploaded = gql`
 `;
 export const Basic = {
   FileList: driveListFiles,
+  Search: driveSearch,
   MakeDir: driveMakeDir,
   MakeDirUnder: driveMakeDirUnder,
   Move: driveMoveFile,

@@ -14,6 +14,7 @@ import { useApollo } from '/@/hooks/apollo/apollo';
 const { createMessage, createErrorModal } = useMessage();
 
 import { Socket as PhoenixSocket } from 'phoenix';
+
 let WsChannel: any = null;
 
 interface uploadSpeed {
@@ -59,6 +60,7 @@ interface netFileState {
   editorPath: { name: string; dirId: string };
   space: { total: number; used: number };
   waitingList: { id: string | undefined }[];
+  files: NetFile[];
 }
 
 export const useNetFileStore = defineStore({
@@ -77,6 +79,7 @@ export const useNetFileStore = defineStore({
     Info: { file: null, mode: 'basic', button: false, collection: false },
     space: { total: 1, used: 0 },
     waitingList: [],
+    files: [],
   }),
   getters: {
     getUploadList(): FileItem[] {
@@ -97,6 +100,9 @@ export const useNetFileStore = defineStore({
     },
     getRefetch(): boolean {
       return this.refetch;
+    },
+    getFiles(): NetFile[] {
+      return this.files;
     },
     getFileInfo(): fileInfo {
       return this.Info;
@@ -439,6 +445,22 @@ export const useNetFileStore = defineStore({
         });
       console.log('ws就绪');
       // this.waitingList.push({ id: f.UseFileId });
+    },
+    async searchFile(keywords: string) {
+      const { data } = await useApollo({
+        mode: 'query',
+        gql: NetGql.Basic.Search,
+        variables: { keywords, space: 'PRIVATE' },
+      });
+      let list: NetFile[] = [];
+      data.driveSearch.forEach((v) => {
+        // @ts-ignore
+        list.push(new NetFile({ userFile: v }));
+      });
+      this.files = list;
+    },
+    setFiles(files: NetFile[]) {
+      this.files = files;
     },
   },
 });
