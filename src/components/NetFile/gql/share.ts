@@ -62,6 +62,7 @@ const drivePreviewShare = gql`
   query($uri: String!) {
     drivePreviewShare(uri: $uri) {
       needCode
+      expiredAt
       UserPreview {
         avatar
         bio

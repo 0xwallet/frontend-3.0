@@ -12,6 +12,7 @@ export function getBasicColumns(): BasicColumn[] {
       dataIndex: 'fullName',
       width: 200,
       align: 'left',
+      ellipsis: true,
       slots: { customRender: 'name' },
     },
     {

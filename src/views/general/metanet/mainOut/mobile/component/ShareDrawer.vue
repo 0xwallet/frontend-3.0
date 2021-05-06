@@ -1,50 +1,50 @@
 <template>
   <div>
-  <BasicDrawer
-    @register="register"
-    v-bind="$attrs"
-    title="title"
-    placement="bottom"
-    :closable="false"
-    :height="300"
-    destroyOnClose
-  >
-    <div class="row">
-      <Space direction="vertical">
-        <div
-          ><Button type="link" @click="download">{{ t('downloadButton') }}</Button>
-        </div>
-        <div
-          ><Button type="link" @click="save">{{ t('saveTo') }}</Button></div
+    <BasicDrawer
+      @register="register"
+      v-bind="$attrs"
+      title="title"
+      placement="bottom"
+      :closable="false"
+      :height="300"
+      destroyOnClose
+    >
+      <div class="row">
+        <Space direction="vertical">
+          <div
+            ><Button type="link" @click="download">{{ t('downloadButton') }}</Button>
+          </div>
+          <div
+            ><Button type="link" @click="save">{{ t('saveTo') }}</Button></div
+          >
+          <div
+            ><Button type="link" @click="collect">{{ t('collectionButton') }}</Button></div
+          >
+          <div
+            ><Button type="link">{{ t('showComment') }}</Button></div
+          >
+          <div
+            ><Button type="link" @click="login">{{ t('login') }}</Button></div
+          ></Space
         >
-        <div
-          ><Button type="link" @click="collect">{{ t('collectionButton') }}</Button></div
-        >
-        <div
-          ><Button type="link">{{ t('showComment') }}</Button></div
-        >
-        <div
-          ><Button type="link" @click="login">{{ t('login') }}</Button></div
-        ></Space
-      >
-    </div>
-  </BasicDrawer>
+      </div>
+    </BasicDrawer>
     <CollectModal @register="registerCollectModal" />
   </div>
 </template>
 <script lang="ts">
-  import { computed, defineComponent,ref } from 'vue';
+  import { computed, defineComponent, ref } from 'vue';
   import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
   import { Space, Button } from 'ant-design-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import router from '/@/router';
   import { PageEnum } from '/@/enums/pageEnum';
-  import {useModal} from "/@/components/Modal";
-  import {CollectModal,NetFile} from "/@/components/NetFile";
-  import {propTypes} from "/@/utils/propTypes";
+  import { useModal } from '/@/components/Modal';
+  import { CollectModal, NetFile } from '/@/components/NetFile';
+  import { propTypes } from '/@/utils/propTypes';
   const { t } = useI18n('general.metanet');
   export default defineComponent({
-    components: { BasicDrawer, Space, Button,CollectModal },
+    components: { BasicDrawer, Space, Button, CollectModal },
     props: {
       file: propTypes.object.def({}),
     },
@@ -52,9 +52,9 @@
       const file: NetFile = computed(() => {
         return props.file;
       });
-      const code=ref('')
-      const [register, { closeDrawer }] = useDrawerInner((data)=>{
-        code.value=data.code
+      const code = ref('');
+      const [register, { closeDrawer }] = useDrawerInner((data) => {
+        code.value = data.code;
       });
       async function download() {
         await file.value.download();
@@ -66,7 +66,7 @@
       }
       const [registerCollectModal, { openModal: openCollectModal }] = useModal();
       async function collect() {
-        openCollectModal(true,{mode:'share',id:file.value.shareInfo.id,code:code.value})
+        openCollectModal(true, { mode: 'share', id: file.value.shareInfo.id, code: code.value });
         closeDrawer();
       }
       async function login() {
@@ -79,7 +79,7 @@
         collect,
         t,
         login,
-        registerCollectModal
+        registerCollectModal,
       };
     },
   });

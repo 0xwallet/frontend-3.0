@@ -1,67 +1,67 @@
 <template>
   <div class="p-4">
-    <Row v-if="!form">
-      <Col :xs="2" :sm="4" :md="6" :lg="8" :xl="9"></Col>
-      <Col :xs="20" :sm="16" :md="12" :lg="8" :xl="6">
-        <Card hoverable>
-          <Space direction="vertical">
-            <CardMeta>
-              <template #title
-                >{{ userPreview.username }} 给你{{ needCode ? '加密' : '' }}分享了文件</template
-              >
-              <template #description> {{ userPreview.bio }} </template>
-              <template #avatar>
-                <Avatar :src="userPreview.avatar" />
-              </template>
-            </CardMeta>
-            <BasicForm @register="registerForm" layout="vertical" class="m-px-5" v-if="needCode" />
-          </Space>
-        </Card>
-      </Col>
-      <Col :xs="2" :sm="4" :md="6" :lg="8" :xl="9"></Col>
-    </Row>
+    <!--    <Row v-if="!form">-->
+    <!--      <Col :xs="2" :sm="4" :md="6" :lg="8" :xl="9"></Col>-->
+    <!--      <Col :xs="20" :sm="16" :md="12" :lg="8" :xl="6">-->
+    <!--        <Card hoverable>-->
+    <!--          <Space direction="vertical">-->
+    <!--            <CardMeta>-->
+    <!--              <template #title-->
+    <!--                >{{ userPreview.username }} 给你{{ needCode ? '加密' : '' }}分享了文件</template-->
+    <!--              >-->
+    <!--              <template #description> {{ userPreview.bio }} </template>-->
+    <!--              <template #avatar>-->
+    <!--                <Avatar :src="userPreview.avatar" />-->
+    <!--              </template>-->
+    <!--            </CardMeta>-->
+    <!--            <BasicForm @register="registerForm" layout="vertical" class="m-px-5" v-if="needCode" />-->
+    <!--          </Space>-->
+    <!--        </Card>-->
+    <!--      </Col>-->
+    <!--      <Col :xs="2" :sm="4" :md="6" :lg="8" :xl="9"></Col>-->
+    <!--    </Row>-->
 
-    <Card v-if="form">
-      <template #title
-        ><Space
-          ><Avatar :src="userPreview.avatar" /><span
-            >{{ userPreview.username }} 给你{{ needCode ? '加密' : '' }}分享了文件</span
-          ></Space
-        ></template
-      >
-      <BasicTable @register="registerTable">
-        <template #name="{ record }">
-          <a-button type="link" @click="openFile(record)"
-            ><Icon :type="record.type" />{{ record.name
-            }}{{ record.type === 'folder' ? '' : '.' + record.type }}</a-button
-          >
-        </template>
-        <template #hash="{ text }">
-          <Hash :hash="text" v-if="text" />
-        </template>
-        <template #action="{ record }">
-          <div>
-            <!--          <a-button type="link" v-if="record.type !== 'folder'">详情</a-button>-->
-            <a-button type="link" v-if="record.type !== 'folder'" @click="preview(record)">{{
-              t('previewButton')
-            }}</a-button>
-            <!--          <a-button type="link">复制路径</a-button>-->
-            <a-button type="link" @click="download(record)">{{ t('downloadButton') }}</a-button>
+    <!--    <Card v-if="form">-->
+    <!--      <template #title-->
+    <!--        ><Space-->
+    <!--          ><Avatar :src="userPreview.avatar" /><span-->
+    <!--            >{{ userPreview.username }} 给你{{ needCode ? '加密' : '' }}分享了文件</span-->
+    <!--          ></Space-->
+    <!--        ></template-->
+    <!--      >-->
+    <!--      <BasicTable @register="registerTable">-->
+    <!--        <template #name="{ record }">-->
+    <!--          <a-button type="link" @click="openFile(record)"-->
+    <!--            ><Icon :type="record.type" />{{ record.name-->
+    <!--            }}{{ record.type === 'folder' ? '' : '.' + record.type }}</a-button-->
+    <!--          >-->
+    <!--        </template>-->
+    <!--        <template #hash="{ text }">-->
+    <!--          <Hash :hash="text" v-if="text" />-->
+    <!--        </template>-->
+    <!--        <template #action="{ record }">-->
+    <!--          <div>-->
+    <!--            &lt;!&ndash;          <a-button type="link" v-if="record.type !== 'folder'">详情</a-button>&ndash;&gt;-->
+    <!--            <a-button type="link" v-if="record.type !== 'folder'" @click="preview(record)">{{-->
+    <!--              t('previewButton')-->
+    <!--            }}</a-button>-->
+    <!--            &lt;!&ndash;          <a-button type="link">复制路径</a-button>&ndash;&gt;-->
+    <!--            <a-button type="link" @click="download(record)">{{ t('downloadButton') }}</a-button>-->
 
-            <a-button type="link" @click="save(record)">{{ t('saveButton') }}</a-button>
-            <a-button type="link" @click="collection(record)">{{ t('collectionButton') }}</a-button>
-            <a-button type="link" @click="comment(record)">{{ t('comment') }}</a-button></div
-          >
-        </template>
+    <!--            <a-button type="link" @click="save(record)">{{ t('saveButton') }}</a-button>-->
+    <!--            <a-button type="link" @click="collection(record)">{{ t('collectionButton') }}</a-button>-->
+    <!--            <a-button type="link" @click="comment(record)">{{ t('comment') }}</a-button></div-->
+    <!--          >-->
+    <!--        </template>-->
 
-        <template #toolbar>
-          <a-button type="primary" @click="setSelectedRowKeyList">
-            {{ !choose ? '全选' : '取消' }}
-          </a-button>
-          <a-button type="primary" v-show="choose"> 下载 </a-button>
-        </template></BasicTable
-      >
-    </Card>
+    <!--        <template #toolbar>-->
+    <!--          <a-button type="primary" @click="setSelectedRowKeyList">-->
+    <!--            {{ !choose ? '全选' : '取消' }}-->
+    <!--          </a-button>-->
+    <!--          <a-button type="primary" v-show="choose"> 下载 </a-button>-->
+    <!--        </template></BasicTable-->
+    <!--      >-->
+    <!--    </Card>-->
     <CollectModal @register="registerCollectModal" />
     <PdfDrawer @register="registerPdfDrawer" />
     <MarkdownModal @register="registerMarkdownModal" />
