@@ -16,18 +16,19 @@
       <div v-if="expired">
         <div class="flex justify-center">{{ userPreview.username }}</div>
         <div class="flex justify-center" v-if="userPreview.bio">{{ userPreview.bio }}</div>
+
+        <div class="m-4"><Divider /></div>
         <div class="flex justify-center mt-10" v-if="needCode">
           <BasicForm @register="registerForm" layout="vertical"
         /></div>
-        <div class="m-4"><Divider /></div
-      ></div>
+      </div>
       <div class="flex justify-center" v-if="!expired">分享已过期</div>
       <AppLocalePicker
         class="absolute bottom-8 right-6 enter-x text-black xl:text-gray-600"
         :showText="false"
       />
       <div class="m-2" v-if="expired">
-        <List item-layout="horizontal" :data-source="files">
+        <List item-layout="horizontal" :data-source="files" v-if="!needCode">
           <template #renderItem="{ item }">
             <ListItem>
               <ListItemMeta @click="openFile(item)">
@@ -140,7 +141,7 @@
     setup() {
       const fileStore = useNetFileStore();
       const { currentRoute } = useRouter();
-      const expired = ref(false);
+      const expired = ref('');
       const params = computed(() => {
         return unref(currentRoute).query;
       });
@@ -186,7 +187,6 @@
       PreviewShare(({ data }) => {
         const { drivePreviewShare } = data;
         if (drivePreviewShare) {
-          console.log();
           expired.value =
             '🗓️ ' +
             dateUtil(drivePreviewShare.expiredAt).format('YY-MM-DD ') +
@@ -206,6 +206,7 @@
           const { code } = await validateFields();
           params.value.code = code;
           await fileStore.fetchShareFile(params.value);
+          needCode.value = false;
         }
       }
       async function preview(f: NetFile) {

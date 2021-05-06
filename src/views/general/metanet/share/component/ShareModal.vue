@@ -4,7 +4,7 @@
     @register="register"
     :title="t('shareButton')"
     @ok="shareFile"
-    :height="250"
+    :height="350"
   >
     <Card>
       <template #title>
@@ -16,22 +16,21 @@
       <template v-if="shareUrl === ''">
         <BasicForm @register="registerForm" :model="model" />
       </template>
-      <template v-if="shareUrl !== ''">
-        <Space>
-          <span>{{ t('shareUrl') }}</span>
-          <a-button type="link" @click="copy(1)">{{ shareUrl }}</a-button></Space
+      <Descriptions v-if="shareUrl" bordered :column="1">
+        <DescriptionsItem :label="t('shareUrl')"
+          ><a-button type="link" @click="copy(1)">{{ shareUrl }}</a-button></DescriptionsItem
         >
-        <br />
-        <Space v-if="radio === 1">
-          <span>{{ t('code') }}</span>
-          <a-button type="link" @click="copy(2)">{{ file.code }}</a-button>
-        </Space>
-        <br />
-        <Space>
-          <span>{{ t('valid') }}</span>
-          <a-button type="primary" @click="copy(3)">{{ t('copyShare') }}</a-button>
-        </Space>
-      </template>
+        <DescriptionsItem :label="t('code')" v-if="file.shareInfo.code"
+          ><a-button type="link" @click="copy(2)">{{
+            file.shareInfo.code
+          }}</a-button></DescriptionsItem
+        >
+        <DescriptionsItem :label="t('valid')"
+          ><a-button type="primary" @click="copy(3)">{{
+            t('copyShare')
+          }}</a-button></DescriptionsItem
+        >
+      </Descriptions>
     </Card>
   </BasicModal>
 </template>
@@ -39,10 +38,11 @@
   import { computed, defineComponent, ref, unref } from 'vue';
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { BasicForm, FormSchema, useForm } from '/@/components/Form';
-  import { Card, Space } from 'ant-design-vue';
+  import { Card, Descriptions, Space } from 'ant-design-vue';
   import { NetFile } from '/@/components/NetFile';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useNetFileStore } from '/@/store/modules/netFile';
+
   const { t } = useI18n('general.metanet');
   function randomString(len) {
     len = len || 32;
@@ -102,12 +102,18 @@
     },
   ];
   export default defineComponent({
-    components: { BasicModal, BasicForm, Card, Space },
+    components: {
+      BasicModal,
+      BasicForm,
+      Card,
+      Space,
+      Descriptions,
+      DescriptionsItem: Descriptions.Item,
+    },
     setup() {
       const fileStore = useNetFileStore();
       const modelRef = ref({});
       const file = ref<NetFile>({});
-      const radio = ref(0);
       const shareUrl = computed(() => {
         if (!file.value.shareInfo?.uri) return '';
         return `${window.location.origin}/#/s/file?uri=${file.value.shareInfo.uri}`;
@@ -126,18 +132,18 @@
 
       const [register, { setModalProps }] = useModalInner((data) => {
         file.value = unref(data.record);
-        radio.value = 0;
         file.value.shareInfo.uri = '';
+        setModalProps({ showOkBtn: true });
       });
 
       async function shareFile() {
         try {
-          if (radio.value === 0) {
-            await file.value.share();
-            return;
-          }
           const params = await validateFields();
-          await file.value.share(params);
+          if (params.shareType === 'public') {
+            await file.value.share();
+          } else {
+            await file.value.share(params);
+          }
         } catch (e) {
           console.log(err);
         } finally {
@@ -158,7 +164,6 @@
         copy,
         t,
         radioStyle,
-        radio,
       };
     },
   });
