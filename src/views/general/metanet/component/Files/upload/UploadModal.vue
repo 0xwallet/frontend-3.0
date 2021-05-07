@@ -60,17 +60,13 @@
   import { FileItem, UploadResultStatus } from './types';
   import { basicProps } from './props';
   import { createTableColumns, createActionColumn } from './data';
-  // utils
-  import { checkFileType, checkImgType, getBase64WithFile } from './utils';
-  import { buildUUID } from '/@/utils/uuid';
 
   import FileList from './FileList';
   //Apollo
   import { InboxOutlined, MinusOutlined } from '@ant-design/icons-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useNetFileStore } from '/@/store/modules/netFile';
-  import { useMutation } from '@vue/apollo-composable';
-  import { NetGql, NetUpload } from '/@/components/NetFile';
+  import { NetUpload } from '/@/components/NetFile';
 
   const { t } = useI18n('general.metanet');
   export default defineComponent({
@@ -138,52 +134,10 @@
           ? t('reUpload')
           : t('uploadButton');
       });
-      const { mutate: UploadByHash } = useMutation(NetGql.Basic.Hash);
 
       // 上传前校验
       function beforeUpload(file: File) {
         NetUpload.checkFile(file, path);
-
-        // let hash = '';
-        // file.arrayBuffer().then((res) => {
-        //   let wordArray = CryptoES.lib.WordArray.create(res);
-        //   hash = CryptoES.SHA256(wordArray).toString();
-        //   let status = '';
-        //   let percent = 0;
-        //   UploadByHash({
-        //     fullName: [...path, name],
-        //     hash: hash,
-        //   })
-        //     .then(() => {
-        //       status = UploadResultStatus.SUCCESS;
-        //       percent = 100;
-        //     })
-        //     .catch((err) => {})
-        //     .finally(() => {
-        //       const commonItem: FileItem = {
-        //         uuid: buildUUID(),
-        //         file,
-        //         size,
-        //         name,
-        //         hash,
-        //         percent,
-        //         speed: 0,
-        //         type: name.split('.').pop(),
-        //         status,
-        //         thumbUrl: '',
-        //       };
-        //       // 生成图片缩略图
-        //       if (checkImgType(file)) {
-        //         // beforeUpload，如果异步会调用自带上传方法
-        //         // file.thumbUrl = await getBase64(file);
-        //         getBase64WithFile(file).then(({ result: thumbUrl }) => {
-        //           commonItem.thumbUrl = thumbUrl;
-        //         });
-        //       }
-        //       fileStore.addItem(commonItem);
-        //     });
-        // });
-
         return false;
       }
       // 删除
@@ -206,7 +160,7 @@
             [];
           const data = await Promise.all(
             uploadFileList.map((item) => {
-              return fileStore.uploadApiByItem(item, path);
+              return fileStore.uploadApiByItem(item);
               // return uploadApiByItem(item);
             })
           );

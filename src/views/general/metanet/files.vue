@@ -77,16 +77,7 @@
   </div>
 </template>
 <script lang="ts">
-  import {
-    defineComponent,
-    computed,
-    ref,
-    nextTick,
-    unref,
-    createVNode,
-    watch,
-    onMounted,
-  } from 'vue';
+  import { defineComponent, computed, ref, nextTick, unref, createVNode, watch } from 'vue';
   import { BasicTable, useTable } from '/@/components/Table';
   import { getBasicColumns } from './tableData';
   import { useMessage } from '/@/hooks/web/useMessage';
@@ -202,7 +193,6 @@
       }));
 
       onResult(({ data }) => {
-        console.log(22);
         // 取得返回值
         let list = data?.driveListFiles;
         // 重置文件夹列表，文件列表

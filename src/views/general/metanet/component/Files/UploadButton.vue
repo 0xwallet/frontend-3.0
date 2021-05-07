@@ -57,7 +57,6 @@
           return v.name;
         });
         await NetUpload.checkFile(file, path, true);
-
         return false;
       }
 

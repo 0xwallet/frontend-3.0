@@ -257,7 +257,7 @@ export const useNetFileStore = defineStore({
         };
         console.log(object);
         await this.uploadItem(object, item.uuid);
-        this.setItemValue({ uuid: item.uuid, key: 'status', value: UploadResultStatus.SUCCESS });
+        // this.setItemValue({ uuid: item.uuid, key: 'status', value: UploadResultStatus.SUCCESS });
         createMessage.success(item.name + '上传成功', 2);
         return {
           success: true,
@@ -339,7 +339,7 @@ export const useNetFileStore = defineStore({
               this.setItemValue({
                 uuid: uuid,
                 key: 'percent',
-                value: (((n + buf.length) / Number(f.FileSize)) * 100) | 0,
+                value: (((n + buf.length) / Number(f.FileSize)) * 100 - 1) | 0,
               });
             }
 
@@ -367,6 +367,7 @@ export const useNetFileStore = defineStore({
           }
         }
         console.log('done');
+        console.log(this.uploadList);
       } catch (e) {
         this.setItemValue({ uuid: uuid, key: 'status', value: UploadResultStatus.ERROR });
       }
@@ -407,12 +408,7 @@ export const useNetFileStore = defineStore({
     setWaiting(index: number, waiting: boolean) {
       this.markdownFiles[index].waiting = waiting;
     },
-    uploaded(id: string) {
-      const index = this.markdownFiles.findIndex((v) => v.key == id);
-      console.log(index);
-      this.markdownFiles[index].waiting = false;
-      this.markdownFiles[index].edited = false;
-    },
+
     useWs(): any {
       if (WsChannel) return WsChannel;
       const phoenix_socket = new PhoenixSocket('wss://owaf.io/socket', {
@@ -430,10 +426,8 @@ export const useNetFileStore = defineStore({
       WsChannel = phoenix_socket.channel(`drive:user_${user_id}`, {});
 
       WsChannel.on('file_uploaded', (file) => {
-        this.refetch = true;
-        this.uploaded(file.id);
-
         console.log('file uploaded:', file);
+        this.uploaded(file);
       });
       // join channel
       WsChannel.join()
@@ -445,6 +439,21 @@ export const useNetFileStore = defineStore({
         });
       console.log('ws就绪');
       // this.waitingList.push({ id: f.UseFileId });
+    },
+    uploaded(file: { hash: string; id: string; full_name: string[] }) {
+      let index = this.markdownFiles.findIndex((v) => v.key == file.id);
+      if (this.markdownFiles[index]) {
+        this.markdownFiles[index].waiting = false;
+        this.markdownFiles[index].edited = false;
+        return;
+      }
+      index = this.uploadList.findIndex((v) => v.hash == file.hash);
+      if (index) {
+        this.uploadList[index].status = UploadResultStatus.SUCCESS;
+        this.uploadList[index].percent = 100;
+        createMessage.success(`${file.full_name.slice(-1)[0]} 上传成功`);
+        this.refetch = true;
+      }
     },
     async searchFile(keywords: string) {
       const { data } = await useApollo({

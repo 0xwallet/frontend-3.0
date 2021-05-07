@@ -57,17 +57,16 @@ async function checkFile(file: File, path: string[] = [], immediately: boolean =
         thumbUrl: '',
         path,
       };
-      // // 生成图片缩略图
-      // if (checkImgType(file)) {
-      //   // beforeUpload，如果异步会调用自带上传方法
-      //   // file.thumbUrl = await getBase64(file);
-      //   getBase64WithFile(file).then(({ result: thumbUrl }) => {
-      //     commonItem.thumbUrl = thumbUrl;
-      //   });
-      // }
+
       const fileStore = useNetFileStoreWidthOut();
       fileStore.appendItem(commonItem);
-      if (immediately) fileStore.uploadApiByItem(commonItem);
+      if (immediately) {
+        if (percent == 100) {
+          createMessage.success(`${name} 上传成功`);
+          return;
+        }
+        fileStore.uploadApiByItem(commonItem);
+      }
     });
 }
 
