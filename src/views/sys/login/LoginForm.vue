@@ -146,13 +146,12 @@
       const rememberMe = ref(false);
 
       const formData = reactive({
-        email: 'jinmao88@qq.com',
-        password: '111111',
+        email: '',
+        password: '',
       });
 
       const { validForm } = useFormValid(formRef);
       const { mutate: SignIn, onDone } = useMutation(signIn);
-
 
       onKeyStroke('Enter', handleLogin);
 
