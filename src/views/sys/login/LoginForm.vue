@@ -13,24 +13,24 @@
       />
     </FormItem>
 
-    <ARow class="enter-x">
-      <ACol :span="12">
+    <Row class="enter-x">
+      <Col :span="12">
         <FormItem>
           <!-- No logic, you need to deal with it yourself -->
           <Checkbox v-model:checked="rememberMe" size="small">
             {{ t('sys.login.rememberMe') }}
           </Checkbox>
         </FormItem>
-      </ACol>
-      <ACol :span="12">
+      </Col>
+      <Col :span="12">
         <FormItem :style="{ 'text-align': 'right' }">
           <!-- No logic, you need to deal with it yourself -->
           <Button type="link" size="small" @click="setLoginState(LoginStateEnum.RESET_PASSWORD)">
             {{ t('sys.login.forgetPassword') }}
           </Button>
         </FormItem>
-      </ACol>
-    </ARow>
+      </Col>
+    </Row>
 
     <FormItem class="enter-x">
       <Button type="primary" size="large" block @click="handleLogin" :loading="loading">
@@ -40,30 +40,30 @@
         {{ t('sys.login.registerButton') }}
       </Button> -->
     </FormItem>
-    <ARow class="enter-x">
-      <ACol :xs="24" :md="8">
+    <Row class="enter-x">
+      <Col :xs="24" :md="8">
         <Tooltip>
           <template #title>{{ t('sys.login.webAuthnTooltip') }}</template>
           <Button block @click="setLoginState(LoginStateEnum.QR_CODE)"> WebAuthn </Button>
         </Tooltip>
-      </ACol>
-      <ACol :md="8" :xs="24" class="xs:my-2 md:my-0 xs:mx-0 md:mx-2">
+      </Col>
+      <Col :md="8" :xs="24" class="xs:my-2 md:my-0 xs:mx-0 md:mx-2">
         <Tooltip>
           <template #title>{{ t('sys.login.nMobileTooltip') }}</template>
           <Button block @click="setLoginState(LoginStateEnum.nMOBILE, formData.email)">
             nMobile
           </Button>
         </Tooltip>
-      </ACol>
-      <ACol :md="7" :xs="24">
+      </Col>
+      <Col :md="7" :xs="24">
         <Tooltip>
           <template #title>{{ t('sys.login.registerTooltip') }}</template>
           <Button block @click="setLoginState(LoginStateEnum.REGISTER)">
             {{ t('sys.login.registerButton') }}
           </Button>
         </Tooltip>
-      </ACol>
-    </ARow>
+      </Col>
+    </Row>
 
     <Divider class="enter-x">{{ t('sys.login.otherSignIn') }}</Divider>
 
@@ -115,8 +115,8 @@
   export default defineComponent({
     name: 'LoginForm',
     components: {
-      [Col.name]: Col,
-      [Row.name]: Row,
+      Col,
+      Row,
       Checkbox,
       Button,
       Form,
@@ -166,9 +166,10 @@
           description: `${t('sys.login.loginSuccessDesc')}: ${res.data?.signin?.User?.username}`,
           duration: 3,
         });
-        await useMClient();
 
         await userStore.login();
+        await useMClient();
+        loading.value = false;
       });
       async function handleLogin() {
         loading.value = true;
@@ -180,7 +181,6 @@
         } catch (err) {
           console.log(err);
         } finally {
-          loading.value = false;
         }
       }
 
