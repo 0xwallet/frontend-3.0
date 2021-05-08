@@ -29,8 +29,8 @@ export function getBasicColumns(): BasicColumn[] {
       title: t('createDate'),
       width: 200,
       dataIndex: 'createdAt',
-      customRender: ({ text }) => {
-        return formatToDate(text);
+      customRender: ({ record }) => {
+        return formatToDate(record.shareInfo.insertedAt);
       },
     },
     {

@@ -8,10 +8,10 @@ import { useUserStoreWidthOut } from '/@/store/modules/user';
 import { PAGE_NOT_FOUND_ROUTE } from '/@/router/routes/basic';
 
 const LOGIN_PATH = PageEnum.BASE_LOGIN;
-const REG_PATH = PageEnum.BASE_REG;
+// const REG_PATH = PageEnum.BASE_REG;
 // const SHARE_PAGE = PageEnum.SHARE_PAGE;
 
-const whitePathList: PageEnum[] = [LOGIN_PATH, REG_PATH];
+const whitePathList: PageEnum[] = [LOGIN_PATH];
 
 export function createPermissionGuard(router: Router) {
   const userStore = useUserStoreWidthOut();

@@ -115,4 +115,5 @@ export default {
   owner: '所有者',
   validTime: '有效期',
   accessCode: '访问码',
+  submit: '确认',
 };

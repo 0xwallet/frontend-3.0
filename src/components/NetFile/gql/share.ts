@@ -35,6 +35,8 @@ const driveListShares = gql`
       expiredAt
       collectedCount
       isCollected
+      insertedAt
+      updatedAt
       ${userFile}
     }
   }
@@ -63,6 +65,8 @@ const drivePreviewShare = gql`
     drivePreviewShare(uri: $uri) {
       needCode
       expiredAt
+      insertedAt
+      updatedAt
       UserPreview {
         avatar
         bio

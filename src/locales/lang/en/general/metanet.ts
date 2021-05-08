@@ -115,4 +115,5 @@ export default {
   owner: 'Owner',
   validTime: 'Valid Time',
   accessCode: 'Access Code',
+  submit: 'Submit',
 };

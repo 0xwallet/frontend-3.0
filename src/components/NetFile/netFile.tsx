@@ -98,6 +98,7 @@ interface fileParams {
   uri?: string;
   token?: string;
   expiredAt?: string;
+  insertedAt?: string;
   updatedAt: string;
   isCollected: boolean;
   collectedCount: number;
@@ -137,6 +138,7 @@ interface fileShare {
   code: string;
   token: string;
   uri: string;
+  insertedAt: string;
 }
 interface filePublish {
   id: number;
@@ -201,6 +203,7 @@ export class NetFile {
     this.shareInfo = {
       id: params.id || '',
       expiredAt: params.expiredAt || '',
+      insertedAt: params.insertedAt || '',
       code: params.code || '',
       uri: params.uri || '',
       token: params.token || '',

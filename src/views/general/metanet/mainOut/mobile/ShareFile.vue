@@ -35,12 +35,12 @@
                 <template #title>
                   <div class="w-3/4">
                     {{
-                      item.fileName() == '...'
+                      item.fileName() === '...'
                         ? '...'
                         : item.fullName.slice(-1)[0].split('.').slice(0)[0].length > 20
                         ? item.fullName.slice(-1)[0].split('.').slice(0)[0].slice(0, 20) + '...'
                         : item.fullName.slice(-1)[0].split('.').slice(0)[0]
-                    }}{{ item.type == 'folder' ? '' : '.' + item.type }}</div
+                    }}{{ item.type === 'folder' ? '' : '.' + item.type }}</div
                   >
                   <div class="flex justify-between">
                     <span class="text-gray-300">{{ item.desc }}</span
@@ -103,7 +103,6 @@
   import ShareDrawer from './component/ShareDrawer.vue';
   import MarkdownDrawer from './component/MarkdownDrawer.vue';
   import { MoreOutlined, InfoCircleOutlined } from '@ant-design/icons-vue';
-  import { useModal } from '/@/components/Modal';
   const { t } = useI18n('general.metanet');
   import { AppLogo } from '/@/components/Application';
   import { AppLocalePicker } from '/@/components/Application';
@@ -154,7 +153,6 @@
           isDir.value = fileStore.getShareFile[0]?.isDir;
           file.value = fileStore.getShareFile[0];
         }
-        console.log(fileStore.getShareFile);
         return fileStore.getShareFile;
       });
       const [registerForm, { validateFields }] = useForm({
@@ -173,7 +171,7 @@
         showActionButtonGroup: true,
         showResetButton: false,
         submitButtonOptions: {
-          text: 'Submit',
+          text: t('submit'),
         },
         actionColOptions: {
           span: 24,
@@ -189,7 +187,7 @@
         if (drivePreviewShare) {
           expired.value =
             '🗓️ ' +
-            dateUtil(drivePreviewShare.expiredAt).format('YY-MM-DD ') +
+            dateUtil(drivePreviewShare.insertedAt).format('YY-MM-DD ') +
             '⏳ ' +
             dateUtil(drivePreviewShare.expiredAt).fromNow(true);
           needCode.value = drivePreviewShare?.needCode;
