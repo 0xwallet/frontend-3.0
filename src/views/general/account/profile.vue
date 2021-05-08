@@ -266,7 +266,7 @@
       const wallet = ref({});
       const edit = ref(false);
       const status = computed(() => {
-        return userStore.userNKNstatus;
+        return userStore.nknStatus;
       });
       const token = localStorage.getItem('token');
       const temp = ref(false);
