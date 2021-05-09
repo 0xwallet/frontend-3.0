@@ -8,9 +8,7 @@ import { PageEnum } from '/@/enums/pageEnum';
 import { ROLES_KEY, TOKEN_KEY, USER_INFO_KEY } from '/@/enums/cacheEnum';
 
 import { getAuthCache, setAuthCache } from '/@/utils/auth';
-import {
-  GetUserInfoByUserIdModel,
-} from '/@/api/sys/model/userModel';
+import { GetUserInfoByUserIdModel } from '/@/api/sys/model/userModel';
 import { disk } from '/@/hooks/nkn/getNKN';
 
 import { useI18n } from '/@/hooks/web/useI18n';
@@ -21,7 +19,7 @@ interface UserState {
   userInfo: Nullable<UserInfo>;
   token?: string;
   roleList: RoleEnum[];
-  nknStatus:boolean
+  nknStatus: boolean;
 }
 
 export const useUserStore = defineStore({
@@ -33,7 +31,7 @@ export const useUserStore = defineStore({
     token: undefined,
     // roleList
     roleList: [],
-    nknStatus:false
+    nknStatus: false,
   }),
   getters: {
     getUserInfo(): UserInfo {
@@ -50,9 +48,10 @@ export const useUserStore = defineStore({
     checkNKN(): void {
       setInterval(() => {
         if (disk) {
-          this.nknStatus=true;
+          console.log(disk.readyClientIDs());
+          this.nknStatus = disk.readyClientIDs().length > 0;
         } else {
-          this.nknStatus=false;
+          this.nknStatus = false;
         }
       }, 1000);
     },
@@ -76,17 +75,14 @@ export const useUserStore = defineStore({
     /**
      * @description: login
      */
-    async login(
-    ): Promise<GetUserInfoByUserIdModel | null> {
+    async login(): Promise<GetUserInfoByUserIdModel | null> {
       try {
-
-
         // save token
         this.setToken('1');
         this.setRoleList(['super'] as RoleEnum[]);
         // get user info
 
-        await router.replace(PageEnum.BASE_HOME)
+        await router.replace(PageEnum.BASE_HOME);
         return null;
       } catch (error) {
         return null;
