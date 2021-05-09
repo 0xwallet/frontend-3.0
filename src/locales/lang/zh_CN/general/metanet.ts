@@ -116,5 +116,6 @@ export default {
   owner: '所有者',
   validTime: '有效期',
   accessCode: '访问码',
+  accessCodeWrong: '访问码错误',
   submit: '确认',
 };

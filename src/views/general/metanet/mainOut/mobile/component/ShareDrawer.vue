@@ -42,25 +42,6 @@
           <div class="self-center font-semibold text-center">{{ t('cancel') }}</div>
         </div>
       </div>
-      <!--      <div class="row">-->
-      <!--        <Space direction="vertical">-->
-      <!--          <div-->
-      <!--            ><Button type="link" @click="download">{{ t('downloadButton') }}</Button>-->
-      <!--          </div>-->
-      <!--          <div-->
-      <!--            ><Button type="link" @click="save">{{ t('saveTo') }}</Button></div-->
-      <!--          >-->
-      <!--          <div-->
-      <!--            ><Button type="link" @click="collect">{{ t('collectionButton') }}</Button></div-->
-      <!--          >-->
-      <!--          <div-->
-      <!--            ><Button type="link">{{ t('showComment') }}</Button></div-->
-      <!--          >-->
-      <!--          <div-->
-      <!--            ><Button type="link" @click="login">{{ t('login') }}</Button></div-->
-      <!--          ></Space-->
-      <!--        >-->
-      <!--      </div>-->
     </BasicDrawer>
     <CollectModal @register="registerCollectModal" />
   </div>

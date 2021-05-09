@@ -117,4 +117,5 @@ export default {
   validTime: 'Valid Time',
   accessCode: 'Access Code',
   submit: 'Submit',
+  accessCodeWrong: 'Wrong Access Code',
 };

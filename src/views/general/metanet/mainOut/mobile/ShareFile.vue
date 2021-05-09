@@ -18,11 +18,14 @@
         <div class="flex justify-center" v-if="userPreview.bio">{{ userPreview.bio }}</div>
 
         <div class="m-4"><Divider /></div>
+        <div class="text-center text-red-500" v-if="codeError">{{ t('accessCodeWrong') }} {{}}</div>
         <div class="flex justify-center mt-10" v-show="needCode">
           <BasicForm @register="registerForm" layout="vertical"
         /></div>
       </div>
-      <div class="flex justify-center" v-if="!expired">分享已过期</div>
+      <div class="flex justify-center" v-if="!expired"
+        >{{ t('shareButton') }} {{ t('expired') }}</div
+      >
       <AppLocalePicker
         class="absolute bottom-8 right-6 enter-x text-black xl:text-gray-600"
         :showText="false"
@@ -61,15 +64,14 @@
     <ShareDrawer @register="registerDrawer" :file="file" />
     <PdfDrawer @register="registerPdfDrawer" :file="file" :scale="0.5" />
     <MarkdownDrawer @register="registerMarkdownDrawer" :file="file" />
-    <!--    </Card>-->
   </div>
 </template>
 <script lang="ts">
-  import { computed, defineComponent, ref, unref } from 'vue';
+  import { computed, defineComponent, nextTick, ref, unref } from 'vue';
   import { useRouter } from 'vue-router';
   import { useQuery } from '@vue/apollo-composable';
-  import { Hash, Icon, PdfDrawer, NetFile, NetGql } from '/@/components/NetFile';
-  import { Card, Space, Row, Col, Button, List, Avatar, Typography, Divider } from 'ant-design-vue';
+  import { Icon, PdfDrawer, NetFile, NetGql } from '/@/components/NetFile';
+  import { Button, List, Avatar, Divider } from 'ant-design-vue';
   import { Svg } from '/@/components/Svg';
   import { useNetFileStore } from '/@/store/modules/netFile';
   import { BasicForm, useForm } from '/@/components/Form';
@@ -77,40 +79,30 @@
   import { useDrawer } from '/@/components/Drawer';
   import ShareDrawer from './component/ShareDrawer.vue';
   import MarkdownDrawer from './component/MarkdownDrawer.vue';
-  import { MoreOutlined, InfoCircleOutlined } from '@ant-design/icons-vue';
+  import { MoreOutlined } from '@ant-design/icons-vue';
   const { t } = useI18n('general.metanet');
-  import { AppLogo } from '/@/components/Application';
   import { AppLocalePicker } from '/@/components/Application';
   import { StarOutlined } from '@ant-design/icons-vue';
   import { dateUtil } from '/@/utils/dateUtil';
 
   export default defineComponent({
-    name: 'ReleaseFile',
+    name: 'MobileShareFile',
     components: {
-      Card,
       Svg,
       BasicForm,
-      Space,
-      CardMeta: Card.Meta,
-      Row,
-      Col,
       Button,
       ShareDrawer,
       MoreOutlined,
       PdfDrawer,
       Icon,
-      Hash,
       MarkdownDrawer,
       List,
       ListItem: List.Item,
       ListItemMeta: List.Item.Meta,
-      AppLogo,
       Avatar,
       AppLocalePicker,
-      TypographyText: Typography.Text,
       StarOutlined,
       Divider,
-      InfoCircleOutlined,
     },
     setup() {
       const fileStore = useNetFileStore();
@@ -119,6 +111,7 @@
       const params = computed(() => {
         return unref(currentRoute).query;
       });
+      const codeError = ref(false);
       const needCode = ref(false);
       const userPreview = ref({});
       const isDir = ref(true);
@@ -135,7 +128,7 @@
           {
             field: 'code',
             component: 'Input',
-            label: t('code'),
+            label: t('accessCode'),
             required: true,
             colProps: {
               span: 24,
@@ -168,17 +161,21 @@
           needCode.value = drivePreviewShare?.needCode;
           // needCode.value = true;
           userPreview.value = drivePreviewShare?.UserPreview;
-          fetchData();
+          nextTick(() => {
+            if (!needCode.value) fileStore.fetchShareFile(params.value);
+          });
         }
       });
       async function fetchData() {
-        if (!needCode.value) {
-          await fileStore.fetchShareFile(params.value);
-        } else {
-          const { code } = await validateFields();
-          params.value.code = code;
-          await fileStore.fetchShareFile(params.value);
+        codeError.value = false;
+        const { code } = await validateFields();
+        params.value.code = code;
+        const res = await fileStore.fetchShareFile(params.value);
+        console.log(res);
+        if (res) {
           needCode.value = false;
+        } else {
+          codeError.value = true;
         }
       }
       async function preview(f: NetFile) {
@@ -228,6 +225,7 @@
         files,
         openFile,
         expired,
+        codeError,
       };
     },
   });

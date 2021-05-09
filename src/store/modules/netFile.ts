@@ -291,14 +291,12 @@ export const useNetFileStore = defineStore({
         console.log(e);
       }
     },
-    fetchShareFile(params: { code?: string; uri: string }) {
-      useApollo({ mode: 'query', gql: NetGql.Share.Find, variables: params }).then((res) => {
+    fetchShareFile(params: { code?: string; uri: string }): Promise<boolean> {
+      return useApollo({ mode: 'query', gql: NetGql.Share.Find, variables: params }).then((res) => {
         const data = res.data?.driveFindShare;
-        if (!data) {
-          createErrorModal({ title: '错误', content: '分享文件信息错误' });
-          return;
-        }
+        if (!data) return false;
         this.setShareFile([new NetFile(data)]);
+        return true;
       });
     },
     fetchShareFiles(params: { token: string; dirId: string }) {
