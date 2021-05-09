@@ -121,7 +121,6 @@
           };
         }
       );
-
       // Custom implementation of the bottom button,
       const getFooterHeight = computed(() => {
         const { footerHeight, showFooter } = unref(getProps);

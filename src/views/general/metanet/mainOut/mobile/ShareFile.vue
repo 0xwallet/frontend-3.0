@@ -58,31 +58,6 @@
         </List>
       </div>
     </div>
-    <!--    <Card>-->
-    <!--      <template #title>-->
-    <!--        <Space-->
-    <!--          ><Svg :width="30" :height="30" />-->
-    <!--          <span>{{ userPreview.username }} 给你{{ needCode ? '加密' : '' }}分享了文件 </span></Space-->
-    <!--        ></template-->
-    <!--      >-->
-    <!--      <template #extra v-if="file"-->
-    <!--        ><Button type="link" @click="openShareDrawer"-->
-    <!--          ><MoreOutlined :style="{ fontSize: '26px' }" /></Button-->
-    <!--      ></template>-->
-
-    <!--      <div v-if="!isDir" class="grid grid-col-1 gap-2 place-items-center">-->
-    <!--        <div><Icon :type="file.type" :size="100" /></div>-->
-    <!--        <div>{{ file.fileName() }}</div>-->
-    <!--        <div>{{ file.byteTransfer() }}</div>-->
-    <!--        <div><Hash :hash="file.hash" v-if="file.hash" /></div>-->
-    <!--        <div-->
-    <!--          ><Button type="primary" @click="preview(file)">{{ t('previewButton') }}</Button></div-->
-    <!--        >-->
-    <!--        <div-->
-    <!--          ><Button @click="comment(file)">{{ t('comment') }}</Button></div-->
-    <!--        >-->
-    <!--      </div>-->
-
     <ShareDrawer @register="registerDrawer" :file="file" />
     <PdfDrawer @register="registerPdfDrawer" :file="file" :scale="0.5" />
     <MarkdownDrawer @register="registerMarkdownDrawer" :file="file" />
@@ -193,7 +168,6 @@
           needCode.value = drivePreviewShare?.needCode;
           // needCode.value = true;
           userPreview.value = drivePreviewShare?.UserPreview;
-          console.log(drivePreviewShare);
           fetchData();
         }
       });

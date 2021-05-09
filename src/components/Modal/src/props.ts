@@ -6,8 +6,6 @@ import { propTypes, VueNode } from '/@/utils/propTypes';
 import type { ModalWrapperProps } from './types';
 const { t } = useI18n();
 
-console.log(t('common.okText'));
-
 export const modalProps = {
   visible: propTypes.bool,
   scrollTop: propTypes.bool.def(true),

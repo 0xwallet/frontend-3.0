@@ -13,6 +13,7 @@ export default {
   delButton: '删除',
   selectAll: '全选',
   cancelAll: '取消',
+  cancel: '取消',
   delSelect: '删除选中的',
   createFile: '新建文件',
   createFolder: '新建文件夹',

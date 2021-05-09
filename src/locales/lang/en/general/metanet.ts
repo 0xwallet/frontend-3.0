@@ -13,6 +13,7 @@ export default {
   delButton: 'Delete',
   selectAll: 'Select All',
   cancelAll: 'Cancel All',
+  cancel: 'Cancel',
   delSelect: 'Delete Select',
   createFile: 'New File',
   createFolder: 'New Folder',
