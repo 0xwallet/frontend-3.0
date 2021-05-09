@@ -1,48 +1,40 @@
 <template>
-  <BasicModal
-    v-bind="$attrs"
-    @register="register"
-    :title="t('shareButton')"
-    @ok="shareFile"
-    :height="350"
-  >
-    <Card>
-      <template #title>
-        <Space
-          ><span> {{ t('shareButton') }}{{ t('file') }}:</span>
-          <span> {{ file.name + '.' + file.type }}</span>
-        </Space>
-      </template>
-      <template v-if="shareUrl === ''">
-        <BasicForm @register="registerForm" :model="model" />
-      </template>
-      <Descriptions v-if="shareUrl" bordered :column="1">
-        <DescriptionsItem :label="t('shareUrl')"
-          ><a-button type="link" @click="copy(1)">{{ shareUrl }}</a-button></DescriptionsItem
-        >
-        <DescriptionsItem :label="t('code')" v-if="file.shareInfo.code"
-          ><a-button type="link" @click="copy(2)">{{
-            file.shareInfo.code
-          }}</a-button></DescriptionsItem
-        >
-        <DescriptionsItem :label="t('valid')"
-          ><a-button type="primary" @click="copy(3)">{{
-            t('copyShare')
-          }}</a-button></DescriptionsItem
-        >
-      </Descriptions>
-    </Card>
+  <BasicModal v-bind="$attrs" @register="register" @ok="shareFile">
+    <div class="ml-20">
+      <div> <BasicForm @register="registerForm" v-if="!shareUrl" /></div>
+
+      <div class="w-2/3" v-if="shareUrl">
+        <div class="flex flex-col">
+          <div>{{ t('shareUrl') }}</div>
+          <InputSearch
+            v-model:value="shareUrl"
+            placeholder=""
+            @search="copy(1)"
+            :enterButton="t('copy')"
+          />
+        </div>
+
+        <div class="mt-3 w-2/3 flex flex-col" v-if="file.shareInfo.code"
+          ><div>{{ t('accessCode') }}</div>
+
+          <InputSearch
+            v-model:value="file.shareInfo.code"
+            placeholder=""
+            @search="copy(6)"
+            :enterButton="t('copy')"
+        /></div>
+        <div class="mt-10">{{ t('validTime') }}: {{ day }} {{ t('days') }}</div>
+      </div>
+    </div>
   </BasicModal>
 </template>
 <script lang="ts">
   import { computed, defineComponent, ref, unref } from 'vue';
   import { BasicModal, useModalInner } from '/@/components/Modal';
-  import { BasicForm, FormSchema, useForm } from '/@/components/Form';
-  import { Card, Descriptions, Space } from 'ant-design-vue';
+  import { BasicForm, useForm } from '/@/components/Form';
+  import { Input } from 'ant-design-vue';
   import { NetFile } from '/@/components/NetFile';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import { useNetFileStore } from '/@/store/modules/netFile';
-
   const { t } = useI18n('general.metanet');
   function randomString(len) {
     len = len || 32;
@@ -55,65 +47,15 @@
     }
     return pwd;
   }
-  const schemas: FormSchema[] = [
-    {
-      field: 'shareType',
-      label: t('shareType'),
-      component: 'RadioGroup',
-      labelWidth: 100,
-      defaultValue: 'public',
-      componentProps: {
-        options: [
-          {
-            value: 'public',
-            label: t('public'),
-          },
-          {
-            value: 'private',
-            label: t('private'),
-          },
-        ],
-      },
-    },
-
-    {
-      field: 'day',
-      component: 'InputNumber',
-      labelWidth: 100,
-      label: '有效期',
-      required: true,
-      colProps: { span: 12 },
-      defaultValue: 7,
-    },
-    {
-      field: 'code',
-      component: 'Input',
-      labelWidth: 100,
-      label: '分享码',
-      required: true,
-      componentProps: {
-        style: { width: '200px' },
-      },
-      colProps: { span: 12 },
-      defaultValue: randomString(4),
-      ifShow: ({ values }) => {
-        return values.shareType === 'private';
-      },
-    },
-  ];
   export default defineComponent({
     components: {
       BasicModal,
       BasicForm,
-      Card,
-      Space,
-      Descriptions,
-      DescriptionsItem: Descriptions.Item,
+      InputSearch: Input.Search,
     },
     setup() {
-      const fileStore = useNetFileStore();
-      const modelRef = ref({});
       const file = ref<NetFile>({});
+      const day = ref(7);
       const shareUrl = computed(() => {
         if (!file.value.shareInfo?.uri) return '';
         return `${window.location.origin}/#/s/file?uri=${file.value.shareInfo.uri}`;
@@ -123,7 +65,47 @@
         lineHeight: '30px',
       };
       const [registerForm, { validateFields }] = useForm({
-        schemas,
+        schemas: [
+          {
+            field: 'shareType',
+            label: t('shareType'),
+            component: 'RadioGroup',
+            defaultValue: 'public',
+            componentProps: {
+              options: [
+                {
+                  value: 'public',
+                  label: t('public'),
+                },
+                {
+                  value: 'private',
+                  label: t('private'),
+                },
+              ],
+            },
+          },
+
+          {
+            field: 'day',
+            component: 'InputNumber',
+            label: t('validTime'),
+            required: true,
+            defaultValue: day.value,
+          },
+          {
+            field: 'code',
+            component: 'Input',
+            label: t('accessCode'),
+            required: true,
+            componentProps: {
+              style: { width: '200px' },
+            },
+            defaultValue: randomString(4),
+            ifShow: ({ values }) => {
+              return values.shareType === 'private';
+            },
+          },
+        ],
         showActionButtonGroup: false,
         actionColOptions: {
           span: 24,
@@ -133,19 +115,20 @@
       const [register, { setModalProps }] = useModalInner((data) => {
         file.value = unref(data.record);
         file.value.shareInfo.uri = '';
-        setModalProps({ showOkBtn: true });
+        setModalProps({ showOkBtn: true, title: `${t('shareFile')}:${data.record.fileName()}` });
       });
 
       async function shareFile() {
         try {
           const params = await validateFields();
+          day.value = params.day;
           if (params.shareType === 'public') {
             await file.value.share();
           } else {
             await file.value.share(params);
           }
         } catch (e) {
-          console.log(err);
+          console.log(e);
         } finally {
           setModalProps({ showOkBtn: false });
         }
@@ -155,15 +138,14 @@
       }
       return {
         register,
-        schemas,
         registerForm,
-        model: modelRef,
         shareFile,
         file,
         shareUrl,
         copy,
         t,
         radioStyle,
+        day,
       };
     },
   });

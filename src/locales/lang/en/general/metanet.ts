@@ -118,4 +118,6 @@ export default {
   accessCode: 'Access Code',
   submit: 'Submit',
   accessCodeWrong: 'Wrong Access Code',
+  shareFile: 'Share File',
+  days: 'Days',
 };

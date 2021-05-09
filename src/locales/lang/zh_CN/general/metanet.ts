@@ -118,4 +118,6 @@ export default {
   accessCode: '访问码',
   accessCodeWrong: '访问码错误',
   submit: '确认',
+  shareFile: '分享文件',
+  days: '天',
 };

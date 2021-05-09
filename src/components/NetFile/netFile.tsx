@@ -413,6 +413,7 @@ export class NetFile {
   // 分享链接放出剪切板
   copyShareUrl(mode: number) {
     let temp = '';
+
     if (mode === 1 || mode === 3) {
       temp += `${t('general.metanet.shareUrl')}:${window.location.origin}/#/s/file?uri=${
         this.shareInfo.uri
@@ -426,6 +427,9 @@ export class NetFile {
     }
     if (mode === 5) {
       temp = `${window.location.origin}/#/p?txid=${this.publishInfo?.txid}`;
+    }
+    if (mode === 6) {
+      temp = `${this.shareInfo.code}`;
     }
 
     clipboardRef.value = temp;
