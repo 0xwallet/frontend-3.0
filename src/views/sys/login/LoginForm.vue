@@ -180,6 +180,7 @@
           await SignIn(data);
         } catch (err) {
           console.log(err);
+          loading.value = false;
         } finally {
         }
       }
