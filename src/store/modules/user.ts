@@ -19,7 +19,7 @@ interface UserState {
   userInfo: Nullable<UserInfo>;
   token?: string;
   roleList: RoleEnum[];
-  nknStatus: boolean;
+  nknStatus: number;
 }
 
 export const useUserStore = defineStore({
@@ -31,7 +31,7 @@ export const useUserStore = defineStore({
     token: undefined,
     // roleList
     roleList: [],
-    nknStatus: false,
+    nknStatus: 0,
   }),
   getters: {
     getUserInfo(): UserInfo {
@@ -49,9 +49,9 @@ export const useUserStore = defineStore({
       setInterval(() => {
         if (disk) {
           console.log(disk.readyClientIDs());
-          this.nknStatus = disk.readyClientIDs().length > 0;
+          this.nknStatus = disk.readyClientIDs().length;
         } else {
-          this.nknStatus = false;
+          this.nknStatus = 0;
         }
       }, 1000);
     },

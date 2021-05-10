@@ -63,9 +63,8 @@
           <Divider />
 
           <Tag :color="status ? '#52c41a' : '#f50'">
-            <CheckCircleTwoTone v-if="status" twoToneColor="#52c41a" />
-            <QuestionCircleTwoTone v-if="!status" twoToneColor="#f50" />
-
+            <CheckCircleTwoTone v-if="status > 0" twoToneColor="#52c41a" />
+            <QuestionCircleTwoTone v-if="status === 0" twoToneColor="#f50" />
             {{ status ? t('connected') : t('connecting') }}
             <Icon icon="fa-solid:signal" :size="15" />
           </Tag>
@@ -216,7 +215,6 @@
   import { Icon } from '/@/components/Icon';
   import { Button } from '/@/components/Button';
   import { useNetFileStore } from '/@/store/modules/netFile';
-
   export default defineComponent({
     components: {
       BasicTitle,
@@ -265,9 +263,7 @@
       const visible = ref(false);
       const wallet = ref({});
       const edit = ref(false);
-      const status = computed(() => {
-        return userStore.nknStatus;
-      });
+      const status = computed(() => userStore.nknStatus);
       const token = localStorage.getItem('token');
       const temp = ref(false);
       const { clipboardRef, copiedRef } = useCopyToClipboard();

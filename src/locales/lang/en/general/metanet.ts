@@ -120,4 +120,5 @@ export default {
   accessCodeWrong: 'Wrong Access Code',
   shareFile: 'Share File',
   days: 'Days',
+  allFiles: 'All Files',
 };

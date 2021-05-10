@@ -18,7 +18,7 @@
         <div class="flex justify-center" v-if="userPreview.bio">{{ userPreview.bio }}</div>
 
         <div class="m-4"><Divider /></div>
-        <div class="text-center text-red-500" v-if="codeError">{{ t('accessCodeWrong') }} {{}}</div>
+        <div class="text-center text-red-500" v-if="codeError">{{ t('accessCodeWrong') }} </div>
         <div class="flex justify-center mt-10" v-show="needCode">
           <BasicForm @register="registerForm" layout="vertical"
         /></div>

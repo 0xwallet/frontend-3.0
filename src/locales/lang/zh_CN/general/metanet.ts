@@ -120,4 +120,5 @@ export default {
   submit: '确认',
   shareFile: '分享文件',
   days: '天',
+  allFiles: '全部文件',
 };

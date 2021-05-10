@@ -1,5 +1,74 @@
 <template>
-  <div class="p-4">
+  <div class="p-4 h-full flex">
+    <div class="bg-white w-full flex justify-center">
+      <div v-if="expired === 'expired'" class="self-center flex flex-col text-center w-1/4">
+        <Avatar :size="80" :src="`/resource/img/info.png`" class="self-center m-4" />
+        <div>{{ t('expired') }}</div></div
+      >
+
+      <div
+        class="self-center flex flex-col text-center w-1/4"
+        v-if="expired !== 'expired' && needCode && tableData.length === 0"
+      >
+        <Avatar :size="80" :src="userPreview.avatar" class="self-center m-4" />
+        <div class="m-10 text-3xl">{{ userPreview.username }}</div>
+        <Input v-model:value="code" :placeholder="t('accessCode')" class="m-10 w-5 h-10" />
+        <div class="mt-5 text-red-500" v-if="codeError">{{ t('accessCodeWrong') }}</div>
+        <Button class="mt-10" type="primary" @click="fetchData">{{ t('submit') }}</Button>
+        <div class="mt-10">{{ expired }}</div>
+      </div>
+      <div class="w-full flex flex-col divide-y" v-if="tableData.length > 0">
+        <div class="m-5 text-2xl"
+          ><Avatar
+            :size="30"
+            :src="!expired ? `/resource/img/info.png` : userPreview.avatar"
+            class="self-center mr-10"
+          />
+          <span class="ml-4"
+            >{{ userPreview.username }} 给你{{ needCode ? '加密' : '' }}分享了文件</span
+          ></div
+        >
+        <BasicTable @register="registerTable">
+          <template #tableTitle
+            ><span class="text-xl m-2">{{ t('allFiles') }}</span>
+            <span class="text-gary-500">{{ toExpired }} {{ t('expired') }}</span></template
+          >
+          <template #name="{ record }">
+            <a-button type="link" @click="openFile(record)"
+              ><Icon :type="record.type" />{{ record.name
+              }}{{ record.type === 'folder' ? '' : '.' + record.type }}</a-button
+            >
+          </template>
+          <template #hash="{ text }">
+            <Hash :hash="text" v-if="text" />
+          </template>
+          <template #action="{ record }">
+            <div>
+              <!--          <a-button type="link" v-if="record.type !== 'folder'">详情</a-button>-->
+              <a-button type="link" v-if="record.type !== 'folder'" @click="preview(record)">{{
+                t('previewButton')
+              }}</a-button>
+              <!--          <a-button type="link">复制路径</a-button>-->
+              <a-button type="link" @click="download(record)">{{ t('downloadButton') }}</a-button>
+
+              <a-button type="link" @click="save(record)">{{ t('saveButton') }}</a-button>
+              <a-button type="link" @click="collection(record)">{{
+                t('collectionButton')
+              }}</a-button>
+              <a-button type="link" @click="comment(record)">{{ t('comment') }}</a-button></div
+            >
+          </template>
+
+          <template #toolbar>
+            <a-button type="primary" @click="setSelectedRowKeyList">
+              {{ !choose ? '全选' : '取消' }}
+            </a-button>
+            <a-button type="primary" v-show="choose"> 下载 </a-button>
+          </template></BasicTable
+        >
+      </div>
+    </div>
+
     <!--    <Row v-if="!form">-->
     <!--      <Col :xs="2" :sm="4" :md="6" :lg="8" :xl="9"></Col>-->
     <!--      <Col :xs="20" :sm="16" :md="12" :lg="8" :xl="6">-->
@@ -29,47 +98,16 @@
     <!--          ></Space-->
     <!--        ></template-->
     <!--      >-->
-    <!--      <BasicTable @register="registerTable">-->
-    <!--        <template #name="{ record }">-->
-    <!--          <a-button type="link" @click="openFile(record)"-->
-    <!--            ><Icon :type="record.type" />{{ record.name-->
-    <!--            }}{{ record.type === 'folder' ? '' : '.' + record.type }}</a-button-->
-    <!--          >-->
-    <!--        </template>-->
-    <!--        <template #hash="{ text }">-->
-    <!--          <Hash :hash="text" v-if="text" />-->
-    <!--        </template>-->
-    <!--        <template #action="{ record }">-->
-    <!--          <div>-->
-    <!--            &lt;!&ndash;          <a-button type="link" v-if="record.type !== 'folder'">详情</a-button>&ndash;&gt;-->
-    <!--            <a-button type="link" v-if="record.type !== 'folder'" @click="preview(record)">{{-->
-    <!--              t('previewButton')-->
-    <!--            }}</a-button>-->
-    <!--            &lt;!&ndash;          <a-button type="link">复制路径</a-button>&ndash;&gt;-->
-    <!--            <a-button type="link" @click="download(record)">{{ t('downloadButton') }}</a-button>-->
 
-    <!--            <a-button type="link" @click="save(record)">{{ t('saveButton') }}</a-button>-->
-    <!--            <a-button type="link" @click="collection(record)">{{ t('collectionButton') }}</a-button>-->
-    <!--            <a-button type="link" @click="comment(record)">{{ t('comment') }}</a-button></div-->
-    <!--          >-->
-    <!--        </template>-->
-
-    <!--        <template #toolbar>-->
-    <!--          <a-button type="primary" @click="setSelectedRowKeyList">-->
-    <!--            {{ !choose ? '全选' : '取消' }}-->
-    <!--          </a-button>-->
-    <!--          <a-button type="primary" v-show="choose"> 下载 </a-button>-->
-    <!--        </template></BasicTable-->
-    <!--      >-->
     <!--    </Card>-->
-    <CollectModal @register="registerCollectModal" />
-    <PdfDrawer @register="registerPdfDrawer" />
-    <MarkdownModal @register="registerMarkdownModal" />
+    <!--    <CollectModal @register="registerCollectModal" />-->
+    <!--    <PdfDrawer @register="registerPdfDrawer" />-->
+    <!--    <MarkdownModal @register="registerMarkdownModal" />-->
   </div>
 </template>
 <script lang="ts">
-  import { computed, defineComponent, unref, ref } from 'vue';
-  import { Card, Space, Row, Col, Avatar } from 'ant-design-vue';
+  import { computed, defineComponent, unref, ref, nextTick } from 'vue';
+  import { Card, Space, Row, Col, Avatar, Input } from 'ant-design-vue';
   import { useRouter } from 'vue-router';
   import { useTable, BasicTable } from '/@/components/Table';
   import { getBasicColumns } from './tableData';
@@ -83,6 +121,8 @@
   import { useDrawer } from '/@/components/Drawer';
   import { useModal } from '/@/components/Modal';
   import { useMessage } from '/@/hooks/web/useMessage';
+  import { dateUtil } from '/@/utils/dateUtil';
+  import { Button } from '/@/components/Button';
   const { t } = useI18n('general.metanet');
 
   export default defineComponent({
@@ -101,9 +141,16 @@
       MarkdownModal,
       Icon,
       CollectModal,
+      Input,
+      Button,
     },
     setup() {
       const fileStore = useNetFileStore();
+      const expired = ref('');
+      const toExpired = ref('');
+      const userPreview = ref({});
+      const code = ref('');
+      const codeError = ref(false);
       const { currentRoute } = useRouter();
       const { createMessage } = useMessage();
       if (
@@ -123,7 +170,6 @@
         return fileStore.getShareFile;
       });
       const needCode = ref(false);
-      const userPreview = ref({});
       const [registerForm, { validateFields }] = useForm({
         schemas: [
           {
@@ -152,7 +198,6 @@
         { getSelectRowKeys, setSelectedRowKeys, clearSelectedRowKeys, getDataSource },
       ] = useTable({
         canResize: false,
-        title: '文件列表',
         dataSource: (tableData as unknown) as any[],
         columns: getBasicColumns(),
         rowKey: 'id',
@@ -182,22 +227,37 @@
       }
 
       const { onResult: PreviewShare } = useQuery(NetGql.Share.Preview, params.value);
-      PreviewShare((res) => {
-        needCode.value = res.data?.drivePreviewShare.needCode;
-        userPreview.value = res.data?.drivePreviewShare.UserPreview;
-        fetchData();
+      PreviewShare(({ data }) => {
+        const { drivePreviewShare } = data;
+        if (drivePreviewShare) {
+          expired.value =
+            '🗓️ ' +
+            dateUtil(drivePreviewShare.insertedAt).format('YY-MM-DD ') +
+            '⏳ ' +
+            dateUtil(drivePreviewShare.expiredAt).fromNow(true);
+          toExpired.value = dateUtil(drivePreviewShare.expiredAt).fromNow(true);
+          needCode.value = drivePreviewShare?.needCode;
+          // needCode.value = true;
+          userPreview.value = drivePreviewShare?.UserPreview;
+          nextTick(() => {
+            if (!needCode.value) fileStore.fetchShareFile(params.value);
+          });
+        } else {
+          expired.value = 'expired';
+        }
+        console.log(drivePreviewShare);
       });
 
       async function fetchData() {
-        if (!needCode.value) {
-          await fileStore.fetchShareFile(params.value);
+        codeError.value = false;
+        params.value.code = code.value;
+        const res = await fileStore.fetchShareFile(params.value);
+        if (res) {
+          needCode.value = false;
         } else {
-          const { code } = await validateFields();
-          params.value.code = code;
-          await fileStore.fetchShareFile(params.value);
+          codeError.value = true;
         }
       }
-
       function preview(file: NetFile) {
         switch (file.type) {
           case 'pdf':
@@ -263,6 +323,11 @@
         collection,
         comment,
         registerCollectModal,
+        expired,
+        code,
+        fetchData,
+        codeError,
+        toExpired,
       };
     },
   });
