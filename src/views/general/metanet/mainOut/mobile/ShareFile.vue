@@ -46,8 +46,12 @@
                     }}{{ item.type === 'folder' ? '' : '.' + item.type }}</div
                   >
                   <div class="flex justify-between">
-                    <span class="text-gray-300">{{ item.desc }}</span
-                    ><span>
+                    <Desc
+                      :desc="item.desc"
+                      :id="item.id"
+                      :share="true"
+                      class="text-gray-300 flex-grow"
+                    /><span>
                       <StarOutlined class="m-1" />{{ item.status.collectedCount || 0 }}</span
                     ></div
                   >
@@ -84,7 +88,7 @@
   import { AppLocalePicker } from '/@/components/Application';
   import { StarOutlined } from '@ant-design/icons-vue';
   import { dateUtil } from '/@/utils/dateUtil';
-
+  import Desc from '/@/components/NetFile/components/Desc.vue';
   export default defineComponent({
     name: 'MobileShareFile',
     components: {
@@ -103,6 +107,7 @@
       AppLocalePicker,
       StarOutlined,
       Divider,
+      Desc,
     },
     setup() {
       const fileStore = useNetFileStore();
