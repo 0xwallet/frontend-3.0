@@ -1,7 +1,7 @@
 import { useScript } from '/@/hooks/web/useScript';
 import dayjs from 'dayjs';
-import {useApollo} from "/@/hooks/apollo/apollo";
-import {nknOnline} from "/@/hooks/apollo/gqlUser";
+import { useApollo } from '/@/hooks/apollo/apollo';
+import { nknOnline } from '/@/hooks/apollo/gqlUser';
 export const getGlobal = (): any => (typeof window !== 'undefined' ? window : global);
 export let wallet: any = null;
 export let NknClient: [] = [];
@@ -21,7 +21,9 @@ export async function useMClient(): Promise<any> {
       sessionConfig,
       identifier: dayjs(),
     });
+
     await new Promise((resolve) => disk.onConnect(resolve));
+
     console.log('nkn ready');
     return disk;
   } catch (e) {
@@ -54,38 +56,44 @@ export function closeSession() {
   if (session && session.isClosed) session.close();
 }
 
-export function useWallet(email:string='',): Promise<any> {
-  return new Promise((resolve,reject) => {
+export function useWallet(email: string = ''): Promise<any> {
+  return new Promise((resolve, reject) => {
     if (wallet) resolve(wallet);
     const json = localStorage.getItem('walletJson');
     const e = localStorage.getItem('walletEmail');
-    if (json&&e){
+    if (json && e) {
       useNKN().then((nkn: any) => {
-        wallet = nkn.Wallet.fromJSON(json, {password:e });
+        wallet = nkn.Wallet.fromJSON(json, { password: e });
         resolve(wallet);
       });
-      return
+      return;
     }
-    if(email==''){
+    if (email == '') {
       // userStore.logout(true);
       reject('no wallJson');
       return;
     }
-    resolve(newWallet(email))
+    resolve(newWallet(email));
   });
 }
 
-export function newWallet(email: string,online:boolean=true): Promise<{ json: string; publicKey: string }> {
+export function newWallet(
+  email: string,
+  online: boolean = true
+): Promise<{ json: string; publicKey: string }> {
   return new Promise((resolve, reject) => {
     useNKN()
       .then((nkn) => {
         wallet = new nkn.Wallet({ password: email });
-        if(online){
-          useApollo({mode:'mutate',gql:nknOnline,variables:{nknPublicKey:wallet.getPublicKey()}}).then(()=>{
+        if (online) {
+          useApollo({
+            mode: 'mutate',
+            gql: nknOnline,
+            variables: { nknPublicKey: wallet.getPublicKey() },
+          }).then(() => {
             localStorage.setItem('walletEmail', email);
             localStorage.setItem('walletJson', JSON.stringify(wallet.toJSON()));
-
-          })
+          });
         }
 
         resolve({ json: JSON.stringify(wallet.toJSON()), publicKey: wallet.getPublicKey() });
@@ -94,12 +102,10 @@ export function newWallet(email: string,online:boolean=true): Promise<{ json: st
   });
 }
 
-export function saveWallet(params: { email: string;  walletJson: string }) {
-    localStorage.setItem('walletEmail', params.email);
-    localStorage.setItem('walletJson', params.walletJson);
+export function saveWallet(params: { email: string; walletJson: string }) {
+  localStorage.setItem('walletEmail', params.email);
+  localStorage.setItem('walletJson', params.walletJson);
 }
-
-
 
 export function initJS() {
   // 加载nkn.JS

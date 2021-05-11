@@ -35,9 +35,7 @@
         console.log('wallet ready');
         useMClient();
       });
-
       userStore.checkNKN();
-
       // Create a lock screen monitor
       const lockEvent = useLockPage();
 

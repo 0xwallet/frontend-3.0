@@ -49,6 +49,8 @@ export const useUserStore = defineStore({
       setInterval(() => {
         if (disk) {
           console.log(disk.readyClientIDs());
+          console.log(disk.isReady);
+          console.log(disk.isClosed);
           this.nknStatus = disk.readyClientIDs().length;
         } else {
           this.nknStatus = 0;
