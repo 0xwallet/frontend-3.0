@@ -64,6 +64,16 @@
         height: '30px',
         lineHeight: '30px',
       };
+      const [register, { setModalProps }] = useModalInner((data) => {
+        file.value = unref(data.record);
+        file.value.shareInfo.uri = '';
+        setModalProps({
+          showOkBtn: true,
+          title: `${t('shareFile')}:${data.record.fileName()}`,
+          height: 300,
+        });
+      });
+
       const [registerForm, { validateFields }] = useForm({
         schemas: [
           {
@@ -110,12 +120,6 @@
         actionColOptions: {
           span: 24,
         },
-      });
-
-      const [register, { setModalProps }] = useModalInner((data) => {
-        file.value = unref(data.record);
-        file.value.shareInfo.uri = '';
-        setModalProps({ showOkBtn: true, title: `${t('shareFile')}:${data.record.fileName()}` });
       });
 
       async function shareFile() {
