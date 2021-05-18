@@ -37,8 +37,7 @@
         useMClient();
       });
       userStore.checkNKN();
-      const fileStore = useNetFileStore();
-      fileStore.useWs();
+
       // Create a lock screen monitor
       const lockEvent = useLockPage();
 

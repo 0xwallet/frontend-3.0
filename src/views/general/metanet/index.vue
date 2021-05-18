@@ -53,6 +53,7 @@
     },
     setup() {
       const fileStore = useNetFileStore();
+      fileStore.useWs();
       const tabList = [
         {
           key: 'basic',
