@@ -23,7 +23,9 @@ export async function useMClient(): Promise<any> {
     });
 
     await new Promise((resolve) => disk.onConnect(resolve));
-
+    setInterval(() => {
+      NknClient = disk.readyClientIDs();
+    }, 1000);
     console.log('nkn ready');
     return disk;
   } catch (e) {
@@ -39,9 +41,6 @@ export async function useSession(): Promise<any> {
     session = await disk.dial(
       'file-jpgkdpid.5281e9f852705a509b748414148a9909a2e30ec860b3bf6ac0633c39d88613bf'
     );
-    setInterval(() => {
-      NknClient = disk.readyClientIDs();
-    }, 1000);
 
     console.log('session ready');
     // console.log(session);

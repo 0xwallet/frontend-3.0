@@ -277,18 +277,12 @@
       const [registerShareModal, { openModal: openModal4, setModalProps: setModal4 }] = useModal();
       // MarkdownModal
       const [registerMarkdownModal, { openModal: openMarkdownModal }] = useModal();
-      const [
-        registerPublishModal,
-        { openModal: openModal6, setModalProps: setModal6 },
-      ] = useModal();
-      const [
-        registerRenameModal,
-        { openModal: openRenameModal, setModalProps: setRenameModal },
-      ] = useModal();
-      const [
-        registerCopyModal,
-        { openModal: openCopyModal, setModalProps: setCopyModal },
-      ] = useModal();
+      const [registerPublishModal, { openModal: openModal6, setModalProps: setModal6 }] =
+        useModal();
+      const [registerRenameModal, { openModal: openRenameModal, setModalProps: setRenameModal }] =
+        useModal();
+      const [registerCopyModal, { openModal: openCopyModal, setModalProps: setCopyModal }] =
+        useModal();
       const [registerPdfDrawer, { openDrawer: openPdfDrawer }] = useDrawer();
       // 打开新建文件夹modal
       // 打开复制窗口
