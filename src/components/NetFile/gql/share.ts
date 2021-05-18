@@ -51,6 +51,7 @@ const driveFindShare = gql`
       token
       uri
       expiredAt
+      collectedCount
       ${userFile}
       user{
       id
