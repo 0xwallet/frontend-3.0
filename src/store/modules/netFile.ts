@@ -310,8 +310,6 @@ export const useNetFileStore = defineStore({
       });
     },
     async uploadItem(f: uploadItem, uuid?: string) {
-      this.useWs();
-
       try {
         const session = await useSession();
         const writeChunkSize = 1024;
