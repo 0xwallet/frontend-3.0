@@ -119,10 +119,10 @@ export const useNetFileStore = defineStore({
     getEditorOutlineVisible(): boolean {
       return this.editorOutlineVisible;
     },
-    getEditorPath() {
+    getEditorPath(): { name: string; dirId: string } {
       return this.editorPath;
     },
-    getWaitingList() {
+    getWaitingList(): { id: string | undefined }[] {
       return this.waitingList;
     },
   },
@@ -438,13 +438,15 @@ export const useNetFileStore = defineStore({
     },
     uploaded(file: { hash: string; id: string; full_name: string[] }) {
       let index = this.markdownFiles.findIndex((v) => v.key == file.id);
-      if (this.markdownFiles[index]) {
+      console.log(index);
+      if (index > -1) {
         this.markdownFiles[index].waiting = false;
         this.markdownFiles[index].edited = false;
         return;
       }
       index = this.uploadList.findIndex((v) => v.hash == file.hash);
-      if (index) {
+      console.log(index);
+      if (index > -1) {
         this.uploadList[index].status = UploadResultStatus.SUCCESS;
         this.uploadList[index].percent = 100;
         createMessage.success(`${file.full_name.slice(-1)[0]} 上传成功`);
