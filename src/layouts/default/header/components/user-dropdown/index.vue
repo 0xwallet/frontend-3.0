@@ -19,6 +19,7 @@
         />
         <MenuDivider v-if="getShowDoc" />
         <MenuItem
+          v-if="getUseLockPage"
           key="lock"
           :text="t('layout.header.tooltipLock')"
           icon="ion:lock-closed-outline"
@@ -72,9 +73,9 @@
     setup() {
       const { prefixCls } = useDesign('header-user-dropdown');
       const { t } = useI18n();
-      const { getShowDoc } = useHeaderSetting();
       const avatar = ref('');
       const userInfo = ref({});
+      const { getShowDoc, getUseLockPage } = useHeaderSetting();
       const userStore = useUserStore();
 
       const { onResult } = useQuery(me);
@@ -121,6 +122,7 @@
         getShowDoc,
         register,
         avatar,
+        getUseLockPage,
       };
     },
   });
