@@ -376,11 +376,9 @@ export class NetFile {
       variables: { userFileId: this.id, ...params },
     })
       .then((res) => {
-        console.log(res);
         this.shareInfo.uri = res.data?.driveCreateShare.uri;
         this.shareInfo.code = res.data?.driveCreateShare.code;
         this.shareInfo.token = res.data?.driveCreateShare.token;
-        console.log(this.shareInfo);
         return true;
       })
       .catch(() => {
