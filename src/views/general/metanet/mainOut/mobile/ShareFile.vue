@@ -1,7 +1,7 @@
 <template>
   <div class="background h-full">
     <div class="h-10 flex justify-between p-2">
-      <Svg :width="30" :height="30" />
+      <Svg :width="30" :height="30" type="footer" />
       <div class="text-white">{{ expired || '' }}</div>
       <MoreOutlined :style="{ fontSize: '26px', color: 'white' }" @click="openShareDrawer"
     /></div>
@@ -29,6 +29,7 @@
       <AppLocalePicker
         class="absolute bottom-8 right-6 enter-x text-black xl:text-gray-600"
         :showText="false"
+        :reload="true"
       />
       <div class="m-2" v-if="expired">
         <List item-layout="horizontal" :data-source="files" v-if="!needCode">
