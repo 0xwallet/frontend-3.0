@@ -417,7 +417,7 @@ export class NetFile {
         this.shareInfo.uri
       }   `;
     }
-    if ((mode === 2 || mode === 3) && this.code) {
+    if ((mode === 2 || mode === 3) && this.shareInfo.code) {
       temp += `${t('general.metanet.code')}:${this.shareInfo.code}`;
     }
     if (mode === 4) {
@@ -429,7 +429,7 @@ export class NetFile {
     if (mode === 6) {
       temp = `${this.shareInfo.code}`;
     }
-
+    console.log(temp);
     clipboardRef.value = temp;
     if (unref(copiedRef)) {
       createMessage.success(t('general.metanet.copySuccess'));

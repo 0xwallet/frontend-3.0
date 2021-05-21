@@ -1,5 +1,10 @@
 <template>
   <BasicModal v-bind="$attrs" @register="register" @ok="shareFile">
+    <template #appendFooter
+      ><Button type="primary" @click="copy(3)" v-if="shareUrl">{{
+        t('copyShare')
+      }}</Button></template
+    >
     <div class="ml-20">
       <div> <BasicForm @register="registerForm" v-if="!shareUrl" /></div>
 
@@ -35,6 +40,8 @@
   import { Input } from 'ant-design-vue';
   import { NetFile } from '/@/components/NetFile';
   import { useI18n } from '/@/hooks/web/useI18n';
+  import { Button } from '/@/components/Button';
+
   const { t } = useI18n('general.metanet');
   function randomString(len) {
     len = len || 32;
@@ -52,6 +59,7 @@
       BasicModal,
       BasicForm,
       InputSearch: Input.Search,
+      Button,
     },
     setup() {
       const file = ref<NetFile>({});
@@ -69,6 +77,7 @@
         file.value.shareInfo.uri = '';
         setModalProps({
           showOkBtn: true,
+          okText: t('createShare'),
           title: `${t('shareFile')}:${data.record.fileName()}`,
           height: 300,
         });

@@ -12,7 +12,7 @@
       >
         <Avatar :size="80" :src="userPreview.avatar" class="self-center m-4" />
         <div class="m-10 text-3xl">{{ userPreview.username }}</div>
-        <Input v-model:value="code" :placeholder="t('accessCode')" class="m-10 w-5 h-10" />
+        <Input v-model:value="code" :placeholder="t('accessCode')" class="m-10 h-10" />
         <div class="mt-5 text-red-500" v-if="codeError">{{ t('accessCodeWrong') }}</div>
         <Button class="mt-10" type="primary" @click="fetchData">{{ t('submit') }}</Button>
         <div class="mt-10">{{ expired }}</div>
@@ -198,7 +198,7 @@
         { getSelectRowKeys, setSelectedRowKeys, clearSelectedRowKeys, getDataSource },
       ] = useTable({
         canResize: false,
-        dataSource: (tableData as unknown) as any[],
+        dataSource: tableData as unknown as any[],
         columns: getBasicColumns(),
         rowKey: 'id',
         showIndexColumn: false,

@@ -121,4 +121,5 @@ export default {
   shareFile: '分享文件',
   days: '天',
   allFiles: '全部文件',
+  createShare: '创建链接',
 };

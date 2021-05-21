@@ -121,4 +121,5 @@ export default {
   shareFile: 'Share File',
   days: 'Days',
   allFiles: 'All Files',
+  createShare: 'Create Link',
 };
