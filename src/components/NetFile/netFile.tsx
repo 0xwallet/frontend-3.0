@@ -220,7 +220,6 @@ export class NetFile {
     this.desc = params.userFile.info.description || '';
     this.createdAt = params.userFile.insertedAt;
     this.updatedAt = params.userFile.updatedAt;
-    this.code = params.code;
     this.token = params.token || '';
     this.uri = params.uri || '';
     this.expiredAt = params.expiredAt;

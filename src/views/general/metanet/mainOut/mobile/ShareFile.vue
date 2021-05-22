@@ -2,7 +2,7 @@
   <div class="background h-full">
     <div class="h-10 flex justify-between p-2">
       <Svg :width="30" :height="30" type="footer" />
-      <div class="text-white">{{ expired || '' }}</div>
+      <div class="text-white" v-if="!!expired">{{ expired }}</div>
       <MoreOutlined :style="{ fontSize: '26px', color: 'white' }" @click="openShareDrawer"
     /></div>
     <div class="bg-white h-7/8 mt-10 m-4 rounded-lg static">
@@ -13,7 +13,7 @@
           :src="!expired ? `/resource/img/info.png` : userPreview.avatar"
         />
       </div>
-      <div v-if="expired">
+      <div v-if="!!expired">
         <div class="flex justify-center">{{ userPreview.username }}</div>
         <div class="flex justify-center" v-if="userPreview.bio">{{ userPreview.bio }}</div>
 
@@ -23,7 +23,7 @@
           <BasicForm @register="registerForm" layout="vertical"
         /></div>
       </div>
-      <div class="flex justify-center" v-if="!expired"
+      <div class="flex justify-center" v-if="expired === 'expired'"
         >{{ t('shareButton') }} {{ t('expired') }}</div
       >
       <AppLocalePicker
@@ -31,7 +31,7 @@
         :showText="false"
         :reload="true"
       />
-      <div class="m-2" v-if="expired">
+      <div class="m-2" v-if="!!expired">
         <List item-layout="horizontal" :data-source="files" v-if="!needCode">
           <template #renderItem="{ item }">
             <ListItem>
@@ -170,6 +170,8 @@
           nextTick(() => {
             if (!needCode.value) fileStore.fetchShareFile(params.value);
           });
+        } else {
+          expired.value = 'expired';
         }
       });
       async function fetchData() {
