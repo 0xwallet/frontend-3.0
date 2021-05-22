@@ -57,7 +57,9 @@
   import { propTypes } from '/@/utils/propTypes';
   import { Icon } from '/@/components/Icon';
   import { Divider } from 'ant-design-vue';
+  import { CheckToken } from '/@/components/NetFile/netFile';
   const { t } = useI18n('general.metanet');
+
   export default defineComponent({
     components: { BasicDrawer, CollectModal, Icon, Divider },
     props: {
@@ -88,6 +90,7 @@
       }
       const [registerCollectModal, { openModal: openCollectModal }] = useModal();
       async function collect() {
+        if (!CheckToken()) return;
         openCollectModal(true, { mode: 'share', id: file.value.shareInfo.id, code: code.value });
         closeDrawer();
       }

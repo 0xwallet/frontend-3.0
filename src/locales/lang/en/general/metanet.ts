@@ -122,4 +122,5 @@ export default {
   days: 'Days',
   allFiles: 'All Files',
   createShare: 'Create Link',
+  noLoginTips: 'Not logged in, please log in',
 };

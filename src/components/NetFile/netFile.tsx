@@ -76,12 +76,12 @@ export function getFileList(list: any[], dirId: string, token: string = ''): Net
   return temp.concat(p).concat(f);
 }
 
-function CheckToken(): boolean {
+export function CheckToken(): boolean {
   if (localStorage.getItem('token')) return true;
   Modal.confirm({
     title: t('error'),
     icon: createVNode(ExclamationCircleOutlined),
-    content: '未登录账号，请登录',
+    content: t('general.metanet.noLoginTips'),
     centered: true,
     okText: t('login'),
     onOk() {
