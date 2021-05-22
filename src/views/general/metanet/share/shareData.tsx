@@ -41,7 +41,7 @@ export function getBasicColumns(): BasicColumn[] {
     },
     {
       title: t('accessCode'),
-      dataIndex: 'code',
+      dataIndex: 'fullName',
       slots: { customRender: 'code' },
     },
     {

@@ -136,6 +136,7 @@
         try {
           const params = await validateFields();
           day.value = params.day;
+          console.log(params);
           await file.value.share(params);
         } catch (e) {
           console.log(e);

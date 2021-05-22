@@ -10,7 +10,7 @@
         <span @click="editExpire(record.shareInfo.id)">{{ getExpired(text) }}</span>
       </template>
       <template #code="{ record, text }">
-        <span @click="editCode(record.shareInfo.id)">{{ text }}</span>
+        <span @click="editCode(record.shareInfo.id)">{{ record.shareInfo.code }}</span>
       </template>
       <template #action="{ record }">
         <Dropdown>
