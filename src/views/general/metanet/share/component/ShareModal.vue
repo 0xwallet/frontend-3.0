@@ -11,23 +11,25 @@
       <div class="w-2/3" v-if="shareUrl">
         <div class="flex flex-col">
           <div>{{ t('shareUrl') }}</div>
-          <InputSearch v-model:value="shareUrl" @search="copy(1)">
-            <template #enterButton>
-              <Button>{{ t('copy') }}</Button>
+          <Input v-model:value="shareUrl">
+            <template #suffix>
+              <span @click="copy(1)" class="text-blue-600">{{ t('copyButton') }}</span>
             </template>
-          </InputSearch>
+          </Input>
         </div>
 
         <div class="mt-3 w-2/3 flex flex-col" v-if="file.shareInfo.code"
           ><div>{{ t('accessCode') }}</div>
 
-          <InputSearch
-            v-model:value="file.shareInfo.code"
-            placeholder=""
-            @search="copy(6)"
-            :enterButton="t('copy')"
-        /></div>
-        <div class="mt-10">{{ t('validTime') }}: {{ day }} {{ t('days') }}</div>
+          <Input v-model:value="file.shareInfo.code" placeholder=""
+            ><template #suffix>
+              <span @click="copy(6)" class="text-blue-600">{{ t('copyButton') }}</span>
+            </template></Input
+          >
+        </div>
+        <div class="mt-10"
+          >{{ t('validTime') }}<span class="text-blue-500">{{ day }} {{ t('days') }}</span>
+        </div>
       </div>
     </div>
   </BasicModal>
@@ -57,7 +59,7 @@
     components: {
       BasicModal,
       BasicForm,
-      InputSearch: Input.Search,
+      Input,
       Button,
     },
     setup() {
