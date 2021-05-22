@@ -11,12 +11,11 @@
       <div class="w-2/3" v-if="shareUrl">
         <div class="flex flex-col">
           <div>{{ t('shareUrl') }}</div>
-          <InputSearch
-            v-model:value="shareUrl"
-            placeholder=""
-            @search="copy(1)"
-            :enterButton="t('copy')"
-          />
+          <InputSearch v-model:value="shareUrl" @search="copy(1)">
+            <template #enterButton>
+              <Button>{{ t('copy') }}</Button>
+            </template>
+          </InputSearch>
         </div>
 
         <div class="mt-3 w-2/3 flex flex-col" v-if="file.shareInfo.code"
@@ -135,11 +134,7 @@
         try {
           const params = await validateFields();
           day.value = params.day;
-          if (params.shareType === 'public') {
-            await file.value.share();
-          } else {
-            await file.value.share(params);
-          }
+          await file.value.share(params);
         } catch (e) {
           console.log(e);
         } finally {
