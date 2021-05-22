@@ -123,4 +123,5 @@ export default {
   allFiles: 'All Files',
   createShare: 'Create Link',
   noLoginTips: 'Not logged in, please log in',
+  linkValidTime: 'Link Valid Time',
 };

@@ -28,7 +28,7 @@
           >
         </div>
         <div class="mt-10"
-          >{{ t('validTime') }}<span class="text-blue-500">{{ day }} {{ t('days') }}</span>
+          >{{ t('linkValidTime') }}<span class="text-blue-500">{{ day }} {{ t('days') }}</span>
         </div>
       </div>
     </div>
