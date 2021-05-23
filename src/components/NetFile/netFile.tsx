@@ -254,6 +254,7 @@ export class NetFile {
     let url = `https://drive-s.owaf.io/download/${this.userId}/${toLower(this.space.space)}/${
       this.id
     }/${this.fullName.slice(-1)[0]}?token=${token}`;
+    console.log(url);
     downloadByUrl({
       url: url,
       target: '_blank',
