@@ -1,6 +1,6 @@
 <template>
   <LoginFormTitle v-show="getShow" class="enter-x" />
-  <Form class="p-4 enter-x" :model="formData" :rules="getFormRules" ref="formRef" v-show="getShow">
+  <Form class="p-4 enter-x" :model="formData" :rules="getFormRules" ref="formRef" v-show="getShow" @keypress.enter="handleLogin">
     <FormItem name="email" class="enter-x">
       <Input size="large" v-model:value="formData.email" :placeholder="t('sys.login.email')" />
     </FormItem>
@@ -110,7 +110,6 @@
   import { useMutation } from '@vue/apollo-composable';
   import { useMClient, useWallet } from '/@/hooks/nkn/getNKN';
   import { signIn } from '/@/hooks/apollo/gqlUser';
-  import { onKeyStroke } from '@vueuse/core';
 
   export default defineComponent({
     name: 'LoginForm',
@@ -151,7 +150,6 @@
       });
       const { validForm } = useFormValid(formRef);
       const { mutate: SignIn, onDone } = useMutation(signIn);
-      onKeyStroke('Enter', handleLogin);
       const getShow = computed(() => unref(getLoginState) === LoginStateEnum.LOGIN);
       onDone(async (res) => {
         const data = await validForm();
