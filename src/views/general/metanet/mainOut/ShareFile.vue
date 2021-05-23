@@ -15,6 +15,7 @@
         <Input v-model:value="code" :placeholder="t('accessCode')" class="m-10 h-10" />
         <div class="mt-5 text-red-500" v-if="codeError">{{ t('accessCodeWrong') }}</div>
         <Button class="mt-10" type="primary" @click="fetchData">{{ t('submit') }}</Button>
+
         <div class="mt-10">{{ expired }}</div>
       </div>
       <div class="w-full flex flex-col divide-y" v-if="tableData.length > 0">
@@ -31,7 +32,7 @@
         <BasicTable @register="registerTable">
           <template #tableTitle
             ><span class="text-xl m-2">{{ t('allFiles') }}</span>
-            <span class="text-gary-500">{{ toExpired }} {{ t('expired') }}</span></template
+            <span class="text-gary-500">{{ toExpired }} </span></template
           >
           <template #name="{ record }">
             <a-button type="link" @click="openFile(record)"
@@ -121,10 +122,9 @@
   import { useDrawer } from '/@/components/Drawer';
   import { useModal } from '/@/components/Modal';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { dateUtil } from '/@/utils/dateUtil';
+  import { dateUtil, getExpired } from '/@/utils/dateUtil';
   import { Button } from '/@/components/Button';
   const { t } = useI18n('general.metanet');
-
   export default defineComponent({
     name: 'TestTab',
     components: {
@@ -235,7 +235,7 @@
             dateUtil(drivePreviewShare.insertedAt).format('YY-MM-DD ') +
             '⏳ ' +
             dateUtil(drivePreviewShare.expiredAt).fromNow(true);
-          toExpired.value = dateUtil(drivePreviewShare.expiredAt).fromNow(true);
+          toExpired.value = getExpired(drivePreviewShare.expiredAt);
           needCode.value = drivePreviewShare?.needCode;
           // needCode.value = true;
           userPreview.value = drivePreviewShare?.UserPreview;

@@ -2,12 +2,13 @@ import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
+import { useI18n } from '/@/hooks/web/useI18n';
 dayjs.extend(duration);
 dayjs.extend(relativeTime);
 dayjs.extend(localizedFormat);
 const DATE_TIME_FORMAT = 'YYYY-MM-DD HH:mm';
 const DATE_FORMAT = 'YYYY-MM-DD ';
-
+const { t } = useI18n();
 export function formatToDateTime(date: dayjs.ConfigType, format = DATE_TIME_FORMAT): string {
   return dayjs(date).format(format);
 }
@@ -37,6 +38,15 @@ export function formatAgo(str: string | number) {
   } else {
     return parseInt(String(time / 31536000000)) + '年前';
   }
+}
+
+export function getExpired(time: string): string {
+  if (dateUtil().isAfter(time) || time == null) {
+    return t('expired');
+  }
+  //@ts-ignore
+  const du = dateUtil.duration(dateUtil(time) - dateUtil(), 'ms');
+  return du.humanize(true);
 }
 
 export const dateUtil = dayjs;

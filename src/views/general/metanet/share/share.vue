@@ -64,10 +64,9 @@
   import { ExclamationCircleOutlined, ExclamationCircleTwoTone } from '@ant-design/icons-vue';
   import { NetGql, NetFile } from '/@/components/NetFile';
   import { Button } from '/@/components/Button';
-  import { dateUtil } from '/@/utils/dateUtil';
+  import { dateUtil, getExpired } from '/@/utils/dateUtil';
   import { BasicForm } from '/@/components/Form';
   import { useNetFileStore } from '/@/store/modules/netFile';
-
   const { t } = useI18n('general.metanet');
   export default defineComponent({
     components: {
@@ -91,7 +90,6 @@
       const path = ref([]);
       const tableData = ref([]);
       const infoButton = computed(() => fileStore.getFileInfo.button);
-
       const [
         registerTable,
         { getSelectRowKeys, setSelectedRowKeys, clearSelectedRowKeys, getDataSource },
@@ -176,14 +174,7 @@
         const f: NetFile = record;
         f.copyShareUrl(mode);
       }
-      function getExpired(time: string): string {
-        if (dateUtil().isAfter(time) || time == null) {
-          return t('expired');
-        }
-        //@ts-ignore
-        const du = dateUtil.duration(dateUtil(time) - dateUtil(), 'ms');
-        return du.humanize(true);
-      }
+
       const modal = ref({
         visible: false,
         title: '',
