@@ -5,12 +5,12 @@ import { createRouter, createWebHashHistory } from 'vue-router';
 import { basicRoutes, LoginRoute } from './routes';
 import { REDIRECT_NAME } from './constant';
 
-const WHITE_NAME_LIST = [LoginRoute.name, REDIRECT_NAME];
+const WHITE_NAME_LIST = [LoginRoute.name, REDIRECT_NAME, 'ShareFile', 'PublishFile'];
 
 // app router
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.VITE_PUBLIC_PATH),
-  routes: (basicRoutes as unknown) as RouteRecordRaw[],
+  routes: basicRoutes as unknown as RouteRecordRaw[],
   strict: true,
   scrollBehavior: () => ({ left: 0, top: 0 }),
 });

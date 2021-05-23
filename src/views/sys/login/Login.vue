@@ -6,9 +6,7 @@
     />
     <AppDarkModeToggle class="absolute top-3 right-7 enter-x" />
 
-    <span class="-enter-x xl:hidden">
-      <AppLogo :alwaysShowTitle="true" />
-    </span>
+    <span class="-enter-x xl:hidden"> <AppLogo :alwaysShowTitle="true" /> </span>
 
     <div class="container relative h-full py-2 mx-auto sm:px-10">
       <div class="flex h-full">
@@ -31,7 +29,25 @@
         <div class="h-full xl:h-auto flex py-5 xl:py-0 xl:my-0 w-full xl:w-6/12">
           <div
             :class="`${prefixCls}-form`"
-            class="my-auto mx-auto xl:ml-20 xl:bg-transparent px-5 py-8 sm:px-8 xl:p-4 rounded-md shadow-md xl:shadow-none w-full sm:w-3/4 lg:w-2/4 xl:w-auto enter-x relative"
+            class="
+              my-auto
+              mx-auto
+              xl:ml-20
+              xl:bg-transparent
+              px-5
+              py-8
+              sm:px-8
+              xl:p-4
+              rounded-md
+              shadow-md
+              xl:shadow-none
+              w-full
+              sm:w-3/4
+              lg:w-2/4
+              xl:w-auto
+              enter-x
+              relative
+            "
           >
             <LoginForm />
             <ForgetPasswordForm />
@@ -45,7 +61,7 @@
   </div>
 </template>
 <script lang="ts">
-  import { defineComponent, computed } from 'vue';
+  import { defineComponent, computed, ref } from 'vue';
 
   import { AppLogo } from '/@/components/Application';
   import { AppLocalePicker, AppDarkModeToggle } from '/@/components/Application';

@@ -95,7 +95,7 @@
         closeDrawer();
       }
       async function login() {
-        await router.replace(PageEnum.BASE_LOGIN);
+        await router.push(PageEnum.BASE_LOGIN);
       }
 
       return {

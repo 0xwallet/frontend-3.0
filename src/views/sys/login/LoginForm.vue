@@ -149,12 +149,9 @@
         email: '',
         password: '',
       });
-
       const { validForm } = useFormValid(formRef);
       const { mutate: SignIn, onDone } = useMutation(signIn);
-
       onKeyStroke('Enter', handleLogin);
-
       const getShow = computed(() => unref(getLoginState) === LoginStateEnum.LOGIN);
       onDone(async (res) => {
         const data = await validForm();
@@ -169,6 +166,7 @@
 
         await userStore.login();
         await useMClient();
+
         loading.value = false;
       });
       async function handleLogin() {
