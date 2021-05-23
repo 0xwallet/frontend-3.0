@@ -26,6 +26,7 @@ export default {
   failed: '失败',
   shareUrl: '分享链接',
   copyShare: '复制链接及访问码',
+  copyLink: '复制链接',
   url: '链接',
   code: '访问码',
   moveFile: '移动文件',

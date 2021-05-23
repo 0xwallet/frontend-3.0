@@ -28,6 +28,7 @@ export default {
   shareUrl: 'Share Url',
   code: 'Share Code',
   copyShare: 'Click to Copy Url and Code',
+  copyLink: 'Copy Url',
   url: 'Url',
   moveFile: 'Move File',
   select: 'Select',

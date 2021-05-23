@@ -1,9 +1,7 @@
 <template>
   <BasicModal v-bind="$attrs" @register="register" @ok="shareFile">
     <template #appendFooter
-      ><Button type="primary" @click="copy(3)" v-if="shareUrl">{{
-        t('copyShare')
-      }}</Button></template
+      ><Button type="primary" @click="copy(3)" v-if="shareUrl"> {{ button }}</Button></template
     >
     <div class="ml-20">
       <div> <BasicForm @register="registerForm" v-if="!shareUrl" /></div>
@@ -65,6 +63,7 @@
     setup() {
       const file = ref<NetFile>({});
       const day = ref(7);
+      const button = ref('');
       const shareUrl = computed(() => {
         if (!file.value.shareInfo?.uri) return '';
         return `${window.location.origin}/#/s/file?uri=${file.value.shareInfo.uri}`;
@@ -137,6 +136,11 @@
           const params = await validateFields();
           day.value = params.day;
           console.log(params);
+          if (params.shareType == 'public') {
+            button.value = t('copyLink');
+          } else {
+            button.value = t('copyShare');
+          }
           await file.value.share(params);
         } catch (e) {
           console.log(e);
@@ -157,6 +161,7 @@
         t,
         radioStyle,
         day,
+        button,
       };
     },
   });
