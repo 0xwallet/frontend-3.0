@@ -91,7 +91,6 @@
         registerTable,
         { getSelectRowKeys, setSelectedRowKeys, clearSelectedRowKeys, getDataSource },
       ] = useTable({
-        canResize: false,
         customRow: (record) => ({
           onClick: () => {
             fileStore.setFileInfo({ file: record.file, mode: 'publish', collection: false });
@@ -103,7 +102,9 @@
         columns: getBasicColumns(),
         rowKey: 'publishId',
         showIndexColumn: false,
-        scroll: { x: 1000, y: 1000 },
+        // scroll: { x: 1000, y: 1000 },
+        canResize: false,
+        scroll: { x: null },
       });
       const [registerUpdatePublishModal, { openModal, setModalProps }] = useModal();
       const [

@@ -12,7 +12,7 @@
             allow-clear
         /></div>
       </template>
-      <div class="tabsHeight">
+      <div>
         <template v-if="tabKey === 'basic'"><Files /></template>
         <template v-if="tabKey === 'share'"> <Share /> </template>
         <template v-if="tabKey === 'publish'"> <Publish /> </template>
@@ -29,7 +29,7 @@
   import { defineComponent, ref } from 'vue';
   import { Tabs, Card, Input } from 'ant-design-vue';
   import Files from './files.vue';
-  import Share from './share/share.vue';
+  import Share from './share/index.vue';
   import Recycle from './recycle.vue';
   import Publish from './publish/index.vue';
   import Collection from './collection/index.vue';
@@ -103,8 +103,3 @@
     },
   });
 </script>
-<style>
-  .tabsHeight {
-    height: 74vh;
-  }
-</style>

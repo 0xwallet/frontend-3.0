@@ -60,7 +60,6 @@
       const publishData = ref([]);
       const infoButton = computed(() => fileStore.getFileInfo.button);
       const [registerTable] = useTable({
-        canResize: false,
         customRow: (record) => ({
           onClick: () => {
             fileStore.setFileInfo({
@@ -76,7 +75,9 @@
         columns: getBasicColumns(),
         rowKey: 'id',
         showIndexColumn: false,
-        scroll: { x: 1000, y: window.innerHeight * 0.7 },
+        // scroll: { x: 1000, y: window.innerHeight * 0.7 },
+        canResize: false,
+        scroll: { x: null },
       });
 
       const { onResult: shareList, refetch: reloadShare } = useQuery(

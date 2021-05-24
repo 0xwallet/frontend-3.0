@@ -105,7 +105,9 @@
         columns: getBasicColumns(),
         rowKey: 'shareId',
         showIndexColumn: false,
-        scroll: { x: 1000, y: window.innerHeight * 0.7 },
+        // scroll: { x: 1000, y: window.innerHeight * 0.7 },
+        canResize: false,
+        scroll: { x: null },
       });
 
       const { onResult, refetch } = useQuery(NetGql.Share.List, null, () => ({
