@@ -1,9 +1,9 @@
 <template>
   <Tooltip :title="`[${mode}]`" v-if="hash !== ''">
     <span @click="copy"
-      >{{ hash.slice(0, 2)
-      }}<span v-for="v in list" :style="'background-color:#' + v">&nbsp;&nbsp;&nbsp;</span
-      >{{ hash.slice(hash.length - 2, hash.length) }}</span
+      ><span class="font-mono">{{ hash.slice(0, 2) }}</span
+      ><span v-for="v in list" :style="'background-color:#' + v">&nbsp;&nbsp;&nbsp;</span
+      ><span class="font-mono">{{ hash.slice(hash.length - 2, hash.length) }}</span></span
     >
     <CopyOutlined class="ml-4" @click="copy" />
   </Tooltip>
