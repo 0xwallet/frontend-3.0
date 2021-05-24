@@ -2,7 +2,18 @@ import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
+import zh_CN from 'dayjs/locale/zh-cn';
+const { getLocale } = useLocale();
+
+switch (getLocale.value) {
+  case 'zh_CN':
+    dayjs.locale(zh_CN);
+    break;
+  default:
+    break;
+}
 import { useI18n } from '/@/hooks/web/useI18n';
+import { useLocale } from '/@/locales/useLocale';
 dayjs.extend(duration);
 dayjs.extend(relativeTime);
 dayjs.extend(localizedFormat);
