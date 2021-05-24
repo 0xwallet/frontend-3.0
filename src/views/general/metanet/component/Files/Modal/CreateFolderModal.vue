@@ -189,14 +189,14 @@
         NetGql.Basic.MakeDirUnder
       );
       MakeDirDone(() => {
-        closeModal();
         setTimeout(() => {
+          closeModal();
           fileStore.setRefetch();
         }, 1000);
       });
       MakeDirUnderDone(() => {
-        closeModal();
         setTimeout(() => {
+          closeModal();
           fileStore.setRefetch();
         }, 1000);
       });
