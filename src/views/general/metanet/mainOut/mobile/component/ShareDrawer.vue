@@ -13,7 +13,7 @@
     >
       <div class="grid grid-cols-1 gap-4">
         <div class="h-55 bg-white rounded-xl flex flex-col divide-y-2"
-          ><div>
+          ><div @click="download">
             <div class="m-3" @click="download"
               ><Icon icon="feather:download-cloud" :size="25" class="ml-5" />
               <span class="ml-4 font-semibold">{{ t('downloadButton') }}</span></div
