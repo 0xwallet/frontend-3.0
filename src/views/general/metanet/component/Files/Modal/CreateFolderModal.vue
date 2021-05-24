@@ -190,11 +190,15 @@
       );
       MakeDirDone(() => {
         closeModal();
-        fileStore.setRefetch();
+        setTimeout(() => {
+          fileStore.setRefetch();
+        }, 1000);
       });
       MakeDirUnderDone(() => {
         closeModal();
-        fileStore.setRefetch();
+        setTimeout(() => {
+          fileStore.setRefetch();
+        }, 1000);
       });
       async function createFolder() {
         const data = await validateFields();
