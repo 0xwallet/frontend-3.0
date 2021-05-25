@@ -13,26 +13,26 @@
     >
       <div class="grid grid-cols-1 gap-4">
         <div class="h-55 bg-white rounded-xl flex flex-col divide-y-2"
-          ><div @click="download">
+          ><div @touchend="download">
             <div class="m-3"
               ><Icon icon="feather:download-cloud" :size="25" class="ml-5" />
               <span class="ml-4 font-semibold">{{ t('downloadButton') }}</span></div
             >
           </div>
-          <div>
-            <div class="m-3" @click="save"
+          <div @click="save">
+            <div class="m-3"
               ><Icon icon="ant-design:save-outlined" :size="25" class="ml-5" />
               <span class="ml-4 font-semibold">{{ t('saveButton') }}</span></div
             >
           </div>
 
-          <div>
-            <div class="m-3" @click="collect"
+          <div @click="collect">
+            <div class="m-3"
               ><Icon icon="uil:favorite" :size="25" class="ml-5" />
               <span class="ml-4 font-semibold">{{ t('collectionButton') }}</span></div
             > </div
-          ><div>
-            <div class="m-3" @click="login"
+          ><div @click="login">
+            <div class="m-3"
               ><Icon icon="mdi:login-variant" :size="25" class="ml-5" />
               <span class="ml-4 font-semibold">{{ t('login') }}</span></div
             >
