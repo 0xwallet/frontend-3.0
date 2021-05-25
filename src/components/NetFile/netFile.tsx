@@ -79,7 +79,7 @@ export function getFileList(list: any[], dirId: string, token: string = ''): Net
 export function CheckToken(): boolean {
   if (localStorage.getItem('token')) return true;
   Modal.confirm({
-    title: t('error'),
+    title: t('general.metanet.error'),
     icon: createVNode(ExclamationCircleOutlined),
     content: t('general.metanet.noLoginTips'),
     centered: true,
