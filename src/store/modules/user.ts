@@ -20,6 +20,7 @@ interface UserState {
   token?: string;
   roleList: RoleEnum[];
   nknStatus: number;
+  sessionTimeout?: boolean;
 }
 
 export const useUserStore = defineStore({
@@ -32,6 +33,8 @@ export const useUserStore = defineStore({
     // roleList
     roleList: [],
     nknStatus: 0,
+    // Whether the login expired
+    sessionTimeout: false,
   }),
   getters: {
     getUserInfo(): UserInfo {
@@ -42,6 +45,9 @@ export const useUserStore = defineStore({
     },
     getRoleList(): RoleEnum[] {
       return this.roleList.length > 0 ? this.roleList : getAuthCache<RoleEnum[]>(ROLES_KEY);
+    },
+    getSessionTimeout(): boolean {
+      return !!this.sessionTimeout;
     },
   },
   actions: {
@@ -57,7 +63,7 @@ export const useUserStore = defineStore({
         }
       }, 1000);
     },
-    setToken(info: string) {
+    setToken(info: string | undefined) {
       this.token = info;
       setAuthCache(TOKEN_KEY, info);
     },
@@ -69,10 +75,14 @@ export const useUserStore = defineStore({
       this.userInfo = info;
       setAuthCache(USER_INFO_KEY, info);
     },
+    setSessionTimeout(flag: boolean) {
+      this.sessionTimeout = flag;
+    },
     resetState() {
       this.userInfo = null;
       this.token = '';
       this.roleList = [];
+      this.sessionTimeout = false;
     },
     /**
      * @description: login
@@ -84,8 +94,10 @@ export const useUserStore = defineStore({
         this.setRoleList(['super'] as RoleEnum[]);
         // get user info
 
-        await router.replace(PageEnum.BASE_HOME);
-        return null;
+        const sessionTimeout = this.sessionTimeout;
+        sessionTimeout && this.setSessionTimeout(false);
+        !sessionTimeout && await router.replace(PageEnum.BASE_HOME);
+        return userInfo;
       } catch (error) {
         return null;
       }
