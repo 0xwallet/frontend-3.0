@@ -1,5 +1,5 @@
 <template>
-  <ConfigProvider v-bind="lockEvent" :locale="getAntdLocale">
+  <ConfigProvider :locale="getAntdLocale">
     <AppProvider>
       <RouterView />
     </AppProvider>
@@ -11,7 +11,6 @@
   import { ConfigProvider } from 'ant-design-vue';
   import { AppProvider } from '/@/components/Application';
 
-  import { useLockPage } from '/@/hooks/web/useLockPage';
   import { initApollo } from '/@/hooks/apollo/apollo';
   import { initJS, useMClient, useWallet } from '/@/hooks/nkn/getNKN';
   import { useUserStore } from '/@/store/modules/user';
@@ -38,9 +37,8 @@
       userStore.checkNKN();
 
       // Create a lock screen monitor
-      const lockEvent = useLockPage();
 
-      return { getAntdLocale, lockEvent };
+      return { getAntdLocale };
     },
   });
 </script>
