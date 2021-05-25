@@ -34,13 +34,13 @@ export const useUserStore = defineStore({
     nknStatus: 0,
   }),
   getters: {
-    getUserInfo(_): UserInfo {
+    getUserInfo(): UserInfo {
       return this.userInfo || getAuthCache<UserInfo>(USER_INFO_KEY) || {};
     },
-    getToken(_): string {
+    getToken(): string {
       return this.token || getAuthCache<string>(TOKEN_KEY);
     },
-    getRoleList(_): RoleEnum[] {
+    getRoleList(): RoleEnum[] {
       return this.roleList.length > 0 ? this.roleList : getAuthCache<RoleEnum[]>(ROLES_KEY);
     },
   },
