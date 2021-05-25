@@ -3,7 +3,7 @@
     <div class="h-10 flex justify-between p-2">
       <Svg :width="30" :height="30" type="footer" />
       <div class="text-white" v-if="!!expired">{{ expired }}</div>
-      <MoreOutlined :style="{ fontSize: '26px', color: 'white' }" @click="openShareDrawer"
+      <MoreOutlined :style="{ fontSize: '26px', color: 'white' }" @touchend="openShareDrawer"
     /></div>
     <div class="bg-white h-7/8 mt-10 m-4 rounded-lg static">
       <div class="flex justify-center">
@@ -35,7 +35,7 @@
         <List item-layout="horizontal" :data-source="files" v-if="!needCode">
           <template #renderItem="{ item }">
             <ListItem>
-              <ListItemMeta @click="openFile(item)">
+              <ListItemMeta @touchend="openFile(item)">
                 <template #title>
                   <div class="w-3/4">
                     {{

@@ -38,7 +38,7 @@
             >
           </div>
         </div>
-        <div class="h-10 bg-white rounded-xl flex justify-center" @click="closeDrawer">
+        <div class="h-10 bg-white rounded-xl flex justify-center" @touchend="closeDrawer">
           <div class="self-center font-semibold text-center">{{ t('cancel') }}</div>
         </div>
       </div>
