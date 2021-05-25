@@ -19,19 +19,19 @@
               <span class="ml-4 font-semibold">{{ t('downloadButton') }}</span></div
             >
           </div>
-          <div @click="save">
+          <div @touchend="save">
             <div class="m-3"
               ><Icon icon="ant-design:save-outlined" :size="25" class="ml-5" />
               <span class="ml-4 font-semibold">{{ t('saveButton') }}</span></div
             >
           </div>
 
-          <div @click="collect">
+          <div @touchend="collect">
             <div class="m-3"
               ><Icon icon="uil:favorite" :size="25" class="ml-5" />
               <span class="ml-4 font-semibold">{{ t('collectionButton') }}</span></div
             > </div
-          ><div @click="login">
+          ><div @touchend="login">
             <div class="m-3"
               ><Icon icon="mdi:login-variant" :size="25" class="ml-5" />
               <span class="ml-4 font-semibold">{{ t('login') }}</span></div
