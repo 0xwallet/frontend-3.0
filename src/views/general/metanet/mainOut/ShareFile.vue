@@ -101,9 +101,9 @@
     <!--      >-->
 
     <!--    </Card>-->
-    <!--    <CollectModal @register="registerCollectModal" />-->
-    <!--    <PdfDrawer @register="registerPdfDrawer" />-->
-    <!--    <MarkdownModal @register="registerMarkdownModal" />-->
+    <CollectModal @register="registerCollectModal" />
+    <PdfDrawer @register="registerPdfDrawer" />
+    <MarkdownModal @register="registerMarkdownModal" />
   </div>
 </template>
 <script lang="ts">
@@ -124,6 +124,7 @@
   import { useMessage } from '/@/hooks/web/useMessage';
   import { dateUtil, getExpired } from '/@/utils/dateUtil';
   import { Button } from '/@/components/Button';
+  import { CheckToken } from '/@/components/NetFile/netFile';
   const { t } = useI18n('general.metanet');
   export default defineComponent({
     name: 'TestTab',
@@ -296,6 +297,7 @@
         await f.save();
       }
       async function collection(f: NetFile) {
+        if (!CheckToken()) return;
         openCollectModal(true, { mode: 'share', id: f.shareInfo.id, code: params.code });
       }
 

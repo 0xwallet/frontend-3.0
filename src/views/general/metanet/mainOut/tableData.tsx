@@ -10,7 +10,7 @@ export function getBasicColumns(): BasicColumn[] {
     {
       title: t('fileName'),
       dataIndex: 'fullName',
-      width: 200,
+      width: 250,
       align: 'left',
       ellipsis: true,
       slots: { customRender: 'name' },
@@ -32,7 +32,7 @@ export function getBasicColumns(): BasicColumn[] {
     {
       title: 'Hash',
       dataIndex: 'hash',
-      width: 150,
+      width: 200,
       slots: { customRender: 'hash' },
     },
 
