@@ -1242,7 +1242,7 @@
   resolved "https://registry.yarnpkg.com/@intlify/shared/-/shared-9.0.0.tgz#d85b3b5f9033f377c5cf2202cf2459aa49948f36"
   integrity sha512-0r4v7dnY8g/Jfx2swUWy2GyfH/WvIpWvkU4OIupvxDTWiE8RhcpbOCVvqpVh/xGi0proHQ/r2Dhc0QSItUsfDQ==
 
-"@logicflow/core@^0.4.7", "@logicflow/core@^0.4.8":
+"@logicflow/core@^0.4.8":
   version "0.4.8"
   resolved "https://registry.yarnpkg.com/@logicflow/core/-/core-0.4.8.tgz#54b5ef604a39dc3d980c31e69661ee02e7950515"
   integrity sha512-CpVOALxiRvfa3CZLgRiQUMn08/TrUlurst45HcF5448g9CkyX21Nk7smHoj/AybgVkzPpVXsAuxqmc5zh5Qraw==
@@ -1251,7 +1251,7 @@
     mousetrap "^1.6.5"
     preact "^10.4.8"
 
-"@logicflow/extension@^0.4.7":
+"@logicflow/extension@^0.4.8":
   version "0.4.8"
   resolved "https://registry.yarnpkg.com/@logicflow/extension/-/extension-0.4.8.tgz#91747c7d4d98e824c1b9c1c20e8576327e922708"
   integrity sha512-e0xSruFgv65dJPmmG2yAE+1+vrncL/eg5S5mFqDbpSazY8yCNQXh70bHNdpsMzvav64nY8IBDMW6FAA/cbIN/g==
@@ -2224,10 +2224,10 @@ ansi-styles@^4.0.0, ansi-styles@^4.1.0:
   dependencies:
     color-convert "^2.0.1"
 
-ant-design-vue@^2.1.6:
-  version "2.1.6"
-  resolved "https://registry.yarnpkg.com/ant-design-vue/-/ant-design-vue-2.1.6.tgz#c51cdc858e1b1b8b569f5435eb487f53a3f1745e"
-  integrity sha512-qICxb6Y4f7QuSuh/jbLhZA9SkUBnP9xYfy/E6yD7+1fg04aAzmRK8oLv8ETuGTrROVdSVeic9v/NS2BXEuuARg==
+ant-design-vue@2.1.2:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/ant-design-vue/-/ant-design-vue-2.1.2.tgz#2065d7e63199c0c584919458af57b6a0b597f677"
+  integrity sha512-gDG0wauGVt4LE63behrJaIcq4BB+dgs+dpj9jz17IgKr2MPYSEeKetU/x9Kk8d58cGonz4Ulncg7fBZJ7EljsQ==
   dependencies:
     "@ant-design-vue/use" "^0.0.1-0"
     "@ant-design/icons-vue" "^6.0.0"
@@ -2237,7 +2237,7 @@ ant-design-vue@^2.1.6:
     async-validator "^3.3.0"
     dom-align "^1.10.4"
     dom-scroll-into-view "^2.0.0"
-    lodash "^4.17.21"
+    is-mobile "^2.2.1"
     lodash-es "^4.17.15"
     moment "^2.27.0"
     omit.js "^2.0.0"
@@ -6072,6 +6072,11 @@ is-jpg@^2.0.0:
   resolved "https://registry.yarnpkg.com/is-jpg/-/is-jpg-2.0.0.tgz#2e1997fa6e9166eaac0242daae443403e4ef1d97"
   integrity sha1-LhmX+m6RZuqsAkLarkQ0A+TvHZc=
 
+is-mobile@^2.2.1:
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/is-mobile/-/is-mobile-2.2.2.tgz#f6c9c5d50ee01254ce05e739bdd835f1ed4e9954"
+  integrity sha512-wW/SXnYJkTjs++tVK5b6kVITZpAZPtUrt9SF80vvxGiF/Oywal+COk1jlRkiVq15RFNEQKQY31TkV24/1T5cVg==
+
 is-module@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/is-module/-/is-module-1.0.0.tgz#3258fb69f78c14d5b815d664336b4cffb6441591"
@@ -8863,7 +8868,7 @@ rollup-plugin-visualizer@5.5.0:
     source-map "^0.7.3"
     yargs "^16.2.0"
 
-rollup@^2.38.5, rollup@^2.43.1, rollup@^2.45.2, rollup@^2.49.0:
+rollup@^2.38.5, rollup@^2.43.1, rollup@^2.45.2, rollup@^2.50.0:
   version "2.50.0"
   resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.50.0.tgz#e5a77820c2230c66ef9ea26cbc9d7a3c1a18a439"
   integrity sha512-wO+F2MqWPGUCZx0549oqY8dsQqHVjuSxoyBWWnxKoQE+1UGcDKjtL7wHq/8jnnLJEeoGDQLf3ztrpgRwlbGJ0A==
@@ -10580,7 +10585,7 @@ vite-plugin-imagemin@^0.3.2:
     imagemin-svgo "^8.0.0"
     imagemin-webp "^6.0.0"
 
-vite-plugin-mock@^2.5.2:
+vite-plugin-mock@^2.5.4:
   version "2.5.4"
   resolved "https://registry.yarnpkg.com/vite-plugin-mock/-/vite-plugin-mock-2.5.4.tgz#d8440068302f62ea4ff42b3e22446f6ca06d8112"
   integrity sha512-vyGeT+W1twahZx90gprXJ3G2XbT5bU/8mv9MINpqvMJ91/bazFXMsip+Op6mOHUTHsKTfyCytkg/s9cUCR2b/g==
@@ -10616,7 +10621,7 @@ vite-plugin-pwa@^0.7.3:
     workbox-build "^6.1.5"
     workbox-window "^6.1.5"
 
-vite-plugin-style-import@^0.10.0:
+vite-plugin-style-import@^0.10.1:
   version "0.10.1"
   resolved "https://registry.yarnpkg.com/vite-plugin-style-import/-/vite-plugin-style-import-0.10.1.tgz#8732d2c04c92b7e13a7afddcb8e4a34f289fc17c"
   integrity sha512-3P7Jyf5+b1p26t6mOd6yn8ATNPTDGDRkE19aHicFpo3K7Of7ouJabiPfWE4QaicO6grtCfWGQ0SGMAPqxUSdRA==
@@ -10627,7 +10632,7 @@ vite-plugin-style-import@^0.10.0:
     es-module-lexer "^0.4.1"
     magic-string "^0.25.7"
 
-vite-plugin-svg-icons@^0.6.0:
+vite-plugin-svg-icons@^0.6.1:
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/vite-plugin-svg-icons/-/vite-plugin-svg-icons-0.6.1.tgz#e6f7a89208991d49b12f1b849532b9a9f2a48cb6"
   integrity sha512-tXAtr3GVf+G3q1bhIf8Cg90xvuRyOQ7yEcW3+sCMBpy7KyTMgRXQ6OcuWuRgQlB1kphrkz6SXY2Iipzj0ap07g==
@@ -10664,10 +10669,10 @@ vite-plugin-windicss@0.16.0:
     debug "^4.3.2"
     windicss "^3.0.9"
 
-vite@2.3.3:
-  version "2.3.3"
-  resolved "https://registry.yarnpkg.com/vite/-/vite-2.3.3.tgz#7e88a71abd03985c647789938d784cce0ee3b0fd"
-  integrity sha512-eO1iwRbn3/BfkNVMNJDeANAFCZ5NobYOFPu7IqfY7DcI7I9nFGjJIZid0EViTmLDGwwSUPmRAq3cRBbO3+DsMA==
+vite@2.3.4:
+  version "2.3.4"
+  resolved "https://registry.yarnpkg.com/vite/-/vite-2.3.4.tgz#370118e0334725b898ff754ea43d5db4c5e120e3"
+  integrity sha512-7orxrF65+Q5n/sMCnO91S8OS0gkPJ7g+y3bLlc7CPCXVswK8to1T8YycCk9SZh+AcIc0TuN6YajWTBFS5atMNA==
   dependencies:
     esbuild "^0.11.23"
     postcss "^8.2.10"

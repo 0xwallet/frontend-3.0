@@ -13,8 +13,9 @@ import router from '/@/router';
 import { PageEnum } from '/@/enums/pageEnum';
 import { NetGql } from '/@/components/NetFile/gql';
 import { getFile } from '/@/api/general/metanet/file';
+import { useUserStore } from '/@/store/modules/user';
 // 循环获取NKN.JS
-
+const userStore = useUserStore();
 const { t } = useI18n();
 const { clipboardRef, copiedRef } = useCopyToClipboard();
 const { createMessage, createConfirm } = useMessage();
@@ -85,7 +86,9 @@ export function CheckToken(): boolean {
     centered: true,
     okText: t('login'),
     onOk() {
-      router.push(PageEnum.BASE_LOGIN);
+      userStore.setSessionTimeout(true);
+      console.log(123);
+      // router.push(PageEnum.BASE_LOGIN);
     },
   });
   return false;

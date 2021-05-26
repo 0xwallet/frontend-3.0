@@ -96,8 +96,8 @@ export const useUserStore = defineStore({
 
         const sessionTimeout = this.sessionTimeout;
         sessionTimeout && this.setSessionTimeout(false);
-        !sessionTimeout && await router.replace(PageEnum.BASE_HOME);
-        return userInfo;
+        !sessionTimeout && (await router.replace(PageEnum.BASE_HOME));
+        return null;
       } catch (error) {
         return null;
       }

@@ -1,5 +1,6 @@
 <template>
   <div class="background h-full">
+    <SessionTimeoutLogin v-if="getIsSessionTimeout" />
     <div class="h-10 flex justify-between p-2">
       <Svg :width="30" :height="30" type="footer" />
       <div class="text-white" v-if="!!expired">{{ expired }}</div>
@@ -90,6 +91,8 @@
   import { StarOutlined } from '@ant-design/icons-vue';
   import { dateUtil } from '/@/utils/dateUtil';
   import Desc from '/@/components/NetFile/components/Desc.vue';
+  import SessionTimeoutLogin from '/@/views/sys/login/SessionTimeoutLogin.vue';
+  import { useUserStore } from '/@/store/modules/user';
   export default defineComponent({
     name: 'MobileShareFile',
     components: {
@@ -109,8 +112,11 @@
       StarOutlined,
       Divider,
       Desc,
+      SessionTimeoutLogin,
     },
     setup() {
+      const userStore = useUserStore();
+      const getIsSessionTimeout = computed(() => userStore.getSessionTimeout);
       const fileStore = useNetFileStore();
       const { currentRoute } = useRouter();
       const expired = ref('');
@@ -234,6 +240,7 @@
         openFile,
         expired,
         codeError,
+        getIsSessionTimeout,
       };
     },
   });
