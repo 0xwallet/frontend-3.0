@@ -99,7 +99,7 @@ export const useUserStore = defineStore({
         !sessionTimeout && (await router.replace(PageEnum.BASE_HOME));
         return null;
       } catch (error) {
-        return null;
+        return Promise.reject(error);
       }
     },
     // async getUserInfoAction({ userId }: GetUserInfoByUserIdParams) {
