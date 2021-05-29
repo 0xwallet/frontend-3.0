@@ -1,21 +1,45 @@
 <template>
   <transition>
-    <div :class="prefixCls">
+    <div :class="prefixCls" @touchstart="touchstart" @touchmove="touchmove" @touchend="touchend">
       <Login sessionTimeout />
     </div>
   </transition>
 </template>
 <script lang="ts">
-  import { defineComponent } from 'vue';
+  import { defineComponent, ref } from 'vue';
   import Login from './Login.vue';
 
   import { useDesign } from '/@/hooks/web/useDesign';
+  import { useUserStore } from '/@/store/modules/user';
   export default defineComponent({
     name: 'SessionTimeoutLogin',
     components: { Login },
     setup() {
       const { prefixCls } = useDesign('st-login');
-      return { prefixCls };
+      const userStore = useUserStore();
+      const startX = ref(0);
+      const moveX = ref(0);
+      const startY = ref(0);
+      const moveY = ref(0);
+      function touchstart(e) {
+        // 如果你要阻止点击事件，请反注释下一行代码
+        e.preventDefault();
+        startX.value = e.touches[0].clientX;
+        startY.value = e.touches[0].clientY;
+      }
+      function touchmove(e) {
+        e.preventDefault();
+        moveX.value = e.touches[0].clientX;
+        moveY.value = e.touches[0].clientY;
+      }
+      function touchend(e) {
+        e.preventDefault();
+        console.log(e);
+        if (startX.value - moveX.value > 30) {
+          userStore.setSessionTimeout(false);
+        }
+      }
+      return { prefixCls, touchstart, touchmove, touchend };
     },
   });
 </script>

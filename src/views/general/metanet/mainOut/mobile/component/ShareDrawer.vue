@@ -50,14 +50,13 @@
   import { computed, defineComponent, nextTick, ref } from 'vue';
   import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import router from '/@/router';
-  import { PageEnum } from '/@/enums/pageEnum';
   import { useModal } from '/@/components/Modal';
   import { CollectModal, NetFile } from '/@/components/NetFile';
   import { propTypes } from '/@/utils/propTypes';
   import { Icon } from '/@/components/Icon';
   import { Divider } from 'ant-design-vue';
   import { CheckToken } from '/@/components/NetFile/netFile';
+  import { useUserStore } from '/@/store/modules/user';
   const { t } = useI18n('general.metanet');
 
   export default defineComponent({
@@ -66,6 +65,7 @@
       file: propTypes.object.def({}),
     },
     setup(props) {
+      const userStore = useUserStore();
       const file: NetFile = computed(() => {
         return props.file;
       });
@@ -95,7 +95,7 @@
         closeDrawer();
       }
       async function login() {
-        await router.push(PageEnum.BASE_LOGIN);
+        userStore.setSessionTimeout(true);
       }
 
       return {
