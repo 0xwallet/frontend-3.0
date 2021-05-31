@@ -28,6 +28,9 @@
     components: { BasicTable },
     setup() {
       const { createMessage } = useMessage();
+      function onChange() {
+        console.log('onChange', arguments);
+      }
       const [
         registerTable,
         {
@@ -51,6 +54,7 @@
         columns: getBasicColumns(),
         rowKey: 'id',
         showTableSetting: true,
+        onChange,
         rowSelection: {
           type: 'checkbox',
         },
@@ -121,6 +125,7 @@
         getSelectRowKeyList,
         setSelectedRowKeyList,
         clearSelect,
+        onChange,
       };
     },
   });
