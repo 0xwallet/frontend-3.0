@@ -1,17 +1,15 @@
 <template>
   <transition>
-    <div :class="prefixCls">
+    <div :class="prefixCls" @touchstart="touchstart" @touchend="touchend">
       <Login sessionTimeout />
     </div>
   </transition>
 </template>
 <script lang="ts">
-  import { defineComponent, ref } from 'vue';
   import { defineComponent, onBeforeUnmount, onMounted, ref } from 'vue';
   import Login from './Login.vue';
 
   import { useDesign } from '/@/hooks/web/useDesign';
-  import { useUserStore } from '/@/store/modules/user';
   import { useUserStore } from '/@/store/modules/user';
   import { usePermissionStore } from '/@/store/modules/permission';
   import { useAppStore } from '/@/store/modules/app';
@@ -42,33 +40,36 @@
       }
       function touchend(e) {
         e.preventDefault();
-        console.log(e);
-        if (startX.value - moveX.value > 30) {
+        if (startX.value - e.changedTouches[0].clientX > 30) {
           userStore.setSessionTimeout(false);
         }
       }
+      history.pushState(null, null, document.URL);
 
-
-
-      const isBackMode = () => {
-        return appStore.getProjectConfig.permissionMode === PermissionModeEnum.BACK;
-      };
-
-      onMounted(() => {
-        // 记录当前的UserId
-        userId.value = userStore.getUserInfo?.userId;
-        console.log('Mounted', userStore.getUserInfo);
+      window.addEventListener('popstate', () => {
+        console.log(111);
+        history.pushState(null, null, document.URL);
       });
 
-      onBeforeUnmount(() => {
-        if (userId.value && userId.value !== userStore.getUserInfo.userId) {
-          // 登录的不是同一个用户，刷新整个页面以便丢弃之前用户的页面状态
-          document.location.reload();
-        } else if (isBackMode() && permissionStore.getLastBuildMenuTime === 0) {
-          // 后台权限模式下，没有成功加载过菜单，就重新加载整个页面。这通常发生在会话过期后按F5刷新整个页面后载入了本模块这种场景
-          document.location.reload();
-        }
-      });
+      // const isBackMode = () => {
+      //   return appStore.getProjectConfig.permissionMode === PermissionModeEnum.BACK;
+      // };
+
+      // onMounted(() => {
+      //   // 记录当前的UserId
+      //   userId.value = userStore.getUserInfo?.userId;
+      //   console.log('Mounted', userStore.getUserInfo);
+      // });
+      //
+      // onBeforeUnmount(() => {
+      //   if (userId.value && userId.value !== userStore.getUserInfo.userId) {
+      //     // 登录的不是同一个用户，刷新整个页面以便丢弃之前用户的页面状态
+      //     document.location.reload();
+      //   } else if (isBackMode() && permissionStore.getLastBuildMenuTime === 0) {
+      //     // 后台权限模式下，没有成功加载过菜单，就重新加载整个页面。这通常发生在会话过期后按F5刷新整个页面后载入了本模块这种场景
+      //     document.location.reload();
+      //   }
+      // });
 
       return { prefixCls, touchstart, touchmove, touchend };
     },
