@@ -6,14 +6,12 @@
   </transition>
 </template>
 <script lang="ts">
-  import { defineComponent, onBeforeUnmount, onMounted, ref } from 'vue';
+  import { defineComponent, ref } from 'vue';
   import Login from './Login.vue';
 
   import { useDesign } from '/@/hooks/web/useDesign';
   import { useUserStore } from '/@/store/modules/user';
-  import { usePermissionStore } from '/@/store/modules/permission';
-  import { useAppStore } from '/@/store/modules/app';
-  import { PermissionModeEnum } from '/@/enums/appEnum';
+
   export default defineComponent({
     name: 'SessionTimeoutLogin',
     components: { Login },
