@@ -305,6 +305,8 @@
   @prefix-cls: ~'@{namespace}-basic-table';
 
   .@{prefix-cls} {
+    max-width: 100%;
+
     &-row__striped {
       td {
         background-color: @app-content-background;
