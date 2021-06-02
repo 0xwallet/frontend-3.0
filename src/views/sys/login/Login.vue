@@ -1,5 +1,6 @@
 <template>
   <div :class="prefixCls" class="relative w-full h-full px-4">
+    <div class="h-6" v-if="sessionTimeout" />
     <AppLocalePicker
       class="absolute top-4 right-4 enter-x text-white xl:text-gray-600"
       :showText="false"

@@ -1,9 +1,7 @@
 <template>
-  <transition>
-    <div :class="prefixCls" @touchstart="touchstart" @touchend="touchend">
-      <Login sessionTimeout />
-    </div>
-  </transition>
+  <div :class="prefixCls" @touchstart="touchstart" @touchend="touchend">
+    <Login sessionTimeout />
+  </div>
 </template>
 <script lang="ts">
   import { defineComponent, ref } from 'vue';
@@ -19,22 +17,16 @@
       const { prefixCls } = useDesign('st-login');
       const userStore = useUserStore();
       const startX = ref(0);
-      const moveX = ref(0);
       const startY = ref(0);
-      const moveY = ref(0);
       function touchstart(e) {
         // 如果你要阻止点击事件，请反注释下一行代码
-        e.preventDefault();
+        // e.preventDefault();
         startX.value = e.touches[0].clientX;
         startY.value = e.touches[0].clientY;
       }
-      function touchmove(e) {
-        e.preventDefault();
-        moveX.value = e.touches[0].clientX;
-        moveY.value = e.touches[0].clientY;
-      }
+
       function touchend(e) {
-        e.preventDefault();
+        // e.preventDefault();
         if (startX.value - e.changedTouches[0].clientX > 30) {
           userStore.setSessionTimeout(false);
         }
@@ -46,7 +38,7 @@
         history.pushState(null, null, document.URL);
       });
 
-      return { prefixCls, touchstart, touchmove, touchend };
+      return { prefixCls, touchstart, touchend };
     },
   });
 </script>
