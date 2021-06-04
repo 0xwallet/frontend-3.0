@@ -125,4 +125,5 @@ export default {
   allFiles: '全部文件',
   createShare: '创建链接',
   noLoginTips: '未登录账号，请登录',
+  loginOut: '登出',
 };

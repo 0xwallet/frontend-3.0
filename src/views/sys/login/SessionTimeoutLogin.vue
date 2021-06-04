@@ -1,7 +1,9 @@
 <template>
-  <div :class="prefixCls" @touchstart="touchstart" @touchend="touchend">
-    <Login sessionTimeout />
-  </div>
+  <transition>
+    <div :class="prefixCls" @touchstart="touchstart" @touchend="touchend">
+      <Login sessionTimeout />
+    </div>
+  </transition>
 </template>
 <script lang="ts">
   import { defineComponent, ref } from 'vue';

@@ -8,9 +8,7 @@ import { PageEnum } from '/@/enums/pageEnum';
 import { ROLES_KEY, TOKEN_KEY, USER_INFO_KEY } from '/@/enums/cacheEnum';
 
 import { getAuthCache, setAuthCache } from '/@/utils/auth';
-import { GetUserInfoByUserIdModel } from '/@/api/sys/model/userModel';
 import { disk } from '/@/hooks/nkn/getNKN';
-
 
 import { useI18n } from '/@/hooks/web/useI18n';
 import { useMessage } from '/@/hooks/web/useMessage';
@@ -88,7 +86,7 @@ export const useUserStore = defineStore({
     /**
      * @description: login
      */
-    async login(): Promise<GetUserInfoByUserIdModel | null> {
+    async login(): Promise<null> {
       try {
         // save token
         this.setToken('1');

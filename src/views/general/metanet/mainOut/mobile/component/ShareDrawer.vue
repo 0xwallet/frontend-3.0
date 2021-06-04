@@ -31,11 +31,17 @@
               ><Icon icon="uil:favorite" :size="25" class="ml-5" />
               <span class="ml-4 font-semibold">{{ t('collectionButton') }}</span></div
             > </div
-          ><div @touchend="login">
+          ><div @touchend="login" v-if="!token">
             <div class="m-3"
               ><Icon icon="mdi:login-variant" :size="25" class="ml-5" />
-              <span class="ml-4 font-semibold">{{ t('login') }}</span></div
-            >
+              <span class="ml-4 font-semibold">{{ t('login') }}</span>
+            </div>
+          </div>
+          <div @touchend="loginOut" v-if="token">
+            <div class="m-3"
+              ><Icon icon="mdi:login-variant" :size="25" class="ml-5" />
+              <span class="ml-4 font-semibold">{{ t('loginOut') }}</span>
+            </div>
           </div>
         </div>
         <div class="h-10 bg-white rounded-xl flex justify-center" @touchend="closeDrawer">
@@ -80,6 +86,10 @@
           }
         });
       });
+      const token = computed(() => {
+        console.log(userStore.getToken);
+        return !!userStore.getToken;
+      });
       async function download() {
         await file.value.download();
         closeDrawer();
@@ -96,6 +106,10 @@
       }
       async function login() {
         userStore.setSessionTimeout(true);
+        closeDrawer();
+      }
+      async function loginOut() {
+        userStore.logout(true);
       }
 
       return {
@@ -107,6 +121,8 @@
         login,
         registerCollectModal,
         closeDrawer,
+        token,
+        loginOut,
       };
     },
   });

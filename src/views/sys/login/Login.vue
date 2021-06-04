@@ -77,7 +77,7 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useDesign } from '/@/hooks/web/useDesign';
   import { useLocaleStore } from '/@/store/modules/locale';
-
+  import { useUserStore } from '/@/store/modules/user';
   export default defineComponent({
     name: 'Login',
     components: {
@@ -99,10 +99,12 @@
       const globSetting = useGlobSetting();
       const { prefixCls } = useDesign('login');
       const { t } = useI18n();
+      const userStore = useUserStore();
       localStorage.setItem('walletJson', '');
       localStorage.setItem('walletPassword', '');
       localStorage.setItem('token', '');
       localStorage.setItem('uid', '');
+      userStore.setToken(undefined);
       const localeStore = useLocaleStore();
 
       return {

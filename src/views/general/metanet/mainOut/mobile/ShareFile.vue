@@ -1,12 +1,12 @@
 <template>
-  <div class="background h-full">
+  <div class="background h-full container">
     <SessionTimeoutLogin v-if="getIsSessionTimeout" />
     <div class="h-10 flex justify-between p-2">
       <Svg :width="30" :height="30" type="footer" />
       <div class="text-white" v-if="!!expired">{{ expired }}</div>
       <MoreOutlined :style="{ fontSize: '26px', color: 'white' }" @touchend="openShareDrawer"
     /></div>
-    <div class="bg-white h-7/8 mt-10 m-4 rounded-lg static">
+    <div class="relative bg-white mt-10 rounded-lg m-4 h-10/12">
       <div class="flex justify-center">
         <Avatar
           class="absolute bottom-7 border-1 border-white"
@@ -28,7 +28,7 @@
         >{{ t('shareButton') }} {{ t('expired') }}</div
       >
       <AppLocalePicker
-        class="absolute bottom-8 right-6 enter-x text-black xl:text-gray-600"
+        class="absolute bottom-2 right-2 enter-x text-black xl:text-gray-600"
         :showText="false"
         :reload="true"
       />
@@ -93,6 +93,7 @@
   import Desc from '/@/components/NetFile/components/Desc.vue';
   import SessionTimeoutLogin from '/@/views/sys/login/SessionTimeoutLogin.vue';
   import { useUserStore } from '/@/store/modules/user';
+
   export default defineComponent({
     name: 'MobileShareFile',
     components: {
