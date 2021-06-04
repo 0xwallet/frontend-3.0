@@ -287,7 +287,7 @@
       // 打开新建文件夹modal
       // 打开复制窗口
       function openCopy(f: NetFile) {
-        openCopyModal(true, { file: [f.id, ...getSelectRowKeys()] }, true);
+        openCopyModal(true, { file: [...new Set([f.id, ...getSelectRowKeys()])] }, true);
         nextTick(() => {
           setCopyModal({
             canFullscreen: false,
@@ -314,7 +314,7 @@
       }
       // 打开移动窗口
       function openMoveModal(f: NetFile) {
-        openModal2(true, { folder: [f.id, ...getSelectRowKeys()], path });
+        openModal2(true, { folder: [...new Set([f.id, ...getSelectRowKeys()])], path });
         nextTick(() => {
           setModal2({
             canFullscreen: false,
