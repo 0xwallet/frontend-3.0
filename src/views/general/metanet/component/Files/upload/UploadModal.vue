@@ -13,10 +13,10 @@
     :showOkBtn="false"
     :showCancelBtn="false"
   >
-    <template #closeIcon><MinusOutlined /></template>
+    <template #closeIcon><MinusOutlined @click="closeModal" /></template>
     <template #centerFooter>
       <Space>
-        <a-button @click="deleteAll" type="primary">
+        <a-button @click="closeModal" type="primary">
           {{ t('cancelAll') }}
         </a-button>
         <a-button
@@ -25,7 +25,7 @@
           :disabled="!getIsSelectFile"
           :loading="isUploadingRef"
         >
-          {{ getUploadBtnText }}
+          {{ t('uploadButton') }}
         </a-button>
       </Space>
     </template>
@@ -45,6 +45,7 @@
       </Upload>
     </div>
     <FileList :dataSource="fileList" :columns="columns" :actionColumn="actionColumn"> </FileList>
+    {{ fileList }}
   </BasicModal>
 </template>
 <script lang="ts">
@@ -55,7 +56,6 @@
   // hooks
   import { useUploadType } from './useUpload';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { closeSession } from '/@/hooks/nkn/getNKN';
   //   types
   import { FileItem, UploadResultStatus } from './types';
   import { basicProps } from './props';
@@ -94,7 +94,9 @@
       let path: string[] = [];
       const [register, { closeModal }] = useModalInner((data) => {
         isUploadingRef.value = false;
-        path = [...unref(data.path)];
+        if (data.path) {
+          path = [...unref(data.path)];
+        }
       });
 
       const { accept, helpText, maxNumber, maxSize } = toRefs(props);
@@ -158,16 +160,15 @@
           const uploadFileList =
             fileStore.getUploadList.filter((item) => item.status !== UploadResultStatus.SUCCESS) ||
             [];
-          const data = await Promise.all(
-            uploadFileList.map((item) => {
-              return fileStore.uploadApiByItem(item);
-              // return uploadApiByItem(item);
-            })
-          );
+
+          uploadFileList.forEach((item) => {
+            fileStore.uploadApiByItem(item);
+          });
+
           isUploadingRef.value = false;
           // 生产环境:抛出错误
-          const errorList = data.filter((item: any) => !item.success);
-          if (errorList.length > 0) throw errorList;
+          // const errorList = data.filter((item: any) => !item.success);
+          // if (errorList.length > 0) throw errorList;
         } catch (e) {
           isUploadingRef.value = false;
           throw e;
@@ -203,25 +204,9 @@
 
       // 点击关闭：则所有操作不保存，包括上传的
       function handleCloseFunc() {
-        closeSession();
+        closeModal();
         return true;
-        // if (!isUploadingRef.value) {
-        //   fileListRef.value = [];
-        // } else {
-        //   createMessage.warning('请等待文件上传结束后操作');
-        //   return false;
-        // }
       }
-
-      //   const [registerTable] = useTable({
-      //     columns: createTableColumns(),
-      //     actionColumn: createActionColumn(handleRemove, handlePreview),
-      //     pagination: false,
-      //     inset: true,
-      //     scroll: {
-      //       y: 3000,
-      //     },
-      //   });
 
       function deleteAll() {
         fileStore.delAllItems();

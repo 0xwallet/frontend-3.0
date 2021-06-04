@@ -258,7 +258,7 @@ export const useNetFileStore = defineStore({
         console.log(object);
         await this.uploadItem(object, item.uuid);
         // this.setItemValue({ uuid: item.uuid, key: 'status', value: UploadResultStatus.SUCCESS });
-        createMessage.success(item.name + '上传成功', 2);
+        // createMessage.success(item.name + '上传成功', 2);
         return {
           success: true,
           error: null,
@@ -365,6 +365,7 @@ export const useNetFileStore = defineStore({
         console.log('done');
         console.log(this.uploadList);
       } catch (e) {
+        console.log(e);
         this.setItemValue({ uuid: uuid, key: 'status', value: UploadResultStatus.ERROR });
       }
     },
@@ -438,16 +439,16 @@ export const useNetFileStore = defineStore({
     },
     uploaded(file: { hash: string; id: string; full_name: string[] }) {
       let index = this.markdownFiles.findIndex((v) => v.key == file.id);
-      console.log(index);
+      console.log(index, this.uploadList[index]);
 
-      if (!index) {
+      if (index > -1) {
         this.markdownFiles[index].waiting = false;
         this.markdownFiles[index].edited = false;
         return;
       }
       index = this.uploadList.findIndex((v) => v.hash == file.hash);
-      console.log(index);
-      if (!index) {
+      console.log(index, this.uploadList[index]);
+      if (index > -1) {
         this.uploadList[index].status = UploadResultStatus.SUCCESS;
         this.uploadList[index].percent = 100;
         createMessage.success(`${file.full_name.slice(-1)[0]} 上传成功`);

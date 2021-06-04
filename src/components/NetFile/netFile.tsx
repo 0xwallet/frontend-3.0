@@ -9,8 +9,6 @@ import { createImgPreview } from '/@/components/Preview';
 export const getGlobal = (): any => (typeof window !== 'undefined' ? window : global);
 import { Modal } from 'ant-design-vue';
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
-import router from '/@/router';
-import { PageEnum } from '/@/enums/pageEnum';
 import { NetGql } from '/@/components/NetFile/gql';
 import { getFile } from '/@/api/general/metanet/file';
 import { useUserStore } from '/@/store/modules/user';

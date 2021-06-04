@@ -112,7 +112,6 @@
   import { useDrawer } from '/@/components/Drawer';
   import { useNetFileStore } from '/@/store/modules/netFile';
   const { t } = useI18n('general.metanet');
-
   export default defineComponent({
     components: {
       Hash,

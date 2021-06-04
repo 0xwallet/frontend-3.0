@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <PageWrapper dense contentFullHeight>
     <Card :tab-list="tabList" :active-tab-key="tabKey" @tabChange="(key) => onTabChange(key)">
       <template #tabBarExtraContent>
         <div class="m-2">
@@ -22,7 +22,7 @@
       <div class="h-28"></div>
     </Card>
     <FileInfo />
-  </div>
+  </PageWrapper>
 </template>
 
 <script lang="ts">
@@ -37,7 +37,7 @@
   import { FileInfo } from '/@/components/NetFile';
   import { useNetFileStore } from '/@/store/modules/netFile';
   const { t } = useI18n('general.metanet');
-
+  import { PageWrapper } from '/@/components/Page';
   export default defineComponent({
     components: {
       FileInfo,
@@ -50,6 +50,7 @@
       Publish,
       InputSearch: Input.Search,
       Collection,
+      PageWrapper,
     },
     setup() {
       const fileStore = useNetFileStore();

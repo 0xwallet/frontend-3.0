@@ -50,7 +50,10 @@
       const [registerUploadModal, { openModal, setModalProps }] = useModal();
 
       function openUploadModal() {
-        openModal(true);
+        const path = props.path.map((v) => {
+          return v.name;
+        });
+        openModal(true, { path });
       }
       async function beforeUpload(file) {
         const path = props.path.map((v) => {
