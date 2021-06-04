@@ -45,7 +45,6 @@
       </Upload>
     </div>
     <FileList :dataSource="fileList" :columns="columns" :actionColumn="actionColumn"> </FileList>
-    {{ fileList }}
   </BasicModal>
 </template>
 <script lang="ts">
@@ -161,8 +160,12 @@
             fileStore.getUploadList.filter((item) => item.status !== UploadResultStatus.SUCCESS) ||
             [];
 
-          uploadFileList.forEach((item) => {
-            fileStore.uploadApiByItem(item);
+          uploadFileList.forEach((item, index) => {
+            setTimeout(() => {
+              // 这里就是处理的事件
+              console.log(index);
+              fileStore.uploadApiByItem(item);
+            }, 500 * index);
           });
 
           isUploadingRef.value = false;
