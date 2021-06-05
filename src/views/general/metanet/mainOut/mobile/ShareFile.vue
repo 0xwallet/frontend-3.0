@@ -202,7 +202,7 @@
             openMarkdownDrawer(true, {}, true);
             break;
           default:
-            await f.preview();
+            await f.preview(false);
         }
       }
       function openShareDrawer() {
@@ -221,6 +221,7 @@
           fileStore.fetchShareFiles({ token: f.shareInfo.token, dirId: f.id });
           return;
         }
+        f.shareInfo.uri = params.value.uri || '';
         file.value = f;
         preview(f);
       }

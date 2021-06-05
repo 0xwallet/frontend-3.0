@@ -232,18 +232,27 @@ export class NetFile {
   fileName(): string {
     return this.fullName.slice(-1)[0] || 'none';
   }
-  getToken(): Promise<string> {
+  getToken(self: boolean = true): Promise<string> {
     return new Promise<string>((resolve) => {
-      if (this.shareInfo?.token !== '') {
-        resolve(this.shareInfo?.token || '');
+      if (self) {
+        useApollo({
+          mode: 'mutate',
+          gql: NetGql.Basic.Token,
+        }).then((res) => {
+          resolve(res.data.drivePreviewToken || '');
+        });
         return;
+      } else {
+        useApollo({
+          mode: 'query',
+          gql: NetGql.Share.Find,
+          variables: { uri: this.shareInfo.uri, code: this.shareInfo.code },
+        }).then((res) => {
+          console.log(res.data);
+          resolve(res.data.driveFindShare.token || '');
+          return;
+        });
       }
-      useApollo({
-        mode: 'mutate',
-        gql: NetGql.Basic.Token,
-      }).then((res) => {
-        resolve(res.data.drivePreviewToken || '');
-      });
     });
   }
   // 文件下载
@@ -261,8 +270,8 @@ export class NetFile {
     });
   }
   // 文件预览
-  async preview(): Promise<any> {
-    let token = await this.getToken();
+  async preview(self: boolean = true): Promise<any> {
+    let token: string = await this.getToken(self);
     return new Promise<any>((resolve) => {
       let url = `https://drive-s.owaf.io/preview/${this.userId}/${toLower(this.space.space)}/${
         this.id
