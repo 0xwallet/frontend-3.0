@@ -13,6 +13,7 @@
         /></div>
       </template>
       <div>
+        <!-- 我的 文件 / 分享 / 发布 / 收藏 / 回收站 -->
         <template v-if="tabKey === 'basic'"><Files /></template>
         <template v-if="tabKey === 'share'"> <Share /> </template>
         <template v-if="tabKey === 'publish'"> <Publish /> </template>
