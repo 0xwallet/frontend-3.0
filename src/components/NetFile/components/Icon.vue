@@ -20,7 +20,7 @@
           return 'bx-bx-folder';
         }
         if (
-          ['txt', 'pdf', 'md', 'jpg', 'png', 'gif', 'html', 'css', 'doc', 'js', 'json'].includes(
+          ['txt', 'pdf', 'md', 'jpg','jpeg', 'png', 'gif', 'html', 'css', 'doc', 'js', 'json'].includes(
             props.type
           )
         ) {

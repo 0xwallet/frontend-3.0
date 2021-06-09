@@ -19,18 +19,20 @@
         <a-button @click="closeModal" type="primary">
           {{ t('cancelAll') }}
         </a-button>
+        <!-- 弹窗里的上传按钮 -->
         <a-button
           @click="handleStartUpload"
           color="success"
           :disabled="!getIsSelectFile"
           :loading="isUploadingRef"
         >
-          {{ t('uploadButton') }}
+        {{ t('uploadButton') }}
         </a-button>
       </Space>
     </template>
     <div class="upload-modal-toolbar">
       <!--      <Alert :message="getHelpText" type="info" banner class="upload-modal-toolbar__text"></Alert>-->
+      <!--  单击或拖动文件到该区域以上传 -->
       <Upload
         :accept="getStringAccept"
         :multiple="multiple"
@@ -84,6 +86,7 @@
       const fileStore = useNetFileStore();
       const isUploadingRef = ref(false);
       const fileListRef = ref<FileItem[]>([]);
+      // fileStore 里的上传列表
       const fileList = computed(() => {
         return fileStore.getUploadList;
       });
@@ -105,9 +108,10 @@
         maxNumberRef: maxNumber,
         maxSizeRef: maxSize,
       });
+      // console.log('--getStringAccept--',getStringAccept)
 
       const { createMessage } = useMessage();
-
+      // fileStore.uploadList 里不是全部都是成功状态
       const getIsSelectFile = computed(() => {
         return (
           fileStore.getUploadList.length > 0 &&
@@ -160,15 +164,19 @@
             fileStore.getUploadList.filter((item) => item.status !== UploadResultStatus.SUCCESS) ||
             [];
 
-          uploadFileList.forEach((item, index) => {
-            setTimeout(() => {
-              // 这里就是处理的事件
-              console.log(index);
-              fileStore.uploadApiByItem(item);
-            }, 500 * index);
-          });
+          // uploadFileList.forEach((item, index) => {
+          //   setTimeout(() => {
+          //     // 这里就是处理的事件
+          //     console.log(index);
+          //     fileStore.uploadApiByItem(item);
+          //   }, 500 * index);
+          // });
+          // uploadFileList.forEach((item) => fileStore.uploadApiByItem(item));
+          // 正在上传途中锁住loading
+          await Promise.all(uploadFileList.map((item) => fileStore.uploadApiByItem(item)));
 
           isUploadingRef.value = false;
+          console.log('上传完',fileList)
           // 生产环境:抛出错误
           // const errorList = data.filter((item: any) => !item.success);
           // if (errorList.length > 0) throw errorList;

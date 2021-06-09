@@ -187,7 +187,13 @@
       const collection = computed(() => fileStore.getFileInfo.collection);
       const space = computed(() => fileStore.getSpace);
       const visible = computed(
-        () => fileStore.getFileInfo.button && fileStore.getFileInfo.file !== null
+        () => {
+          // fileStore.getFileInfo.button && fileStore.getFileInfo.file !== null
+          const { button, file:storeFile } = fileStore.getFileInfo
+          // 需要手动点击表格里的其中一项的空白地方 再掉右上角的 info 图标才会显示 ?
+          // console.log('computed-change-visible',button && storeFile !==null)
+          return button && storeFile !== null
+        }
       );
 
       const desc = ref('');

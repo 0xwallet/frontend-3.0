@@ -149,6 +149,7 @@
         }
       }
       function copy(v) {
+        console.log('vvv',v)
         file.value.copyShareUrl(v);
       }
       return {

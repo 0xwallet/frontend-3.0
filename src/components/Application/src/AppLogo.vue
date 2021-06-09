@@ -72,7 +72,8 @@
   .@{prefix-cls} {
     display: flex;
     align-items: center;
-    padding-left: 7px;
+    // justify-content: center;
+    // padding-left: 7px;
     cursor: pointer;
     transition: all 0.2s ease;
 

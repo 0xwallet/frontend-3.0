@@ -13,7 +13,14 @@ const { createMessage } = useMessage();
 const maxSize = 20;
 const accept: string[] = [];
 
+/**
+ * 检查文件格式/大小并上传
+ * @param  {File} file - 文件
+ * @param  {string} path - 上传的目录(路径)
+ * @param  {boolean} immediately - 是否立即上传
+ */
 async function checkFile(file: File, path: string[] = [], immediately: boolean = false) {
+  console.log('call checkFile')
   // 设置类型,则判断
   const { size, name } = file;
   if (accept.length > 0 && !checkFileType(file, accept)) {
@@ -39,8 +46,9 @@ async function checkFile(file: File, path: string[] = [], immediately: boolean =
     variables: { hash, fullName: [...path, name] },
   })
     .then(() => {
-      status = UploadResultStatus.SUCCESS;
-      percent = 100;
+      // 为什么这里要一开始就成功??
+      // status = UploadResultStatus.SUCCESS;
+      // percent = 100;
     })
     .catch(() => {})
     .finally(() => {
@@ -60,11 +68,16 @@ async function checkFile(file: File, path: string[] = [], immediately: boolean =
 
       const fileStore = useNetFileStoreWidthOut();
       fileStore.appendItem(commonItem);
+      console.log('--fileStore',fileStore)
       if (immediately) {
-        if (percent == 100) {
-          createMessage.success(`${name} 上传成功`);
-          return;
-        }
+        console.log('why in finally ?')
+        // 这里不提示 统一交给 ws 的事件监听
+        // if (percent == 100) {
+        //   createMessage.success(`${name} 上传成功`);
+        //   // 目的是触发重新获取列表数据操作
+        //   fileStore.setRefetch()
+        //   return;
+        // }
         fileStore.uploadApiByItem(commonItem);
       }
     });

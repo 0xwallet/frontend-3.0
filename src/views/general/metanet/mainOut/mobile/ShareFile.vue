@@ -194,6 +194,7 @@
         }
       }
       async function preview(f: NetFile) {
+        console.log('f.preview',f)
         switch (f.type) {
           case 'pdf':
             openPdfDrawer(true, { file: f }, true);
@@ -213,11 +214,12 @@
       }
 
       function openFile(f: NetFile) {
+        console.log('openFile',f)
         if (f.isDir) {
-          if (f.id === 'root') {
-            fetchData();
-            return;
-          }
+          // if (f.id === 'root') {
+          //   fetchData();
+          //   return;
+          // }
           fileStore.fetchShareFiles({ token: f.shareInfo.token, dirId: f.id });
           return;
         }

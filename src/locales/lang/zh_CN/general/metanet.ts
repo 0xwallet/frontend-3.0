@@ -49,6 +49,7 @@ export default {
   publish: '发布',
   send: '传送',
   copyButton: '复制',
+  batchDelete: '批量删除',
   rename: '重命名',
   desc: '描述',
   detail: '详情',

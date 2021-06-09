@@ -3,10 +3,18 @@
     <BasicTable @register="registerTable">
       <template #tableTitle>
         <Space>
-          <CreateButton :path="path" v-if="!choose" />
-          <Button type="primary" @click="openMoveModal" v-if="choose">{{ t('moveButton') }}</Button>
-          <UploadButton ref="uploadRef" :path="path" v-if="!choose" />
-          <Button type="primary" v-if="choose" @click="openCopy">{{ t('copyButton') }}</Button>
+          <!-- 创建 / 上传 -->
+          <template v-if="!choose">
+            <CreateButton :path="path" />
+            <UploadButton ref="uploadRef" :path="path" />
+          </template>
+          <!-- 移动 / 复制 -->
+          <template v-else>
+            <Button type="primary" @click="openMoveModal">{{ t('moveButton') }}</Button>
+            <Button type="primary" @click="openCopy">{{ t('copyButton') }}</Button>
+            <Button type="danger" @click="delFiles">{{ t('batchDelete') }}</Button>
+          </template>
+          <!-- 点击切换上级目录 -->
           <BreadCrumb :path="currentPath" @jump="goPath" />
         </Space>
       </template>
@@ -18,6 +26,7 @@
       ><template #hash="{ text }">
         <Hash :hash="text" v-if="text" />
       </template>
+      <!-- 表格里右边的操作栏 -->
       <template #action="{ record }">
         <Dropdown v-if="record.name !== '...'">
           <a class="ant-dropdown-link"> ... </a>
@@ -66,6 +75,7 @@
         }}</Button>
       </template>
     </BasicTable>
+    <!-- 上传状态底部栏 -->
     <UploadStatus @openUploadModal="openUploadModal" />
     <MoveModal @register="registerMoveModal" />
     <ShareModal @register="registerShareModal" />
@@ -147,13 +157,26 @@
       const fileStore = useNetFileStore();
       // 信息框
       const { createMessage, createErrorModal, notification } = useMessage();
+      // 通过watch fetch 变量来控制表格数据的刷新
       watch(
         () => fileStore.getRefetch,
+        // (v,oldV) => {
         (v) => {
+          // console.log('watch-fileStore.getRefetch',v,oldV)
           if (!v) return;
-          refetch();
+          // 重置表格选中状态 (from bug: 选中项 删除后,左上角的移动按钮没有根据状态改变)
+          const beforeSelectRowKeys = getSelectRowKeys()
+          // console.log('getSelectRowKeys',beforeSelectRowKeys)
+          refetch().then(res=>{
+            // console.log('refetch-res',res)
+            if(res?.data?.driveListFiles) {
+              const toSetRowKeys = res.data.driveListFiles.filter(i=>i && i.id && beforeSelectRowKeys.includes(i.id)).map(i=>i.id)
+              // console.log('toSetRowKeys',toSetRowKeys)
+              setSelectedRowKeys(toSetRowKeys)
+            }
+          })
           fileStore.setRefetch(false);
-          console.log('Refetch');
+          // console.log('Refetch');
         }
       );
 
@@ -377,6 +400,7 @@
                 createMessage.success('删除成功');
               })
               .finally(() => {
+                // 这个动作会触发 watch 然后重新获取列表
                 fileStore.setRefetch();
               });
           },
@@ -431,6 +455,7 @@
         for (let i = 0; i < getDataSource().length; i++) {
           arr.push(String(i));
         }
+        console.log('setSelectedRowKeys',arr)
         setSelectedRowKeys(arr);
       }
 
@@ -451,6 +476,7 @@
       }
       // 打开文件或者进入目录
       function openFile(f: NetFile) {
+        console.log('pcclick-openFile',f)
         if (f.isDir) {
           variables.value = { dirId: f.id };
           if (f.id === 'root') {
@@ -476,7 +502,7 @@
           path.value.push({ name: f.name, dirId: f.id });
           return;
         }
-        if (['png', 'jpg'].includes(f.type)) {
+        if (['png', 'jpg','jpeg'].includes(f.type)) {
           f.preview();
           return;
         }

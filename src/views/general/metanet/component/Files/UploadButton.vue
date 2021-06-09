@@ -5,6 +5,7 @@
       <template #overlay>
         <Menu>
           <MenuItem>
+            <!-- TODO 禁止默认的上传操作! -->
             <Upload :beforeUpload="beforeUpload" :showUploadList="false">
               <Button type="link">{{ t('file') }}</Button></Upload
             >
@@ -55,11 +56,17 @@
         });
         openModal(true, { path });
       }
-      async function beforeUpload(file) {
-        const path = props.path.map((v) => {
-          return v.name;
-        });
-        await NetUpload.checkFile(file, path, true);
+      // async function beforeUpload(file) {
+      function beforeUpload(file:File) {
+        // 1. return false 取消默认的上传操作
+        // 2. 执行自定义的上传操作
+        // const path = props.path.map((v) => {
+        //   return v.name;
+        // });
+        // // check 之后马上就传了
+        // await NetUpload.checkFile(file, path, true);
+        // check 之后马上就传了
+        NetUpload.checkFile(file, props.path.map((v:any) => v.name), true);
         return false;
       }
 

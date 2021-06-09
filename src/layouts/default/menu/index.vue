@@ -180,7 +180,8 @@
   .@{prefix-cls} {
     &-logo {
       height: @header-height;
-      padding: 10px 4px 10px 10px;
+      // padding: 10px 4px 10px 10px;
+      padding: 14px 16px;
 
       img {
         width: @logo-width;

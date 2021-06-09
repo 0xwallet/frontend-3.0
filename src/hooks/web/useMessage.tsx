@@ -100,7 +100,6 @@ notification.config({
   placement: 'topRight',
   duration: 3,
 });
-
 /**
  * @description: message
  */

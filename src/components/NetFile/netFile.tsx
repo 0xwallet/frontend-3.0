@@ -276,7 +276,8 @@ export class NetFile {
       let url = `https://drive-s.owaf.io/preview/${this.userId}/${toLower(this.space.space)}/${
         this.id
       }/${this.fullName.slice(-1)[0]}?token=${token}`;
-      if (this.type == 'png' || this.type == 'jpg') {
+      // if (this.type == 'png' || this.type == 'jpg') {
+      if (['png', 'jpg','jpeg'].includes(this.type)) {
         createImgPreview({ imageList: [url] });
       }
       resolve(url);
@@ -439,7 +440,8 @@ export class NetFile {
       temp = `${this.shareInfo.code}`;
     }
     console.log(temp);
-    clipboardRef.value = temp;
+    // 不拷贝前面的分享链接
+    clipboardRef.value = temp.slice(temp.indexOf('http'))
     if (unref(copiedRef)) {
       createMessage.success(t('general.metanet.copySuccess'));
     }

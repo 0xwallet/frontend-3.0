@@ -50,6 +50,7 @@ export default {
   publish: 'Publish',
   send: 'Send',
   copyButton: 'Copy',
+  batchDelete: 'BatchDelete',
   rename: 'Rename',
   desc: 'Description',
   detail: 'Details',

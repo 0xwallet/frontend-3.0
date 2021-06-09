@@ -22,6 +22,7 @@
       </div>
       <div class="h-28"></div>
     </Card>
+    <!-- 文件信息 点击右上角的 info 弹出来的弹窗 -->
     <FileInfo />
   </PageWrapper>
 </template>

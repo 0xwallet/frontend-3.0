@@ -287,7 +287,8 @@
         if (f.type === 'md') {
           openMarkdownModal(true, f, true);
         }
-        if (f.type === 'png' || f.type === 'jpg') {
+        // if (f.type === 'png' || f.type === 'jpg') {
+        if (['png', 'jpg','jpeg'].includes(f.type)) {
           f.preview();
         }
         return;

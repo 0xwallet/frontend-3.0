@@ -14,7 +14,7 @@
   </Affix>
 </template>
 <script lang="ts">
-  import { computed, defineComponent, ref } from 'vue';
+  import { computed, defineComponent, ref, toRef } from 'vue';
   import { Affix, Progress } from 'ant-design-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useNetFileStore } from '/@/store/modules/netFile';
@@ -37,6 +37,7 @@
           const total = list.reduce((total, v) => {
             return total + v.percent;
           }, 0);
+          // console.log('total',total,list)
           return Number((total / list.length).toFixed(2));
         }
         return 0;
@@ -58,9 +59,7 @@
         }
         return (speed * 1000 * 1000).toFixed(2) + 'B/s';
       });
-      const clients = computed(() => {
-        return NknClient.length;
-      });
+      const clients = NknClient
       const show = ref(true);
       let now = ref(0);
       let max = ref(10);
