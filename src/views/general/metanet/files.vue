@@ -423,8 +423,8 @@
           width: '50%',
           centered: true,
           onOk() {
-            const top = `${document.documentElement.clientHeight - 300}px`;
-            createMessage.config({ top });
+            // const top = `${document.documentElement.clientHeight - 300}px`;
+            // createMessage.config({ top });
             createMessage.loading({
               content: `${t('deleting')} ${getSelectRowKeys().length} ${t('items')}...`,
               key: 'deleteModal',
@@ -439,6 +439,7 @@
               })
               .finally(() => {
                 fileStore.setRefetch();
+                // 删除后恢复原来 因为会影响所有的message提示
               });
           },
           onCancel() {},

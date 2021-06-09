@@ -67,7 +67,7 @@ export async function useSessionImpl(): Promise<any> {
     //   'file-jpgkdpid.5281e9f852705a509b748414148a9909a2e30ec860b3bf6ac0633c39d88613bf'
     // );
     // 间隔1秒,重试10次 获取session
-    async function retryDialSession(retryCounter = 10) {
+    async function retryDialSession(retryCounter = 100) {
       let res;
       const once = () =>
         new Promise<void>((resolve) => {

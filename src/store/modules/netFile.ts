@@ -310,7 +310,6 @@ export const useNetFileStore = defineStore({
       });
     },
     async uploadItem(f: uploadItem, uuid?: string) {
-      console.log('--uploadItem--',f)
       try {
         const session = await useSession();
         const writeChunkSize = 1024;
@@ -337,7 +336,7 @@ export const useNetFileStore = defineStore({
               // 修复二次上传卡在99 的bug的地方
               const calcPercent = Math.round(((n + buf.length) / Number(f.FileSize)) * 100)
               const toSetPercent = calcPercent < 100 ? calcPercent : 100
-              console.log('----calc----',calcPercent)
+              // console.log('----calc----',calcPercent)
               this.setItemValue({
                 uuid: uuid,
                 key: 'percent',
@@ -365,14 +364,14 @@ export const useNetFileStore = defineStore({
               // 如果已经 100% 了就不要再设置速度为状态了
               this.setItemValue({ uuid: uuid, key: 'status', value: speed });
             }
-            console.log(
-              session.localAddr,
-              'sent',
-              n + buf.length,
-              'bytes',
-              ((n + buf.length) / (1 << 20) / (Date.now() - timeStart)) * 1000000000,
-              'B/s'
-            );
+            // console.log(
+            //   session.localAddr,
+            //   'sent',
+            //   n + buf.length,
+            //   'bytes',
+            //   ((n + buf.length) / (1 << 20) / (Date.now() - timeStart)) * 1000000000,
+            //   'B/s'
+            // );
           }
         }
         // console.log('done');
@@ -453,10 +452,10 @@ export const useNetFileStore = defineStore({
       // this.waitingList.push({ id: f.UseFileId });
     },
     uploaded(file: { hash: string; id: string; full_name: string[] }) {
-      console.log('uploaded',file)
+      // console.log('uploaded',file)
       // 1. 如果在 markdown 中找得到
       let index = this.markdownFiles.findIndex((v) => v.key == file.id);
-      console.log(index, this.uploadList[index]);
+      // console.log(index, this.uploadList[index]);
 
       if (index > -1) {
         this.markdownFiles[index].waiting = false;
@@ -465,15 +464,15 @@ export const useNetFileStore = defineStore({
       }
       // 2. 提示上传成功
       index = this.uploadList.findIndex((v) => v.hash == file.hash);
-      console.log(index, this.uploadList[index]);
+      // console.log(index, this.uploadList[index]);
       if (index > -1) {
         this.uploadList[index].status = UploadResultStatus.SUCCESS;
         this.uploadList[index].percent = 100; // 这里设置了为 100 ?
         createMessage.success(`${file.full_name.slice(-1)[0]} 上传成功`);
-        console.log('上传后的set success 标记',this.uploadList[index])
+        // console.log('上传后的set success 标记',this.uploadList[index])
         // this.refetch = true;
         this.setRefetch();
-        console.log('this', this);
+        // console.log('this', this);
       }
     },
     async searchFile(keywords: string) {
