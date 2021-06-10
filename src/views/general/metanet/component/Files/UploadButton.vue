@@ -5,7 +5,6 @@
       <template #overlay>
         <Menu>
           <MenuItem>
-            <!-- TODO 禁止默认的上传操作! -->
             <Upload :beforeUpload="beforeUpload" :showUploadList="false">
               <Button type="link">{{ t('file') }}</Button></Upload
             >

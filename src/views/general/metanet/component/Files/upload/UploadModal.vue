@@ -173,7 +173,11 @@
           // });
           // uploadFileList.forEach((item) => fileStore.uploadApiByItem(item));
           // 正在上传途中锁住loading
-          await Promise.all(uploadFileList.map((item) => fileStore.uploadApiByItem(item)));
+          await Promise.all(uploadFileList.map((item) => {
+            // 检查是否都有 secondPass 秒传属性
+            // console.log('---批量上传',item)
+            return fileStore.uploadApiByItem(item)
+          }));
 
           isUploadingRef.value = false;
           console.log('上传完',fileList)

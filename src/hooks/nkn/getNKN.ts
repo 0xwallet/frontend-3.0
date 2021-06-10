@@ -66,7 +66,7 @@ export async function useSessionImpl(): Promise<any> {
     // session = await disk.dial(
     //   'file-jpgkdpid.5281e9f852705a509b748414148a9909a2e30ec860b3bf6ac0633c39d88613bf'
     // );
-    // 间隔1秒,重试10次 获取session
+    // 间隔1秒,重试100次 获取session
     async function retryDialSession(retryCounter = 100) {
       let res;
       const once = () =>
@@ -86,9 +86,7 @@ export async function useSessionImpl(): Promise<any> {
         await once();
         if (!res) await useDelay();
       }
-      return res
-        ? res
-        : Promise.reject(`dial session failed, retryCount: ${10 - 1 - retryCounter}`);
+      return res ?? Promise.reject(`dial session failed, retryCount: ${10 - 1 - retryCounter}`);
     }
     console.time('[性能] nkn-client-session握手时间');
     session = await retryDialSession();
@@ -143,15 +141,15 @@ export function useWallet(email: string = ''): Promise<any> {
       // 如果缓存有 email ,拿出来初始化
       // TODO 校验账户是否有效
       if (e && email === '') email = e;
-      if (json && e) {
+      if (e && json) {
         useNKN().then((nkn: any) => {
           wallet = nkn.Wallet.fromJSON(json, { password: e });
           resolve(wallet);
         });
-      } else if (email === '') {
-        reject('no walletJson');
-      } else {
+      } else if (email) {
         resolve(newWallet(email));
+      } else {
+        reject('no walletJson');
       }
     }
   });

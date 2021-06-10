@@ -20,7 +20,8 @@ export interface FileItem {
   status?: UploadResultStatus | string;
   responseData?: UploadApiResult;
   uuid: string;
-  path:string[]
+  path:string[];
+  secondPass?:Boolean
 }
 
 export interface PreviewFileItem {

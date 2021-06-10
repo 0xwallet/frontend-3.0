@@ -12,7 +12,6 @@ import { NetGql } from '/@/components/NetFile/gql';
 const { createMessage } = useMessage();
 const maxSize = 20;
 const accept: string[] = [];
-
 /**
  * 检查文件格式/大小并上传
  * @param  {File} file - 文件
@@ -20,7 +19,6 @@ const accept: string[] = [];
  * @param  {boolean} immediately - 是否立即上传
  */
 async function checkFile(file: File, path: string[] = [], immediately: boolean = false) {
-  console.log('call checkFile')
   // 设置类型,则判断
   const { size, name } = file;
   if (accept.length > 0 && !checkFileType(file, accept)) {
@@ -40,17 +38,26 @@ async function checkFile(file: File, path: string[] = [], immediately: boolean =
   // @ts-ignore
   let wordArray = CryptoJS.lib.WordArray.create(data);
   hash = CryptoJS.SHA256(wordArray).toString();
+  let secondPass = false;
+  // 秒传接口,如果返回有hash(then成功,没hash会catch),就代表秒传成功
   useApollo({
     mode: 'mutate',
     gql: NetGql.Basic.Hash,
     variables: { hash, fullName: [...path, name] },
   })
     .then(() => {
-      // 为什么这里要一开始就成功??
+      // 是否可以秒传
+      secondPass = true;
+      // console.log('upload-apollo-hashchech',res)
       // status = UploadResultStatus.SUCCESS;
       // percent = 100;
     })
-    .catch(() => {})
+    .catch(() => {
+      // 是否可以秒传
+      secondPass = false;
+      // err Error: file hash not found
+      // console.log('err',err)
+    })
     .finally(() => {
       const commonItem: FileItem = {
         uuid: buildUUID(),
@@ -64,13 +71,13 @@ async function checkFile(file: File, path: string[] = [], immediately: boolean =
         status,
         thumbUrl: '',
         path,
+        secondPass
       };
 
       const fileStore = useNetFileStoreWidthOut();
       fileStore.appendItem(commonItem);
-      console.log('--fileStore',fileStore)
+      // console.log('--fileStore',fileStore)
       if (immediately) {
-        console.log('why in finally ?')
         // 这里不提示 统一交给 ws 的事件监听
         // if (percent == 100) {
         //   createMessage.success(`${name} 上传成功`);

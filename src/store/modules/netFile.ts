@@ -14,6 +14,7 @@ import { useApollo } from '/@/hooks/apollo/apollo';
 const { createMessage, createErrorModal } = useMessage();
 
 import { Socket as PhoenixSocket } from 'phoenix';
+import { useDelay } from '/@/hooks/web/useDelay';
 
 let WsChannel: any = null;
 
@@ -244,20 +245,38 @@ export const useNetFileStore = defineStore({
     },
     async uploadApiByItem(item: FileItem) {
       try {
-        // 获取client session
-        this.setItemValue({ uuid: item.uuid, key: 'status', value: UploadResultStatus.UPLOADING });
-        const object: uploadItem = {
-          File: new Uint8Array(await item.file.arrayBuffer()),
-          FullName: [...item.path, item.name],
-          FileSize: item.size,
-          UserId: localStorage.getItem('uid'),
-          Space: 'PRIVATE',
-          Description: item.desc || '',
-          Action: 'drive',
-        };
-        await this.uploadItem(object, item.uuid);
-        // this.setItemValue({ uuid: item.uuid, key: 'status', value: UploadResultStatus.SUCCESS });
-        // createMessage.success(item.name + '上传成功', 2);
+        // 如果可以秒传
+        if (item.secondPass) {
+          this.setItemValue({
+            uuid: item.uuid,
+            key: 'status',
+            value: UploadResultStatus.SUCCESS,
+          });
+          this.setItemValue({
+            uuid: item.uuid,
+            key: 'percent',
+            value: 100,
+          });
+        } else {
+          // 获取client session
+          this.setItemValue({
+            uuid: item.uuid,
+            key: 'status',
+            value: UploadResultStatus.UPLOADING,
+          });
+          const object: uploadItem = {
+            File: new Uint8Array(await item.file.arrayBuffer()),
+            FullName: [...item.path, item.name],
+            FileSize: item.size,
+            UserId: localStorage.getItem('uid'),
+            Space: 'PRIVATE',
+            Description: item.desc || '',
+            Action: 'drive',
+          };
+          await this.uploadItem(object, item.uuid);
+          // this.setItemValue({ uuid: item.uuid, key: 'status', value: UploadResultStatus.SUCCESS });
+          // createMessage.success(item.name + '上传成功', 2);
+        }
         this.uploaded({ hash: item.hash, id: item.uuid, full_name: ['', item.name] });
         return {
           success: true,
@@ -300,7 +319,7 @@ export const useNetFileStore = defineStore({
     },
     fetchShareFiles(params: { token: string; dirId: string }) {
       useApollo({ mode: 'query', gql: NetGql.Basic.FileList, variables: params }).then((res) => {
-        console.log('fetchShareFiles-----res',res)
+        console.log('fetchShareFiles-----res', res);
         const data = res.data?.driveListFiles;
         if (!data) {
           createErrorModal({ title: '错误', content: '分享文件信息错误' });
@@ -334,8 +353,8 @@ export const useNetFileStore = defineStore({
             let shouldContinueSetStatusAsSpeed = true;
             if (uuid) {
               // 修复二次上传卡在99 的bug的地方
-              const calcPercent = Math.round(((n + buf.length) / Number(f.FileSize)) * 100)
-              const toSetPercent = calcPercent < 100 ? calcPercent : 100
+              const calcPercent = Math.round(((n + buf.length) / Number(f.FileSize)) * 100);
+              const toSetPercent = calcPercent < 100 ? calcPercent : 100;
               // console.log('----calc----',calcPercent)
               this.setItemValue({
                 uuid: uuid,
@@ -343,7 +362,7 @@ export const useNetFileStore = defineStore({
                 // value: (((n + buf.length) / Number(f.FileSize)) * 100 - 1) | 0,
                 value: toSetPercent,
               });
-              if(toSetPercent === 100) {
+              if (toSetPercent === 100) {
                 shouldContinueSetStatusAsSpeed = false;
               }
             }
@@ -435,7 +454,7 @@ export const useNetFileStore = defineStore({
       WsChannel = phoenix_socket.channel(`drive:user_${user_id}`, {});
 
       WsChannel.on('file_uploaded', (file) => {
-        console.log('file uploaded:', file);
+        // console.log('file uploaded:', file);
         // 这个file uploaded事件执行在session.write之前(还没开始写文件)
         // this.uploaded(file);
       });
@@ -469,7 +488,7 @@ export const useNetFileStore = defineStore({
         this.uploadList[index].status = UploadResultStatus.SUCCESS;
         this.uploadList[index].percent = 100; // 这里设置了为 100 ?
         createMessage.success(`${file.full_name.slice(-1)[0]} 上传成功`);
-        // console.log('上传后的set success 标记',this.uploadList[index])
+        // console.log('上传后的set success 标记', this.uploadList[index]);
         // this.refetch = true;
         this.setRefetch();
         // console.log('this', this);
