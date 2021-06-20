@@ -1,108 +1,69 @@
 <template>
-  <PageWrapper dense contentFullHeight>
-    <Card :tab-list="tabList" :active-tab-key="tabKey" @tabChange="(key) => onTabChange(key)">
-      <template #tabBarExtraContent>
-        <div class="m-2">
-          <InputSearch
-            v-model:value="value"
-            placeholder="input search text"
-            enter-button
-            @search="onSearch"
-            :loading="loading"
-            allow-clear
-        /></div>
-      </template>
-      <div>
-        <!-- 我的 文件 / 分享 / 发布 / 收藏 / 回收站 -->
-        <template v-if="tabKey === 'basic'"><Files /></template>
-        <template v-if="tabKey === 'share'"> <Share /> </template>
-        <template v-if="tabKey === 'publish'"> <Publish /> </template>
-        <template v-if="tabKey === 'collection'"> <Collection /> </template>
-        <template v-if="tabKey === 'recycle'"> <Recycle /> </template>
-      </div>
-      <div class="h-28"></div>
-    </Card>
-    <!-- 文件信息 点击右上角的 info 弹出来的弹窗 -->
-    <FileInfo />
-  </PageWrapper>
+  <div class="px-4 pt-2 pb-6">
+    <a-tabs v-model:activeKey="curTabKey">
+      <a-tab-pane key="myFile" :tab="$t('metanet.files')" />
+      <a-tab-pane key="myShare" :tab="$t('metanet.share')" />
+      <a-tab-pane key="myPublish" :tab="$t('metanet.publishTitle')" />
+      <a-tab-pane key="myCollect" :tab="$t('metanet.collectionTitle')" />
+      <a-tab-pane key="recycle" :tab="$t('metanet.recycle')" />
+      <!-- tab 的最右边可以加内容 -->
+      <!-- <template #tabBarExtraContent>
+        <a-button>Extra Action</a-button>
+      </template> -->
+    </a-tabs>
+    <!-- 内容切换区 -->
+    <component :is="curTabComponent"></component>
+  </div>
 </template>
 
 <script lang="ts">
-  import { defineComponent, ref } from 'vue';
-  import { Tabs, Card, Input } from 'ant-design-vue';
-  import Files from './files.vue';
-  import Share from './share/index.vue';
-  import Recycle from './recycle.vue';
-  import Publish from './publish/index.vue';
-  import Collection from './collection/index.vue';
-  import { useI18n } from '/@/hooks/web/useI18n';
-  import { FileInfo } from '/@/components/NetFile';
-  import { useNetFileStore } from '/@/store/modules/netFile';
-  const { t } = useI18n('general.metanet');
-  import { PageWrapper } from '/@/components/Page';
-  export default defineComponent({
-    components: {
-      FileInfo,
-      Tabs,
-      TabPane: Tabs.TabPane,
-      Files,
-      Share,
-      Recycle,
-      Card,
-      Publish,
-      InputSearch: Input.Search,
-      Collection,
-      PageWrapper,
-    },
-    setup() {
-      const fileStore = useNetFileStore();
-      fileStore.useWs();
-      const tabList = [
-        {
-          key: 'basic',
-          tab: t('files'),
-        },
-        {
-          key: 'share',
-          tab: t('share'),
-        },
-        {
-          key: 'publish',
-          tab: t('publishTitle'),
-        },
-        {
-          key: 'collection',
-          tab: t('collectionTitle'),
-        },
-        {
-          key: 'recycle',
-          tab: t('recycle'),
-        },
-      ];
-      const tabKey = ref('basic');
-      function onTabChange(key) {
-        fileStore.setFileInfo({
-          file: fileStore.getFileInfo.file,
-          mode: key,
-          collection: key === 'collection',
-        });
-        tabKey.value = key;
-      }
-      const value = ref('');
-      const loading = ref(false);
-      async function onSearch(v) {
-        if (!v) return;
-        loading.value = true;
-        try {
-          await fileStore.searchFile(v);
-        } catch (e) {
-          console.log(e);
-        } finally {
-          loading.value = false;
-        }
-      }
+import { computed, defineComponent, ref } from "vue";
+import TabMyFile from "./components/TabMyFile.vue";
+import TabMyCollect from "./components/TabMyCollect.vue";
+import TabMyPublish from "./components/TabMyPublish.vue";
+import TabMyShare from "./components/TabMyShare.vue";
+import TabRecycle from "./components/TabRecycle.vue";
+export type ICurrentTabKey =
+  | "myFile"
+  | "myShare"
+  | "myPublish"
+  | "myCollect"
+  | "recycle";
+export default defineComponent({
+  components: {
+    // icon
+    TabMyFile,
+    TabMyCollect,
+    TabMyPublish,
+    TabMyShare,
+    TabRecycle,
+  },
+  setup() {
+    function useTab() {
+      const curTabKey = ref<ICurrentTabKey>("myFile");
+      const mapComponentName: {
+        [key in ICurrentTabKey]: string;
+      } = {
+        myFile: "TabMyFile",
+        myPublish: "TabMyCollect",
+        myCollect: "TabMyPublish",
+        myShare: "TabMyShare",
+        recycle: "TabRecycle",
+      };
+      const curTabComponent = computed(() => {
+        return mapComponentName[curTabKey.value];
+      });
+      return {
+        curTabKey,
+        curTabComponent,
+      };
+    }
 
-      return { t, tabList, tabKey, onTabChange, onSearch, value, loading };
-    },
-  });
+    return {
+      ...useTab(),
+    };
+  },
+});
 </script>
+
+<style scoped></style>

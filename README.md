@@ -1,169 +1,85 @@
-<div align="center"> <a href="https://github.com/anncwb/vue-vben-admin"> <img alt="VbenAdmin Logo" width="200" height="200" src="https://anncwb.github.io/anncwb/images/logo.png"> </a> <br> <br>
+# refactor-frontend-3
 
-[![license](https://img.shields.io/github/license/anncwb/vue-vben-admin.svg)](LICENSE)
+### 技术栈
 
-<h1>Vue vben admin</h1>
-</div>
+typescript / vue3 / vue-router-next / vue-i18n / pinia(数据管理) / ant-design-vue2 / webpack / graphql
 
-**English** | [中文](./README.zh-CN.md)
-
-## Introduction
-
-Vue Vben Admin is a free and open source middle and back-end template. Using the latest `vue3`, `vite2`, `TypeScript` and other mainstream technology development, the out-of-the-box middle and back-end front-end solutions can also be used for learning reference.
-
-## Feature
-
-- **State of The Art Development**：Use front-end front-end technology development such as Vue3/vite2
-- **TypeScript**: Application-level JavaScript language
-- **Theming**: Configurable themes
-- **International**：Built-in complete internationalization program
-- **Mock Server** Built-in mock data scheme
-- **Authority** Built-in complete dynamic routing permission generation scheme.
-- **Component** Multiple commonly used components are encapsulated twice
-
-## 预览
-
-- [vue-vben-admin](https://vvbin.cn/next/) - Full version Chinese site
-- [vue-vben-admin-gh-pages](https://anncwb.github.io/vue-vben-admin/) - Full version of the github site
-- [vben-admin-thin-next](https://vvbin.cn/thin/next/) - Simplified Chinese site
-- [vben-admin-thin-gh-pages](https://anncwb.github.io/vben-admin-thin-next/) -Simplified github site
-
-Test account: vben/123456
-
-<p align="center">
-    <img alt="VbenAdmin Logo" width="100%" src="https://anncwb.github.io/anncwb/images/preview1.png">
-    <img alt="VbenAdmin Logo" width="100%" src="https://anncwb.github.io/anncwb/images/preview2.png">
-    <img alt="VbenAdmin Logo" width="100%" src="https://anncwb.github.io/anncwb/images/preview3.png">
-</p>
-
-### Use Gitpod
-
-Open the project in Gitpod (free online dev environment for GitHub) and start coding immediately.
-
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/anncwb/vue-vben-admin)
-
-## Documentation
-
-[Document](https://vvbin.cn/doc-next/)
-
-## Preparation
-
-- [node](http://nodejs.org/) and [git](https://git-scm.com/) - Project development environment
-- [Vite](https://vitejs.dev/) - Familiar with vite features
-- [Vue3](https://v3.vuejs.org/) - Familiar with Vue basic syntax
-- [TypeScript](https://www.typescriptlang.org/) - Familiar with the basic syntax of `TypeScript`
-- [Es6+](http://es6.ruanyifeng.com/) - Familiar with es6 basic syntax
-- [Vue-Router-Next](https://next.router.vuejs.org/) - Familiar with the basic use of vue-router
-- [Ant-Design-Vue](https://2x.antdv.com/docs/vue/introduce-cn/) - ui basic use
-- [Mock.js](https://github.com/nuysoft/Mock) - mockjs basic syntax
-
-## Install and use
-
-- Get the project code
+### 项目结构
 
 ```bash
-git clone https://github.com/anncwb/vue-vben-admin.git
+├─@types #typescript 类型文件
+├─apollo #关于 graphql 的所有函数
+│  └─document
+│      └─netFile
+├─assets #logo 等资源
+│  ├─images
+│  └─svg
+│      └─preview
+├─components #公共组件
+├─const #全局常量文件
+├─hooks #公共hook
+├─languages #国际化语言
+├─router #路由
+├─store #全局数据中心
+├─utils #公共工具函数
+└─views #页面
+    ├─General #一级菜单
+    │  ├─Account #二级菜单
+    │  ├─Metanet #二级菜单
+    │  │  └─components #二级菜单组件
+    │  └─Security
+    └─Login
+        └─components
 ```
 
-- Installation dependencies
+### 项目命令
 
 ```bash
-cd vue-vben-admin
-
+# 安装依赖
 yarn install
-
-```
-
-- run
-
-```bash
+# 开发项目(注意localhost:4000 端口,不然websocket 授权失败)
 yarn serve
-```
-
-- build
-
-```bash
+# 打包
 yarn build
+# 单元测试(todo)
+yarn test:unit
+# 格式检测
+yarn lint
+# 查看线上包的信息
+yarn info [package_name]
+# 查看本地安装包的信息
+yarn list --pattern [package_name]
 ```
 
-## Change Log
+### 开发技巧
 
-[CHANGELOG](./CHANGELOG.zh_CN.md)
+外部 JS 文件加载:
 
-## Project
+1. public/index.html 里 CDN 引入,然后通过全局引用,webpack 同时配置 externals
+2. npm 安装
 
-- [vue-vben-admin](https://github.com/anncwb/vue-vben-admin) - full version
-- [vue-vben-admin-thin-next](https://github.com/anncwb/vben-admin-thin-next) - Simplified version
+> 关于 nkn  
+> package.json 中安装了依赖 nkn-sdk 然后拷贝其 nkn.min.js 到了 public 目录,  
+> 并在 index.html 中手动引入
+> webpack 中配置 externals => webpack 不会打包进来
+> @types/nkn-sdk.d.ts 中声明了 nkn => typescript 编译器可以识别类型
 
-## How to contribute
+```css
+/* 在css中引入资源 */
+background-image: url("~@/assets/svg/login-bg.svg");
+```
 
-You are very welcome to join！[Raise an issue](https://github.com/anncwb/vue-vben-admin/issues/new/choose) Or submit a Pull Request。
-
-**Pull Request:**
-
-1. Fork code!
-2. Create your own branch: `git checkout -b feat/xxxx`
-3. Submit your changes: `git commit -am 'feat(function): add xxxxx'`
-4. Push your branch: `git push origin feat/xxxx`
-5. submit`pull request`
-
-## Git Contribution submission specification
-
-- reference [vue](https://github.com/vuejs/vue/blob/dev/.github/COMMIT_CONVENTION.md) specification ([Angular](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-changelog-angular))
-
-  - `feat` Add new features
-  - `fix` Fix the problem/BUG
-  - `style` The code style is related and does not affect the running result
-  - `perf` Optimization/performance improvement
-  - `refactor` Refactor
-  - `revert` Undo edit
-  - `test` Test related
-  - `docs` Documentation/notes
-  - `chore` Dependency update/scaffolding configuration modification etc.
-  - `workflow` Workflow improvements
-  - `ci` Continuous integration
-  - `types` Type definition file changes
-  - `wip` In development
-
-## Related warehouse
-
-If these plugins are helpful to you, you can give a star support
-
-- [vite-plugin-mock](https://github.com/anncwb/vite-plugin-mock) - Used for local and development environment data mock
-- [vite-plugin-html](https://github.com/anncwb/vite-plugin-html) - Used for html template conversion and compression
-- [vite-plugin-style-import](https://github.com/anncwb/vite-plugin-style-import) - Used for component library style introduction on demand
-- [vite-plugin-theme](https://github.com/anncwb/vite-plugin-theme) - Used for online switching of theme colors and other color-related configurations
-- [vite-plugin-imagemin](https://github.com/anncwb/vite-plugin-imagemin) - Used to pack compressed image resources
-- [vite-plugin-compression](https://github.com/anncwb/vite-plugin-compression) - Used to pack input .gz|.brotil files
-- [vite-plugin-svg-icons](https://github.com/anncwb/vite-plugin-svg-icons) - Used to quickly generate svg sprite
-
-## Browser support
-
-The `Chrome 80+` browser is recommended for local development
-
-Support modern browsers, not IE
-
-| [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/edge/edge_48x48.png" alt=" Edge" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>IE | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/edge/edge_48x48.png" alt=" Edge" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Edge | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/firefox/firefox_48x48.png" alt="Firefox" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Firefox | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/chrome/chrome_48x48.png" alt="Chrome" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Chrome | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/safari/safari_48x48.png" alt="Safari" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Safari |
-| :-: | :-: | :-: | :-: | :-: |
-| not support | last 2 versions | last 2 versions | last 2 versions | last 2 versions |
-
-## Maintainer
-
-[@Vben](https://github.com/anncwb)
-
-## Donate
-
-If you think this project is helpful to you, you can help the author buy a cup of coffee to show your support!
-
-![donate](https://anncwb.github.io/anncwb/images/sponsor.png)
-
-<a style="display: block;width: 100px;height: 50px;line-height: 50px; color: #fff;text-align: center; background: #408aed;border-radius: 4px;" href="https://www.paypal.com/paypalme/cvvben">Paypal Me</a>
-
-## Discord
-
-- [github discussions](https://github.com/anncwb/vue-vben-admin/discussions)
-- [Discord](https://discord.gg/8GuAdwDhj6)
-
-## License
-
-[MIT © Vben-2020](./LICENSE)
+```javascript
+// 1. 路由懒加载的方法
+{
+  path: "/about",
+  name: "About",
+  // route level code-splitting
+  // this generates a separate chunk (about.[hash].js) for this route
+  // which is lazy-loaded when the route is visited.
+  component: () =>
+    import(/* webpackChunkName: "about" */ "../views/About.vue"),
+}
+// 2. 不用引入 @apollo/client , 不然要装 react ! 引入 /core 就可以了
+import { ApolloClient, InMemoryCache } from "@apollo/client/core";
+```

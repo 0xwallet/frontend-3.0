@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net/" />
+    <link rel="icon" href="<%= BASE_URL %>favicon.ico" />
+    <link rel="preload" href="./js/nkn.min.js" as="script" />
+    <!-- icon -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/file-icon-vectors@1.0.0/dist/file-icon-classic.min.css"
+    />
+
+    <title><%= htmlWebpackPlugin.options.title %></title>
+  </head>
+  <body>
+    <noscript>
+      <strong
+        >We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work
+        properly without JavaScript enabled. Please enable it to
+        continue.</strong
+      >
+    </noscript>
+    <div id="app"></div>
+    <!-- nkn -->
+    <script src="./js/nkn.min.js"></script>
+    <!-- 开发环境下的global.js 文件带有webpack HMR 代码 和友善的报错等; 生产环境不需要 -->
+    <% if(process.env.NODE_ENV === "development"){ %>
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/vue@3.1.1/dist/vue.global.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/vue-router@4.0.9/dist/vue-router.global.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/vue-i18n@9.1.6/dist/vue-i18n.global.js"
+    ></script>
+    <% } else{ %>
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/vue@3.1.1/dist/vue.global.prod.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/vue-router@4.0.9/dist/vue-router.global.prod.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/vue-i18n@9.1.6/dist/vue-i18n.global.prod.js"
+    ></script>
+    <% } %>
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/moment@2.29.1/locale/zh-cn.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/moment@2.29.1/locale/en-gb.js"
+    ></script>
+    <!-- built files will be auto injected -->
+  </body>
+</html>

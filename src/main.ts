@@ -1,70 +1,72 @@
-import '/@/design/index.less';
+import { createApp } from "vue";
+import App from "./App.vue";
+import router from "./router";
+// import store from "./store";
+import { createPinia } from "pinia";
+import "tailwindcss/tailwind.css";
+import languages from "./languages";
+import { useLocalStorage } from "@vueuse/core";
+const app = createApp(App);
+// 注册全局属性
+// 专门给模板中调试事件用的 @click="$log"
+app.config.globalProperties.$log = console.log;
 
-// Register windi
-import 'virtual:windi.css';
-// Register icon sprite
-import 'virtual:svg-icons-register';
+// 国际化 --start
+import { createI18n } from "vue-i18n";
+import { DEFAULT_LANG } from "./const";
+// 注意 是响应式的
+const storageLocale = useLocalStorage("locale", DEFAULT_LANG);
+export const i18n = createI18n({
+  messages: languages,
+  locale: storageLocale.value,
+  fallbackLocale: DEFAULT_LANG,
+});
+app.use(i18n);
+// 国际化 --end
 
-import { createApp } from 'vue';
-import App from './App.vue';
-import { initAppConfigStore } from '/@/logics/initAppConfig';
-import { setupErrorHandle } from '/@/logics/error-handle';
-import router, { setupRouter } from '/@/router';
-import { setupRouterGuard } from '/@/router/guard';
-import { setupStore } from '/@/store';
-import { setupGlobDirectives } from '/@/directives';
-import { setupI18n } from '/@/locales/setupI18n';
-import { registerGlobComp } from '/@/components/registerGlobComp';
+// ant-design-vue --start
+import {
+  ConfigProvider,
+  Menu,
+  Dropdown,
+  Form,
+  Select,
+  Checkbox,
+  Button,
+  Input,
+  InputNumber,
+  Row,
+  Col,
+  Tooltip,
+  Divider,
+  Breadcrumb,
+  Avatar,
+  Tabs,
+  Table,
+  Upload,
+  Layout,
+} from "ant-design-vue";
+app
+  .use(ConfigProvider)
+  .use(Menu)
+  .use(Dropdown)
+  .use(Form)
+  .use(Select)
+  .use(Checkbox)
+  .use(Button)
+  .use(Input)
+  .use(InputNumber)
+  .use(Row)
+  .use(Col)
+  .use(Tooltip)
+  .use(Divider)
+  .use(Breadcrumb)
+  .use(Avatar)
+  .use(Tabs)
+  .use(Table)
+  .use(Upload)
+  .use(Layout);
+// ant-design-vue --end
 
-// Do not introduce on-demand in local development?
-// In the local development for introduce on-demand, the number of browser requests will increase by about 20%.
-// Which may slow down the browser refresh.
-// Therefore, all are introduced in local development, and only introduced on demand in the production environment
-if (import.meta.env.DEV) {
-  import('ant-design-vue/dist/antd.less');
-}
-
-async function bootstrap() {
-  const app = createApp(App);
-
-  // Configure store
-  // 1. 设置全局数据管理 pinia (类vuex)
-  setupStore(app);
-
-  // Initialize internal system configuration
-  // 2. 初始化内部系统配置 语言/主题
-  initAppConfigStore();
-
-  // Register global components
-  // 3. 初始化全局 Icon Button ButtonGroup 组件
-  registerGlobComp(app);
-
-  // Multilingual configuration
-  // 4. 设置国际化语言
-  await setupI18n(app);
-
-  // Configure routing
-  // 5. 安装路由
-  setupRouter(app);
-
-  // router-guard
-  // 6. 路由守卫 page / pageLoading / http / scroll / message / progress / permission / state
-  setupRouterGuard();
-
-  // Register global directive
-  // 7. 注册全局钩子 验证 v-auth / loading v-loading
-  setupGlobDirectives(app);
-
-  // Configure global error handling
-  // 8. 错误处理 appError / windowError / promiseError / resourceError
-  setupErrorHandle(app);
-
-  // Mount when the route is ready
-  // https://next.router.vuejs.org/api/#isready
-  // 9. 等待路由 ready
-  await router.isReady();
-  // 10. 挂载 app
-  app.mount('#app', true);
-}
-
-void bootstrap();
+// app.use(store)
+app.use(createPinia()).use(router).mount("#app");
