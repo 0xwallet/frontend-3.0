@@ -5,11 +5,17 @@ import { PRODUCT_NAME } from "../const/index";
 import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
 import { useUserStore } from "../store";
 // vue 文件
-import Login from "../views/Login/index.vue";
-import Layout from "../views/Layout.vue";
-import GeneralAccount from "../views/General/Account/index.vue";
-import GeneralSecurity from "../views/General/Security/index.vue";
-import GeneralMetanet from "../views/General/Metanet/index.vue";
+// import Login from "../views/Login/index.vue";
+// import Layout from "../views/Layout.vue";
+// import GeneralAccount from "../views/General/Account/index.vue";
+// import GeneralSecurity from "../views/General/Security/index.vue";
+// import GeneralMetanet from "../views/General/Metanet/index.vue";
+import Login from "@/views/Login/index.vue";
+import Layout from "@/views/Layout.vue";
+import GeneralAccount from "@/views/General/Account/index.vue";
+import GeneralSecurity from "@/views/General/Security/index.vue";
+import GeneralMetanet from "@/views/General/Metanet/index.vue";
+
 const routes: RouteRecordRaw[] = [
   {
     path: "/login",

@@ -108,14 +108,7 @@ export type ICurrentFormKey =
   | "nMobile"
   | "webauthn";
 
-//
-import LoginForm from "./components/LoginForm.vue";
-import ForgetPasswordForm from "./components/ForgetPasswordForm.vue";
-import RegisterForm from "./components/RegisterForm.vue";
-import nMobileForm from "./components/nMobileForm.vue";
-import QrCodeForm from "./components/QrCodeForm.vue";
 import { useSvgWhiteLogo } from "@/hooks";
-// import AppLogo from "../../components/AppLogo.vue";
 export default defineComponent({
   components: {
     AppLocaleSwither,
@@ -124,12 +117,6 @@ export default defineComponent({
     FormForget,
     FormnMobile,
     FormWebauthn,
-    // LoginForm,
-    // ForgetPasswordForm,
-    // RegisterForm,
-    // nMobileForm,
-    // QrCodeForm,
-    // AppLogo,
   },
   setup() {
     // const svgWidth = 50;
