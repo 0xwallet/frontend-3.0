@@ -5,16 +5,12 @@ import { PRODUCT_NAME } from "../const/index";
 import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
 import { useUserStore } from "../store";
 // vue 文件
-// import Login from "../views/Login/index.vue";
-// import Layout from "../views/Layout.vue";
-// import GeneralAccount from "../views/General/Account/index.vue";
-// import GeneralSecurity from "../views/General/Security/index.vue";
-// import GeneralMetanet from "../views/General/Metanet/index.vue";
-import Login from "@/views/Login/index.vue";
-import Layout from "@/views/Layout.vue";
-import GeneralAccount from "@/views/General/Account/index.vue";
-import GeneralSecurity from "@/views/General/Security/index.vue";
-import GeneralMetanet from "@/views/General/Metanet/index.vue";
+import Login from "../pages/Login/index.vue";
+import Layout from "../pages/Layout.vue";
+import GeneralAccount from "../pages/General/Account/index.vue";
+import GeneralSecurity from "../pages/General/Security/index.vue";
+import GeneralMetanet from "../pages/General/Metanet/index.vue";
+
 
 const routes: RouteRecordRaw[] = [
   {
@@ -70,7 +66,7 @@ const routes: RouteRecordRaw[] = [
   //   // this generates a separate chunk (about.[hash].js) for this route
   //   // which is lazy-loaded when the route is visited.
   //   component: () =>
-  //     import(/* webpackChunkName: "about" */ "../views/About.vue"),
+  //     import(/* webpackChunkName: "about" */ "../pages/About.vue"),
   // },
 ];
 

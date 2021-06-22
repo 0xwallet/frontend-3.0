@@ -22,7 +22,7 @@ typescript / vue3 / vue-router-next / vue-i18n / pinia(数据管理) / ant-desig
 ├─router #路由
 ├─store #全局数据中心
 ├─utils #公共工具函数
-└─views #页面
+└─pages #页面
     ├─General #一级菜单
     │  ├─Account #二级菜单
     │  ├─Metanet #二级菜单
@@ -78,7 +78,7 @@ background-image: url("~@/assets/svg/login-bg.svg");
   // this generates a separate chunk (about.[hash].js) for this route
   // which is lazy-loaded when the route is visited.
   component: () =>
-    import(/* webpackChunkName: "about" */ "../views/About.vue"),
+    import(/* webpackChunkName: "about" */ "../pages/About.vue"),
 }
 // 2. 不用引入 @apollo/client , 不然要装 react ! 引入 /core 就可以了
 import { ApolloClient, InMemoryCache } from "@apollo/client/core";
